@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose'
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret-change-in-prod')
+
 export const authCookieName = 'session'
 
 export async function signSession(email: string, role: string): Promise<string> {

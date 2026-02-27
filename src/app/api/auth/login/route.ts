@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
       headers: { Authorization: `Basic ${cred}` },
     })
     zimbraOk = resp.ok
-  } catch { zimbraOk = false }
+  } catch {
+    zimbraOk = false
+  }
 
   if (!zimbraOk) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
 
