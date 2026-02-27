@@ -1,35 +1,41 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'public-anon-key-placeholder'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-})
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-export type Message = {
+// 資料類型
+export interface TeamMember {
   id: string
-  thread_id: string
-  sender: string
-  content: string
-  timestamp: string
-  message_type?: string
-  metadata?: any
+  name: string
+  english_name?: string
+  email?: string
+  phone?: string
+  region?: string
+  status?: 'active' | 'inactive'
+  created_at?: string
 }
 
-export type Thread = {
+export interface Dealer {
   id: string
-  title: string
-  description?: string
-  created_at: string
-  updated_at: string
-  created_by: string
-  is_active: boolean
-  message_count?: number
-  task_id?: number
-  task_title?: string
+  name: string
+  contact?: string
+  phone?: string
+  email?: string
+  region?: string
+  status?: 'active' | 'inactive'
+  address?: string
+  notes?: string
+  created_at?: string
+}
+
+export interface Target {
+  id: string
+  year: number
+  month: number
+  rep_id: string
+  rep_name?: string
+  target_amount: number
+  created_at?: string
 }
