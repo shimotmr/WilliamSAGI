@@ -86,29 +86,33 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: '快速功能',
     items: [
-      { id: 'home', title: '首頁', href: '/', icon: icons.home },
+      { id: 'home', title: '首頁', href: '/portal/dashboard', icon: icons.home },
     ]
   },
   {
     label: '營業核心',
     items: [
-      { id: 'performance', title: '業績管理', href: '/performance', icon: icons.performance },
-      { id: 'products', title: '產品目錄', href: '/products', icon: icons.products },
-      { id: 'quotations', title: '報價單', href: '/quotations', icon: icons.quotations },
+      { id: 'performance', title: '業績管理', href: '/portal/performance', icon: icons.performance },
+      { id: 'products', title: '產品目錄', href: '/portal/products', icon: icons.products },
+      { id: 'quotations', title: '報價單', href: '/portal/quotations', icon: icons.quotations },
+      { id: 'cases', title: '案件管理', href: '/portal/cases', icon: icons.performance },
+      { id: 'employees', title: '員工通訊錄', href: '/portal/employees', icon: icons.agents },
+      { id: 'knowledge', title: 'SOP知識庫', href: '/portal/knowledge', icon: icons.marketing },
     ]
   },
   {
     label: '效率工具',
     items: [
-      { id: 'transcripts', title: '會議逐字稿', href: '/transcripts', icon: icons.transcripts },
-      { id: 'marketing', title: '數位資源庫', href: '/marketing', icon: icons.marketing },
+      { id: 'transcripts', title: '會議逐字稿', href: '/portal/transcripts', icon: icons.transcripts },
+      { id: 'marketing', title: '數位資源庫', href: '/portal/marketing', icon: icons.marketing },
     ]
   },
   {
     label: '系統管理',
     items: [
-      { id: 'agents', title: 'Agent 中控台', href: '/agents', icon: icons.agents, adminOnly: true },
-      { id: 'admin', title: '後台管理', href: '/admin', icon: icons.admin, adminOnly: true },
+      { id: 'agents', title: 'Agent 中控台', href: '/portal/agents', icon: icons.agents, adminOnly: true },
+      { id: 'admin', title: '後台管理', href: '/portal/admin/allowlist', icon: icons.admin, adminOnly: true },
+      { id: 'dealers', title: '經銷商', href: '/portal/admin/dealers', icon: icons.home, adminOnly: true },
     ]
   }
 ]
