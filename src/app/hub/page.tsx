@@ -465,7 +465,7 @@ export default function Home() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-5 py-12 sm:py-20">
         {/* Header */}
-        <!-- Mobile Header -->
+        {/* Mobile Header */}
         <header className="mb-10 md:hidden">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
@@ -559,51 +559,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* App Cards */}
-        {/* App Cards - Mobile (single column) */}
-        <section className="md:hidden grid grid-cols-1 gap-4">
-          {apps.slice(0, 6).map((app) => {
-          {apps.map((app) => {
+        {/* App Cards — shared card renderer */}
+        {(() => {
+          const renderCard = (app: AppItem) => {
             const Icon = iconMap[app.name]
             const inner = (
               <div
-                className={`group relative rounded-xl border p-5 sm:p-6 transition-all duration-200 ${
+                className={`group relative rounded-xl border p-5 transition-all duration-200 ${
                   app.disabled
                     ? 'opacity-40 cursor-not-allowed'
                     : 'cursor-pointer hover:translate-y-[-2px] hover:shadow-lg'
                 }`}
-                style={{
-                  borderColor: app.borderColor,
-                  background: app.accentBg,
-                }}
+                style={{ borderColor: app.borderColor, background: app.accentBg }}
               >
-                {/* Tag */}
                 <span
-                  className={`absolute top-4 right-4 text-[10px] px-2 py-0.5 rounded-full border ${
-                    app.disabled 
-                      ? 'border-gray-600/30 text-gray-500' 
-                      : ''
-                  }`}
-                  style={{
-                    ...(app.disabled ? {} : {
-                      borderColor: app.borderColor,
-                      color: app.accent,
-                    })
-                  }}
+                  className="absolute top-4 right-4 text-[10px] px-2 py-0.5 rounded-full border"
+                  style={app.disabled ? { borderColor: 'rgba(100,100,100,0.3)', color: '#6b7280' } : { borderColor: app.borderColor, color: app.accent }}
                 >
                   {app.tag}
                 </span>
-
-                {/* Icon */}
-                <div className="mb-3">
-                  {Icon && <Icon color={app.accent} />}
-                </div>
-
-                {/* Text */}
+                <div className="mb-3">{Icon && <Icon color={app.accent} />}</div>
                 <h2 className="text-base font-semibold text-foreground mb-1">{app.name}</h2>
                 <p className="text-sm text-foreground-muted leading-relaxed">{app.desc}</p>
-
-                {/* Arrow */}
                 {!app.disabled && (
                   <div className="absolute bottom-5 right-5 text-foreground-subtle group-hover:text-foreground transition-colors">
                     <ArrowRight />
@@ -611,15 +588,24 @@ export default function Home() {
                 )}
               </div>
             )
-
             if (app.disabled) return <div key={app.name}>{inner}</div>
-            return (
-              <a key={app.name} href={app.url} target="_blank" rel="noopener noreferrer">
-                {inner}
-              </a>
-            )
-          })}
-        </section>
+            return <a key={app.name} href={app.url} target={app.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer">{inner}</a>
+          }
+
+          return (
+            <>
+              {/* Mobile: single-column card stack */}
+              <section className="md:hidden grid grid-cols-1 gap-3 mb-8">
+                {apps.map(renderCard)}
+              </section>
+
+              {/* Desktop: 3-column grid */}
+              <section className="hidden md:grid grid-cols-3 gap-4 mb-8">
+                {apps.map(renderCard)}
+              </section>
+            </>
+          )
+        })()}
 
         {/* Footer */}
         <footer className="mt-14 text-center text-foreground-subtle text-xs tracking-wide">
