@@ -6,10 +6,10 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Line, Doughnut } from 'react-chartjs-2'
 
-import AgentRanking from '@/app/components/AgentRanking'
-import ModelQuotaOverview from '@/app/components/ModelQuotaOverview'
-import ModelTrendChart from '@/app/components/ModelTrendChart'
-import SystemMonitor from '@/app/components/SystemMonitor'
+import AgentRanking from '@/app/hub/components/AgentRanking'
+import ModelQuotaOverview from '@/app/hub/components/ModelQuotaOverview'
+import ModelTrendChart from '@/app/hub/components/ModelTrendChart'
+import SystemMonitor from '@/app/hub/components/SystemMonitor'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler)
 
