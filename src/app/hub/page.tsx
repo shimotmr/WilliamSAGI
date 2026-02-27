@@ -465,7 +465,8 @@ export default function Home() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-5 py-12 sm:py-20">
         {/* Header */}
-        <header className="mb-10">
+        <!-- Mobile Header -->
+        <header className="mb-10 md:hidden">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-sm font-bold text-white">
@@ -478,26 +479,42 @@ export default function Home() {
           <p className="text-foreground-muted text-sm ml-12">Command Center</p>
         </header>
 
-        {/* Strategic Panel */}
-        <section className="mb-8 rounded-xl border border-border bg-card backdrop-blur-sm">
-          <div className="px-5 py-4 sm:px-6 sm:py-5">
-            {/* Top row: date + agents */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-              <div className="text-sm text-foreground-muted font-medium tracking-wide">
+        {/* Desktop Header - only visible on md+ */}
+        <header className="hidden md:block mb-8">
+          <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-lg font-bold text-white">
+                  W
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">William Hub</h1>
+                  <p className="text-sm text-foreground-muted">Command Center - AI Control Panel</p>
+                </div>
+              </div>
+              <ThemeToggle />
+            </div>
+          </div>
+        </header>
+
+        {/* Strategic Panel - Mobile */}
+        <section className="md:hidden mb-6 rounded-xl border border-border bg-card backdrop-blur-sm">
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-foreground-muted font-medium">
                 {getDateStr()}
               </div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-                {agents.map((a) => (
-                  <div key={a.name} className="flex items-center gap-1.5 text-xs text-foreground-muted">
+              <div className="flex items-center gap-2">
+                {agents.slice(0, 3).map((a) => (
+                  <div key={a.name} className="flex items-center gap-1 text-xs text-foreground-muted">
                     <StatusDot status={a.status} />
                     <span>{a.name}</span>
                   </div>
                 ))}
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-3">
 
-            {/* Token stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
                 { label: 'Today', value: tokens.today },
                 { label: 'This Week', value: tokens.week },
@@ -543,7 +560,9 @@ export default function Home() {
         </section>
 
         {/* App Cards */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* App Cards - Mobile (single column) */}
+        <section className="md:hidden grid grid-cols-1 gap-4">
+          {apps.slice(0, 6).map((app) => {
           {apps.map((app) => {
             const Icon = iconMap[app.name]
             const inner = (
