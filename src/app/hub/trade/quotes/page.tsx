@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 import { Search, RefreshCw, Wifi, WifiOff } from 'lucide-react'
 import { useState, useRef, useMemo } from 'react'
 
@@ -60,6 +60,7 @@ const DEFAULT_SYMBOLS = ['2330', '2317', '2454', '2881', '2412', '2303']
  * 即時報價面板頁面
  */
 export default function QuotesPage() {
+  const [queryClient] = useState(() => new QueryClient())
   const [selectedSymbol, setSelectedSymbol] = useState<string>('2330')
   const [activeWatchListId, setActiveWatchListId] = useState<string>('favorites')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -136,7 +137,7 @@ export default function QuotesPage() {
     enabled: watchListSymbols.length > 0,
     refetchInterval: isAutoRefresh ? refreshInterval : false,
     staleTime: 5000 // 5秒內認為數據是新鮮的
-  })
+  }, queryClient)
 
   // 獲取選中股票的詳細報價
   const {
@@ -165,7 +166,7 @@ export default function QuotesPage() {
     enabled: !!selectedSymbol,
     refetchInterval: isAutoRefresh ? refreshInterval : false,
     staleTime: 5000
-  })
+  }, queryClient)
 
   // 處理監視清單變更
   const handleWatchListChange = (watchListId: string) => {
@@ -219,6 +220,7 @@ export default function QuotesPage() {
   const selectedQuote = selectedQuoteData || quotes.find(q => q.symbol === selectedSymbol)
 
   return (
+    <QueryClientProvider client={queryClient}>
     <div className="min-h-screen bg-slate-950">
       <div className="flex h-screen">
         {/* 左側面板 - 搜尋和監視清單 */}
@@ -458,5 +460,6 @@ export default function QuotesPage() {
         </div>
       </div>
     </div>
+    </QueryClientProvider>
   )
 }

@@ -4,7 +4,7 @@ import { Shield, AlertTriangle, CheckCircle, XCircle, RefreshCw, TrendingUp } fr
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-import type { RuleItem, RuleSummary } from '../api/rules/route'
+import type { RuleItem, RuleSummary } from '@/app/api/rules/route'
 
 // 層級配置
 const levelConfig = {

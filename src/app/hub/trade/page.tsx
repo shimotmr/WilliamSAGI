@@ -1,6 +1,8 @@
 'use client'
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TrendingUp, Users, Clock, AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
 
 import { AccountOverviewWithAPI } from '@/components/trading/AccountOverviewWithAPI'
 import { PercentageBadge } from '@/components/trading/PercentageBadge'
@@ -10,6 +12,7 @@ import { StockPrice } from '@/components/trading/StockPrice'
  * 交易主頁 - 帳戶總覽
  */
 export default function TradePage() {
+  const [queryClient] = useState(() => new QueryClient())
 
   // Mock 市場指數資料
   const marketIndices = [
@@ -35,6 +38,7 @@ export default function TradePage() {
   ]
 
   return (
+    <QueryClientProvider client={queryClient}>
     <div className="space-y-8">
       {/* 頁面標題 */}
       <div>
@@ -184,5 +188,6 @@ export default function TradePage() {
         </div>
       </div>
     </div>
+    </QueryClientProvider>
   )
 }

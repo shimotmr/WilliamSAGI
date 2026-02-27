@@ -98,6 +98,7 @@ export default function ReportDetailPage({
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       }
       
+      // @ts-ignore
       await html2pdf().set(opt).from(contentRef.current).save()
     } catch (err) {
       console.error('Error generating PDF:', err)
