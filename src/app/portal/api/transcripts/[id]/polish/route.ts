@@ -108,7 +108,7 @@ export async function POST(
           const batchResults = await polishBatch(batch)
           
           // Write results to DB immediately
-          for (const [segmentId, polishedText] of batchResults) {
+          for (const [segmentId, polishedText] of Array.from(batchResults.entries())) {
             await supabase
               .from('transcript_segments')
               .update({ edited_text: polishedText })
@@ -123,7 +123,7 @@ export async function POST(
             // Retry
             try {
               const batchResults = await polishBatch(batch)
-              for (const [segmentId, polishedText] of batchResults) {
+              for (const [segmentId, polishedText] of Array.from(batchResults.entries())) {
                 await supabase
                   .from('transcript_segments')
                   .update({ edited_text: polishedText })

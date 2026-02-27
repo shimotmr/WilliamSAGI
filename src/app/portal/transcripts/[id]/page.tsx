@@ -115,7 +115,7 @@ export default function TranscriptDetailPage() {
 
       // Auto-populate speakers from segments if empty
       if ((!t.speakers || Object.keys(t.speakers).length === 0) && segs && segs.length > 0) {
-        const uniqueSpeakers = [...new Set(segs.map((s: Segment) => s.speaker))].sort()
+        const uniqueSpeakers = Array.from(new Set(segs.map((s: Segment) => s.speaker))).sort()
         const speakersMap: Record<string, string> = {}
         uniqueSpeakers.forEach(label => { speakersMap[label] = label })
         await supabase.from('transcripts').update({ speakers: speakersMap }).eq('id', id)
