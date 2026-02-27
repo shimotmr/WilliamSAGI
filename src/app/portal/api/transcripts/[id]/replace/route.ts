@@ -29,12 +29,13 @@ export async function POST(
     }
 
     // 批量取代
+    const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     let replacedCount = 0
     const updates = []
 
     for (const seg of segments) {
       const originalText = seg.edited_text || seg.text
-      const newText = originalText.replace(new RegExp(search, 'g'), replace)
+      const newText = originalText.replace(new RegExp(escaped, 'g'), replace)
       
       if (newText !== originalText) {
         updates.push({
