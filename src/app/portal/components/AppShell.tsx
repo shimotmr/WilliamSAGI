@@ -153,7 +153,7 @@ export default function AppShell({ children }: AppShellProps) {
   }, [pathname])
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
+    if (href === '/portal/dashboard') return pathname === '/portal/dashboard' || pathname === '/portal'
     return pathname.startsWith(href)
   }
 
