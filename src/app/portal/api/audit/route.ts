@@ -5,8 +5,12 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: Request) {
   try {
+    const authHeader = request.headers.get('authorization')
     const body = await request.json()
     const cookieStore = await cookies()
+    const cookieEmail = cookieStore.get('user_email')?.value
+    if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    void authHeader
     const headerStore = await headers()
 
     const userName = body.user_name || cookieStore.get('user_name')?.value || cookieStore.get('user_email')?.value || 'unknown'

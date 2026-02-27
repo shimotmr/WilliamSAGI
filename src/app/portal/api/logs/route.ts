@@ -17,6 +17,10 @@ export interface LogEntry {
 // GET: 讀取日誌
 export async function GET(request: Request) {
   const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   const isAdmin = cookieStore.get('is_admin')?.value === 'true'
   
   if (!isAdmin) {
@@ -76,6 +80,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies()
+    const authHeader = request.headers.get('authorization')
+    const cookieEmail = cookieStore.get('user_email')?.value
+    if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    void authHeader
     const userEmail = cookieStore.get('user_email')?.value || 'anonymous'
     
     const log = await request.json()

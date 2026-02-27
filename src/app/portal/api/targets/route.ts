@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { supabase } from '@/lib/supabase'
@@ -39,6 +40,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const cookieStore = await cookies()
+    const authHeader = request.headers.get('authorization')
+    const cookieEmail = cookieStore.get('user_email')?.value
+    if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    void authHeader
     const body = await request.json()
     
     if (!body.repId || !body.year || !body.month) {
@@ -68,5 +74,10 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   return POST(request)
 }

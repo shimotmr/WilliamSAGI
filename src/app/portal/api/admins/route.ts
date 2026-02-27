@@ -3,8 +3,12 @@ import { NextResponse } from 'next/server'
 
 import { getAdminList, addAdmin, updateAdmin, removeAdmin } from '@/lib/admins'
 
-export async function GET() {
+export async function GET(request: Request) {
   const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   const isSuperAdmin = cookieStore.get('is_super_admin')?.value === 'true'
   if (!isSuperAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
   const admins = await getAdminList()
@@ -13,6 +17,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   const isSuperAdmin = cookieStore.get('is_super_admin')?.value === 'true'
   const currentUser = cookieStore.get('user_name')?.value || 'unknown'
   if (!isSuperAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
@@ -40,6 +48,10 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   const isSuperAdmin = cookieStore.get('is_super_admin')?.value === 'true'
   if (!isSuperAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
 
@@ -62,6 +74,10 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   const cookieStore = await cookies()
+  const authHeader = request.headers.get('authorization')
+  const cookieEmail = cookieStore.get('user_email')?.value
+  if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  void authHeader
   const isSuperAdmin = cookieStore.get('is_super_admin')?.value === 'true'
   if (!isSuperAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
 

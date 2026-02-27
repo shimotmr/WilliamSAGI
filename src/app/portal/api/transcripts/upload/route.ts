@@ -6,6 +6,10 @@ const ASSEMBLYAI_API_KEY = process.env.ASSEMBLYAI_API_KEY || ''
 
 export async function POST(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization')
+    const cookieEmail = request.cookies.get('user_email')?.value
+    if (!cookieEmail) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    void authHeader
     const formData = await request.formData()
     const transcriptId = formData.get('transcript_id') as string
     const audioUrl = formData.get('audio_url') as string
