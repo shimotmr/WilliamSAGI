@@ -18,8 +18,10 @@ export async function GET(request: Request) {
     if (rep) query = query.eq('rep', rep)
     if (dealer) query = query.eq('dealer', dealer)
     if (search) {
+      // Escape special PostgREST characters to prevent query injection
+      const safeSearch = search.replace(/[%_(),*]/g, '').slice(0, 100)
       query = query.or(
-        `end_customer.ilike.%${search}%,machine.ilike.%${search}%,dealer.ilike.%${search}%,id.ilike.%${search}%`
+        `end_customer.ilike.%${safeSearch}%,machine.ilike.%${safeSearch}%,dealer.ilike.%${safeSearch}%,id.ilike.%${safeSearch}%`
       )
     }
 
@@ -27,7 +29,6 @@ export async function GET(request: Request) {
 
     if (error) throw error
 
-    // Map DB fields to frontend format
     const cases = (data || []).map(c => ({
       id: c.id,
       stage: c.stage,
