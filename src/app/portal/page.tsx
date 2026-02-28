@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
 import UserMenu from './components/UserMenu'
+import Breadcrumb from '@/components/Breadcrumb'
 
 import { 
   icons, 
@@ -55,7 +56,7 @@ export default function Home() {
       setUserName(employeeId)
       Promise.all([
         fetch(`/api/employees/lookup?employee_id=${encodeURIComponent(employeeId)}`).then(r => r.ok ? r.json() : null).catch(() => null),
-        supabase.from('portal_admins').select('nickname, name, title').or(`employee_id.eq.${employeeId},email.ilike.${employeeId}@%`).maybeSingle().then(r => r.data),
+        supabase.from('portal_admins').select('nickname, name, title').or(`employee_id.eq.${employeeId},email.ilike.${employeeId}@`).maybeSingle().then(r => r.data),
       ]).then(([emp, admin]) => {
         const displayName = admin?.nickname || admin?.name || emp?.name || employeeId
         const title = emp?.title || admin?.title || ''
@@ -83,6 +84,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-4 md:p-6 lg:p-8" style={{ backgroundColor: 'var(--surface-0)' }}>
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: 'Portal' }]} />
+
       {/* Header */}
       <header className="mb-6 md:mb-8">
         <div className="flex items-center justify-between">
@@ -92,7 +96,7 @@ export default function Home() {
                 <path d="M10 2L2 7l8 5 8-5-8-5zM2 13l8 5 8-5M2 10l8 5 8-5"/>
               </svg>
             </div>
-            <span className="font-bold text-lg md:text-xl" style={{ color: 'var(--text-primary)' }}>和椿通路營業系統</span>
+            <span className="font-bold text-lg md:text-xl" style={{ color: 'var(--text-primary)' }}>和椿機器人Portal</span>
           </div>
           <UserMenu />
         </div>
@@ -101,9 +105,9 @@ export default function Home() {
       {/* Greeting Section */}
       <section className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-          {greeting}{userName ? <span className="font-normal" style={{ color: 'var(--primary-500)' }}>，{userName}</span> : ''} 👋
+          {greeting}{userName ? <span className="font-normal" style={{ color: 'var(--primary-500)' }}>，{userName}</span> : ''} 🌿
         </h1>
-        <p className="text-sm md:text-base" style={{ color: 'var(--text-secondary)' }}>需要什麼幫助？選擇下方功能開始</p>
+        <p className="text-sm md:text-base" style={{ color: 'var(--text-secondary)' }}>統整營業相關工具與報表，歡迎使用各項服務</p>
       </section>
 
       {/* Grouped Modules */}
@@ -174,7 +178,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="text-center py-6 text-xs md:text-sm" style={{ color: 'var(--text-tertiary)' }}>
-        Aurotek Sales Portal · Powered by Jarvis 🤖
+        Aurotek Sales Portal &bull; Powered by Jarvis 🤖
       </footer>
     </main>
   )
