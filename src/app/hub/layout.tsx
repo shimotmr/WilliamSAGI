@@ -1,245 +1,82 @@
 import Header from '@/components/Header';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
-export default function HubLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const navLinks = [
+  { href: '/hub/dashboard', icon: '📊', label: 'Dashboard', mobileLabel: '儀表板' },
+  { href: '/hub/board', icon: '📋', label: '任務看板', mobileLabel: '任務' },
+  { href: '/hub/monitor', icon: '📈', label: '系統監控', mobileLabel: '監控' },
+  { href: '/hub/agents', icon: '🤖', label: 'Agents', mobileLabel: 'Agents' },
+  { href: '/hub/reports', icon: '📑', label: '報告', mobileLabel: '報告' },
+  { href: '/hub/trade', icon: '💹', label: '交易', mobileLabel: '交易' },
+  { href: '/hub/settings', icon: '⚙️', label: '設定', mobileLabel: null },
+];
+
+export default function HubLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultContext="hub">
-      <div className="hub-layout" style={{ display: 'flex', minHeight: '100vh' }}>
-        {/* Desktop Sidebar */}
-        <aside
-          className="sidebar-desktop"
-          style={{
-            width: '240px',
-            background: 'var(--card)',
-            borderRight: '1px solid var(--border)',
-            display: 'none',
-            flexDirection: 'column',
-          }}
-        >
-          <div style={{ padding: 'var(--space-4)' }}>
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
-              <a
-                href="/hub/dashboard"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
+      <div style={{ display: 'flex', minHeight: '100vh' }}>
+        {/* Desktop Sidebar — hidden on mobile via inline media not supported; use Tailwind class */}
+        <aside className="hidden lg:flex" style={{
+          width: '240px',
+          background: 'var(--card)',
+          borderRight: '1px solid var(--border)',
+          flexDirection: 'column',
+          flexShrink: 0,
+        }}>
+          <div style={{ padding: '1.5rem 1rem' }}>
+            <p style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Navigation</p>
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              {navLinks.map(link => (
+                <a key={link.href} href={link.href} style={{
+                  padding: '0.625rem 0.75rem',
+                  borderRadius: '0.5rem',
                   color: 'var(--foreground)',
                   textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
+                  fontSize: '0.875rem',
                   fontWeight: 500,
-                }}
-              >
-                📊 Dashboard
-              </a>
-              <a
-                href="/hub/board"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                📋 任務看板
-              </a>
-              <a
-                href="/hub/monitor"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                📈 系統監控
-              </a>
-              <a
-                href="/hub/agents"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                🤖 Agents
-              </a>
-              <a
-                href="/hub/reports"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                📑 報告
-              </a>
-              <a
-                href="/hub/trade"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                💹 交易
-              </a>
-              <a
-                href="/hub/settings"
-                style={{
-                  padding: 'var(--space-3) var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--text-body-sm)',
-                  fontWeight: 500,
-                }}
-              >
-                ⚙️ 設定
-              </a>
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.625rem',
+                }}>
+                  <span>{link.icon}</span>
+                  <span>{link.label}</span>
+                </a>
+              ))}
             </nav>
           </div>
         </aside>
 
         {/* Main Content */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <Header context="hub" />
-          
-          <main style={{ flex: 1, padding: 'var(--space-4)' }}>
-            <div className="container" style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+          <main style={{ flex: 1, padding: '1rem' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               {children}
             </div>
           </main>
 
-          {/* Mobile Bottom Tab Bar - 保留前5個最重要的 */}
-          <nav
-            className="tab-bar-mobile"
-            style={{
-              display: 'flex',
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              background: 'var(--card)',
-              borderTop: '1px solid var(--border)',
-              padding: 'var(--space-2) 0',
-              justifyContent: 'space-around',
-              zIndex: 50,
-            }}
-          >
-            <a
-              href="/hub/dashboard"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>📊</span>
-              <span>儀表板</span>
-            </a>
-            <a
-              href="/hub/board"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>📋</span>
-              <span>任務</span>
-            </a>
-            <a
-              href="/hub/monitor"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>📈</span>
-              <span>監控</span>
-            </a>
-            <a
-              href="/hub/agents"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>🤖</span>
-              <span>Agents</span>
-            </a>
-            <a
-              href="/hub/reports"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>📑</span>
-              <span>報告</span>
-            </a>
+          {/* Mobile Bottom Tab Bar */}
+          <nav className="flex lg:hidden" style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            background: 'var(--card)',
+            borderTop: '1px solid var(--border)',
+            padding: '0.5rem 0',
+            justifyContent: 'space-around',
+            zIndex: 50,
+          }}>
+            {navLinks.filter(l => l.mobileLabel).map(link => (
+              <a key={link.href} href={link.href} style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: '0.25rem', padding: '0.5rem 1rem',
+                color: 'var(--foreground)', textDecoration: 'none', fontSize: '0.75rem',
+              }}>
+                <span style={{ fontSize: '1.25rem' }}>{link.icon}</span>
+                <span>{link.mobileLabel}</span>
+              </a>
+            ))}
           </nav>
-
-          {/* Spacer for mobile tab bar */}
-          <div className="tab-bar-spacer" style={{ height: '64px' }} />
+          <div className="block lg:hidden" style={{ height: '64px' }} />
         </div>
-
-        <style jsx>{`
-          @media (min-width: 1024px) {
-            .sidebar-desktop {
-              display: flex !important;
-            }
-            .tab-bar-mobile,
-            .tab-bar-spacer {
-              display: none !important;
-            }
-          }
-        `}</style>
       </div>
     </ThemeProvider>
   );
