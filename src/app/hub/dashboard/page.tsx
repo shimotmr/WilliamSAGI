@@ -123,9 +123,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/dashboard')
+    fetch('/api/hub/system-status')
       .then(r => r.json())
-      .then(d => { if (!d.error) setData(d) })
+      .then(d => { if (d && !d.error) setData(d) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
@@ -133,9 +133,9 @@ export default function DashboardPage() {
   // Auto-refresh every 30s
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch('/api/dashboard')
+      fetch('/api/hub/system-status')
         .then(r => r.json())
-        .then(d => { if (!d.error) setData(d) })
+        .then(d => { if (d && !d.error) setData(d) })
         .catch(() => {})
     }, 30000)
     return () => clearInterval(interval)
