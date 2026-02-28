@@ -137,13 +137,16 @@ export function ThemeProvider({ children, defaultContext = 'portal' }: ThemeProv
 export function useTheme(): ThemeContextType {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
-    // SSR safe default — no ThemeProvider in tree during static generation
     return {
       theme: 'hub-dark',
       currentMode: 'dark',
       context: 'hub',
       toggleTheme: () => {},
       setTheme: () => {},
+    };
+  }
+  return ctx;
+},
     };
   }
   return ctx;
