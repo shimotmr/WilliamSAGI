@@ -49,6 +49,7 @@ export default function MonitorPage() {
           </table>
         </div>
       )}
+      <p className="text-xs text-gray-400">System Version: 2026.2 | Agents: 5 | Last Updated: 2026-02-28</p>
     </div>
   )
 }
