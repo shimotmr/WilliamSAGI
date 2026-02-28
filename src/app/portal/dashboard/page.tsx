@@ -1,6 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Header from '@/components/Header'
+import Breadcrumb from '@/components/Breadcrumb'
 
 const STAGE_COLORS: Record<string,string> = {
   '簽約':'text-green-600','出貨':'text-blue-600','報價':'text-yellow-600','詢價':'text-gray-500','結案':'text-gray-400',
@@ -19,6 +21,8 @@ export default function PortalDashboard() {
 
   return (
     <div className="p-6 space-y-6">
+      <Header context="portal" />
+      <Breadcrumb items={[{label:'Portal',href:'/portal'},{label:'Dashboard'}]} />
       <h1 className="text-2xl font-bold">業務儀表板</h1>
 
       {/* KPI 卡片 */}
