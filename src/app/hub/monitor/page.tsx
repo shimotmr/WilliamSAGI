@@ -1,59 +1,61 @@
-'use client'
-import { useState, useEffect } from 'react'
-import Header from '@/components/Header'
-import Breadcrumb from '@/components/Breadcrumb'
+'use client';
+
+import { useEffect, useState } from 'react';
 
 export default function MonitorPage() {
-  const [status, setStatus] = useState<any>(null)
+  const [status, setStatus] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    fetch('/api/hub/system-status').then(r=>r.json()).then(setStatus).catch(()=>{})
-  }, [])
+    fetch('/api/system-status')
+      .then(r => r.json())
+      .then(d => setStatus(d))
+      .catch(() => {});
+    const t = setInterval(() => {
+      fetch('/api/system-status').then(r => r.json()).then(setStatus).catch(() => {});
+    }, 30000);
+    return () => clearInterval(t);
+  }, []);
 
-  const metrics = [
-    { label: 'Active Tasks', value: status?.activeTasks ?? '-', color: 'text-blue-600' },
-    { label: 'Completed Today', value: status?.completedToday ?? '-', color: 'text-green-600' },
-    { label: 'Failed Today', value: status?.failedToday ?? '-', color: 'text-red-500' },
-    { label: 'Pending', value: status?.pendingTasks ?? '-', color: 'text-yellow-600' },
-  ]
+  const sys   = (status as Record<string, Record<string, unknown>>).system || {};
+  const sess  = (status as Record<string, Record<string, unknown>>).sessions || {};
+  const stor  = (status as Record<string, Record<string, unknown>>).storage || {};
+  const gw    = (status as Record<string, Record<string, unknown>>).gateway || {};
+
+  const Metric = ({ label, value, accent = '#5E6AD2' }: { label: string; value: string | number; accent?: string }) => (
+    <div style={{
+      background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+      borderRadius: '12px', padding: '1.25rem',
+    }}>
+      <div style={{ fontSize: '0.75rem', color: '#8A8F98', marginBottom: '0.5rem' }}>{label}</div>
+      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: accent, letterSpacing: '-0.02em' }}>{value || '—'}</div>
+    </div>
+  );
 
   return (
-    <div className="p-6 space-y-6">
-      <Header context="hub" />
-      <Breadcrumb items={[{label:'Hub',href:'/hub'},{label:'系統監控'}]} />
-      <h1 className="text-2xl font-bold">系統監控</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {metrics.map(m => (
-          <div key={m.label} className="bg-white rounded-xl shadow p-4">
-            <p className="text-xs text-gray-400 mb-1">{m.label}</p>
-            <p className={`text-3xl font-bold ${m.color}`}>{m.value}</p>
-          </div>
-        ))}
+    <div style={{ color: '#EDEDEF' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>系統監控</h1>
+        <p style={{ fontSize: '0.875rem', color: '#8A8F98' }}>即時系統狀態</p>
       </div>
-      {status?.recentTasks && (
-        <div className="bg-white rounded-xl shadow overflow-hidden">
-          <div className="px-5 py-3 border-b font-semibold text-sm">最近任務</div>
-          <table className="w-full text-sm">
-            <tbody className="divide-y divide-gray-50">
-              {status.recentTasks.map((t:any) => (
-                <tr key={t.id} className="hover:bg-gray-50">
-                  <td className="p-3 font-medium">{t.title}</td>
-                  <td className="p-3 text-gray-500 text-xs">{t.assignee}</td>
-                  <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded ${
-                      t.status==='已完成'?'bg-green-100 text-green-700':
-                      t.status==='執行中'?'bg-blue-100 text-blue-700':
-                      t.status==='失敗'?'bg-red-100 text-red-600':'bg-gray-100 text-gray-500'
-                    }`}>{t.status}</span>
-                  </td>
-                  <td className="p-3 text-gray-400 text-xs">{t.updated_at ? new Date(t.updated_at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}) : ''}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <Metric label="System Status" value={String(sys.status || 'OK')} accent="#4ade80" />
+        <Metric label="Uptime" value={String(sys.uptime || '—')} />
+        <Metric label="Active Sessions" value={String(sess.active || 0)} />
+        <Metric label="Sub-Agents" value={String(sess.subAgents || 0)} accent="#f59e0b" />
+        <Metric label="Gateway" value={String(gw.status || '—')} accent="#60a5fa" />
+        <Metric label="Disk Available" value={String(stor.available || '—')} />
+      </div>
+
+      <div style={{
+        background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
+        borderRadius: '16px', padding: '1.5rem',
+      }}>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8125rem', color: '#4ade80', lineHeight: 1.8 }}>
+          <div>$ openclaw status</div>
+          <div style={{ color: '#8A8F98' }}>{JSON.stringify(status, null, 2).slice(0, 500)}...</div>
         </div>
-      )}
-      <p className="text-xs text-gray-400">System Version: 2026.2 | Agents: 5 | Last Updated: 2026-02-28</p>
+      </div>
     </div>
-  )
+  );
 }
