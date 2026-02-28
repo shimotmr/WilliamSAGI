@@ -23,7 +23,7 @@ export default function HubLayout({
           <div style={{ padding: 'var(--space-4)' }}>
             <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
               <a
-                href="/hub"
+                href="/hub/dashboard"
                 style={{
                   padding: 'var(--space-3) var(--space-4)',
                   borderRadius: 'var(--radius-md)',
@@ -33,10 +33,10 @@ export default function HubLayout({
                   fontWeight: 500,
                 }}
               >
-                🏠 儀表板
+                📊 Dashboard
               </a>
               <a
-                href="/hub/tasks"
+                href="/hub/board"
                 style={{
                   padding: 'var(--space-3) var(--space-4)',
                   borderRadius: 'var(--radius-md)',
@@ -46,7 +46,33 @@ export default function HubLayout({
                   fontWeight: 500,
                 }}
               >
-                📋 任務
+                📋 任務看板
+              </a>
+              <a
+                href="/hub/monitor"
+                style={{
+                  padding: 'var(--space-3) var(--space-4)',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--foreground)',
+                  textDecoration: 'none',
+                  fontSize: 'var(--text-body-sm)',
+                  fontWeight: 500,
+                }}
+              >
+                📈 系統監控
+              </a>
+              <a
+                href="/hub/agents"
+                style={{
+                  padding: 'var(--space-3) var(--space-4)',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--foreground)',
+                  textDecoration: 'none',
+                  fontSize: 'var(--text-body-sm)',
+                  fontWeight: 500,
+                }}
+              >
+                🤖 Agents
               </a>
               <a
                 href="/hub/reports"
@@ -59,7 +85,20 @@ export default function HubLayout({
                   fontWeight: 500,
                 }}
               >
-                📊 報告
+                📑 報告
+              </a>
+              <a
+                href="/hub/trade"
+                style={{
+                  padding: 'var(--space-3) var(--space-4)',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--foreground)',
+                  textDecoration: 'none',
+                  fontSize: 'var(--text-body-sm)',
+                  fontWeight: 500,
+                }}
+              >
+                💹 交易
               </a>
               <a
                 href="/hub/settings"
@@ -88,7 +127,7 @@ export default function HubLayout({
             </div>
           </main>
 
-          {/* Mobile Bottom Tab Bar */}
+          {/* Mobile Bottom Tab Bar - 保留前5個最重要的 */}
           <nav
             className="tab-bar-mobile"
             style={{
@@ -105,7 +144,7 @@ export default function HubLayout({
             }}
           >
             <a
-              href="/hub"
+              href="/hub/dashboard"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -117,11 +156,11 @@ export default function HubLayout({
                 fontSize: 'var(--text-caption)',
               }}
             >
-              <span style={{ fontSize: '1.25rem' }}>🏠</span>
-              <span>首頁</span>
+              <span style={{ fontSize: '1.25rem' }}>📊</span>
+              <span>儀表板</span>
             </a>
             <a
-              href="/hub/tasks"
+              href="/hub/board"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -137,6 +176,38 @@ export default function HubLayout({
               <span>任務</span>
             </a>
             <a
+              href="/hub/monitor"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--space-1)',
+                padding: 'var(--space-2) var(--space-4)',
+                color: 'var(--foreground)',
+                textDecoration: 'none',
+                fontSize: 'var(--text-caption)',
+              }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>📈</span>
+              <span>監控</span>
+            </a>
+            <a
+              href="/hub/agents"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--space-1)',
+                padding: 'var(--space-2) var(--space-4)',
+                color: 'var(--foreground)',
+                textDecoration: 'none',
+                fontSize: 'var(--text-caption)',
+              }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>🤖</span>
+              <span>Agents</span>
+            </a>
+            <a
               href="/hub/reports"
               style={{
                 display: 'flex',
@@ -149,24 +220,8 @@ export default function HubLayout({
                 fontSize: 'var(--text-caption)',
               }}
             >
-              <span style={{ fontSize: '1.25rem' }}>📊</span>
+              <span style={{ fontSize: '1.25rem' }}>📑</span>
               <span>報告</span>
-            </a>
-            <a
-              href="/hub/settings"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--space-1)',
-                padding: 'var(--space-2) var(--space-4)',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-                fontSize: 'var(--text-caption)',
-              }}
-            >
-              <span style={{ fontSize: '1.25rem' }}>⚙️</span>
-              <span>設定</span>
             </a>
           </nav>
 
