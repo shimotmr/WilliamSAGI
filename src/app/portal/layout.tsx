@@ -1,31 +1,51 @@
-import './globals.css'
-import type { Metadata } from 'next'
+import Header from '@/components/Header';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
-import LayoutWrapper from './components/LayoutWrapper'
-import ThemeProvider from './components/ThemeProvider'
-import { TrackingProvider } from './components/TrackingProvider'
-
-export const metadata: Metadata = {
-  title: '和椿通路營業管理系統',
-  description: '樣品借用、報價單、庫存查詢',
-}
-
-export default function RootLayout({
+export default function PortalLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-TW" suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          <TrackingProvider>
-            <LayoutWrapper>
-              {children}
-            </LayoutWrapper>
-          </TrackingProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  )
+    <ThemeProvider defaultContext="portal">
+      <div className="portal-layout" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header context="portal" />
+        
+        <main style={{ flex: 1 }}>
+          <div 
+            className="container" 
+            style={{ 
+              maxWidth: 'var(--container-max)', 
+              margin: '0 auto',
+              padding: 'var(--space-4)',
+            }}
+          >
+            {children}
+          </div>
+        </main>
+
+        <footer
+          style={{
+            padding: 'var(--space-6) var(--space-4)',
+            borderTop: '1px solid var(--border)',
+            background: 'var(--card)',
+            marginTop: 'auto',
+          }}
+        >
+          <div 
+            className="container" 
+            style={{ 
+              maxWidth: 'var(--container-max)', 
+              margin: '0 auto',
+              textAlign: 'center',
+              color: 'var(--muted-foreground)',
+              fontSize: 'var(--text-body-sm)',
+            }}
+          >
+            <p>© 2026 WilliamSAGI Portal. All rights reserved.</p>
+          </div>
+        </footer>
+      </div>
+    </ThemeProvider>
+  );
 }
