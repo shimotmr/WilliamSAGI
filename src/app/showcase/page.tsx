@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Breadcrumb from '@/components/Breadcrumb'
 
 interface Task {
   id: string
@@ -23,30 +24,30 @@ const conversations = [
     agent: 'Blake',
     color: '#0ea5e9',
     messages: [
-      { from: 'user', text: 'Blake，幫我建一個公司官網，要有 RWD 和 SEO 優化。' },
-      { from: 'agent', text: '沒問題！我會使用 Next.js 框架搭配 Tailwind CSS 來建構。先確認幾個需求：\n1. 需要哪些頁面？首頁、關於我們、產品、聯絡？\n2. 是否需要多語系支援？\n3. 色系偏好？' },
-      { from: 'user', text: '全部都要，多語系要中英文，色系用公司的紅色主題。' },
-      { from: 'agent', text: '收到！我已開始建構：\n✅ 專案架構已建立\n✅ 首頁 Hero Section 完成\n🔄 正在處理多語系 i18n 設定...\n預計 15 分鐘內完成初版部署。' },
+      { from: 'user', text: 'Blake，我需要一個產品展示頁面，要有 RWD 和 SEO 優化...' },
+      { from: 'agent', text: '沒問題！我建議用 Next.js 搭配 Tailwind CSS 來實現。讓我了解一下需求...\n1. 產品圖片輪播和規格表格\n2. 可以聯繫業務的表單\n3. 響應式設計' },
+      { from: 'user', text: '太好了，再幫我加上暗黑模式和 i18n 多語系支援。' },
+      { from: 'agent', text: '收到！我會加入...\n\n• Hero Section 和產品特色卡片\n🎯 支援中英文切換，響應式設計...\n交付成果：15 個可重用元件，完整設計規範。' },
     ],
   },
   {
     agent: 'Rex',
     color: '#8b5cf6',
     messages: [
-      { from: 'user', text: 'Rex，分析一下東南亞自動化設備市場的現況和趨勢。' },
-      { from: 'agent', text: '正在蒐集資料中...我會從以下幾個面向分析：\n📊 市場規模與成長率\n🏭 主要競爭者格局\n📈 技術趨勢（AI、IoT 整合）\n🌏 各國政策與投資環境' },
-      { from: 'user', text: '重點放在越南和泰國的機會。' },
-      { from: 'agent', text: '分析完成！關鍵發現：\n\n🇻🇳 越南：製造業 FDI 年增 23%，自動化需求缺口大\n🇹🇭 泰國：EEC 政策推動，工業 4.0 補貼可達 50%\n\n建議優先進入越南市場，已產出完整 PDF 報告供下載。' },
+      { from: 'user', text: 'Rex，我需要一份競爭對手分析報告，包含市場份額和產品優劣勢。' },
+      { from: 'agent', text: '我來整理一下...建議採用以下結構：\n\n📊 市場規模與增長趨勢\n🔍 競品功能對比矩陣\n🤖 AI 功能評估與差距分析\n💡 差異化機會點與策略建議' },
+      { from: 'user', text: '請特別關注 AI 功能和定價策略的部分。' },
+      { from: 'agent', text: '分析完成！關鍵發現：\n\n🐶🐱 競品對手：市場領導者 FDI 佔有率 23%，主打高性價比\n🐭🐹 定價策略：EEC 價格帶較低，平均售價 4.0 萬元起，毛利率 50%\n\n建議我們採取差異化定位，透過 PDF 報告呈現完整的策略規劃。' },
     ],
   },
   {
     agent: 'Warren',
     color: '#22c55e',
     messages: [
-      { from: 'user', text: 'Warren，今天台股有什麼值得關注的交易機會？' },
-      { from: 'agent', text: '早安！根據我的分析：\n\n📈 多方訊號：\n• 台積電(2330) 突破月線，外資連 3 日買超\n• AI 族群量能持續放大\n\n📉 風險提醒：\n• 美債殖利率攀升，留意資金撤出\n• 今晚有 Fed 會議紀要' },
-      { from: 'user', text: '台積電可以進場嗎？建議的策略？' },
-      { from: 'agent', text: '建議策略：\n\n🎯 進場價位：回測 5 日線（約 1,050）分批布局\n📊 部位配置：總資金 15%，分 3 批進場\n🛡️ 停損設定：跌破 1,020（-2.8%）\n🎯 目標價位：1,120（+6.7%）\n\n⚠️ 這是 AI 分析建議，投資決策請自行評估風險。' },
+      { from: 'user', text: 'Warren，幫我分析這個股票投資組合的風險和報酬率。' },
+      { from: 'agent', text: '沒問題！分析結果如下：\n\n📈 投資組合總報酬：+15.2%\n➗ 波動度(標準差)：3\n\n🤖 AI 投資建議：\n• 科技類股權重可適度增加至 25%，分散風險\n• 增加 Fed 利率決策觀察指標' },
+      { from: 'user', text: '請幫我找出投資組合中的風險集中點。' },
+      { from: 'agent', text: '風險分析結果：\n\n⬇ 單一產業集中度：最高達 5 檔股票 (約 1,050 股，-2.8%)\n⬆ 產業配置建議：分散至 3 個產業\n⬇ 單一標的權重：1,120 (+6.7%)\n\n👉 建議使用 AI 輔助投資組合再平衡功能。' },
     ],
   },
 ]
@@ -82,11 +83,14 @@ export default function ShowcasePage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--surface-0)', color: 'var(--text-primary)' }}>
       <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <Breadcrumb items={[{ label: 'Showcase' }]} />
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-2">Showcase</h1>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            {isAdmin ? '目前執行中的真實任務' : 'AI 代理人對話示範'}
+            {isAdmin ? '管理員視角查看所有任務進度' : 'AI Agent 能力展示與使用範例'}
           </p>
           <span
             className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold"
@@ -139,7 +143,7 @@ export default function ShowcasePage() {
             })}
             {(!data?.tasks || data.tasks.length === 0) && (
               <p className="col-span-2 text-center py-12 text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                目前沒有執行中的任務
+                暫無任務數據
               </p>
             )}
           </div>
