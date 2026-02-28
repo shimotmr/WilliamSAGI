@@ -183,7 +183,7 @@ export default function TokenROIDashboard() {
                     cx="50%"
                     cy="50%"
                     outerRadius={100}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                   >
                     {modelPie.map((_, i) => (
                       <Cell key={i} fill={MODEL_COLORS[i % MODEL_COLORS.length]} />
