@@ -7,7 +7,7 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider defaultContext="portal">
+    <ThemeProvider defaultContext="portal" defaultMode="dark">
       <div className="portal-layout" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header context="portal" />
         
