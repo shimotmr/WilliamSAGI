@@ -161,47 +161,55 @@
    8. PORTAL THEME - Dark (溫暖夜色)
    ============================================ */
 :root[data-theme="portal-dark"] {
-  /* Base Colors */
-  --background: oklch(18% 0.02 80);
-  --foreground: oklch(95% 0.01 85);
-  
-  /* Primary: Amber */
-  --primary: oklch(75% 0.12 75);
-  --primary-foreground: oklch(15% 0.02 75);
-  
-  /* Secondary: Warm Dark Gray */
-  --secondary: oklch(28% 0.03 80);
-  --secondary-foreground: oklch(90% 0.01 80);
-  
-  /* Muted: Dark Cream */
-  --muted: oklch(25% 0.03 85);
-  --muted-foreground: oklch(65% 0.02 85);
-  
-  /* Accent: Teal */
-  --accent: oklch(65% 0.1 185);
-  --accent-foreground: oklch(10% 0.02 185);
-  
-  /* Card */
-  --card: oklch(22% 0.02 80);
-  --card-foreground: oklch(95% 0.01 85);
-  
-  /* Border */
-  --border: oklch(30% 0.03 85);
-  
-  /* Semantic Colors */
-  --destructive: oklch(60% 0.16 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(70% 0.1 145);
-  --success-foreground: oklch(15% 0.02 145);
-  --warning: oklch(80% 0.12 75);
-  --warning-foreground: oklch(15% 0.02 75);
-  --info: oklch(75% 0.08 220);
-  --info-foreground: oklch(15% 0.02 220);
+  /* Minimal Dark (Atmospheric Slate + Amber) — designprompts.dev #19 */
+  --background:          #0A0A0F;
+  --background-alt:      #12121A;
+  --background-elevated: #1A1A24;
+  --foreground:          #E8E8F0;
+  --foreground-muted:    #8B8B9E;
+  --foreground-subtle:   rgba(232,232,240,0.5);
 
-  /* Dark Mode Shadows */
-  --shadow-sm: 0 1px 2px 0 oklch(0% 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px oklch(0% 0 0 / 0.4), 0 2px 4px -2px oklch(0% 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px oklch(0% 0 0 / 0.4), 0 4px 6px -4px oklch(0% 0 0 / 0.4);
+  /* Primary: Amber warm accent */
+  --primary:             #F59E0B;
+  --primary-foreground:  #0A0A0F;
+  --primary-hover:       #FBBF24;
+  --primary-glow:        rgba(245,158,11,0.25);
+
+  /* Secondary */
+  --secondary:           rgba(255,255,255,0.04);
+  --secondary-foreground:#E8E8F0;
+
+  /* Muted */
+  --muted:               rgba(255,255,255,0.03);
+  --muted-foreground:    #8B8B9E;
+
+  /* Accent */
+  --accent:              #F59E0B;
+  --accent-foreground:   #0A0A0F;
+
+  /* Card — glass */
+  --card:                rgba(255,255,255,0.04);
+  --card-hover:          rgba(255,255,255,0.07);
+  --card-foreground:     #E8E8F0;
+
+  /* Border */
+  --border:              rgba(255,255,255,0.08);
+  --border-hover:        rgba(255,255,255,0.14);
+
+  /* Semantic */
+  --destructive:         #f87171;
+  --destructive-foreground: #0A0A0F;
+  --success:             #34d399;
+  --success-foreground:  #0A0A0F;
+  --warning:             #F59E0B;
+  --warning-foreground:  #0A0A0F;
+  --info:                #60a5fa;
+  --info-foreground:     #0A0A0F;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 40px rgba(245,158,11,0.06);
 }
 
 /* ============================================
@@ -339,47 +347,62 @@
    12. HUB THEME - Dark (高效夜色)
    ============================================ */
 :root[data-theme="hub-dark"] {
-  /* Base Colors */
-  --background: oklch(12% 0.02 280);
-  --foreground: oklch(95% 0.01 280);
-  
-  /* Primary: Violet */
-  --primary: oklch(65% 0.15 290);
-  --primary-foreground: oklch(10% 0.02 290);
-  
-  /* Secondary: Dark Gray */
-  --secondary: oklch(22% 0.03 280);
-  --secondary-foreground: oklch(90% 0.01 280);
-  
-  /* Muted: Dark Purple Gray */
-  --muted: oklch(18% 0.03 280);
-  --muted-foreground: oklch(55% 0.02 280);
-  
-  /* Accent: Emerald */
-  --accent: oklch(65% 0.12 155);
-  --accent-foreground: oklch(10% 0.02 155);
-  
-  /* Card */
-  --card: oklch(16% 0.02 280);
-  --card-foreground: oklch(95% 0.01 280);
-  
-  /* Border */
-  --border: oklch(24% 0.03 280);
-  
-  /* Semantic Colors */
-  --destructive: oklch(60% 0.16 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(65% 0.12 145);
-  --success-foreground: oklch(10% 0.02 145);
-  --warning: oklch(80% 0.12 75);
-  --warning-foreground: oklch(15% 0.02 75);
-  --info: oklch(70% 0.1 260);
-  --info-foreground: oklch(10% 0.02 260);
+  /* Modern Dark (Linear/Cinematic) — designprompts.dev #03 */
+  --background:          #050506;
+  --background-deep:     #020203;
+  --background-elevated: #0a0a0c;
+  --foreground:          #EDEDEF;
+  --foreground-muted:    #8A8F98;
+  --foreground-subtle:   rgba(255,255,255,0.6);
 
-  /* Dark Mode Shadows */
-  --shadow-sm: 0 1px 2px 0 oklch(0% 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px oklch(0% 0 0 / 0.4), 0 2px 4px -2px oklch(0% 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px oklch(0% 0 0 / 0.4), 0 4px 6px -4px oklch(0% 0 0 / 0.4);
+  /* Primary: Indigo #5E6AD2 */
+  --primary:             #5E6AD2;
+  --primary-foreground:  #ffffff;
+  --primary-hover:       #6872D9;
+  --primary-glow:        rgba(94,106,210,0.3);
+
+  /* Secondary */
+  --secondary:           rgba(255,255,255,0.05);
+  --secondary-foreground:#EDEDEF;
+
+  /* Muted */
+  --muted:               rgba(255,255,255,0.04);
+  --muted-foreground:    #8A8F98;
+
+  /* Accent (same as primary) */
+  --accent:              #5E6AD2;
+  --accent-foreground:   #ffffff;
+
+  /* Card — glass effect */
+  --card:                rgba(255,255,255,0.05);
+  --card-hover:          rgba(255,255,255,0.08);
+  --card-foreground:     #EDEDEF;
+
+  /* Border */
+  --border:              rgba(255,255,255,0.06);
+  --border-hover:        rgba(255,255,255,0.10);
+  --border-accent:       rgba(94,106,210,0.30);
+
+  /* Semantic */
+  --destructive:         #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:             #4ade80;
+  --success-foreground:  #050506;
+  --warning:             #fbbf24;
+  --warning-foreground:  #050506;
+  --info:                #60a5fa;
+  --info-foreground:     #050506;
+
+  /* Shadows — multi-layer */
+  --shadow-sm:  0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.45);
+  --shadow-lg:  0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.55), 0 0 80px rgba(94,106,210,0.08);
+  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.5), 0 4px 12px rgba(94,106,210,0.3), inset 0 1px 0 0 rgba(255,255,255,0.2);
+
+  /* Typography */
+  --font-body:    "Inter", "Geist Sans", system-ui, sans-serif;
+  --font-heading: "Inter", "Geist Sans", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", monospace;
 }
 
 /* ============================================
@@ -547,4 +570,49 @@ button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+/* ============================================
+   Modern Dark — Ambient Animations (Hub)
+   ============================================ */
+@keyframes floatBlob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-20px) rotate(1deg); }
+}
+@keyframes floatBlobAlt {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-15px) rotate(-1deg); }
+}
+@keyframes accentShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* Hub dark body — ambient grid overlay */
+body[data-context="hub"] {
+  background-color: #050506;
+  background-image:
+    radial-gradient(ellipse 70% 55% at 15% 25%, rgba(88,28,220,0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 85% 75%, rgba(94,106,210,0.14) 0%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: auto, auto, 64px 64px, 64px 64px;
+}
+
+/* Portal dark body — atmospheric slate */
+body[data-context="portal"] {
+  background-color: #0A0A0F;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
