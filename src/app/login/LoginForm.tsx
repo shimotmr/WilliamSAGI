@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -17,7 +16,7 @@ export default function LoginForm() {
     setLoading(true); setError('')
     try {
       const res = await fetch('/api/auth/login', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
@@ -28,88 +27,68 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      style={{background: 'oklch(0.10 0.02 260)'}}>
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-20"
-          style={{background: 'radial-gradient(circle, oklch(0.55 0.25 280), transparent)'}} />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full opacity-15"
-          style={{background: 'radial-gradient(circle, oklch(0.50 0.22 250), transparent)'}} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5"
-          style={{background: 'radial-gradient(circle, oklch(0.60 0.20 270), transparent)'}} />
-      </div>
+    <div style={{ minHeight: '100vh', background: '#0a0e1a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, "Noto Sans TC", sans-serif', position: 'relative', overflow: 'hidden' }}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet" />
 
-      {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md mx-4">
-        <div className="rounded-2xl border p-8 shadow-2xl"
-          style={{background: 'oklch(0.15 0.015 260)', borderColor: 'oklch(0.25 0.02 260)'}}>
+      {/* Bg glow */}
+      <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+      <div style={{ position: 'relative', width: '100%', maxWidth: '420px', margin: '0 16px' }}>
+        <div style={{ background: '#101620', border: '1px solid #1c2432', borderRadius: '20px', padding: '40px', boxShadow: '0 25px 60px rgba(0,0,0,0.5)' }}>
 
           {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
-              style={{background: 'linear-gradient(135deg, oklch(0.55 0.25 280), oklch(0.50 0.28 300))'}}>
-              <span className="text-white font-bold text-xl">W</span>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: 'linear-gradient(135deg, #7c3aed, #6366f1)', borderRadius: '14px', marginBottom: '16px' }}>
+              <span style={{ color: '#fff', fontWeight: 700, fontSize: '22px' }}>W</span>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight"
-              style={{background: 'linear-gradient(135deg, oklch(0.85 0.08 280), oklch(0.90 0.05 250))',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
-              SAGIHUB
-            </h1>
-            <p className="mt-2 text-sm" style={{color: 'oklch(0.60 0.02 260)'}}>
-              請使用公司帳號登入
-            </p>
+            <div style={{ fontSize: '22px', fontWeight: 700, background: 'linear-gradient(135deg, #a78bfa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>SAGIHUB</div>
+            <div style={{ color: '#7f8b99', fontSize: '13px', marginTop: '6px' }}>請使用公司帳號登入</div>
           </div>
 
           {/* Error */}
           {error && (
-            <div className="mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm"
-              style={{background: 'oklch(0.18 0.05 20)', borderColor: 'oklch(0.45 0.20 20)', color: 'oklch(0.75 0.18 20)'}}>
-              <AlertCircle size={16} className="shrink-0" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '10px', padding: '10px 14px', marginBottom: '20px', color: '#f87171', fontSize: '13px' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit}>
             {/* Email */}
-            <div className="relative">
-              <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2"
-                style={{color: 'oklch(0.55 0.02 260)'}} />
-              <input type="email" value={email} onChange={e=>setEmail(e.target.value)}
-                placeholder="公司 Email" required
-                className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all"
-                style={{background: 'oklch(0.12 0.015 260)', border: '1px solid oklch(0.25 0.02 260)',
-                  color: 'oklch(0.90 0.01 260)'}}
-                onFocus={e => (e.target.style.borderColor = 'oklch(0.55 0.25 280)')}
-                onBlur={e => (e.target.style.borderColor = 'oklch(0.25 0.02 260)')} />
+            <div style={{ position: 'relative', marginBottom: '14px' }}>
+              <div style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7f8b99' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+              </div>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="公司 Email" required
+                style={{ width: '100%', background: '#0f1621', border: '1px solid #1c2432', borderRadius: '10px', padding: '12px 14px 12px 42px', color: '#e3e8ef', fontSize: '14px', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
+                onFocus={e => (e.target.style.borderColor = '#7c3aed')}
+                onBlur={e => (e.target.style.borderColor = '#1c2432')} />
             </div>
 
             {/* Password */}
-            <div className="relative">
-              <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2"
-                style={{color: 'oklch(0.55 0.02 260)'}} />
-              <input type="password" value={password} onChange={e=>setPassword(e.target.value)}
-                placeholder="Zimbra 密碼" required
-                className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all"
-                style={{background: 'oklch(0.12 0.015 260)', border: '1px solid oklch(0.25 0.02 260)',
-                  color: 'oklch(0.90 0.01 260)'}}
-                onFocus={e => (e.target.style.borderColor = 'oklch(0.55 0.25 280)')}
-                onBlur={e => (e.target.style.borderColor = 'oklch(0.25 0.02 260)')} />
+            <div style={{ position: 'relative', marginBottom: '24px' }}>
+              <div style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7f8b99' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Zimbra 密碼" required
+                style={{ width: '100%', background: '#0f1621', border: '1px solid #1c2432', borderRadius: '10px', padding: '12px 14px 12px 42px', color: '#e3e8ef', fontSize: '14px', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
+                onFocus={e => (e.target.style.borderColor = '#7c3aed')}
+                onBlur={e => (e.target.style.borderColor = '#1c2432')} />
             </div>
 
-            {/* Submit */}
             <button type="submit" disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200 disabled:opacity-60"
-              style={{background: 'linear-gradient(135deg, oklch(0.55 0.25 280), oklch(0.50 0.28 300))'}}
-              onMouseEnter={e => !loading && ((e.target as HTMLElement).style.opacity = '0.9')}
-              onMouseLeave={e => ((e.target as HTMLElement).style.opacity = '1')}>
-              {loading ? <><Loader2 size={16} className="animate-spin" />驗證中...</> : '登入'}
+              style={{ width: '100%', background: loading ? '#5b21b6' : '#7c3aed', color: '#fff', border: 'none', borderRadius: '10px', padding: '13px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.2s' }}>
+              {loading && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>}
+              {loading ? '驗證中...' : '登入'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs" style={{color: 'oklch(0.45 0.02 260)'}}>
+          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+
+          <div style={{ textAlign: 'center', marginTop: '24px', color: '#525a66', fontSize: '12px' }}>
             William Hub — AI Control Panel · © 2026
-          </p>
+          </div>
         </div>
       </div>
     </div>
