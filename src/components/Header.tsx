@@ -287,20 +287,6 @@ export default function Header({ context }: HeaderProps) {
           </nav>
         </div>
       )}
-
-      <style jsx>{`
-        @media (min-width: 768px) {
-          .desktop-nav {
-            display: flex !important;
-          }
-          .mobile-menu-btn {
-            display: none !important;
-          }
-          .mobile-menu {
-            display: none !important;
-          }
-        }
-      `}</style>
     </header>
   );
 }
