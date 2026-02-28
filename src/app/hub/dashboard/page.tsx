@@ -1,303 +1,258 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler } from 'chart.js'
-import { Line, Doughnut } from 'react-chartjs-2'
-import { Bot, ClipboardList, Zap, CheckCircle, TrendingUp, Clock, Activity, Server, Database, Users, BarChart3, AlertCircle, RefreshCw } from 'lucide-react'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from 'chart.js'
+import { Line } from 'react-chartjs-2'
 import Link from 'next/link'
-import Breadcrumb from '@/components/Breadcrumb'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler)
 
-// Error Boundary
-class ErrorBoundary extends React.Component<{children: React.ReactNode; name?: string}, {hasError: boolean}> {
-  constructor(props: {children: React.ReactNode; name?: string}) {
-    super(props)
-    this.state = { hasError: false }
-  }
-  static getDerivedStateFromError() { return { hasError: true } }
-  render() {
-    if (this.state.hasError) return (
-      <div className="flex items-center gap-2 text-sm p-4 rounded-xl"
-        style={{background: 'oklch(0.18 0.02 260)', color: 'oklch(0.55 0.02 260)'}}>
-        <AlertCircle size={14} />{this.props.name || '元件'} 載入中...
-      </div>
-    )
-    return this.props.children
-  }
+const STYLE = {
+  bg: '#0a0e1a', card: '#101620', border: '#1c2432', muted: '#0f1621',
+  text: '#e3e8ef', textMuted: '#7f8b99', textSubtle: '#6b7684',
+  font: 'Inter, "Noto Sans TC", sans-serif',
 }
 
-type AgentData = {
-  name: string; role: string; total: number; completed: number
-  todayCompleted: number; successRate: number; isActive: boolean
-}
-type RecentTask = { id: number; title: string; completedAt: string; assignee: string }
-type RunningTask = { id: number; title: string; assignee: string; updatedAt: string }
-type TokenTrendPoint = { date: string; tokens: number; cost: number }
-type DashboardData = {
-  statusCounts: Record<string, number>; totalTasks: number; weekCompleted: number
-  completionRate: number; agents: AgentData[]; recentCompleted: RecentTask[]
-  runningTasks: RunningTask[]; tokenTrend: TokenTrendPoint[]
+const ACCENTS: Record<string, { color: string; bg: string; border: string }> = {
+  red:    { color: '#ef4444', bg: 'rgba(239,68,68,0.08)',   border: 'rgba(239,68,68,0.25)' },
+  blue:   { color: '#3b82f6', bg: 'rgba(59,130,246,0.08)',  border: 'rgba(59,130,246,0.25)' },
+  amber:  { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)',  border: 'rgba(245,158,11,0.25)' },
+  green:  { color: '#10b981', bg: 'rgba(16,185,129,0.08)',  border: 'rgba(16,185,129,0.25)' },
+  purple: { color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.25)' },
+  indigo: { color: '#6366f1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.25)' },
 }
 
-const AGENT_COLORS: Record<string, string> = {
-  travis: 'oklch(0.60 0.22 260)', blake: 'oklch(0.65 0.20 145)',
-  rex: 'oklch(0.65 0.22 300)', oscar: 'oklch(0.65 0.22 220)',
-  warren: 'oklch(0.65 0.22 60)', griffin: 'oklch(0.65 0.22 20)',
+const AGENT_ACCENT = ['blue','green','purple','amber','red','indigo']
+
+// Inline SVG icons
+const Icons = {
+  Task: (c: string) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><rect x="3" y="6" width="18" height="16" rx="2"/><path d="M9 12h6M9 16h4"/></svg>,
+  Zap: (c: string) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  Check: (c: string) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+  Trend: (c: string) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  Server: (c: string) => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>,
+  Chart: (c: string) => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+  Bot: (c: string) => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V5"/><circle cx="12" cy="4" r="1"/><path d="M8 15h.01M16 15h.01M12 17h.01"/></svg>,
+  Dot: (c: string) => <div style={{ width: 7, height: 7, borderRadius: '50%', background: c, flexShrink: 0, marginTop: 6 }} />,
 }
 
-function StatCard({ icon: Icon, label, value, sub, color }: {
-  icon: React.ElementType; label: string; value: string | number; sub?: string; color: string
-}) {
-  return (
-    <div className="rounded-2xl p-5 flex items-start gap-4 transition-all duration-200 hover:-translate-y-0.5"
-      style={{background: 'oklch(0.16 0.015 260)', border: '1px solid oklch(0.22 0.02 260)'}}>
-      <div className="p-3 rounded-xl shrink-0" style={{background: `${color}22`}}>
-        <Icon size={20} style={{color}} />
-      </div>
-      <div>
-        <p className="text-xs font-medium mb-1" style={{color: 'oklch(0.55 0.02 260)'}}>{label}</p>
-        <p className="text-2xl font-bold" style={{color: 'oklch(0.92 0.01 260)'}}>{value}</p>
-        {sub && <p className="text-xs mt-1" style={{color: 'oklch(0.50 0.02 260)'}}>{sub}</p>}
-      </div>
-    </div>
-  )
+class EB extends React.Component<{children: React.ReactNode}, {err: boolean}> {
+  state = { err: false }
+  static getDerivedStateFromError() { return { err: true } }
+  render() { return this.state.err ? <div style={{ color: STYLE.textMuted, fontSize: 12, padding: 8 }}>載入中…</div> : this.props.children }
 }
 
-function AgentCard({ agent }: { agent: AgentData }) {
-  const color = AGENT_COLORS[agent.name.toLowerCase()] || 'oklch(0.60 0.10 260)'
-  return (
-    <div className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5"
-      style={{background: 'oklch(0.16 0.015 260)', border: '1px solid oklch(0.22 0.02 260)'}}>
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
-          style={{background: color}}>
-          {agent.name.slice(0,1).toUpperCase()}
-        </div>
-        <div className="min-w-0">
-          <p className="font-semibold text-sm truncate" style={{color: 'oklch(0.90 0.01 260)'}}>{agent.name}</p>
-          <p className="text-xs truncate" style={{color: 'oklch(0.55 0.02 260)'}}>{agent.role}</p>
-        </div>
-        {agent.isActive && (
-          <span className="ml-auto w-2 h-2 rounded-full shrink-0" style={{background: 'oklch(0.65 0.20 145)'}} />
-        )}
-      </div>
-      <div className="flex justify-between text-xs mb-2" style={{color: 'oklch(0.55 0.02 260)'}}>
-        <span>完成 {agent.completed}</span>
-        <span>成功率 {agent.successRate}%</span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{background: 'oklch(0.22 0.02 260)'}}>
-        <div className="h-full rounded-full transition-all duration-700"
-          style={{width: `${agent.successRate}%`, background: color}} />
-      </div>
-    </div>
-  )
+type Agent = { name: string; role: string; total: number; completed: number; successRate: number; isActive: boolean }
+type Task = { title: string; assignee: string; updatedAt?: string; completedAt?: string }
+type Data = { statusCounts: Record<string,number>; totalTasks: number; weekCompleted: number; completionRate: number; agents: Agent[]; recentCompleted: Task[]; runningTasks: Task[]; tokenTrend: {date:string;tokens:number}[] }
+
+function card(accent?: keyof typeof ACCENTS) {
+  const a = accent ? ACCENTS[accent] : null
+  return { background: a ? a.bg : STYLE.card, border: `1px solid ${a ? a.border : STYLE.border}`, borderRadius: 14, padding: 20 }
 }
 
 export default function DashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [data, setData] = useState<Data | null>(null)
+  const [, setErr] = useState(false)
+  const [ts, setTs] = useState('')
 
-  const fetchData = async () => {
-    try {
-      const d = await fetch('/api/hub/dashboard').then(r => r.json())
-      if (d && !d.error) { setData(d); setLastUpdated(new Date()) }
-    } catch {}
-    finally { setLoading(false) }
-  }
+  useEffect(() => {
+    fetch('/api/hub/dashboard')
+      .then(r => r.json())
+      .then(d => { if (d && !d.error) { setData(d); setTs(new Date().toLocaleTimeString('zh-TW')) } })
+      .catch(() => setErr(true))
+    const t = setInterval(() => {
+      fetch('/api/hub/dashboard').then(r => r.json()).then(d => { if (d && !d.error) { setData(d); setTs(new Date().toLocaleTimeString('zh-TW')) } }).catch(() => {})
+    }, 30000)
+    return () => clearInterval(t)
+  }, [])
 
-  useEffect(() => { fetchData(); const t = setInterval(fetchData, 30000); return () => clearInterval(t) }, [])
-
-  const cardBg = {background: 'oklch(0.16 0.015 260)', border: '1px solid oklch(0.22 0.02 260)'}
-  const textMuted = {color: 'oklch(0.55 0.02 260)'}
-  const textPrimary = {color: 'oklch(0.90 0.01 260)'}
+  const stats = data ? [
+    { label: '待執行', value: data.statusCounts['待執行'] ?? 0, sub: `共 ${data.totalTasks} 個任務`, accent: 'blue', icon: Icons.Task },
+    { label: '執行中', value: data.statusCounts['執行中'] ?? 0, sub: 'Agent 作業中', accent: 'amber', icon: Icons.Zap },
+    { label: '已完成', value: data.statusCounts['已完成'] ?? 0, sub: `本週 ${data.weekCompleted}`, accent: 'green', icon: Icons.Check },
+    { label: '完成率', value: `${data.completionRate}%`, sub: '歷史總覽', accent: 'purple', icon: Icons.Trend },
+  ] : []
 
   return (
-    <div className="min-h-screen p-6" style={{background: 'oklch(0.11 0.012 260)'}}>
-      <div className="max-w-7xl mx-auto">
-        {/* Title row */}
-        <div className="flex items-center justify-between mb-6">
+    <div style={{ minHeight: '100vh', background: STYLE.bg, fontFamily: STYLE.font, color: STYLE.text }}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet" />
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '28px 24px' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
           <div>
-            <Link href="/hub" className="inline-flex items-center gap-1 text-xs mb-2 transition-colors hover:opacity-80"
-              style={textMuted}>← Back to Hub</Link>
-            <Breadcrumb items={[{label:'Hub',href:'/hub'},{label:'Dashboard'}]} />
-            <h1 className="text-2xl font-bold mt-1" style={textPrimary}>Clawd Dashboard</h1>
-            <p className="text-sm" style={textMuted}>系統即時監控中心 · 每 30 秒自動重整</p>
+            <Link href="/hub" style={{ color: STYLE.textMuted, fontSize: 12, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+              Back to Hub
+            </Link>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.5px' }}>Clawd Dashboard</div>
+            <div style={{ color: STYLE.textMuted, fontSize: 13, marginTop: 4 }}>系統即時監控中心 · 每 30 秒自動更新</div>
           </div>
-          <button onClick={fetchData} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all hover:opacity-80"
-            style={{...cardBg, ...textMuted}}>
-            <RefreshCw size={14} />
-            {lastUpdated ? lastUpdated.toLocaleTimeString('zh-TW') : '載入中'}
-          </button>
+          {ts && <div style={{ ...card(), padding: '8px 14px', fontSize: 12, color: STYLE.textMuted, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {ts}
+          </div>}
         </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="w-10 h-10 border-2 border-t-indigo-500 rounded-full animate-spin"
-              style={{borderColor: 'oklch(0.22 0.02 260)', borderTopColor: 'oklch(0.55 0.25 280)'}} />
+        {!data ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300, color: STYLE.textMuted, fontSize: 14 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite', marginRight: 8 }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            載入中…
           </div>
-        ) : !data ? (
-          <div className="flex items-center justify-center h-64 rounded-2xl" style={cardBg}>
-            <div className="text-center">
-              <AlertCircle size={32} className="mx-auto mb-2" style={{color: 'oklch(0.55 0.20 20)'}} />
-              <p style={textMuted}>載入失敗，請重試</p>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Stats row */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard icon={ClipboardList} label="待執行" value={data.statusCounts['待執行'] || 0}
-                sub={`共 ${data.totalTasks} 個任務`} color="oklch(0.65 0.22 220)" />
-              <StatCard icon={Zap} label="執行中" value={data.statusCounts['執行中'] || 0}
-                sub="Agent 運作中" color="oklch(0.75 0.18 80)" />
-              <StatCard icon={CheckCircle} label="已完成" value={data.statusCounts['已完成'] || 0}
-                sub={`本週 ${data.weekCompleted} 個`} color="oklch(0.65 0.20 145)" />
-              <StatCard icon={TrendingUp} label="完成率" value={`${data.completionRate}%`}
-                sub="歷史總覽" color="oklch(0.60 0.22 280)" />
-            </div>
-
-            {/* Middle row: system + chart */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* System monitor */}
-              <div className="rounded-2xl p-5" style={cardBg}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Server size={16} style={{color: 'oklch(0.60 0.22 280)'}} />
-                  <h2 className="font-semibold text-sm" style={textPrimary}>系統狀態</h2>
-                  <span className="ml-auto text-xs px-2 py-0.5 rounded-full"
-                    style={{background: 'oklch(0.65 0.20 145 / 0.2)', color: 'oklch(0.65 0.20 145)'}}>
-                    ● 正常
-                  </span>
-                </div>
-                <ErrorBoundary name="系統監控">
-                  <div className="space-y-3">
-                    {[
-                      { icon: Activity, label: 'Gateway', value: 'Running :18789' },
-                      { icon: Database, label: '任務總數', value: `${data.totalTasks} 個` },
-                      { icon: Users, label: '活躍 Agents', value: `${data.agents.filter(a=>a.isActive).length} / ${data.agents.length}` },
-                    ].map(({icon: Icon, label, value}) => (
-                      <div key={label} className="flex items-center gap-3 py-2"
-                        style={{borderBottom: '1px solid oklch(0.20 0.015 260)'}}>
-                        <Icon size={14} style={{color: 'oklch(0.55 0.22 280)'}} />
-                        <span className="text-xs flex-1" style={textMuted}>{label}</span>
-                        <span className="text-xs font-medium" style={textPrimary}>{value}</span>
-                      </div>
-                    ))}
+        ) : <>
+          {/* Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
+            {stats.map(s => {
+              const a = ACCENTS[s.accent as keyof typeof ACCENTS]
+              return (
+                <div key={s.label} style={{ ...card(s.accent as keyof typeof ACCENTS), display: 'flex', alignItems: 'flex-start', gap: 14, cursor: 'default' }}>
+                  <div style={{ padding: 10, background: a.bg, border: `1px solid ${a.border}`, borderRadius: 10 }}>
+                    {s.icon(a.color)}
                   </div>
-                </ErrorBoundary>
-              </div>
-
-              {/* Token trend */}
-              <div className="rounded-2xl p-5" style={cardBg}>
-                <div className="flex items-center gap-2 mb-4">
-                  <BarChart3 size={16} style={{color: 'oklch(0.60 0.22 280)'}} />
-                  <h2 className="font-semibold text-sm" style={textPrimary}>Token 趨勢（近 7 天）</h2>
+                  <div>
+                    <div style={{ color: STYLE.textMuted, fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{s.label}</div>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: STYLE.text, lineHeight: 1 }}>{s.value}</div>
+                    <div style={{ color: STYLE.textSubtle, fontSize: 11, marginTop: 4 }}>{s.sub}</div>
+                  </div>
                 </div>
+              )
+            })}
+          </div>
+
+          {/* Row 2: System + Chart */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 14, marginBottom: 20 }}>
+            {/* System status */}
+            <div style={card()}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                {Icons.Server(ACCENTS.purple.color)}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>OpenClaw 系統狀態</span>
+                <div style={{ marginLeft: 'auto', background: ACCENTS.green.bg, border: `1px solid ${ACCENTS.green.border}`, borderRadius: 20, padding: '2px 10px', fontSize: 11, color: ACCENTS.green.color }}>● 正常</div>
+              </div>
+              <EB>
+                {[
+                  { label: '待執行任務', value: `${data.statusCounts['待執行'] ?? 0} 個` },
+                  { label: '執行中任務', value: `${data.statusCounts['執行中'] ?? 0} 個` },
+                  { label: '本週完成', value: `${data.weekCompleted} 個` },
+                  { label: 'Agent 總數', value: `${data.agents.length} 個` },
+                ].map((r, i) => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < 3 ? `1px solid ${STYLE.border}` : 'none' }}>
+                    <span style={{ color: STYLE.textMuted, fontSize: 13 }}>{r.label}</span>
+                    <span style={{ fontWeight: 600, fontSize: 13 }}>{r.value}</span>
+                  </div>
+                ))}
+              </EB>
+            </div>
+
+            {/* Token trend */}
+            <div style={card()}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                {Icons.Chart(ACCENTS.indigo.color)}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>Token 消耗趨勢（近 7 天）</span>
+              </div>
+              <EB>
                 {data.tokenTrend.length > 0 ? (
                   <Line
                     data={{
                       labels: data.tokenTrend.map(d => d.date.slice(5)),
-                      datasets: [{
-                        label: 'Tokens',
-                        data: data.tokenTrend.map(d => d.tokens),
-                        borderColor: 'oklch(0.60 0.22 280)',
-                        backgroundColor: 'oklch(0.60 0.22 280 / 0.1)',
-                        fill: true, tension: 0.4, pointRadius: 3,
-                      }]
+                      datasets: [{ label: 'Tokens', data: data.tokenTrend.map(d => d.tokens), borderColor: ACCENTS.indigo.color, backgroundColor: ACCENTS.indigo.bg, fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: ACCENTS.indigo.color }]
                     }}
-                    options={{
-                      responsive: true, maintainAspectRatio: false,
-                      plugins: { legend: { display: false } },
-                      scales: {
-                        x: { grid: { color: 'oklch(0.20 0.015 260)' }, ticks: { color: 'oklch(0.50 0.02 260)', font: {size: 10} } },
-                        y: { grid: { color: 'oklch(0.20 0.015 260)' }, ticks: { color: 'oklch(0.50 0.02 260)', font: {size: 10} } }
-                      }
-                    }}
+                    options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: STYLE.border }, ticks: { color: STYLE.textMuted, font: { size: 10 } } }, y: { grid: { color: STYLE.border }, ticks: { color: STYLE.textMuted, font: { size: 10 } } } } }}
                     height={160}
                   />
                 ) : (
-                  <div className="h-40 flex items-center justify-center" style={textMuted}>
-                    <p className="text-sm">尚無資料</p>
-                  </div>
+                  <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', color: STYLE.textMuted, fontSize: 13 }}>尚無資料</div>
                 )}
-              </div>
+              </EB>
             </div>
-
-            {/* Agents grid */}
-            {data.agents.length > 0 && (
-              <div className="rounded-2xl p-5" style={cardBg}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Bot size={16} style={{color: 'oklch(0.60 0.22 280)'}} />
-                  <h2 className="font-semibold text-sm" style={textPrimary}>Agent 狀態總覽</h2>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {data.agents.map(agent => <AgentCard key={agent.name} agent={agent} />)}
-                </div>
-              </div>
-            )}
-
-            {/* Tasks tables */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Running */}
-              <div className="rounded-2xl p-5" style={cardBg}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Zap size={16} style={{color: 'oklch(0.75 0.18 80)'}} />
-                  <h2 className="font-semibold text-sm" style={textPrimary}>執行中任務</h2>
-                  <span className="ml-auto text-xs px-2 py-0.5 rounded-full"
-                    style={{background: 'oklch(0.75 0.18 80 / 0.15)', color: 'oklch(0.75 0.18 80)'}}>
-                    {data.runningTasks.length}
-                  </span>
-                </div>
-                {data.runningTasks.length === 0 ? (
-                  <p className="text-sm text-center py-6" style={textMuted}>目前無執行中任務</p>
-                ) : (
-                  <div className="space-y-2">
-                    {data.runningTasks.map((t, i) => (
-                      <div key={i} className="flex items-start gap-3 py-2 text-xs"
-                        style={{borderBottom: i < data.runningTasks.length - 1 ? '1px solid oklch(0.20 0.015 260)' : 'none'}}>
-                        <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 animate-pulse"
-                          style={{background: 'oklch(0.75 0.18 80)'}} />
-                        <div className="flex-1 min-w-0">
-                          <p className="truncate font-medium" style={textPrimary}>{t.title}</p>
-                          <p style={textMuted}>{t.assignee}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Recent completed */}
-              <div className="rounded-2xl p-5" style={cardBg}>
-                <div className="flex items-center gap-2 mb-4">
-                  <CheckCircle size={16} style={{color: 'oklch(0.65 0.20 145)'}} />
-                  <h2 className="font-semibold text-sm" style={textPrimary}>最近完成任務</h2>
-                </div>
-                {data.recentCompleted.length === 0 ? (
-                  <p className="text-sm text-center py-6" style={textMuted}>尚無完成紀錄</p>
-                ) : (
-                  <div className="space-y-2">
-                    {data.recentCompleted.map((t, i) => (
-                      <div key={i} className="flex items-start gap-3 py-2 text-xs"
-                        style={{borderBottom: i < data.recentCompleted.length - 1 ? '1px solid oklch(0.20 0.015 260)' : 'none'}}>
-                        <CheckCircle size={12} className="mt-0.5 shrink-0" style={{color: 'oklch(0.65 0.20 145)'}} />
-                        <div className="flex-1 min-w-0">
-                          <p className="truncate font-medium" style={textPrimary}>{t.title}</p>
-                          <p style={textMuted}>{t.assignee} · {new Date(t.completedAt).toLocaleDateString('zh-TW')}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <p className="text-center text-xs pb-4" style={textMuted}>
-              William Hub — Clawd Dashboard · © 2026
-            </p>
           </div>
-        )}
+
+          {/* Agents */}
+          {data.agents.length > 0 && (
+            <div style={{ ...card(), marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                {Icons.Bot(ACCENTS.blue.color)}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>Agent 狀態總覽</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                {data.agents.slice(0, 9).map((ag, i) => {
+                  const ak = AGENT_ACCENT[i % AGENT_ACCENT.length] as keyof typeof ACCENTS
+                  const a = ACCENTS[ak]
+                  return (
+                    <div key={ag.name} style={{ background: a.bg, border: `1px solid ${a.border}`, borderRadius: 10, padding: 14 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                        <div style={{ width: 34, height: 34, borderRadius: 9, background: a.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: '#fff', flexShrink: 0 }}>{ag.name.slice(0,1).toUpperCase()}</div>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ag.name}</div>
+                          <div style={{ color: STYLE.textMuted, fontSize: 11 }}>{ag.role || ag.name}</div>
+                        </div>
+                        {ag.isActive && <div style={{ marginLeft: 'auto', width: 7, height: 7, borderRadius: '50%', background: ACCENTS.green.color, flexShrink: 0 }} />}
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: STYLE.textMuted, marginBottom: 6 }}>
+                        <span>完成 {ag.completed}</span>
+                        <span>{ag.successRate}%</span>
+                      </div>
+                      <div style={{ height: 4, background: STYLE.border, borderRadius: 2, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${ag.successRate}%`, background: a.color, borderRadius: 2, transition: 'width 0.6s ease' }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Tasks */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 24 }}>
+            {/* Running */}
+            <div style={card()}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                {Icons.Zap(ACCENTS.amber.color)}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>執行中任務</span>
+                <div style={{ marginLeft: 'auto', background: ACCENTS.amber.bg, border: `1px solid ${ACCENTS.amber.border}`, borderRadius: 20, padding: '2px 10px', fontSize: 11, color: ACCENTS.amber.color }}>{data.runningTasks.length}</div>
+              </div>
+              {data.runningTasks.length === 0
+                ? <div style={{ textAlign: 'center', color: STYLE.textMuted, fontSize: 13, padding: '20px 0' }}>目前無執行中任務</div>
+                : data.runningTasks.map((t, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, padding: '10px 0', borderBottom: i < data.runningTasks.length - 1 ? `1px solid ${STYLE.border}` : 'none' }}>
+                    {Icons.Dot(ACCENTS.amber.color)}
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</div>
+                      <div style={{ color: STYLE.textMuted, fontSize: 11, marginTop: 2 }}>{t.assignee}</div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            {/* Recent */}
+            <div style={card()}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                {Icons.Check(ACCENTS.green.color)}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>最近完成任務</span>
+              </div>
+              {data.recentCompleted.length === 0
+                ? <div style={{ textAlign: 'center', color: STYLE.textMuted, fontSize: 13, padding: '20px 0' }}>尚無完成紀錄</div>
+                : data.recentCompleted.map((t, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, padding: '10px 0', borderBottom: i < data.recentCompleted.length - 1 ? `1px solid ${STYLE.border}` : 'none' }}>
+                    {Icons.Dot(ACCENTS.green.color)}
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</div>
+                      <div style={{ color: STYLE.textMuted, fontSize: 11, marginTop: 2 }}>
+                        {t.assignee} · {t.completedAt ? new Date(t.completedAt).toLocaleDateString('zh-TW') : ''}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center', color: STYLE.textSubtle, fontSize: 12, paddingBottom: 16 }}>
+            William Hub — Clawd Dashboard · © 2026
+          </div>
+        </>}
+        <style>{`@keyframes spin { to { transform: rotate(360deg) } } @media(max-width:768px){.sg-stats{grid-template-columns:repeat(2,1fr)!important}.sg-row2,.sg-tasks{grid-template-columns:1fr!important}.sg-agents{grid-template-columns:repeat(2,1fr)!important}}`}</style>
       </div>
     </div>
   )
