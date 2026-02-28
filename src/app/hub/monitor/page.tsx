@@ -1,5 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Header from '@/components/Header'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default function MonitorPage() {
   const [status, setStatus] = useState<any>(null)
@@ -17,6 +19,8 @@ export default function MonitorPage() {
 
   return (
     <div className="p-6 space-y-6">
+      <Header context="hub" />
+      <Breadcrumb items={[{label:'Hub',href:'/hub'},{label:'系統監控'}]} />
       <h1 className="text-2xl font-bold">系統監控</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {metrics.map(m => (
