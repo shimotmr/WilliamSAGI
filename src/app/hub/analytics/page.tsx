@@ -34,7 +34,8 @@ const MODEL_COLORS = [
 ]
 
 /* ── helpers ───────────────────────────────────────── */
-function fmt(n: number) {
+function fmt(n: number | undefined) {
+  if (n == null) return "0";
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
   if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K'
   return n.toLocaleString()
@@ -189,7 +190,7 @@ export default function TokenROIDashboard() {
                       <Cell key={i} fill={MODEL_COLORS[i % MODEL_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(v: number | undefined) => fmt(v) + ' tokens'} />
+                  <Tooltip formatter={(v: number | undefined) => fmt(v ?? 0) + ' tokens'} />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
