@@ -134,7 +134,7 @@ export function ThemeProvider({ children, defaultContext = 'portal' }: ThemeProv
   );
 }
 
-export function useTheme(): { theme: string; currentMode: 'light' | 'dark'; context: 'portal' | 'showcase' | 'hub'; toggleTheme: () => void; setTheme: (t: string) => void } {
+export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
     // SSR safe default - return safe defaults instead of throwing
