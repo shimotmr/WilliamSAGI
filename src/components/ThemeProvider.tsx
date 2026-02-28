@@ -134,22 +134,10 @@ export function ThemeProvider({ children, defaultContext = 'portal' }: ThemeProv
   );
 }
 
-export function useTheme(): ThemeContextType {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    return {
-      theme: 'hub-dark',
-      currentMode: 'dark',
-      context: 'hub',
-      toggleTheme: () => {},
-      setTheme: () => {},
-    };
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
-  return ctx;
-},
-    };
-  }
-  return ctx;
-}
   return context;
 }
