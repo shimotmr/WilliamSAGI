@@ -4,254 +4,139 @@ import {
   ArrowLeft,
   Search,
   MessageSquare,
-  Database,
-  FlaskConical,
-  ChevronDown,
-  ChevronRight,
+  Plus,
+  Play,
+  Loader2,
   CheckCircle2,
   XCircle,
   Clock,
-  Tag,
-  FileText,
-  HelpCircle,
+  RefreshCw,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ─── Types ───────────────────────────────────────────────────
-type FaqItem = {
-  patterns: string[]
-  answer: string
-  category: string
-}
-
-type TestCase = {
+type QaItem = {
   id: number
-  category: string
   question: string
-  expected: string
-  criteria: string
-  status: 'pass' | 'fail' | 'pending'
+  answer: string
+  source_type: string
+  created_at: string
 }
 
-// ─── Static Data ─────────────────────────────────────────────
-// TODO: Replace with real data from Supabase
-const faqData: FaqItem[] = []
+type TrainingRecord = {
+  id: number
+  source_type: string
+  data_count: number
+  status: string
+  created_at: string
+}
 
-// TODO: Replace with real test cases from Supabase  
-const testCases: TestCase[] = []
-
-// ─── Tab type ────────────────────────────────────────────────
-type Tab = 'faq' | 'knowledge' | 'tests'
-
-const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
-  { key: 'faq', label: 'FAQ 管理', icon: <MessageSquare size={16} /> },
-  { key: 'knowledge', label: '知識庫', icon: <Database size={16} /> },
-  { key: 'tests', label: '測試案例', icon: <FlaskConical size={16} /> },
-]
+const SOURCE_OPTIONS = ['手動', 'cases', 'reports'] as const
 
 // ─── Status badge ────────────────────────────────────────────
-function StatusBadge({ status }: { status: TestCase['status'] }) {
-  const config = {
-    pass: { icon: <CheckCircle2 size={14} />, text: '通過', cls: 'text-emerald-400 bg-emerald-400/10' },
-    fail: { icon: <XCircle size={14} />, text: '失敗', cls: 'text-red-400 bg-red-400/10' },
-    pending: { icon: <Clock size={14} />, text: '待測', cls: 'text-amber-400 bg-amber-400/10' },
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, { icon: React.ReactNode; cls: string }> = {
+    '訓練中': { icon: <Loader2 size={14} className="animate-spin" />, cls: 'text-blue-400 bg-blue-400/10' },
+    '已完成': { icon: <CheckCircle2 size={14} />, cls: 'text-emerald-400 bg-emerald-400/10' },
+    '失敗':   { icon: <XCircle size={14} />, cls: 'text-red-400 bg-red-400/10' },
   }
-  const c = config[status]
+  const c = map[status] || { icon: <Clock size={14} />, cls: 'text-amber-400 bg-amber-400/10' }
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${c.cls}`}>
-      {c.icon} {c.text}
+      {c.icon} {status}
     </span>
-  )
-}
-
-// ─── FAQ Tab ─────────────────────────────────────────────────
-function FaqTab({ search }: { search: string }) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
-
-  const filtered = useMemo(() => {
-    if (!search) return faqData
-    const q = search.toLowerCase()
-    return faqData.filter(
-      (f) =>
-        f.category.toLowerCase().includes(q) ||
-        f.answer.toLowerCase().includes(q) ||
-        f.patterns.some((p) => p.toLowerCase().includes(q))
-    )
-  }, [search])
-
-  const grouped = useMemo(() => {
-    const map: Record<string, FaqItem[]> = {}
-    filtered.forEach((f) => {
-      if (!map[f.category]) map[f.category] = []
-      map[f.category].push(f)
-    })
-    return map
-  }, [filtered])
-
-  const toggle = (cat: string) => setExpanded((prev) => ({ ...prev, [cat]: !prev[cat] }))
-
-  // Show empty state when no FAQ data exists
-  if (faqData.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <MessageSquare size={48} className="text-gray-600 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-400 mb-2">尚無 FAQ 資料</h3>
-        <p className="text-sm text-gray-500">
-          請聯繫系統管理員新增 FAQ 問答資料
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-3">
-      {Object.entries(grouped).map(([cat, items]) => (
-        <div key={cat} className="border border-gray-800 rounded-lg overflow-hidden">
-          <button
-            onClick={() => toggle(cat)}
-            className="w-full flex items-center justify-between px-4 py-3 bg-gray-800/40 hover:bg-gray-800/60 transition-colors text-left"
-          >
-            <div className="flex items-center gap-2">
-              <Tag size={14} className="text-blue-400" />
-              <span className="font-medium text-sm">{cat}</span>
-              <span className="text-xs text-gray-500">({items.length})</span>
-            </div>
-            {expanded[cat] ? <ChevronDown size={16} className="text-gray-500" /> : <ChevronRight size={16} className="text-gray-500" />}
-          </button>
-          {expanded[cat] && (
-            <div className="divide-y divide-gray-800/60">
-              {items.map((item, i) => (
-                <div key={i} className="px-4 py-3 space-y-1.5">
-                  <div className="flex items-start gap-2">
-                    <HelpCircle size={14} className="text-amber-400 mt-0.5 shrink-0" />
-                    <div className="flex flex-wrap gap-1.5">
-                      {item.patterns.map((p) => (
-                        <span key={p} className="text-xs bg-gray-800 px-2 py-0.5 rounded text-gray-300">{p}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-400 pl-5">{item.answer}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-      {Object.keys(grouped).length === 0 && faqData.length > 0 && (
-        <p className="text-center text-gray-500 py-8 text-sm">沒有符合的結果</p>
-      )}
-    </div>
-  )
-}
-
-// ─── Knowledge Result type ───────────────────────────────────
-type KnowledgeResult = {
-  title: string
-  spec: string
-  source: string
-  product_types: string
-  list_price: number | null
-  dealer_price: number | null
-  total_qty: number | null
-}
-
-// ─── Knowledge Tab ───────────────────────────────────────────
-function KnowledgeTab({ search }: { search: string }) {
-  // TODO: Replace with real API integration when knowledge/search endpoint is available
-  // For now, show empty state as API doesn't exist
-  
-  return (
-    <div className="text-center py-12">
-      <Database size={48} className="text-gray-600 mx-auto mb-4" />
-      <h3 className="text-lg font-medium text-gray-400 mb-2">尚無知識庫資料</h3>
-      <p className="text-sm text-gray-500 mb-4">
-        知識庫功能尚未建置完成，請聯繫系統管理員
-      </p>
-      <p className="text-xs text-gray-600">
-        API 端點 <code>/api/knowledge/search</code> 尚未實作
-      </p>
-    </div>
-  )
-}
-
-// ─── Tests Tab ───────────────────────────────────────────────
-function TestsTab({ search }: { search: string }) {
-  const filtered = useMemo(() => {
-    if (!search) return testCases
-    const q = search.toLowerCase()
-    return testCases.filter(
-      (t) =>
-        t.category.toLowerCase().includes(q) ||
-        t.question.toLowerCase().includes(q) ||
-        t.expected.toLowerCase().includes(q)
-    )
-  }, [search])
-
-  const stats = useMemo(() => {
-    const pass = filtered.filter((t) => t.status === 'pass').length
-    const fail = filtered.filter((t) => t.status === 'fail').length
-    const pending = filtered.filter((t) => t.status === 'pending').length
-    return { pass, fail, pending, total: filtered.length }
-  }, [filtered])
-
-  // Show empty state when no test cases exist
-  if (testCases.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <FlaskConical size={48} className="text-gray-600 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-400 mb-2">尚無測試案例</h3>
-        <p className="text-sm text-gray-500">
-          請聯繫系統管理員新增 LINE Bot 測試案例
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-4">
-      {/* Stats bar */}
-      <div className="flex gap-4 text-xs">
-        <span className="text-emerald-400">{stats.pass} 通過</span>
-        <span className="text-red-400">{stats.fail} 失敗</span>
-        <span className="text-amber-400">{stats.pending} 待測</span>
-        <span className="text-gray-500">{stats.total} 總計</span>
-      </div>
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-xs text-gray-500 border-b border-gray-800">
-              <th className="text-left py-2 px-3 font-medium">分類</th>
-              <th className="text-left py-2 px-3 font-medium">問題</th>
-              <th className="text-left py-2 px-3 font-medium hidden md:table-cell">預期</th>
-              <th className="text-left py-2 px-3 font-medium">狀態</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-800/60">
-            {filtered.map((t) => (
-              <tr key={t.id} className="hover:bg-gray-800/30 transition-colors">
-                <td className="py-2.5 px-3 text-gray-500 text-xs whitespace-nowrap">{t.category}</td>
-                <td className="py-2.5 px-3 text-gray-200">{t.question}</td>
-                <td className="py-2.5 px-3 text-gray-400 text-xs hidden md:table-cell max-w-[240px] truncate">{t.expected}</td>
-                <td className="py-2.5 px-3"><StatusBadge status={t.status} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {filtered.length === 0 && testCases.length > 0 && (
-        <p className="text-center text-gray-500 py-8 text-sm">沒有符合的結果</p>
-      )}
-    </div>
   )
 }
 
 // ─── Main Page ───────────────────────────────────────────────
 export default function LineBotTrainingPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('faq')
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [sourceType, setSourceType] = useState<string>('手動')
+  const [submitting, setSubmitting] = useState(false)
+  const [training, setTraining] = useState(false)
+  const [qaList, setQaList] = useState<QaItem[]>([])
+  const [records, setRecords] = useState<TrainingRecord[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [msg, setMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
 
+  // ─── Fetch data ──────────────────────────────────────────
+  const fetchData = useCallback(async () => {
+    try {
+      const [qaRes, recRes] = await Promise.all([
+        fetch('/api/hub/linebot-training?type=qa'),
+        fetch('/api/hub/linebot-training?type=records'),
+      ])
+      const qaJson = await qaRes.json()
+      const recJson = await recRes.json()
+      if (qaJson.qa) setQaList(qaJson.qa)
+      if (recJson.records) setRecords(recJson.records)
+    } catch {
+      // silent
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { fetchData() }, [fetchData])
+
+  // ─── Add QA ──────────────────────────────────────────────
+  const handleAddQa = async () => {
+    if (!question.trim() || !answer.trim()) return
+    setSubmitting(true)
+    setMsg(null)
+    try {
+      const res = await fetch('/api/hub/linebot-training', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add_qa', question: question.trim(), answer: answer.trim(), source_type: sourceType }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error)
+      setQuestion('')
+      setAnswer('')
+      setMsg({ type: 'ok', text: 'QA 新增成功' })
+      fetchData()
+    } catch (e: unknown) {
+      setMsg({ type: 'err', text: e instanceof Error ? e.message : '新增失敗' })
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  // ─── Trigger training ────────────────────────────────────
+  const handleTrain = async () => {
+    setTraining(true)
+    setMsg(null)
+    try {
+      const res = await fetch('/api/hub/linebot-training', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'train', source_type: sourceType }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error)
+      setMsg({ type: 'ok', text: '訓練已開始' })
+      fetchData()
+    } catch (e: unknown) {
+      setMsg({ type: 'err', text: e instanceof Error ? e.message : '訓練觸發失敗' })
+    } finally {
+      setTraining(false)
+    }
+  }
+
+  // ─── Filtered QA list ────────────────────────────────────
+  const filteredQa = search
+    ? qaList.filter(
+        (q) =>
+          q.question.toLowerCase().includes(search.toLowerCase()) ||
+          q.answer.toLowerCase().includes(search.toLowerCase())
+      )
+    : qaList
+
+  // ─── Render ──────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#090b10] text-gray-100">
       {/* Header */}
@@ -261,47 +146,184 @@ export default function LineBotTrainingPage() {
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">LINE Bot 訓練中心</h1>
-            <p className="text-xs text-gray-500">FAQ / 知識庫 / 測試案例管理</p>
+            <h1 className="text-lg font-semibold tracking-tight">LINE Bot 訓練管理</h1>
+            <p className="text-xs text-gray-500">QA 資料管理 / 訓練觸發 / 訓練紀錄</p>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
-        {/* Tabs + Search */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="flex gap-1 bg-gray-900 rounded-lg p-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => { setActiveTab(tab.key); setSearch('') }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
-                  activeTab === tab.key
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                {tab.icon}
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="relative flex-1 max-w-xs">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-            <input
-              type="text"
-              placeholder="搜尋..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-gray-900 border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-gray-700 transition-colors"
-            />
-          </div>
-        </div>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        {/* ── QA Input Form ─────────────────────────────── */}
+        <section className="border border-gray-800 rounded-lg p-4 sm:p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+            <Plus size={16} className="text-blue-400" />
+            新增 QA 問答
+          </h2>
 
-        {/* Tab Content */}
-        {activeTab === 'faq' && <FaqTab search={search} />}
-        {activeTab === 'knowledge' && <KnowledgeTab search={search} />}
-        {activeTab === 'tests' && <TestsTab search={search} />}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs text-gray-500">問題</label>
+              <input
+                type="text"
+                placeholder="輸入問題..."
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-gray-700 transition-colors"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs text-gray-500">答案</label>
+              <input
+                type="text"
+                placeholder="輸入答案..."
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-gray-700 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs text-gray-500">資料來源</label>
+              <select
+                value={sourceType}
+                onChange={(e) => setSourceType(e.target.value)}
+                className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gray-700 transition-colors"
+              >
+                {SOURCE_OPTIONS.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddQa}
+                disabled={submitting || !question.trim() || !answer.trim()}
+                className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                新增
+              </button>
+              <button
+                onClick={handleTrain}
+                disabled={training}
+                className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {training ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                訓練
+              </button>
+            </div>
+          </div>
+
+          {msg && (
+            <p className={`text-xs ${msg.type === 'ok' ? 'text-emerald-400' : 'text-red-400'}`}>
+              {msg.text}
+            </p>
+          )}
+        </section>
+
+        {/* ── Training Records ──────────────────────────── */}
+        <section className="border border-gray-800 rounded-lg p-4 sm:p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+              <RefreshCw size={16} className="text-emerald-400" />
+              訓練紀錄
+            </h2>
+            <button onClick={fetchData} className="text-gray-500 hover:text-gray-300 transition-colors">
+              <RefreshCw size={14} />
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 size={24} className="animate-spin text-gray-500" />
+            </div>
+          ) : records.length === 0 ? (
+            <p className="text-center text-gray-500 py-8 text-sm">尚無訓練紀錄</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-xs text-gray-500 border-b border-gray-800">
+                    <th className="text-left py-2 px-3 font-medium">ID</th>
+                    <th className="text-left py-2 px-3 font-medium">資料來源</th>
+                    <th className="text-left py-2 px-3 font-medium">筆數</th>
+                    <th className="text-left py-2 px-3 font-medium">狀態</th>
+                    <th className="text-left py-2 px-3 font-medium">建立時間</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800/60">
+                  {records.map((r) => (
+                    <tr key={r.id} className="hover:bg-gray-800/30 transition-colors">
+                      <td className="py-2.5 px-3 text-gray-500 text-xs font-mono">{r.id}</td>
+                      <td className="py-2.5 px-3 text-gray-300">{r.source_type}</td>
+                      <td className="py-2.5 px-3 text-gray-400">{r.data_count}</td>
+                      <td className="py-2.5 px-3"><StatusBadge status={r.status} /></td>
+                      <td className="py-2.5 px-3 text-gray-500 text-xs">{new Date(r.created_at).toLocaleString('zh-TW')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        {/* ── QA Data List ──────────────────────────────── */}
+        <section className="border border-gray-800 rounded-lg p-4 sm:p-5 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+              <MessageSquare size={16} className="text-blue-400" />
+              QA 資料列表
+              <span className="text-xs text-gray-600 font-normal">({filteredQa.length})</span>
+            </h2>
+            <div className="relative max-w-xs w-full sm:w-auto">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+              <input
+                type="text"
+                placeholder="搜尋 QA..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-gray-700 transition-colors"
+              />
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 size={24} className="animate-spin text-gray-500" />
+            </div>
+          ) : filteredQa.length === 0 ? (
+            <div className="text-center py-8">
+              <MessageSquare size={36} className="text-gray-700 mx-auto mb-3" />
+              <p className="text-sm text-gray-500">{search ? '沒有符合的結果' : '尚無 QA 資料，請使用上方表單新增'}</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-xs text-gray-500 border-b border-gray-800">
+                    <th className="text-left py-2 px-3 font-medium">問題</th>
+                    <th className="text-left py-2 px-3 font-medium">答案</th>
+                    <th className="text-left py-2 px-3 font-medium hidden sm:table-cell">來源</th>
+                    <th className="text-left py-2 px-3 font-medium hidden md:table-cell">時間</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800/60">
+                  {filteredQa.map((q) => (
+                    <tr key={q.id} className="hover:bg-gray-800/30 transition-colors">
+                      <td className="py-2.5 px-3 text-gray-200 max-w-[200px] truncate">{q.question}</td>
+                      <td className="py-2.5 px-3 text-gray-400 max-w-[260px] truncate">{q.answer}</td>
+                      <td className="py-2.5 px-3 text-gray-500 text-xs hidden sm:table-cell">{q.source_type}</td>
+                      <td className="py-2.5 px-3 text-gray-500 text-xs hidden md:table-cell">{new Date(q.created_at).toLocaleString('zh-TW')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </main>
     </div>
   )
