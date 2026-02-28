@@ -189,7 +189,7 @@ export default function TokenROIDashboard() {
                       <Cell key={i} fill={MODEL_COLORS[i % MODEL_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(v: number) => fmt(v) + ' tokens'} />
+                  <Tooltip formatter={(v: number | undefined) => fmt(v) + ' tokens'} />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
