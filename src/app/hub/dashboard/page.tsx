@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler } from 'chart.js'
 import { Target, Code, Palette, Search, BookOpen, PenTool, BarChart3, Mail, Bot, ClipboardList, Zap, CheckCircle, TrendingUp, Users, PieChart, Clock, Check } from 'lucide-react'
@@ -13,6 +14,19 @@ import ModelTrendChart from '@/app/hub/components/ModelTrendChart'
 import SystemMonitor from '@/app/hub/components/SystemMonitor'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler)
+
+class ComponentErrorBoundary extends React.Component<{children: React.ReactNode; fallback?: React.ReactNode}, {hasError: boolean}> {
+  constructor(props: {children: React.ReactNode; fallback?: React.ReactNode}) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() { return { hasError: true } }
+  render() {
+    if (this.state.hasError) return this.props.fallback || <div className="p-4 text-foreground-muted text-sm">載入中...</div>
+    return this.props.children
+  }
+}
+
 
 type AgentData = {
   name: string
@@ -223,16 +237,16 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* System Status Monitor */}
-            <SystemMonitor />
+            <ComponentErrorBoundary><SystemMonitor /></ComponentErrorBoundary>
 
             {/* Model Quota Overview */}
-            <ModelQuotaOverview />
+            <ComponentErrorBoundary><ModelQuotaOverview /></ComponentErrorBoundary>
 
             {/* Model Usage Trend Chart */}
-            <ModelTrendChart />
+            <ComponentErrorBoundary><ModelTrendChart /></ComponentErrorBoundary>
 
             {/* Agent Ranking - Doughnut Chart */}
-            <AgentRanking />
+            <ComponentErrorBoundary><AgentRanking /></ComponentErrorBoundary>
 
             {/* KPI Stats Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
