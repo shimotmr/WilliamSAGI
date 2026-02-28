@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Line, Doughnut } from 'react-chartjs-2'
 
+import Breadcrumb from '@/components/Breadcrumb'
 import AgentRanking from '@/app/hub/components/AgentRanking'
 import ModelQuotaOverview from '@/app/hub/components/ModelQuotaOverview'
 import ModelTrendChart from '@/app/hub/components/ModelTrendChart'
@@ -210,6 +211,8 @@ export default function DashboardPage() {
             </div>
           </div>
         </header>
+
+        <Breadcrumb items={[{label:'Hub',href:'/hub'},{label:'Dashboard'}]} />
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
