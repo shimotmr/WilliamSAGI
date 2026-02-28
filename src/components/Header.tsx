@@ -21,20 +21,22 @@ interface NavItem {
 const navItems: Record<ContextType, NavItem[]> = {
   portal: [
     { label: '首頁', href: '/portal' },
-    { label: '日誌', href: '/portal/daily' },
+    { label: 'Daily', href: '/portal/daily' },
+    { label: '知識庫', href: '/portal/knowledge' },
     { label: '關於', href: '/portal/about' },
   ],
   showcase: [
     { label: '首頁', href: '/showcase' },
     { label: '功能', href: '/showcase/features' },
     { label: '元件', href: '/showcase/components' },
+    { label: '系統架構', href: '/showcase/architecture' },
     { label: '關於', href: '/showcase/about' },
   ],
   hub: [
     { label: '儀表板', href: '/hub' },
     { label: '任務', href: '/hub/tasks' },
     { label: '報告', href: '/hub/reports' },
-    { label: '設定', href: '/hub/settings' },
+    { label: '設置', href: '/hub/settings' },
   ],
 };
 
@@ -203,7 +205,7 @@ export default function Header({ context }: HeaderProps) {
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'var(--secondary)';
           }}
-          aria-label={isDark ? '切換到亮色模式' : '切換到暗色模式'}
+          aria-label={isDark ? '切換到淺色模式' : '切換到深色模式'}
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
@@ -235,7 +237,7 @@ export default function Header({ context }: HeaderProps) {
             }
           }}
           className="mobile-menu-btn"
-          aria-label="切換選單"
+          aria-label="選單"
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
