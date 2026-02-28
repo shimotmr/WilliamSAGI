@@ -8,7 +8,7 @@
 /* ============================================
    1. Font Imports
    ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Calistoga&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ============================================
    2. Typography Tokens
@@ -119,290 +119,363 @@
    7. PORTAL THEME - Light (溫暖日光)
    ============================================ */
 :root[data-theme="portal-light"] {
-  /* Base Colors */
-  --background: oklch(98% 0.01 85);
-  --foreground: oklch(20% 0.02 85);
-  
-  /* Primary: Amber */
-  --primary: oklch(65% 0.15 75);
-  --primary-foreground: oklch(98% 0.01 75);
-  
-  /* Secondary: Warm Gray */
-  --secondary: oklch(92% 0.02 80);
-  --secondary-foreground: oklch(30% 0.03 80);
-  
-  /* Muted: Soft Cream */
-  --muted: oklch(95% 0.02 85);
-  --muted-foreground: oklch(50% 0.03 85);
-  
-  /* Accent: Teal */
-  --accent: oklch(70% 0.12 185);
-  --accent-foreground: oklch(98% 0.01 185);
-  
-  /* Card */
-  --card: oklch(100% 0 85);
-  --card-foreground: oklch(20% 0.02 85);
-  
-  /* Border */
-  --border: oklch(88% 0.02 85);
-  
-  /* Semantic Colors */
-  --destructive: oklch(55% 0.18 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(65% 0.12 145);
-  --success-foreground: oklch(98% 0.01 145);
-  --warning: oklch(75% 0.14 75);
-  --warning-foreground: oklch(25% 0.02 75);
-  --info: oklch(70% 0.1 220);
-  --info-foreground: oklch(98% 0.01 220);
+/* ─────────────────────────────────────────────────────────
+   SaaS #05 — All light contexts (hub-light, portal-light, showcase-light)
+   Source: designprompts.dev/saas | Accent: #0052FF Electric Blue
+   ───────────────────────────────────────────────────────── */
+
+  --background:           #FAFAFA;
+  --background-deep:      #F1F5F9;
+  --background-elevated:  #ffffff;
+
+  --foreground:           #0F172A;
+  --foreground-muted:     #64748B;
+  --foreground-subtle:    #94A3B8;
+
+  /* Primary — Electric Blue gradient */
+  --primary:              #0052FF;
+  --primary-end:          #4D7CFF;
+  --primary-gradient:     linear-gradient(135deg, #0052FF, #4D7CFF);
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #0047E0;
+  --primary-glow:         rgba(0,82,255,0.20);
+
+  /* Secondary */
+  --secondary:            #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted:                #F1F5F9;
+  --muted-foreground:     #64748B;
+
+  /* Accent */
+  --accent:               #0052FF;
+  --accent-foreground:    #ffffff;
+
+  /* Card — pure white lifted surface */
+  --card:                 #ffffff;
+  --card-hover:           #FAFAFA;
+  --card-foreground:      #0F172A;
+
+  /* Borders */
+  --border:               #E2E8F0;
+  --border-hover:         #CBD5E1;
+  --border-accent:        rgba(0,82,255,0.25);
+
+  /* Semantic */
+  --destructive:          #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:              #22c55e;
+  --success-foreground:   #ffffff;
+  --warning:              #f59e0b;
+  --warning-foreground:   #ffffff;
+  --info:                 #3b82f6;
+  --info-foreground:      #ffffff;
+
+  /* Shadows — multi-layer for depth */
+  --shadow-sm:  0 1px 3px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-md:  0 4px 16px rgba(15,23,42,0.10), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-lg:  0 8px 32px rgba(15,23,42,0.14), 0 0 0 1px rgba(15,23,42,0.04), 0 0 40px rgba(0,82,255,0.06);
 }
 
 /* ============================================
    8. PORTAL THEME - Dark (溫暖夜色)
    ============================================ */
 :root[data-theme="portal-dark"] {
-  /* Minimal Dark (Atmospheric Slate + Amber) — designprompts.dev #19 */
-  --background:          #0A0A0F;
-  --background-alt:      #12121A;
-  --background-elevated: #1A1A24;
-  --foreground:          #E8E8F0;
-  --foreground-muted:    #8B8B9E;
-  --foreground-subtle:   rgba(232,232,240,0.5);
+/* ─────────────────────────────────────────────────────────
+   Modern Dark #03 — All dark contexts (hub-dark, portal-dark, showcase-dark)
+   Source: designprompts.dev/modern-dark | Accent: #5E6AD2 Indigo
+   ───────────────────────────────────────────────────────── */
 
-  /* Primary: Amber warm accent */
-  --primary:             #F59E0B;
-  --primary-foreground:  #0A0A0F;
-  --primary-hover:       #FBBF24;
-  --primary-glow:        rgba(245,158,11,0.25);
+  --background:           #050506;
+  --background-deep:      #020203;
+  --background-elevated:  #0c0c0e;
 
-  /* Secondary */
-  --secondary:           rgba(255,255,255,0.04);
-  --secondary-foreground:#E8E8F0;
+  --foreground:           #EDEDEF;
+  --foreground-muted:     #8A8F98;
+  --foreground-subtle:    rgba(237,237,239,0.5);
 
-  /* Muted */
-  --muted:               rgba(255,255,255,0.03);
-  --muted-foreground:    #8B8B9E;
+  /* Primary — Indigo */
+  --primary:              #5E6AD2;
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #6872D9;
+  --primary-glow:         rgba(94,106,210,0.28);
 
-  /* Accent */
-  --accent:              #F59E0B;
-  --accent-foreground:   #0A0A0F;
+  /* Secondary / muted surfaces */
+  --secondary:            rgba(255,255,255,0.05);
+  --secondary-foreground: #EDEDEF;
+  --muted:                rgba(255,255,255,0.04);
+  --muted-foreground:     #8A8F98;
 
-  /* Card — glass */
-  --card:                rgba(255,255,255,0.04);
-  --card-hover:          rgba(255,255,255,0.07);
-  --card-foreground:     #E8E8F0;
+  /* Accent (same as primary for unified look) */
+  --accent:               #5E6AD2;
+  --accent-foreground:    #ffffff;
 
-  /* Border */
-  --border:              rgba(255,255,255,0.08);
-  --border-hover:        rgba(255,255,255,0.14);
+  /* Card — ultra-thin glass */
+  --card:                 rgba(255,255,255,0.05);
+  --card-hover:           rgba(255,255,255,0.08);
+  --card-foreground:      #EDEDEF;
+
+  /* Borders */
+  --border:               rgba(255,255,255,0.06);
+  --border-hover:         rgba(255,255,255,0.10);
+  --border-accent:        rgba(94,106,210,0.30);
 
   /* Semantic */
-  --destructive:         #f87171;
-  --destructive-foreground: #0A0A0F;
-  --success:             #34d399;
-  --success-foreground:  #0A0A0F;
-  --warning:             #F59E0B;
-  --warning-foreground:  #0A0A0F;
-  --info:                #60a5fa;
-  --info-foreground:     #0A0A0F;
+  --destructive:          #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:              #4ade80;
+  --success-foreground:   #050506;
+  --warning:              #fbbf24;
+  --warning-foreground:   #050506;
+  --info:                 #60a5fa;
+  --info-foreground:      #050506;
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
-  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 40px rgba(245,158,11,0.06);
+  --shadow-sm:  0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.50);
+  --shadow-lg:  0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.60), 0 0 80px rgba(94,106,210,0.08);
+  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.5), 0 4px 12px rgba(94,106,210,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 /* ============================================
    9. SHOWCASE THEME - Light (專業日光)
    ============================================ */
 :root[data-theme="showcase-light"] {
-  /* Base Colors */
-  --background: oklch(98% 0.01 250);
-  --foreground: oklch(18% 0.02 250);
-  
-  /* Primary: Blue */
-  --primary: oklch(55% 0.18 250);
-  --primary-foreground: oklch(98% 0.01 250);
-  
-  /* Secondary: Cool Gray */
-  --secondary: oklch(93% 0.02 250);
-  --secondary-foreground: oklch(25% 0.03 250);
-  
-  /* Muted: Soft Blue Gray */
-  --muted: oklch(95% 0.02 250);
-  --muted-foreground: oklch(50% 0.03 250);
-  
-  /* Accent: Indigo */
-  --accent: oklch(60% 0.15 270);
-  --accent-foreground: oklch(98% 0.01 270);
-  
-  /* Card */
-  --card: oklch(100% 0 250);
-  --card-foreground: oklch(18% 0.02 250);
-  
-  /* Border */
-  --border: oklch(88% 0.02 250);
-  
-  /* Semantic Colors */
-  --destructive: oklch(55% 0.18 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(60% 0.14 145);
-  --success-foreground: oklch(98% 0.01 145);
-  --warning: oklch(75% 0.14 75);
-  --warning-foreground: oklch(25% 0.02 75);
-  --info: oklch(65% 0.12 250);
-  --info-foreground: oklch(98% 0.01 250);
+/* ─────────────────────────────────────────────────────────
+   SaaS #05 — All light contexts (hub-light, portal-light, showcase-light)
+   Source: designprompts.dev/saas | Accent: #0052FF Electric Blue
+   ───────────────────────────────────────────────────────── */
+
+  --background:           #FAFAFA;
+  --background-deep:      #F1F5F9;
+  --background-elevated:  #ffffff;
+
+  --foreground:           #0F172A;
+  --foreground-muted:     #64748B;
+  --foreground-subtle:    #94A3B8;
+
+  /* Primary — Electric Blue gradient */
+  --primary:              #0052FF;
+  --primary-end:          #4D7CFF;
+  --primary-gradient:     linear-gradient(135deg, #0052FF, #4D7CFF);
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #0047E0;
+  --primary-glow:         rgba(0,82,255,0.20);
+
+  /* Secondary */
+  --secondary:            #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted:                #F1F5F9;
+  --muted-foreground:     #64748B;
+
+  /* Accent */
+  --accent:               #0052FF;
+  --accent-foreground:    #ffffff;
+
+  /* Card — pure white lifted surface */
+  --card:                 #ffffff;
+  --card-hover:           #FAFAFA;
+  --card-foreground:      #0F172A;
+
+  /* Borders */
+  --border:               #E2E8F0;
+  --border-hover:         #CBD5E1;
+  --border-accent:        rgba(0,82,255,0.25);
+
+  /* Semantic */
+  --destructive:          #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:              #22c55e;
+  --success-foreground:   #ffffff;
+  --warning:              #f59e0b;
+  --warning-foreground:   #ffffff;
+  --info:                 #3b82f6;
+  --info-foreground:      #ffffff;
+
+  /* Shadows — multi-layer for depth */
+  --shadow-sm:  0 1px 3px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-md:  0 4px 16px rgba(15,23,42,0.10), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-lg:  0 8px 32px rgba(15,23,42,0.14), 0 0 0 1px rgba(15,23,42,0.04), 0 0 40px rgba(0,82,255,0.06);
 }
 
 /* ============================================
    10. SHOWCASE THEME - Dark (科技夜色)
    ============================================ */
 :root[data-theme="showcase-dark"] {
-  /* Base Colors */
-  --background: oklch(15% 0.02 260);
-  --foreground: oklch(95% 0.01 250);
-  
-  /* Primary: Blue */
-  --primary: oklch(65% 0.15 250);
-  --primary-foreground: oklch(10% 0.02 250);
-  
-  /* Secondary: Deep Slate */
-  --secondary: oklch(25% 0.03 260);
-  --secondary-foreground: oklch(90% 0.01 260);
-  
-  /* Muted: Dark Blue Gray */
-  --muted: oklch(22% 0.03 260);
-  --muted-foreground: oklch(60% 0.02 260);
-  
-  /* Accent: Indigo */
-  --accent: oklch(70% 0.12 270);
-  --accent-foreground: oklch(10% 0.02 270);
-  
-  /* Card */
-  --card: oklch(20% 0.02 260);
-  --card-foreground: oklch(95% 0.01 250);
-  
-  /* Border */
-  --border: oklch(28% 0.03 260);
-  
-  /* Semantic Colors */
-  --destructive: oklch(60% 0.16 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(65% 0.12 145);
-  --success-foreground: oklch(10% 0.02 145);
-  --warning: oklch(80% 0.12 75);
-  --warning-foreground: oklch(15% 0.02 75);
-  --info: oklch(70% 0.1 250);
-  --info-foreground: oklch(10% 0.02 250);
+/* ─────────────────────────────────────────────────────────
+   Modern Dark #03 — All dark contexts (hub-dark, portal-dark, showcase-dark)
+   Source: designprompts.dev/modern-dark | Accent: #5E6AD2 Indigo
+   ───────────────────────────────────────────────────────── */
 
-  /* Dark Mode Shadows */
-  --shadow-sm: 0 1px 2px 0 oklch(0% 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px oklch(0% 0 0 / 0.4), 0 2px 4px -2px oklch(0% 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px oklch(0% 0 0 / 0.4), 0 4px 6px -4px oklch(0% 0 0 / 0.4);
+  --background:           #050506;
+  --background-deep:      #020203;
+  --background-elevated:  #0c0c0e;
+
+  --foreground:           #EDEDEF;
+  --foreground-muted:     #8A8F98;
+  --foreground-subtle:    rgba(237,237,239,0.5);
+
+  /* Primary — Indigo */
+  --primary:              #5E6AD2;
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #6872D9;
+  --primary-glow:         rgba(94,106,210,0.28);
+
+  /* Secondary / muted surfaces */
+  --secondary:            rgba(255,255,255,0.05);
+  --secondary-foreground: #EDEDEF;
+  --muted:                rgba(255,255,255,0.04);
+  --muted-foreground:     #8A8F98;
+
+  /* Accent (same as primary for unified look) */
+  --accent:               #5E6AD2;
+  --accent-foreground:    #ffffff;
+
+  /* Card — ultra-thin glass */
+  --card:                 rgba(255,255,255,0.05);
+  --card-hover:           rgba(255,255,255,0.08);
+  --card-foreground:      #EDEDEF;
+
+  /* Borders */
+  --border:               rgba(255,255,255,0.06);
+  --border-hover:         rgba(255,255,255,0.10);
+  --border-accent:        rgba(94,106,210,0.30);
+
+  /* Semantic */
+  --destructive:          #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:              #4ade80;
+  --success-foreground:   #050506;
+  --warning:              #fbbf24;
+  --warning-foreground:   #050506;
+  --info:                 #60a5fa;
+  --info-foreground:      #050506;
+
+  /* Shadows */
+  --shadow-sm:  0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.50);
+  --shadow-lg:  0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.60), 0 0 80px rgba(94,106,210,0.08);
+  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.5), 0 4px 12px rgba(94,106,210,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 /* ============================================
    11. HUB THEME - Light (高效日光)
    ============================================ */
 :root[data-theme="hub-light"] {
-  /* Base Colors */
-  --background: oklch(97% 0.01 280);
-  --foreground: oklch(15% 0.02 280);
-  
-  /* Primary: Violet */
-  --primary: oklch(55% 0.18 290);
-  --primary-foreground: oklch(98% 0.01 290);
-  
-  /* Secondary: Neutral Gray */
-  --secondary: oklch(92% 0.02 280);
-  --secondary-foreground: oklch(25% 0.03 280);
-  
-  /* Muted: Soft Purple Gray */
-  --muted: oklch(94% 0.02 280);
-  --muted-foreground: oklch(45% 0.03 280);
-  
-  /* Accent: Emerald */
-  --accent: oklch(60% 0.14 155);
-  --accent-foreground: oklch(98% 0.01 155);
-  
-  /* Card */
-  --card: oklch(100% 0 280);
-  --card-foreground: oklch(15% 0.02 280);
-  
-  /* Border */
-  --border: oklch(85% 0.02 280);
-  
-  /* Semantic Colors */
-  --destructive: oklch(55% 0.18 25);
-  --destructive-foreground: oklch(98% 0.01 25);
-  --success: oklch(60% 0.14 145);
-  --success-foreground: oklch(98% 0.01 145);
-  --warning: oklch(75% 0.14 75);
-  --warning-foreground: oklch(20% 0.02 75);
-  --info: oklch(60% 0.12 260);
-  --info-foreground: oklch(98% 0.01 260);
+/* ─────────────────────────────────────────────────────────
+   SaaS #05 — All light contexts (hub-light, portal-light, showcase-light)
+   Source: designprompts.dev/saas | Accent: #0052FF Electric Blue
+   ───────────────────────────────────────────────────────── */
+
+  --background:           #FAFAFA;
+  --background-deep:      #F1F5F9;
+  --background-elevated:  #ffffff;
+
+  --foreground:           #0F172A;
+  --foreground-muted:     #64748B;
+  --foreground-subtle:    #94A3B8;
+
+  /* Primary — Electric Blue gradient */
+  --primary:              #0052FF;
+  --primary-end:          #4D7CFF;
+  --primary-gradient:     linear-gradient(135deg, #0052FF, #4D7CFF);
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #0047E0;
+  --primary-glow:         rgba(0,82,255,0.20);
+
+  /* Secondary */
+  --secondary:            #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted:                #F1F5F9;
+  --muted-foreground:     #64748B;
+
+  /* Accent */
+  --accent:               #0052FF;
+  --accent-foreground:    #ffffff;
+
+  /* Card — pure white lifted surface */
+  --card:                 #ffffff;
+  --card-hover:           #FAFAFA;
+  --card-foreground:      #0F172A;
+
+  /* Borders */
+  --border:               #E2E8F0;
+  --border-hover:         #CBD5E1;
+  --border-accent:        rgba(0,82,255,0.25);
+
+  /* Semantic */
+  --destructive:          #ef4444;
+  --destructive-foreground: #ffffff;
+  --success:              #22c55e;
+  --success-foreground:   #ffffff;
+  --warning:              #f59e0b;
+  --warning-foreground:   #ffffff;
+  --info:                 #3b82f6;
+  --info-foreground:      #ffffff;
+
+  /* Shadows — multi-layer for depth */
+  --shadow-sm:  0 1px 3px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-md:  0 4px 16px rgba(15,23,42,0.10), 0 0 0 1px rgba(15,23,42,0.04);
+  --shadow-lg:  0 8px 32px rgba(15,23,42,0.14), 0 0 0 1px rgba(15,23,42,0.04), 0 0 40px rgba(0,82,255,0.06);
 }
 
 /* ============================================
    12. HUB THEME - Dark (高效夜色)
    ============================================ */
 :root[data-theme="hub-dark"] {
-  /* Modern Dark (Linear/Cinematic) — designprompts.dev #03 */
-  --background:          #050506;
-  --background-deep:     #020203;
-  --background-elevated: #0a0a0c;
-  --foreground:          #EDEDEF;
-  --foreground-muted:    #8A8F98;
-  --foreground-subtle:   rgba(255,255,255,0.6);
+/* ─────────────────────────────────────────────────────────
+   Modern Dark #03 — All dark contexts (hub-dark, portal-dark, showcase-dark)
+   Source: designprompts.dev/modern-dark | Accent: #5E6AD2 Indigo
+   ───────────────────────────────────────────────────────── */
 
-  /* Primary: Indigo #5E6AD2 */
-  --primary:             #5E6AD2;
-  --primary-foreground:  #ffffff;
-  --primary-hover:       #6872D9;
-  --primary-glow:        rgba(94,106,210,0.3);
+  --background:           #050506;
+  --background-deep:      #020203;
+  --background-elevated:  #0c0c0e;
 
-  /* Secondary */
-  --secondary:           rgba(255,255,255,0.05);
-  --secondary-foreground:#EDEDEF;
+  --foreground:           #EDEDEF;
+  --foreground-muted:     #8A8F98;
+  --foreground-subtle:    rgba(237,237,239,0.5);
 
-  /* Muted */
-  --muted:               rgba(255,255,255,0.04);
-  --muted-foreground:    #8A8F98;
+  /* Primary — Indigo */
+  --primary:              #5E6AD2;
+  --primary-foreground:   #ffffff;
+  --primary-hover:        #6872D9;
+  --primary-glow:         rgba(94,106,210,0.28);
 
-  /* Accent (same as primary) */
-  --accent:              #5E6AD2;
-  --accent-foreground:   #ffffff;
+  /* Secondary / muted surfaces */
+  --secondary:            rgba(255,255,255,0.05);
+  --secondary-foreground: #EDEDEF;
+  --muted:                rgba(255,255,255,0.04);
+  --muted-foreground:     #8A8F98;
 
-  /* Card — glass effect */
-  --card:                rgba(255,255,255,0.05);
-  --card-hover:          rgba(255,255,255,0.08);
-  --card-foreground:     #EDEDEF;
+  /* Accent (same as primary for unified look) */
+  --accent:               #5E6AD2;
+  --accent-foreground:    #ffffff;
 
-  /* Border */
-  --border:              rgba(255,255,255,0.06);
-  --border-hover:        rgba(255,255,255,0.10);
-  --border-accent:       rgba(94,106,210,0.30);
+  /* Card — ultra-thin glass */
+  --card:                 rgba(255,255,255,0.05);
+  --card-hover:           rgba(255,255,255,0.08);
+  --card-foreground:      #EDEDEF;
+
+  /* Borders */
+  --border:               rgba(255,255,255,0.06);
+  --border-hover:         rgba(255,255,255,0.10);
+  --border-accent:        rgba(94,106,210,0.30);
 
   /* Semantic */
-  --destructive:         #ef4444;
+  --destructive:          #ef4444;
   --destructive-foreground: #ffffff;
-  --success:             #4ade80;
-  --success-foreground:  #050506;
-  --warning:             #fbbf24;
-  --warning-foreground:  #050506;
-  --info:                #60a5fa;
-  --info-foreground:     #050506;
+  --success:              #4ade80;
+  --success-foreground:   #050506;
+  --warning:              #fbbf24;
+  --warning-foreground:   #050506;
+  --info:                 #60a5fa;
+  --info-foreground:      #050506;
 
-  /* Shadows — multi-layer */
+  /* Shadows */
   --shadow-sm:  0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.35);
-  --shadow-md:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.45);
-  --shadow-lg:  0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.55), 0 0 80px rgba(94,106,210,0.08);
-  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.5), 0 4px 12px rgba(94,106,210,0.3), inset 0 1px 0 0 rgba(255,255,255,0.2);
-
-  /* Typography */
-  --font-body:    "Inter", "Geist Sans", system-ui, sans-serif;
-  --font-heading: "Inter", "Geist Sans", system-ui, sans-serif;
-  --font-mono:    "JetBrains Mono", "Fira Code", monospace;
+  --shadow-md:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.50);
+  --shadow-lg:  0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.60), 0 0 80px rgba(94,106,210,0.08);
+  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.5), 0 4px 12px rgba(94,106,210,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 /* ============================================
@@ -593,21 +666,43 @@ a:focus-visible {
 }
 
 /* Hub dark body — ambient grid overlay */
-body[data-context="hub"] {
+
+
+/* Portal dark body — atmospheric slate */
+
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Context-specific body backgrounds
+   ============================================ */
+
+/* Dark contexts — Modern Dark #03 ambient grid */
+body[data-context="hub"],
+body[data-context="portal"],
+body[data-context="showcase"] {
   background-color: #050506;
+}
+
+/* Hub: animated blob + grid overlay */
+:root[data-theme="hub-dark"] body,
+[data-theme="hub-dark"] {
   background-image:
-    radial-gradient(ellipse 70% 55% at 15% 25%, rgba(88,28,220,0.2) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 85% 75%, rgba(94,106,210,0.14) 0%, transparent 50%),
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    radial-gradient(ellipse 70% 55% at 15% 25%, rgba(88,28,220,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 85% 75%, rgba(94,106,210,0.12) 0%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
   background-size: auto, auto, 64px 64px, 64px 64px;
 }
 
-/* Portal dark body — atmospheric slate */
-body[data-context="portal"] {
-  background-color: #0A0A0F;
-  background-image:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 50%);
+/* Light contexts — SaaS #05 clean canvas */
+:root[data-theme$="-light"] body {
+  background-color: #FAFAFA;
 }
 
 @media (prefers-reduced-motion: reduce) {
