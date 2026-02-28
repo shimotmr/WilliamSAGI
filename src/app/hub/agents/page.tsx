@@ -11,6 +11,8 @@ import {
 import Image from 'next/image'
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 
+import Breadcrumb from '@/components/Breadcrumb'
+
 interface Agent {
   id: string
   name: string
@@ -197,6 +199,8 @@ export default function AgentsPage() {
             </div>
           )}
         </header>
+
+        <Breadcrumb items={[{label:'Hub',href:'/hub'},{label:'Agents'}]} />
 
         {/* Loading */}
         {loading && (
