@@ -1,4 +1,18 @@
 import type { Metadata } from 'next'
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/ThemeProvider'
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'WilliamSAGI',
@@ -10,5 +24,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <html lang="zh-TW"><body>{children}</body></html>
+  return (
+    <html lang="zh-TW" className={`${plusJakartaSans.variable} ${inter.variable}`}>
+      <body>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }
