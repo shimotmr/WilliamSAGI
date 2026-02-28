@@ -156,7 +156,7 @@ export default function TokenROIDashboard() {
                   <XAxis dataKey="date" fontSize={11} tickFormatter={v => v.slice(5)} />
                   <YAxis fontSize={11} tickFormatter={fmt} />
                   <Tooltip
-                    formatter={(v: number) => [fmt(v) + ' tokens', 'Tokens']}
+                    formatter={(v: number | undefined) => [fmt(v ?? 0) + ' tokens', 'Tokens']}
                     labelFormatter={l => `日期: ${l}`}
                   />
                   <Legend />
