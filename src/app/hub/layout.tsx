@@ -15,6 +15,14 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultContext="hub" defaultMode="dark">
       <style>{`
+        .hub-sidebar { display: none; }
+        .hub-mobile-nav { display: flex; }
+        .hub-mobile-spacer { display: block; }
+        @media (min-width: 1024px) {
+          .hub-sidebar { display: flex; }
+          .hub-mobile-nav { display: none; }
+          .hub-mobile-spacer { display: none; }
+        }
         .hub-nav-link {
           display:flex;align-items:center;gap:0.625rem;
           padding:0.5rem 0.75rem;border-radius:0.5rem;
@@ -28,8 +36,9 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
         }
       `}</style>
       <div style={{ display:'flex',minHeight:'100vh',background:'#050506',color:'#EDEDEF',fontFamily:'Inter,system-ui,sans-serif' }}>
-        {/* Sidebar */}
-        <aside className="hidden lg:flex" style={{
+
+        {/* Sidebar — desktop only */}
+        <aside className="hub-sidebar" style={{
           width:'220px',flexShrink:0,flexDirection:'column',
           background:'rgba(255,255,255,0.02)',
           borderRight:'1px solid rgba(255,255,255,0.06)',
@@ -75,11 +84,11 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
           </main>
         </div>
 
-        {/* Mobile nav */}
-        <nav className="flex lg:hidden" style={{
+        {/* Mobile bottom nav */}
+        <nav className="hub-mobile-nav" style={{
           position:'fixed',bottom:0,left:0,right:0,zIndex:50,
           background:'#0c0c0e',borderTop:'1px solid rgba(255,255,255,0.06)',
-          padding:'0.5rem 0',display:'flex',justifyContent:'space-around',
+          padding:'0.5rem 0',justifyContent:'space-around',
         }}>
           {navLinks.slice(0,5).map(link => (
             <a key={link.href} href={link.href} style={{
@@ -92,7 +101,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
             </a>
           ))}
         </nav>
-        <div className="block lg:hidden" style={{ height:'64px' }} />
+        <div className="hub-mobile-spacer" style={{ height:'64px' }} />
       </div>
     </ThemeProvider>
   );
