@@ -82,6 +82,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
               {children}
             </div>
           </main>
+          <div className="hub-mobile-spacer" style={{ height:'64px' }} />
         </div>
 
         {/* Mobile bottom nav */}
@@ -101,7 +102,6 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
             </a>
           ))}
         </nav>
-        <div className="hub-mobile-spacer" style={{ height:'64px' }} />
       </div>
     </ThemeProvider>
   );

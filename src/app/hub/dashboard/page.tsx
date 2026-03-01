@@ -158,6 +158,7 @@ export default function DashboardPage(){
         @media (max-width: 640px) {
           .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
           .two-col-grid { grid-template-columns: 1fr !important; }
+          .bottom-grid { grid-template-columns: 1fr !important; }
           .title-meta { flex-wrap: wrap; gap: 6px !important; }
         }
       `}</style>
@@ -276,7 +277,7 @@ export default function DashboardPage(){
             )}
 
             {/* Tasks */}
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div className="bottom-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
               {[
                 {icon:I.zap,title:'執行中',tasks:data.runningTasks,dot:T.amber,empty:'目前無執行中任務'},
                 {icon:I.chk,title:'最近完成',tasks:data.recentCompleted,dot:T.green,empty:'尚無完成紀錄'},
