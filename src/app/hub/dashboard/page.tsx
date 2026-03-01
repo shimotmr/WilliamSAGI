@@ -192,7 +192,7 @@ export default function DashboardPage(){
                 <EB>
                   {[
                     {k:'閘道器',v:'online :18789',vc:T.green},
-                    {k:'總任務',v:data.totalTasks.toLocaleString(),vc:T.fg},
+                    {k:'總任務',v:(data.totalTasks??0).toLocaleString(),vc:T.fg},
                     {k:'Agent 數量',v:String(data.agents.length),vc:T.fg},
                     {k:'本週完成',v:String(data.weekCompleted),vc:T.green},
                   ].map((r,i)=>(
@@ -206,12 +206,12 @@ export default function DashboardPage(){
               <Card>
                 <ST icon={I.bar} title="Token 消耗 — 近 7 天"/>
                 <EB>
-                  {data.tokenTrend.length>0?(
+                  {(data.tokenTrend??[]).length>0?(
                     <Line
                       data={{
-                        labels:data.tokenTrend.map(d=>d.date.slice(5)),
+                        labels:(data.tokenTrend??[]).map(d=>d.date.slice(5)),
                         datasets:[{
-                          label:'Tokens',data:data.tokenTrend.map(d=>d.tokens),
+                          label:'Tokens',data:(data.tokenTrend??[]).map(d=>d.tokens),
                           borderColor:T.accent,backgroundColor:'rgba(94,106,210,0.06)',
                           fill:true,tension:0.4,pointRadius:3,
                           pointBackgroundColor:T.accent,pointBorderColor:'#050506',pointBorderWidth:2,
