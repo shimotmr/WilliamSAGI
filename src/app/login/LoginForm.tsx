@@ -78,7 +78,7 @@ export default function LoginForm() {
           width:100%; padding:0.75rem 1rem; border-radius:10px;
           background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
           color:#EDEDEF; font-size:0.9rem; outline:none;
-          transition:border-color 200ms;
+          transition:border-color 200ms; box-sizing:border-box;
         }
         .login-input:focus { border-color:rgba(94,106,210,0.5); }
         .login-input::placeholder { color:#8A8F98; }
@@ -100,17 +100,18 @@ export default function LoginForm() {
         borderRadius: '20px', padding: '2.5rem',
         backdropFilter: 'blur(24px)',
         boxShadow: '0 32px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
+        boxSizing: 'border-box',
       }}>
         {/* Logo */}
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.04em', color: '#EDEDEF', marginBottom: '0.375rem' }}>
             William<span style={{ background: 'linear-gradient(135deg,#5E6AD2,#818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SAGI</span>
           </div>
-          <p style={{ fontSize: '0.8125rem', color: '#8A8F98' }}>Super AGI Control Hub</p>
+          <p style={{ fontSize: '0.8125rem', color: '#8A8F98', margin: 0 }}>Super AGI Control Hub</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-          <input type="email" placeholder="admin@sagi.local" value={email}
+          <input type="email" placeholder="your@email.com" value={email}
             onChange={e => setEmail(e.target.value)} className="login-input" required />
           <div style={{ position: 'relative' }}>
             <input type={showPw ? 'text' : 'password'} placeholder="Password" value={password}
@@ -126,12 +127,9 @@ export default function LoginForm() {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', padding: '0.875rem', background: 'rgba(94,106,210,0.08)',
-          border: '1px solid rgba(94,106,210,0.15)', borderRadius: '10px' }}>
-          <p style={{ fontSize: '0.75rem', color: '#8A8F98', margin: 0 }}>
-            <span style={{ color: '#5E6AD2', fontWeight: 600 }}>Admin</span>：admin@sagi.local / sagi2026
-          </p>
-        </div>
+        <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: '#8A8F98', textAlign: 'center' }}>
+          使用公司 Email 登入
+        </p>
       </div>
     </div>
   )
