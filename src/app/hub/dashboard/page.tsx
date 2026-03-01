@@ -153,7 +153,15 @@ export default function DashboardPage(){
         {/* Header */}
         <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:28}}>
           <div>
-            <Link href="/hub" style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:12,color:T.fgMuted,textDecoration:'none',marginBottom:10,transition:'color 0.2s'}}
+            
+      <style>{`
+        @media (max-width: 640px) {
+          .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .two-col-grid { grid-template-columns: 1fr !important; }
+          .title-meta { flex-wrap: wrap; gap: 6px !important; }
+        }
+      `}</style>
+          <Link href="/hub" style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:12,color:T.fgMuted,textDecoration:'none',marginBottom:10,transition:'color 0.2s'}}
               onMouseEnter={e=>(e.currentTarget.style.color=T.fg)}
               onMouseLeave={e=>(e.currentTarget.style.color=T.fgMuted)}>
               {I.back} Hub
@@ -161,7 +169,7 @@ export default function DashboardPage(){
             <h1 style={{fontSize:22,fontWeight:600,letterSpacing:'-0.03em',margin:0,background:'linear-gradient(to bottom,#EDEDEF,rgba(237,237,239,0.8))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Clawd Dashboard</h1>
             <p style={{fontSize:13,color:T.fgMuted,margin:'4px 0 0',letterSpacing:'-0.01em'}}>系統即時監控 · Agent 作業中心</p>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div className="title-meta" style={{display:'flex',alignItems:'center',gap:10}}>
             {data&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:T.green}}>
               <span style={{width:6,height:6,borderRadius:'50%',background:T.green,display:'inline-block',boxShadow:`0 0 8px ${T.green}`,animation:'pulse 2s infinite'}}/>
               系統正常
@@ -181,12 +189,12 @@ export default function DashboardPage(){
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
 
             {/* Stats */}
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
+            <div className="stats-grid" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
               {stats.map(s=><Stat key={s.label} {...s}/>)}
             </div>
 
             {/* Row 2 */}
-            <div style={{display:'grid',gridTemplateColumns:'270px 1fr',gap:10}}>
+            <div className="two-col-grid" style={{display:'grid',gridTemplateColumns:'270px 1fr',gap:10}}>
               <Card>
                 <ST icon={I.cpu} title="系統概況"/>
                 <EB>
