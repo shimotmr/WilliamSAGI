@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   const { data: allowUser } = await supabase
     .from('allow_users')
     .select('role')
-    .or(`email.eq.${employee.emp_code},email.eq.${employee.email}`)
+    .or(`email.eq.${employee.emp_code},email.eq.${employee.email},email.eq.${employee.emp_code}@aurotek.com`)
     .single()
 
   const role = allowUser?.role || 'user'
