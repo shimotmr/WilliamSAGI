@@ -171,8 +171,9 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--surface-0)' }}>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-70 flex-col z-40" 
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 flex-col z-40" 
              style={{ 
+               width: '280px',
                background: 'linear-gradient(180deg, var(--surface-1) 0%, var(--surface-0) 100%)',
                borderRight: '1px solid var(--surface-3)',
                backdropFilter: 'blur(10px)'
@@ -336,7 +337,7 @@ export default function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Main Content */}
-      <main className="md:ml-70 pt-14 md:pt-0 min-h-screen" style={{ backgroundColor: 'var(--surface-0)' }}>
+      <main className="md:ml-[280px] pt-14 md:pt-0 min-h-screen" style={{ backgroundColor: 'var(--surface-0)' }}>
         {children}
       </main>
 
