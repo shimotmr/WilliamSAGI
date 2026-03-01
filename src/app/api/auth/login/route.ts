@@ -15,8 +15,7 @@ export async function POST(request: NextRequest) {
 
   const account = input.trim().toLowerCase()
 
-  // Step 1: 查 employees 表確認帳號存在
-  // 支援工號（emp_code）或 email prefix（williamhsiao）
+  // Step 1: 查 employees 表（支援工號或 email prefix）
   const { data: employee } = await supabase
     .from('employees')
     .select('emp_code, name, email')
@@ -27,12 +26,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '帳號不存在，請確認工號是否正確' }, { status: 401 })
   }
 
-  // Step 2: Zimbra 驗證（用輸入的帳號原樣送）
+  // Step 2: Zimbra Basic Auth — 必須用完整 email，不能用工號
   let zimbraOk = false
   try {
-    const zimbraAccount = employee.emp_code === account ? account : account
-    const cred = Buffer.from(`${zimbraAccount}:${password}`).toString('base64')
-    const resp = await fetch(`${ZIMBRA_HOST}/home/${zimbraAccount}/inbox?fmt=json&limit=1`, {
+    const zimbraEmail = employee.email  // fix: 永遠用 email
+    const cred = Buffer.from(`${zimbraEmail}:${password}`).toString('base64')
+    const resp = await fetch(`${ZIMBRA_HOST}/home/${zimbraEmail}/inbox?fmt=json&limit=1`, {
       headers: { Authorization: `Basic ${cred}` },
     })
     zimbraOk = resp.ok
@@ -44,7 +43,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '密碼錯誤' }, { status: 401 })
   }
 
-  // Step 3: 查 allow_users 決定角色，預設 user
+  // Step 3: 查 allow_users 決定角色
   const { data: allowUser } = await supabase
     .from('allow_users')
     .select('role')
