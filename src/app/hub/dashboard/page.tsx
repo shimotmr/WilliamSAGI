@@ -215,6 +215,7 @@ export default function DashboardPage(){
               <Card>
                 <ST icon={I.bar} title="Token 消耗 — 近 7 天"/>
                 <EB>
+                  <div style={{position:'relative',width:'100%',height:162,overflow:'hidden'}}>
                   {(data.tokenTrend??[]).length>0?(
                     <Line
                       data={{
@@ -234,11 +235,11 @@ export default function DashboardPage(){
                           y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:T.fgMuted,font:{size:11,family:'Inter'}}},
                         }
                       }}
-                      height={162}
                     />
                   ):(
                     <div style={{height:162,display:'flex',alignItems:'center',justifyContent:'center',color:T.fgMuted,fontSize:13}}>尚無資料</div>
                   )}
+                  </div>
                 </EB>
               </Card>
             </div>
