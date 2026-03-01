@@ -96,7 +96,7 @@ export default function LoginForm() {
           <form className="login-form" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="工號（如 u1612）"
+              placeholder="AD 帳號"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="login-input"
@@ -123,7 +123,7 @@ export default function LoginForm() {
               {loading ? '驗證中…' : '進入 Hub →'}
             </button>
           </form>
-          <p className="login-hint">和椿公司帳號登入</p>
+          <p className="login-hint">請輸入 AD 帳號及密碼登入系統</p>
         </div>
       </div>
     </>
