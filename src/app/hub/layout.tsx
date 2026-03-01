@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/hub/analytics', icon: '◉', label: '分析' },
   { href: '/hub/trade',     icon: '◐', label: '交易' },
   { href: '/hub/warroom',   icon: '◑', label: 'War Room' },
+  { href: '/portal/dashboard', icon: '⬡', label: 'Portal →' },
 ];
 
 export default function HubLayout({ children }: { children: React.ReactNode }) {
