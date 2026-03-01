@@ -1,2 +1,2 @@
 import { redirect } from 'next/navigation'
-export default function RootPage() { redirect('/hub/dashboard') }
+export default function RootPage() { redirect('/login') }
