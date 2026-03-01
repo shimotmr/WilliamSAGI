@@ -96,7 +96,7 @@ export default function LoginForm() {
           <form className="login-form" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="帳號（如 williamhsiao）"
+              placeholder="工號（如 u1612）"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="login-input"
