@@ -2,12 +2,6 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { verifySession, authCookieName } from '@/lib/auth'
 
-const PUBLIC_PATHS = ['/login', '/api/auth/login']
-
-function isPublic(pathname: string) {
-  return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
-}
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -16,10 +10,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // 公開路徑放行
-  if (isPublic(pathname)) return NextResponse.next()
+  // API 路由、靜態資源、login 頁面全部放行
+  if (
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/favicon') ||
+    pathname === '/login'
+  ) {
+    return NextResponse.next()
+  }
 
-  // 驗證 session
+  // 其他頁面路由：驗證 session
   const token = request.cookies.get(authCookieName)?.value
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.url))
