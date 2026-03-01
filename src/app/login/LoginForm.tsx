@@ -61,21 +61,14 @@ export default function LoginForm() {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
-        .login-sub {
-          font-size: 0.8125rem;
-          color: #8A8F98;
-          margin-bottom: 2rem;
-        }
+        .login-sub { font-size: 0.8125rem; color: #8A8F98; margin-bottom: 2rem; }
         .login-form { display: flex; flex-direction: column; gap: 0.875rem; }
         .login-input {
-          width: 100%;
-          padding: 0.75rem 1rem;
+          width: 100%; padding: 0.75rem 1rem;
           border-radius: 10px;
           background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.1);
-          color: #EDEDEF;
-          font-size: 1rem;
-          outline: none;
+          color: #EDEDEF; font-size: 1rem; outline: none;
         }
         .login-input:focus { border-color: rgba(94,106,210,0.6); }
         .login-input::placeholder { color: #8A8F98; }
@@ -94,32 +87,32 @@ export default function LoginForm() {
         }
         .login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .login-error { font-size: 0.8125rem; color: #f87171; }
-        .login-hint {
-          margin-top: 1.25rem;
-          font-size: 0.75rem;
-          color: #8A8F98;
-          text-align: center;
-        }
+        .login-hint { margin-top: 1.25rem; font-size: 0.75rem; color: #8A8F98; text-align: center; }
       `}</style>
-
       <div className="login-wrap">
         <div className="login-card">
-          <div className="login-logo">
-            William<span>SAGI</span>
-          </div>
+          <div className="login-logo">William<span>SAGI</span></div>
           <p className="login-sub">Super AGI Control Hub</p>
-
           <form className="login-form" onSubmit={handleSubmit}>
             <input
-              type="email" placeholder="your@email.com"
-              value={email} onChange={e => setEmail(e.target.value)}
-              className="login-input" autoComplete="email" required
+              type="text"
+              placeholder="帳號（如 williamhsiao）"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="login-input"
+              autoComplete="username"
+              autoCapitalize="none"
+              required
             />
             <div className="pw-wrap">
               <input
-                type={showPw ? 'text' : 'password'} placeholder="Password"
-                value={password} onChange={e => setPassword(e.target.value)}
-                className="login-input" autoComplete="current-password" required
+                type={showPw ? 'text' : 'password'}
+                placeholder="密碼"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="login-input"
+                autoComplete="current-password"
+                required
               />
               <button type="button" className="pw-toggle" onClick={() => setShowPw(!showPw)}>
                 {showPw ? 'Hide' : 'Show'}
@@ -130,8 +123,7 @@ export default function LoginForm() {
               {loading ? '驗證中…' : '進入 Hub →'}
             </button>
           </form>
-
-          <p className="login-hint">使用公司 Email 登入</p>
+          <p className="login-hint">和椿公司帳號登入</p>
         </div>
       </div>
     </>
