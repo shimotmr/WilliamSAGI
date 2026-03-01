@@ -46,9 +46,16 @@ export function ThemeProvider({
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.setAttribute('data-context', context);
+    // Login 頁面強制 light mode
+    if (pathname === '/login') {
+      document.body.style.background = '#FAFAFA';
+      document.body.style.color = '#0F172A';
+      return;
+    }
+
     document.body.style.background = mode === 'dark' ? '#050506' : '#FAFAFA';
     document.body.style.color = mode === 'dark' ? '#EDEDEF' : '#0F172A';
-  }, [theme, context, mode]);
+  }, [theme, context, mode, pathname]);
 
   const toggleTheme = () => {
     const next: ThemeMode = mode === 'dark' ? 'light' : 'dark';
