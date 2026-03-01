@@ -26,12 +26,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '帳號不存在，請確認工號是否正確' }, { status: 401 })
   }
 
-  // Step 2: Zimbra Basic Auth — 必須用完整 email，不能用工號
+  // Step 2: Zimbra Basic Auth — 用 email prefix（@之前的帳號，e.g. williamhsiao）
+  // Zimbra REST API /home/{user}/inbox 接受 prefix，不需要完整 email
   let zimbraOk = false
   try {
-    const zimbraEmail = employee.email  // fix: 永遠用 email
-    const cred = Buffer.from(`${zimbraEmail}:${password}`).toString('base64')
-    const resp = await fetch(`${ZIMBRA_HOST}/home/${zimbraEmail}/inbox?fmt=json&limit=1`, {
+    const zimbraUser = (employee.email || employee.emp_code).split('@')[0]
+    const cred = Buffer.from(`${zimbraUser}:${password}`).toString('base64')
+    const resp = await fetch(`${ZIMBRA_HOST}/home/${zimbraUser}/inbox?fmt=json&limit=1`, {
       headers: { Authorization: `Basic ${cred}` },
     })
     zimbraOk = resp.ok
