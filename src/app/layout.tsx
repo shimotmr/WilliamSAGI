@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import './globals.css'
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
