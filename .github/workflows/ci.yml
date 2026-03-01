@@ -19,6 +19,13 @@ jobs:
       - run: npm ci
       - name: Type check
         run: npx tsc --noEmit
+      - name: Notify failure
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="1029808355" \
+            -d parse_mode="HTML" \
+            -d text="❌ <b>WilliamSAGI CI 失敗</b>%0AJob: TypeScript Check%0ACommit: ${{ github.sha }}%0ABranch: ${{ github.ref_name }}%0A🔗 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   lint:
     name: ESLint
@@ -32,3 +39,10 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint --if-present
+      - name: Notify failure
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="1029808355" \
+            -d parse_mode="HTML" \
+            -d text="❌ <b>WilliamSAGI CI 失敗</b>%0AJob: ESLint%0ACommit: ${{ github.sha }}%0ABranch: ${{ github.ref_name }}%0A🔗 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
