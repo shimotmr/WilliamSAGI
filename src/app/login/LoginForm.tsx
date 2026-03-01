@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
@@ -8,16 +8,7 @@ export default function LoginForm() {
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
   const [showPw, setShowPw]     = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const router  = useRouter()
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const card = cardRef.current
-    if (!card) return
-    const rect = card.getBoundingClientRect()
-    card.style.setProperty('--mx', `${e.clientX - rect.left}px`)
-    card.style.setProperty('--my', `${e.clientY - rect.top}px`)
-  }
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -39,98 +30,110 @@ export default function LoginForm() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh', fontFamily: '"Inter",system-ui,sans-serif',
-      background: '#050506', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', position: 'relative', overflow: 'hidden',
-    }}>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-
-      {/* Ambient blobs */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', top: '-20%', left: '10%',
-          width: '60vw', height: '60vw', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(88,28,220,0.18) 0%, transparent 70%)',
-          animation: 'floatBlob 12s ease-in-out infinite',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: '-10%', right: '5%',
-          width: '50vw', height: '50vw', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(94,106,210,0.12) 0%, transparent 70%)',
-          animation: 'floatBlob 16s ease-in-out infinite reverse',
-        }} />
-      </div>
-
-      {/* Grid overlay */}
-      <div style={{
-        position: 'fixed', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px)',
-        backgroundSize: '64px 64px',
-      }} />
-
+    <>
       <style>{`
-        @keyframes floatBlob {
-          0%,100%{transform:translateY(0) rotate(0deg)}
-          50%{transform:translateY(-24px) rotate(1.5deg)}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .login-wrap {
+          min-height: 100vh;
+          background: #050506;
+          display: grid;
+          place-items: center;
+          padding: 1.5rem;
+          font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
         }
+        .login-card {
+          width: 100%;
+          max-width: 400px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.09);
+          border-radius: 20px;
+          padding: 2.25rem;
+        }
+        .login-logo {
+          font-size: 1.5rem;
+          font-weight: 800;
+          letter-spacing: -0.04em;
+          color: #EDEDEF;
+          margin-bottom: 0.25rem;
+        }
+        .login-logo span {
+          background: linear-gradient(135deg,#5E6AD2,#818cf8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .login-sub {
+          font-size: 0.8125rem;
+          color: #8A8F98;
+          margin-bottom: 2rem;
+        }
+        .login-form { display: flex; flex-direction: column; gap: 0.875rem; }
         .login-input {
-          width:100%; padding:0.75rem 1rem; border-radius:10px;
-          background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
-          color:#EDEDEF; font-size:0.9rem; outline:none;
-          transition:border-color 200ms; box-sizing:border-box;
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: #EDEDEF;
+          font-size: 1rem;
+          outline: none;
         }
-        .login-input:focus { border-color:rgba(94,106,210,0.5); }
-        .login-input::placeholder { color:#8A8F98; }
+        .login-input:focus { border-color: rgba(94,106,210,0.6); }
+        .login-input::placeholder { color: #8A8F98; }
+        .pw-wrap { position: relative; }
+        .pw-toggle {
+          position: absolute; right: 0.875rem; top: 50%;
+          transform: translateY(-50%);
+          background: none; border: none;
+          color: #8A8F98; font-size: 0.75rem; cursor: pointer;
+        }
         .login-btn {
-          width:100%; padding:0.875rem; border-radius:10px; border:none; cursor:pointer;
-          background:linear-gradient(135deg,#5E6AD2,#6872D9);
-          color:#fff; font-size:0.9rem; font-weight:600;
-          letter-spacing:-0.01em; transition:opacity 200ms;
+          width: 100%; padding: 0.875rem;
+          border-radius: 10px; border: none; cursor: pointer;
+          background: linear-gradient(135deg,#5E6AD2,#6872D9);
+          color: #fff; font-size: 1rem; font-weight: 600;
         }
-        .login-btn:hover { opacity:0.88; }
-        .login-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .login-error { font-size: 0.8125rem; color: #f87171; }
+        .login-hint {
+          margin-top: 1.25rem;
+          font-size: 0.75rem;
+          color: #8A8F98;
+          text-align: center;
+        }
       `}</style>
 
-      {/* Card */}
-      <div ref={cardRef} onMouseMove={handleMouseMove} style={{
-        position: 'relative', width: '100%', maxWidth: '400px', margin: '1.5rem',
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '20px', padding: '2.5rem',
-        backdropFilter: 'blur(24px)',
-        boxShadow: '0 32px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
-        boxSizing: 'border-box',
-      }}>
-        {/* Logo */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.04em', color: '#EDEDEF', marginBottom: '0.375rem' }}>
-            William<span style={{ background: 'linear-gradient(135deg,#5E6AD2,#818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SAGI</span>
+      <div className="login-wrap">
+        <div className="login-card">
+          <div className="login-logo">
+            William<span>SAGI</span>
           </div>
-          <p style={{ fontSize: '0.8125rem', color: '#8A8F98', margin: 0 }}>Super AGI Control Hub</p>
+          <p className="login-sub">Super AGI Control Hub</p>
+
+          <form className="login-form" onSubmit={handleSubmit}>
+            <input
+              type="email" placeholder="your@email.com"
+              value={email} onChange={e => setEmail(e.target.value)}
+              className="login-input" autoComplete="email" required
+            />
+            <div className="pw-wrap">
+              <input
+                type={showPw ? 'text' : 'password'} placeholder="Password"
+                value={password} onChange={e => setPassword(e.target.value)}
+                className="login-input" autoComplete="current-password" required
+              />
+              <button type="button" className="pw-toggle" onClick={() => setShowPw(!showPw)}>
+                {showPw ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            {error && <p className="login-error">{error}</p>}
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? '驗證中…' : '進入 Hub →'}
+            </button>
+          </form>
+
+          <p className="login-hint">使用公司 Email 登入</p>
         </div>
-
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-          <input type="email" placeholder="your@email.com" value={email}
-            onChange={e => setEmail(e.target.value)} className="login-input" required />
-          <div style={{ position: 'relative' }}>
-            <input type={showPw ? 'text' : 'password'} placeholder="Password" value={password}
-              onChange={e => setPassword(e.target.value)} className="login-input" required />
-            <button type="button" onClick={() => setShowPw(!showPw)} style={{
-              position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)',
-              background: 'none', border: 'none', color: '#8A8F98', cursor: 'pointer', fontSize: '0.75rem',
-            }}>{showPw ? 'Hide' : 'Show'}</button>
-          </div>
-          {error && <p style={{ fontSize: '0.8rem', color: '#f87171', margin: 0 }}>{error}</p>}
-          <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? '驗證中…' : '進入 Hub →'}
-          </button>
-        </form>
-
-        <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: '#8A8F98', textAlign: 'center' }}>
-          使用公司 Email 登入
-        </p>
       </div>
-    </div>
+    </>
   )
 }
