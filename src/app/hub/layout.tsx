@@ -16,13 +16,13 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultContext="hub" defaultMode="dark">
       <style>{`
-        .hub-sidebar { display: none; }
-        .hub-mobile-nav { display: flex; }
-        .hub-mobile-spacer { display: block; }
-        @media (min-width: 1024px) {
-          .hub-sidebar { display: flex; }
-          .hub-mobile-nav { display: none; }
-          .hub-mobile-spacer { display: none; }
+        .hub-sidebar { display: flex; }
+        .hub-mobile-nav { display: none; }
+        .hub-mobile-spacer { display: none; }
+        @media (max-width: 768px) {
+          .hub-sidebar { display: none; }
+          .hub-mobile-nav { display: flex; }
+          .hub-mobile-spacer { display: block; }
         }
         .hub-nav-link {
           display:flex;align-items:center;gap:0.625rem;
