@@ -215,9 +215,10 @@ export default function DashboardPage(){
               <Card>
                 <ST icon={I.bar} title="Token 消耗 — 近 7 天"/>
                 <EB>
-                  <div style={{position:'relative',width:'100%',height:162,overflow:'hidden'}}>
+                  <div style={{position:'relative',width:'100%',height:162,maxHeight:162,overflow:'hidden'}}>
                   {(data.tokenTrend??[]).length>0?(
                     <Line
+                      style={{maxHeight:'162px'}}
                       data={{
                         labels:(data.tokenTrend??[]).map(d=>d.date.slice(5)),
                         datasets:[{
