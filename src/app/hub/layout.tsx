@@ -27,7 +27,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
         .hub-nav-link {
           display:flex;align-items:center;gap:0.625rem;
           padding:0.5rem 0.75rem;border-radius:0.5rem;
-          color:rgba(237,237,239,0.85);text-decoration:none;
+          color:#EDEDEF;text-decoration:none;
           font-size:0.8125rem;font-weight:500;
           transition:all 150ms ease;
         }
@@ -41,7 +41,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
         {/* Sidebar — desktop only */}
         <aside className="hub-sidebar" style={{
           width:'220px',flexShrink:0,flexDirection:'column',
-          background:'rgba(255,255,255,0.02)',
+          background:'#0a0a0c',
           borderRight:'1px solid rgba(255,255,255,0.06)',
           padding:'1.5rem 0',
         }}>
