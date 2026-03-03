@@ -44,6 +44,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
           background:'#0a0a0c',
           borderRight:'1px solid rgba(255,255,255,0.06)',
           padding:'1.5rem 0',
+          position:'relative',zIndex:20,
         }}>
           <div style={{ padding:'0 1.25rem 1.5rem',borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
             <span style={{ fontWeight:700,fontSize:'1rem',letterSpacing:'-0.02em',color:'#EDEDEF' }}>SAGI</span>
