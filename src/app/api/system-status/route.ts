@@ -12,11 +12,18 @@ export async function GET() {
     const { count: active } = await supabase.from('board_tasks').select('*',{count:'exact',head:true}).eq('status','執行中')
     const { count: total } = await supabase.from('board_tasks').select('*',{count:'exact',head:true})
 
+    const uptimeSec = Math.floor(process.uptime())
+    const h = Math.floor(uptimeSec / 3600)
+    const m = Math.floor((uptimeSec % 3600) / 60)
+    const uptimeStr = h > 0 ? `${h}小時 ${m}分鐘` : `${m}分鐘`
+    const restartTime = new Date(Date.now() - uptimeSec * 1000).toLocaleString('zh-TW')
+
     return NextResponse.json({
-      system: { status: 'healthy', uptime: process.uptime(), version: '2.0' },
+      system: { status: 'healthy', uptime: uptimeStr, lastRestart: restartTime, version: '2.0' },
       sessions: { active: active||0, total: total||0, mainAgent: 1, subAgents: (active||1)-1 },
       storage: { openclaw: '~/.openclaw', diskUsage: 45, available: '100GB' },
       gateway: { status: 'running', port: 18789 },
+      timestamp: new Date().toISOString(),
     })
   } catch(e) {
     return NextResponse.json({
