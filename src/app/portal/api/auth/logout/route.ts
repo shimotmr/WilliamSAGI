@@ -24,12 +24,7 @@ export async function POST(request: Request) {
           details: '用戶登出'
         })
       }).catch(() => {
-        console.log('[ACTIVITY LOG]', JSON.stringify({
-          action: 'logout',
-          user: userEmail,
-          timestamp: new Date().toISOString(),
-          ip: ip,
-        }))
+        // Activity log API unavailable; silently ignore
       })
     } catch {
       // 忽略日誌錯誤

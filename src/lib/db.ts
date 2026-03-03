@@ -139,13 +139,11 @@ export async function saveTeamMember(member: TeamMember): Promise<boolean> {
   }
   
   // TODO: 寫入 Supabase 或 Google Sheets
-  console.log('[DB] Saved team member:', member.id);
   return true;
 }
 
 export async function deleteTeamMember(id: string): Promise<boolean> {
   teamCache = teamCache.filter(m => m.id !== id);
-  console.log('[DB] Deleted team member:', id);
   return true;
 }
 
@@ -186,13 +184,11 @@ export async function saveDealer(dealer: Dealer): Promise<boolean> {
   } else {
     dealersCache.push(dealer);
   }
-  console.log('[DB] Saved dealer:', dealer.id);
   return true;
 }
 
 export async function deleteDealer(id: string): Promise<boolean> {
   dealersCache = dealersCache.filter(d => d.id !== id);
-  console.log('[DB] Deleted dealer:', id);
   return true;
 }
 
@@ -233,7 +229,6 @@ export async function saveTarget(target: Target): Promise<boolean> {
   } else {
     targetsCache.push(target);
   }
-  console.log('[DB] Saved target:', target.id);
   return true;
 }
 

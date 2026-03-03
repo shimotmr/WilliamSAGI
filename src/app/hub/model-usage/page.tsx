@@ -82,27 +82,22 @@ export default function ModelUsageDashboard() {
     
     // Timeout fallback - ensure loading state is always cleared
     const timeoutId = setTimeout(() => {
-      console.log('[ModelUsage] Timeout reached, clearing loading state')
       if (loading) {
         setLoading(false)
         setError('請求超時，請重新整理頁面')
       }
     }, 10000)
 
-    console.log('[ModelUsage] Starting fetch...')
-    
     fetch('/api/model-usage', { signal: controller.signal })
       .then(res => {
-        console.log('[ModelUsage] Response status:', res.status)
         if (!res.ok) {
           throw new Error(`HTTP error: ${res.status}`)
         }
         return res.json()
       })
       .then(result => {
-        console.log('[ModelUsage] API result:', result)
         clearTimeout(timeoutId)
-        
+
         if (result.status === 'success') {
           setData(result)
           setError(null)
@@ -111,16 +106,13 @@ export default function ModelUsageDashboard() {
         }
       })
       .catch(err => {
-        console.error('[ModelUsage] Fetch error:', err)
         clearTimeout(timeoutId)
         if (err.name === 'AbortError') {
-          console.log('[ModelUsage] Request was aborted')
           return
         }
         setError(err.message || '網路錯誤')
       })
       .finally(() => {
-        console.log('[ModelUsage] Loading complete')
         setLoading(false)
       })
       

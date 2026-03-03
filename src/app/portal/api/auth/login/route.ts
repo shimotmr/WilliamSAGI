@@ -186,7 +186,7 @@ async function logActivity(log: {
       })
     }).catch(() => {
       // 如果內部 API 失敗，至少記錄到 console
-      console.log('[ACTIVITY LOG]', JSON.stringify(log))
+      // Activity log API unavailable; silently ignore
     })
   } catch (error) {
     console.error('Failed to log activity:', error)

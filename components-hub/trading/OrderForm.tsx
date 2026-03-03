@@ -180,8 +180,7 @@ export default function OrderForm({ onOrderSubmit }: OrderFormProps) {
   }
 
   const handleConfirmOrder = () => {
-    // Mock API 呼叫
-    console.log('下單成功:', orderData)
+    // TODO: 實際下單 API 呼叫
     
     setShowConfirm(false)
     

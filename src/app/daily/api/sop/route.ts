@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
         const { createClient } = await import('@supabase/supabase-js')
         supabase = createClient(supabaseUrl, supabaseKey)
       } catch (e) {
-        console.log('Supabase not available:', e)
+        // Supabase not available, using mock data
       }
     }
     

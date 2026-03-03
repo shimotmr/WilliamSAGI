@@ -11,7 +11,6 @@ export default function TestRealtimePage() {
 
   const addLog = (message: string) => {
     setLogs(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`])
-    console.log(message)
   }
 
   useEffect(() => {

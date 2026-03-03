@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
   const [email, setEmail]       = useState('')
@@ -8,7 +7,6 @@ export default function LoginForm() {
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
   const [showPw, setShowPw]     = useState(false)
-  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -21,7 +19,8 @@ export default function LoginForm() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || '帳號或密碼錯誤'); return }
-      router.push(data.role === 'admin' ? '/hub' : '/portal')
+      // Hard navigation to ensure session cookie is sent on full page load
+      window.location.href = data.role === 'admin' ? '/hub' : '/portal'
     } catch {
       setError('網路連線失敗')
     } finally {
