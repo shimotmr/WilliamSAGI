@@ -7,16 +7,49 @@ export async function GET() {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-    const { data: positions } = await supabase
-      .from('trade_positions').select('*').eq('status', 'open').limit(20)
-    const { data: orders } = await supabase
-      .from('trade_orders').select('*').order('created_at', { ascending: false }).limit(10)
+
+    const [{ data: account }, { data: positions }, { data: orders }] = await Promise.all([
+      supabase.from('trade_account').select('*').order('synced_at', { ascending: false }).limit(1),
+      supabase.from('trade_positions').select('*').eq('status', 'open').order('synced_at', { ascending: false }),
+      supabase.from('trade_orders').select('*').order('created_at', { ascending: false }).limit(10),
+    ])
+
+    const acc = account?.[0] ?? null
+    const pos = positions ?? []
+    const ord = orders ?? []
+
+    const totalPnl = pos.reduce((sum: number, p: { pnl?: number }) => sum + (p.pnl || 0), 0)
+
     return NextResponse.json({
-      positions: positions || [],
-      recentOrders: orders || [],
-      totalPositions: positions?.length || 0,
+      ok: true,
+      connected: true,
+      account: acc ? {
+        accountId: acc.account_id,
+        brokerId: acc.broker_id,
+        username: acc.username,
+        accountType: acc.account_type,
+        availableBalance: acc.available_balance,
+        syncedAt: acc.synced_at,
+      } : null,
+      totalAssets: acc?.available_balance ?? null,
+      totalPnl,
+      positionCount: pos.length,
+      positions: pos,
+      recentOrders: ord,
+      totalPositions: pos.length,
+      syncedAt: acc?.synced_at ?? null,
     })
-  } catch {
-    return NextResponse.json({ positions: [], recentOrders: [], totalPositions: 0 })
+  } catch (e) {
+    return NextResponse.json({
+      ok: false,
+      connected: false,
+      error: String(e),
+      totalAssets: null,
+      totalPnl: null,
+      positionCount: 0,
+      positions: [],
+      recentOrders: [],
+      totalPositions: 0,
+    })
   }
 }
