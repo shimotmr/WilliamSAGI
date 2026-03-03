@@ -1,12 +1,11 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useState, useEffect, Suspense } from 'react'
 
 import { logActionWithIP } from '@/lib/audit'
 
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
   
@@ -52,9 +51,8 @@ function LoginForm() {
         // 記錄登入成功
         logActionWithIP('login', JSON.stringify({ redirect }), '/login', username)
         
-        // 登入成功，跳轉到原始頁面
-        router.push(redirect)
-        router.refresh()
+        // Hard navigation to ensure session cookie is sent on full page load
+        window.location.href = redirect
       } else {
         // 記錄登入失敗
         logActionWithIP('login_failed', JSON.stringify({ reason: data.message }), '/login', username)
