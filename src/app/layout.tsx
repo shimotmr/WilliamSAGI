@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-TW" className={`${plusJakartaSans.variable} ${inter.variable}`}>
+    <html lang="zh-TW" data-theme="hub-dark" className={`${plusJakartaSans.variable} ${inter.variable}`}>
       <body>
         <ThemeProvider>
           {children}
