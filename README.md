@@ -17,3 +17,4 @@
 
 ## 部署
 Vercel → 連結此 repo → 設定環境變數（參考 .env.example）
+
