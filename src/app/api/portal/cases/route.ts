@@ -17,15 +17,26 @@ export async function GET(req: NextRequest) {
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // 過期篩選
-  let filtered = data || []
+  // 過期篩選 - 根據出貨日判斷
   const today = new Date().toISOString().slice(0,10)
+  let filtered = data || []
+  
   if (expired === 'true') {
-    // 出貨日已過但尚未出貨
-    filtered = filtered.filter(c => c.ship_date && c.ship_date < today && !['已出貨','失敗'].includes(c.stage))
+    // 出貨日已過但尚未出貨的案件 (非已出貨、非失敗)
+    filtered = filtered.filter(c => 
+      c.ship_date && 
+      c.ship_date < today && 
+      c.stage !== '已出貨' && 
+      c.stage !== '失敗'
+    )
   } else if (expired === 'false') {
-    // 未過期
-    filtered = filtered.filter(c => !c.ship_date || c.ship_date >= today || ['已出貨','失敗'].includes(c.stage))
+    // 未過期：還沒到出貨日 或 已出貨 或 失敗
+    filtered = filtered.filter(c => 
+      !c.ship_date || 
+      c.ship_date >= today || 
+      c.stage === '已出貨' || 
+      c.stage === '失敗'
+    )
   }
 
   // 計算金額統計
