@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   // YTD 數據
   const ytdStart = `${year}-01-01`
   const ytdEnd = monthEnd
-  const [{ data: ytdTargets }, { data: ytdCases }] = await Promise.all([
+  const [{ data: ytdTargets }, { data: ytdCases }]: [{ data: any }, { data: any }] = await Promise.all([
     supabase.from('targets').select('*').gte('year', year).lte('year', year),
     supabase.from('cases').select('rep,amount,stage').in('stage', ['已出貨','待出貨']).gte('ship_date', ytdStart).lte('ship_date', ytdEnd),
   ])
