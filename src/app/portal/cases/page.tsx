@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react'
 interface Case { id: string; stage: string; order_id: string; rep: string; dealer: string; end_customer: string; machine: string; probability: number; quantity: number; amount: number; expected: number; order_date: string; ship_date: string; category: string; brand: string; updated_at: string }
 
 const STAGE_COLORS: Record<string,string> = {
-  '簽約':'bg-green-100 text-green-700','出貨':'bg-blue-100 text-blue-700',
-  '報價':'bg-yellow-100 text-yellow-700','詢價':'bg-gray-100 text-gray-600',
-  '取消':'bg-red-100 text-red-400','結案':'bg-gray-100 text-gray-400',
+  '已出貨':'bg-blue-100 text-blue-700','待出貨':'bg-yellow-100 text-yellow-700',
+  '進行中':'bg-gray-100 text-gray-600','失敗':'bg-red-100 text-red-400',
+  '結案':'bg-gray-100 text-gray-400',
 }
 
 export default function CasesPage() {
   const [cases, setCases] = useState<Case[]>([])
+  const [stats, setStats] = useState<{count:number,totalAmount:number,totalExpected:number}>({count:0,totalAmount:0,totalExpected:0})
   const [stage, setStage] = useState('')
+  const [expired, setExpired] = useState('')
   const [q, setQ] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -19,35 +21,53 @@ export default function CasesPage() {
     setLoading(true)
     const p = new URLSearchParams()
     if (stage) p.set('stage', stage)
+    if (expired) p.set('expired', expired)
     if (q) p.set('q', q)
     const r = await fetch(`/api/portal/cases?${p}`)
     const d = await r.json()
     setCases(d.cases || [])
+    setStats(d.stats || {count:0,totalAmount:0,totalExpected:0})
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [stage])
+  useEffect(() => { load() }, [stage, expired])
 
-  const stages = ['簽約','出貨','報價','詢價','結案','取消']
-  const totalAmt = cases.reduce((s,c) => s + (c.amount||0), 0)
-  const totalExp = cases.reduce((s,c) => s + (c.expected||0), 0)
+  const stages = ['已出貨','待出貨','進行中','失敗','結案']
+  const totalAmt = stats.totalAmount
+  const totalExp = stats.totalExpected
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-2">案件管理</h1>
+      
+      {/* 統計數字 */}
       <div className="flex gap-4 mb-4 text-sm text-gray-500">
-        <span>共 {cases.length} 筆</span>
+        <span>共 <strong className="text-gray-800">{stats.count}</strong> 筆</span>
         <span>合約金額 <strong className="text-gray-800">{(totalAmt/10000).toFixed(0)}萬</strong></span>
         <span>預計金額 <strong className="text-gray-800">{(totalExp/10000).toFixed(0)}萬</strong></span>
       </div>
+
+      {/* 篩選條件 */}
       <div className="flex gap-2 mb-4 flex-wrap">
+        {/* 狀態篩選 */}
         <button onClick={()=>setStage('')} className={`px-3 py-1.5 rounded-lg text-sm ${!stage?'bg-blue-600 text-white':'bg-gray-100'}`}>全部</button>
         {stages.map(s=><button key={s} onClick={()=>setStage(s)} className={`px-3 py-1.5 rounded-lg text-sm ${stage===s?'bg-blue-600 text-white':'bg-gray-100'}`}>{s}</button>)}
+        
+        <div className="w-px bg-gray-300 mx-2"/>
+        
+        {/* 過期篩選 */}
+        <button onClick={()=>setExpired('')} className={`px-3 py-1.5 rounded-lg text-sm ${!expired?'bg-gray-200':'bg-gray-100'}`}>不限</button>
+        <button onClick={()=>setExpired('true')} className={`px-3 py-1.5 rounded-lg text-sm ${expired==='true'?'bg-red-600 text-white':'bg-gray-100'}`}>⚠️ 過期</button>
+        <button onClick={()=>setExpired('false')} className={`px-3 py-1.5 rounded-lg text-sm ${expired==='false'?'bg-green-600 text-white':'bg-gray-100'}`}>✓ 未過期</button>
+        
         <div className="flex-1"/>
+        
+        {/* 搜尋 */}
         <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&load()} placeholder="搜尋客戶/廠商/型號..."
           className="border rounded-lg px-3 py-2 text-sm w-56" />
         <button onClick={load} className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm">搜尋</button>
       </div>
+
       {loading ? <p className="text-gray-400 text-sm">載入中...</p> : (
         <div className="bg-white rounded-xl shadow overflow-x-auto">
           <table className="w-full text-sm min-w-[900px]">
@@ -65,9 +85,14 @@ export default function CasesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {cases.map(c=>(
-                <tr key={c.id} className="hover:bg-gray-50">
-                  <td className="p-3"><span className={`px-2 py-0.5 rounded text-xs font-medium ${STAGE_COLORS[c.stage]||'bg-gray-100'}`}>{c.stage}</span></td>
+              {cases.map(c=>{
+                const isExpired = c.ship_date && c.ship_date < new Date().toISOString().slice(0,10) && !['已出貨','失敗'].includes(c.stage)
+                return (
+                <tr key={c.id} className={`hover:bg-gray-50 ${isExpired?'bg-red-50':''}`}>
+                  <td className="p-3">
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${STAGE_COLORS[c.stage]||'bg-gray-100'}`}>{c.stage}</span>
+                    {isExpired && <span className="ml-1 text-red-500 text-xs">⚠️</span>}
+                  </td>
                   <td className="p-3 text-gray-500 text-xs">{c.order_id||'-'}</td>
                   <td className="p-3 font-medium">{c.end_customer}</td>
                   <td className="p-3 text-gray-600">{c.dealer}</td>
@@ -77,7 +102,7 @@ export default function CasesPage() {
                   <td className="p-3 text-gray-500 text-xs">{c.ship_date||'-'}</td>
                   <td className="p-3 text-gray-500">{c.rep}</td>
                 </tr>
-              ))}
+              )})}
               {!cases.length && <tr><td colSpan={9} className="p-8 text-center text-gray-400">無資料</td></tr>}
             </tbody>
           </table>
