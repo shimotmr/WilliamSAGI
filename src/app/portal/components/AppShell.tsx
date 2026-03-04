@@ -174,9 +174,9 @@ export default function AppShell({ children }: AppShellProps) {
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 flex-col z-40" 
              style={{ 
                width: '280px',
-               background: 'linear-gradient(180deg, var(--surface-1) 0%, var(--surface-0) 100%)',
+               backgroundColor: '#0f172a',
                borderRight: '1px solid var(--surface-3)',
-               backdropFilter: 'blur(10px)'
+               
              }}>
         {/* Logo */}
         <div className="h-16 flex items-center px-5" style={{ borderBottom: '1px solid var(--surface-3)' }}>
@@ -294,7 +294,7 @@ export default function AppShell({ children }: AppShellProps) {
               style={{ 
                 backgroundColor: 'var(--surface-0)', 
                 borderBottom: '1px solid var(--surface-3)',
-                backdropFilter: 'blur(10px)'
+                
               }}>
         {/* Left side - Hamburger Menu */}
         <button
