@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   startDate.setDate(startDate.getDate() - days)
   
   // Query model_usage_log for last N days
-  const { data: logs, error } = await supabase
+  const { data: logs, error } = await getSupabase()
     .from('model_usage_log')
     .select('*')
     .gte('created_at', startDate.toISOString())

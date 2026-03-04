@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('travis_daily_posts')
     .select('id,title,slug,summary,category,published_at,created_at')
     .order('published_at', { ascending: false, nullsFirst: false })

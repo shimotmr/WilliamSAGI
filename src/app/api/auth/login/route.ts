@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   const account = input.trim().toLowerCase()
 
   // Step 1: 查 employees 表（支援工號或 email prefix）
-  const { data: employee } = await supabase
+  const { data: employee } = await getSupabase()
     .from('employees')
     .select('emp_code, name, email')
     .or(`emp_code.eq.${account},email.ilike.${account}@%`)
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Step 3: 查 allow_users 決定角色
-  const { data: allowUser } = await supabase
+  const { data: allowUser } = await getSupabase()
     .from('allow_users')
     .select('role')
     .or(`email.eq.${employee.emp_code},email.eq.${employee.email},email.eq.${employee.emp_code}@aurotek.com`)

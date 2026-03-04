@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     )
   const { searchParams } = new URL(req.url)
   const limit = parseInt(searchParams.get('limit') || '20')
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('reports')
     .select('id,title,author,type,created_at')
     .order('created_at', { ascending: false })

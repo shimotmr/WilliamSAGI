@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const keywords = ['機器人', 'humanoid', 'VLA', 'walker', 'Walker', '宇樹', 'Unitree', '天工', '人形']
   const orFilter = keywords.map(k => `title.ilike.%${k}%`).join(',')
 
-  const { data: reports } = await supabase
+  const { data: reports } = await getSupabase()
     .from('reports')
     .select('id, title, author, type, created_at')
     .or(orFilter)

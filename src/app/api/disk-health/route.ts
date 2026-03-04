@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-    const { data } = await supabase
+    const { data } = await getSupabase()
       .from('disk_health_logs')
       .select('*')
       .order('created_at', { ascending: false })

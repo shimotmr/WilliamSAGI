@@ -11,7 +11,7 @@ const getSupabase = () => createClient(
 export async function GET() {
   try {
     // Status counts
-    const { data: tasks } = await supabase
+    const { data: tasks } = await getSupabase()
       .from('board_tasks')
       .select('status, assignee, title, updated_at, completed_at')
 

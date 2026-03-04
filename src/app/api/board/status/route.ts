@@ -7,7 +7,7 @@ export async function GET() {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-  const { data: tasks } = await supabase
+  const { data: tasks } = await getSupabase()
     .from('board_tasks')
     .select('id,title,status,assignee,priority,updated_at')
     .in('status', ['執行中', '待派發', '待執行'])

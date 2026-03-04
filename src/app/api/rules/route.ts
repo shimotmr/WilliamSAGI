@@ -62,7 +62,7 @@ export async function GET() {
     )
 
     // Fetch from Supabase
-    const { data: rules, error } = await supabase
+    const { data: rules, error } = await getSupabase()
       .from('rule_compliance')
       .select('*')
       .order('scanned_at', { ascending: false })

@@ -6,7 +6,7 @@ export async function GET() {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('board_tasks')
     .select('assignee, status')
     .neq('assignee', '待分配')
