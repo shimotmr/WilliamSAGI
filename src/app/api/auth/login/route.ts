@@ -11,7 +11,8 @@ const getSupabase = () => createClient(
 const ZIMBRA_HOST = process.env.ZIMBRA_HOST || 'https://webmail.aurotek.com'
 
 export async function POST(request: NextRequest) {
-  const { email: input, password } = await request.json()
+  const { email, username, password } = await request.json()
+  const input = email || username
   if (!input || !password) return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
 
   const account = input.trim().toLowerCase()
