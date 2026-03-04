@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NextResponse } from 'next/server'
 
 const getSupabase = () => {
@@ -13,29 +12,22 @@ export async function GET() {
   const supabase = getSupabase()
   
   try {
-    // 1. 從資料庫讀取檔案分析
-    const { data: fileAnalysis } = await supabase
+    // 1. 從資料庫讀取所有檔案分析
+    const { data: allFiles } = await supabase
       .from('file_context_analysis')
       .select('*')
       .order('tokens', { ascending: false })
     
-    // 2. 過去 5 天每日使用量
+    // 2. 分類
+    const coreFiles = allFiles?.filter((f: any) => f.name.endsWith('.md') && !f.path?.startsWith('memory/')) || []
+    const memoryFiles = allFiles?.filter((f: any) => f.path?.startsWith('memory/')) || []
+    
+    // 3. 過去 5 天每日使用量
     const { data: dailyByModel } = await supabase
       .from('token_usage')
       .select('date, model, total_tokens, cost_usd')
       .gte('date', new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
       .order('date', { ascending: true })
-    
-    // 3. 最近的事件
-    const { data: recentEvents } = await supabase
-      .from('token_usage_events')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(20)
-    
-    // 分類統計
-    const coreFiles = fileAnalysis?.filter(f => f.type === 'core') || []
-    const memoryFiles = fileAnalysis?.filter(f => f.type === 'memory') || []
     
     const cronJobs = [
       { name: 'system-health', frequency: 48, tokensPerRun: 500 },
@@ -53,17 +45,16 @@ export async function GET() {
       memoryFiles,
       memoryStats: {
         files: memoryFiles.length,
-        totalSize: memoryFiles.reduce((s, f) => s + (f.size || 0), 0),
-        totalTokens: memoryFiles.reduce((s, f) => s + (f.tokens || 0), 0),
+        totalSize: memoryFiles.reduce((s: any, f: any) => s + (f.size || 0), 0),
+        totalTokens: memoryFiles.reduce((s: any, f: any) => s + (f.tokens || 0), 0),
       },
       dailyByModel,
-      recentEvents,
       cronJobs,
       cronDailyEstimate,
       summary: {
-        coreFilesTotalTokens: coreFiles.reduce((s, f) => s + (f.tokens || 0), 0),
-        memoryTotalTokens: memoryFiles.reduce((s, f) => s + (f.tokens || 0), 0),
-        estimatedDailyTokens: cronDailyEstimate + coreFiles.reduce((s, f) => s + (f.tokens || 0), 0) * 20
+        coreFilesTotalTokens: coreFiles.reduce((s: any, f: any) => s + (f.tokens || 0), 0),
+        memoryTotalTokens: memoryFiles.reduce((s: any, f: any) => s + (f.tokens || 0), 0),
+        estimatedDailyTokens: cronDailyEstimate + coreFiles.reduce((s: any, f: any) => s + (f.tokens || 0), 0) * 20
       }
     })
   } catch (error) {
