@@ -8,9 +8,9 @@ export async function GET(request: NextRequest) {
 
   if (type === 'overview') {
     // Try to get disk usage from DB if available
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
     const { data } = await supabase
       .from('disk_health_logs')

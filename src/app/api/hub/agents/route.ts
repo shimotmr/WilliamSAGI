@@ -2,8 +2,11 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 export async function GET() {
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
-  const { data } = await supabase.from('board_tasks').select('assignee, status').neq('assignee', '待分配')
+  const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+  const { data } = await getSupabase().from('board_tasks').select('assignee, status').neq('assignee', '待分配')
   const agentMap: Record<string, { name: string; running: number; completed: number; pending: number }> = {}
   for (const t of (data || [])) {
     if (!agentMap[t.assignee]) agentMap[t.assignee] = { name: t.assignee, running: 0, completed: 0, pending: 0 }

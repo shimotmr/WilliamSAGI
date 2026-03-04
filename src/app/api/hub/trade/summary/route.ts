@@ -4,15 +4,15 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function GET() {
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
     const [{ data: account }, { data: positions }, { data: orders }] = await Promise.all([
-      supabase.from('trade_account').select('*').order('synced_at', { ascending: false }).limit(1),
-      supabase.from('trade_positions').select('*').eq('status', 'open').order('synced_at', { ascending: false }),
-      supabase.from('trade_orders').select('*').order('created_at', { ascending: false }).limit(10),
+      getSupabase().from('trade_account').select('*').order('synced_at', { ascending: false }).limit(1),
+      getSupabase().from('trade_positions').select('*').eq('status', 'open').order('synced_at', { ascending: false }),
+      getSupabase().from('trade_orders').select('*').order('created_at', { ascending: false }).limit(10),
     ])
 
     const acc = account?.[0] ?? null

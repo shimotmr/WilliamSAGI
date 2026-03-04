@@ -56,7 +56,10 @@ export async function GET() {
       return NextResponse.json(fallbackData)
     }
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
     // Fetch from Supabase
     const { data: rules, error } = await supabase

@@ -3,15 +3,15 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { execSync } from 'child_process'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
 export async function GET() {
   try {
-    const { count: active } = await supabase.from('board_tasks').select('*',{count:'exact',head:true}).eq('status','執行中')
-    const { count: total } = await supabase.from('board_tasks').select('*',{count:'exact',head:true})
+    const { count: active } = await getSupabase().from('board_tasks').select('*',{count:'exact',head:true}).eq('status','執行中')
+    const { count: total } = await getSupabase().from('board_tasks').select('*',{count:'exact',head:true})
 
     const uptimeSec = Math.floor(process.uptime())
     const h = Math.floor(uptimeSec / 3600)

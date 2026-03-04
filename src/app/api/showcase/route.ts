@@ -56,7 +56,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const getSupabase = () => createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
     const { data, error } = await supabase
       .from('board_tasks')
       .select('id, title, assignee, priority, status, updated_at')
