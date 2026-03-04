@@ -7,6 +7,12 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useAuth } from '@/components/AuthProvider'
 import { createClient } from '@/lib/supabase-client'
 
+const getSupabase = () => {
+  const { createClient } = require("@supabase/supabase-js")
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+}
+
+
 interface Message {
   id: string
   user_name: string
@@ -141,7 +147,7 @@ export default function MeetingPage() {
       .subscribe()
 
     return () => {
-      supabase.removeChannel(channel)
+      getSupabase().removeChannel(channel)
     }
   }, [supabase, scrollToBottom])
 
@@ -152,7 +158,7 @@ export default function MeetingPage() {
     const userName = user.user_metadata?.user_name || user.email || 'Anonymous'
     const userAvatar = user.user_metadata?.avatar_url || ''
 
-    await supabase.from('meeting_messages').insert({
+    await getSupabase().from('meeting_messages').insert({
       meeting_id: 'general',
       user_name: userName,
       user_avatar: userAvatar,

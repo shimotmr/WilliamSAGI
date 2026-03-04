@@ -1,11 +1,17 @@
 export const dynamic = 'force-dynamic'
 import { createClient } from '@supabase/supabase-js'
 
+const getSupabase = () => {
+  const { createClient } = require("@supabase/supabase-js")
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+}
+
+
 export default async function ApprovalsPage() {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
   let items: any[] = []
   try {
-    const { data } = await supabase.from('approval_queue').select('*').eq('status', '待審核').order('created_at', { ascending: false }).limit(20)
+    const { data } = await getSupabase().from('approval_queue').select('*').eq('status', '待審核').order('created_at', { ascending: false }).limit(20)
     items = data || []
   } catch {}
 

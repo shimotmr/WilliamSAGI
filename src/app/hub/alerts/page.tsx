@@ -1,10 +1,16 @@
 export const dynamic = 'force-dynamic'
 import { createClient } from '@supabase/supabase-js'
+
+const getSupabase = () => {
+  const { createClient } = require("@supabase/supabase-js")
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+}
+
 export default async function AlertsPage() {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
   let alerts: any[] = []
   try {
-    const { data } = await supabase.from('alerts').select('*').eq('resolved', false).order('created_at', { ascending: false }).limit(50)
+    const { data } = await getSupabase().from('alerts').select('*').eq('resolved', false).order('created_at', { ascending: false }).limit(50)
     alerts = data || []
   } catch {}
   const sc: Record<string,string> = {critical:'border-red-500 bg-red-50',high:'border-orange-400 bg-orange-50',medium:'border-yellow-400 bg-yellow-50'}

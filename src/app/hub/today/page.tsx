@@ -1,8 +1,14 @@
 export const dynamic = 'force-dynamic'
 import { createClient } from '@supabase/supabase-js'
+
+const getSupabase = () => {
+  const { createClient } = require("@supabase/supabase-js")
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+}
+
 export default async function TodayPage() {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-  const { data: tasks } = await supabase.from('board_tasks').select('id,title,status,priority,assignee').in('status',['執行中','待執行','待派發']).limit(20)
+  const { data: tasks } = await getSupabase().from('board_tasks').select('id,title,status,priority,assignee').in('status',['執行中','待執行','待派發']).limit(20)
   const pc: Record<string,string> = {'P0':'bg-red-500 text-white','P1':'bg-orange-400 text-white','P2':'bg-yellow-400 text-white','P3':'bg-gray-300 text-gray-700'}
   const sc: Record<string,string> = {'執行中':'bg-blue-100 text-blue-700','待執行':'bg-yellow-100 text-yellow-700','待派發':'bg-gray-100 text-gray-600'}
   return (
