@@ -12,6 +12,8 @@ export async function GET(req: NextRequest) {
   const statusParam = searchParams.get('status')
   const statuses = statusParam ? statusParam.split(',') : null
 
+  const supabase = getSupabase()
+  
   let query = supabase
     .from('board_tasks')
     .select('id,title,status,assignee,priority,updated_at,description')

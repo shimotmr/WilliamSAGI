@@ -12,6 +12,8 @@ export async function GET() {
   since.setDate(since.getDate() - 30)
   const sinceISO = since.toISOString()
 
+  const supabase = getSupabase()
+
   const [tokenRes, perfRes] = await Promise.all([
     supabase
       .from('token_usage_log')
