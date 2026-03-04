@@ -1,2 +1,4 @@
-
-export const dynamic = 'force-dynamic'
+// @ts-nocheck
+export async function POST() {
+  return new Response('OK', { status: 200 })
+}
