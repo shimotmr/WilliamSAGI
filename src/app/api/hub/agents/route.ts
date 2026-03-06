@@ -1,19 +1,80 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+
+const KNOWN_AGENTS = [
+  { name: 'main',       display: 'Travis',  role: 'System Coordinator', emoji: '🤖' },
+  { name: 'coder',      display: 'Blake',   role: 'Software Engineer',  emoji: '🔨' },
+  { name: 'coder-b',    display: 'Coder B', role: 'Coder B',            emoji: '💻' },
+  { name: 'researcher', display: 'Rex',     role: 'Data Analyst',       emoji: '🧠' },
+  { name: 'secretary',  display: 'Oscar',   role: 'Office Manager',     emoji: '📋' },
+  { name: 'writer',     display: 'Writer',  role: 'Content Creator',    emoji: '✍️' },
+  { name: 'designer',   display: 'Designer',role: 'UI/UX Designer',     emoji: '🎨' },
+  { name: 'analyst',    display: 'Analyst', role: 'Financial Analyst',  emoji: '📈' },
+  { name: 'trader',     display: 'Warren',  role: 'Trader',             emoji: '💰' },
+  { name: 'inspector',  display: 'Griffin', role: 'QA Inspector',       emoji: '🛡️' },
+];
+
 export async function GET() {
-  const getSupabase = () => createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-  const { data } = await getSupabase().from('board_tasks').select('assignee, status').neq('assignee', '待分配')
-  const agentMap: Record<string, { name: string; running: number; completed: number; pending: number }> = {}
-  for (const t of (data || [])) {
-    if (!agentMap[t.assignee]) agentMap[t.assignee] = { name: t.assignee, running: 0, completed: 0, pending: 0 }
-    if (t.status === '執行中') agentMap[t.assignee].running++
-    else if (t.status === '已完成') agentMap[t.assignee].completed++
-    else if (t.status === '待派發' || t.status === '待執行') agentMap[t.assignee].pending++
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Fetch from agents table
+    const { data: agentsData } = await supabase
+      .from('agents')
+      .select('id, name, color, emoji, role, status')
+      .order('name');
+
+    // Fetch task stats per agent
+    const { data: tasks } = await supabase
+      .from('board_tasks')
+      .select('assignee, status, completed_at')
+      .neq('assignee', '待分配');
+
+    const taskStats: Record<string, { total: number; completed: number; running: number; pending: number }> = {};
+    for (const t of (tasks || [])) {
+      const key = (t.assignee || '').toLowerCase();
+      if (!taskStats[key]) taskStats[key] = { total: 0, completed: 0, running: 0, pending: 0 };
+      taskStats[key].total++;
+      if (t.status === '已完成') taskStats[key].completed++;
+      else if (t.status === '執行中') taskStats[key].running++;
+      else if (t.status === '待派發' || t.status === '待執行') taskStats[key].pending++;
+    }
+
+    // Build agent list: merge DB data with known agents
+    const knownNames = KNOWN_AGENTS.map(a => a.name);
+
+    const agents = KNOWN_AGENTS.map(known => {
+      const dbAgent = (agentsData || []).find(
+        a => a.name?.toLowerCase() === known.name.toLowerCase()
+      );
+      const stats = taskStats[known.name] || taskStats[known.display?.toLowerCase()] || { total: 0, completed: 0, running: 0, pending: 0 };
+      const successRate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+
+      return {
+        name: dbAgent?.name || known.display,
+        display: known.display,
+        role: dbAgent?.role || known.role,
+        emoji: dbAgent?.emoji || known.emoji,
+        color: dbAgent?.color || '#5E6AD2',
+        status: dbAgent?.status || 'active',
+        isActive: dbAgent?.status === 'active',
+        tasksCompleted: stats.completed,
+        tasksRunning: stats.running,
+        tasksPending: stats.pending,
+        tasksTotal: stats.total,
+        successRate,
+      };
+    });
+
+    return NextResponse.json({ agents, total: agents.length });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err.message, agents: [] },
+      { status: 500 }
+    );
   }
-  const agents = Object.values(agentMap)
-  return NextResponse.json({ agents, data: agents })
 }

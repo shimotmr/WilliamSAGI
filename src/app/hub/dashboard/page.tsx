@@ -304,6 +304,65 @@ export default function DashboardPage(){
               ))}
             </div>
 
+            {/* Quick Navigation */}
+            <Card>
+              <ST icon={I.list} title="快速導航"/>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:8}}>
+                {[
+                  {group:'核心監控',items:[
+                    {href:'/hub/monitor',icon:'📊',title:'系統監控',desc:'Gateway、服務健康狀態'},
+                    {href:'/hub/alerts',icon:'🔔',title:'告警中心',desc:'錯誤通知與告警'},
+                    {href:'/hub/warroom',icon:'⚔️',title:'作戰室',desc:'即時指揮中心'},
+                  ]},
+                  {group:'Agent 管理',items:[
+                    {href:'/hub/agents',icon:'🤖',title:'Agents',desc:'Agent 狀態與配置'},
+                    {href:'/hub/today',icon:'📅',title:'今日任務',desc:'今天的待辦事項'},
+                    {href:'/hub/board',icon:'📋',title:'任務看板',desc:'Kanban 任務追蹤'},
+                  ]},
+                  {group:'資料分析',items:[
+                    {href:'/hub/analytics',icon:'📈',title:'分析',desc:'數據分析總覽'},
+                    {href:'/hub/model-usage',icon:'🧠',title:'模型使用',desc:'AI 模型用量統計'},
+                    {href:'/hub/token-usage',icon:'🪙',title:'Token 使用',desc:'Token 消耗追蹤'},
+                  ]},
+                  {group:'業務功能',items:[
+                    {href:'/hub/reports',icon:'📄',title:'報告',desc:'Agent 產出報告'},
+                    {href:'/hub/approvals',icon:'✅',title:'審批',desc:'任務審批中心'},
+                    {href:'/hub/trade',icon:'💹',title:'交易',desc:'交易監控與下單'},
+                    {href:'/hub/growth',icon:'🌱',title:'成長',desc:'成長指標追蹤'},
+                  ]},
+                  {group:'系統設定',items:[
+                    {href:'/hub/prompts',icon:'💬',title:'Prompt 管理',desc:'系統 Prompt 配置'},
+                    {href:'/hub/rules',icon:'🛡️',title:'規則',desc:'自動化規則管理'},
+                  ]},
+                ].flatMap(g=>g.items).map(item=>(
+                  <Link key={item.href} href={item.href} style={{
+                    display:'flex',alignItems:'center',gap:10,
+                    padding:'12px 14px',borderRadius:12,
+                    background:'rgba(255,255,255,0.03)',
+                    border:'1px solid rgba(255,255,255,0.05)',
+                    textDecoration:'none',color:T.fg,
+                    transition:'all 0.2s cubic-bezier(0.16,1,0.3,1)',
+                  }}
+                  onMouseEnter={e=>{
+                    (e.currentTarget as HTMLElement).style.background='rgba(94,106,210,0.1)';
+                    (e.currentTarget as HTMLElement).style.borderColor='rgba(94,106,210,0.25)';
+                    (e.currentTarget as HTMLElement).style.transform='translateY(-1px)';
+                  }}
+                  onMouseLeave={e=>{
+                    (e.currentTarget as HTMLElement).style.background='rgba(255,255,255,0.03)';
+                    (e.currentTarget as HTMLElement).style.borderColor='rgba(255,255,255,0.05)';
+                    (e.currentTarget as HTMLElement).style.transform='none';
+                  }}>
+                    <span style={{fontSize:18,flexShrink:0}}>{item.icon}</span>
+                    <div style={{minWidth:0}}>
+                      <div style={{fontSize:13,fontWeight:500,letterSpacing:'-0.01em'}}>{item.title}</div>
+                      <div style={{fontSize:11,color:T.fgMuted,marginTop:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{item.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </Card>
+
             <p style={{textAlign:'center',color:'rgba(138,143,152,0.35)',fontSize:11,paddingBottom:8,letterSpacing:'0.02em'}}>
               SAGI Hub · Clawd Dashboard · © 2026
             </p>
