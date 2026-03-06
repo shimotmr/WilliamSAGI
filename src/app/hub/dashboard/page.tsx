@@ -333,6 +333,7 @@ export default function DashboardPage(){
                   {group:'系統設定',items:[
                     {href:'/hub/prompts',icon:'💬',title:'Prompt 管理',desc:'系統 Prompt 配置'},
                     {href:'/hub/rules',icon:'🛡️',title:'規則',desc:'自動化規則管理'},
+                    {href:'/hub/profile',icon:'👤',title:'個人檔案',desc:'使用者設定與偏好'},
                   ]},
                 ].flatMap(g=>g.items).map(item=>(
                   <Link key={item.href} href={item.href} style={{

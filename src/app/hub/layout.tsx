@@ -8,7 +8,7 @@ import {
   Bot, CalendarCheck, Kanban,
   BarChart3, Cpu, Coins,
   FileText, CheckSquare, TrendingUp, Sprout,
-  MessageSquare, ShieldCheck,
+  MessageSquare, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -53,6 +53,7 @@ const navGroups = [
     items: [
       { href: '/hub/prompts', icon: MessageSquare, label: 'Prompt 管理' },
       { href: '/hub/rules',   icon: ShieldCheck,   label: '規則' },
+      { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
 ];
