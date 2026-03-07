@@ -44,14 +44,14 @@ export function usePortalUser(): PortalUser {
         const [empResult, adminResult] = await Promise.all([
           fetch(`/api/employees/lookup?employee_id=${encodeURIComponent(employeeId)}`)
             .then((r) => (r.ok ? r.json() : null))
-            .catch(() => null),
+            .catch(() => null) as Promise<any>,
           supabase
             .from('portal_admins')
             .select('nickname, name, title')
             .or(`employee_id.eq.${employeeId},email.ilike.${employeeId}@`)
             .maybeSingle()
             .then((r) => r.data)
-            .catch(() => null),
+            .catch(() => null) as Promise<{ nickname: any; name: any; title: any } | null>,
         ])
 
         const displayNameBase =
