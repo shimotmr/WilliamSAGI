@@ -33,9 +33,11 @@ function getContextFromPath(pathname: string): ContextType {
 export function ThemeProvider({
   children,
   defaultMode = 'dark',
+  defaultContext,
 }: {
   children: ReactNode
   defaultMode?: ThemeMode
+  defaultContext?: ContextType
 }) {
   const pathname = usePathname()
   const context = getContextFromPath(pathname)
