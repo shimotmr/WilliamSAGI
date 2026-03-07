@@ -121,7 +121,7 @@ const QUESTION_TEMPLATES: Record<string, Question[]> = {
       question: '其他補充說明？',
     },
   ],
-];
+};
 
 function detectTaskType(description: string): string {
   const text = description.toLowerCase();
