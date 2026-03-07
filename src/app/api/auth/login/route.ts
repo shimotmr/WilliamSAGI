@@ -27,7 +27,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 }
 
 function getSupabase() {
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+  return createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!)
 }
 
 export async function POST(request: NextRequest) {
