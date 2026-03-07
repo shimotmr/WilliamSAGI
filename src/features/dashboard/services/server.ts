@@ -1,5 +1,5 @@
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import type { DashboardData } from './types'
+import type { DashboardData } from '../types'
 
 export async function getDashboardData(): Promise<DashboardData> {
   const supabase = getSupabaseServerClient()
