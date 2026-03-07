@@ -13,7 +13,7 @@ if (!JWT_SECRET) {
   throw new Error('Missing JWT_SECRET in environment variables')
 }
 
-const secret = new TextEncoder().encode(JWT_SECRET)
+const secret = new TextEncoder().encode(JWT_SECRET!)
 
 export const authCookieName = 'session'
 
