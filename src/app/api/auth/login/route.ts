@@ -1,42 +1,70 @@
-// @ts-nocheck
 import { NextRequest, NextResponse } from 'next/server'
-import { signSession, authCookieName } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
+import { signSession, authCookieName, type SessionRole } from '@/lib/auth/session'
 
-const getSupabase = () => createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+interface LoginRequestBody {
+  email?: string
+  username?: string
+  password?: string
+}
 
+interface EmployeeRow {
+  emp_code: string
+  name: string
+  email: string
+}
+
+interface AllowUserRow {
+  role: SessionRole | null
+}
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const ZIMBRA_HOST = process.env.ZIMBRA_HOST || 'https://webmail.aurotek.com'
 
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+function getSupabase() {
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+}
+
 export async function POST(request: NextRequest) {
-  const { email, username, password } = await request.json()
-  const input = email || username
-  if (!input || !password) return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
+  const body = (await request.json()) as LoginRequestBody
+  const input = body.email || body.username
+  const password = body.password
+
+  if (!input || !password) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
+  }
 
   const account = input.trim().toLowerCase()
+  const supabase = getSupabase()
 
-  // Step 1: 查 employees 表（支援工號或 email prefix）
-  const { data: employee } = await getSupabase()
+  const { data: employee, error: employeeError } = await supabase
     .from('employees')
     .select('emp_code, name, email')
     .or(`emp_code.eq.${account},email.ilike.${account}@%`)
-    .single()
+    .single<EmployeeRow>()
 
-  if (!employee) {
+  if (employeeError || !employee) {
     return NextResponse.json({ error: '帳號不存在，請確認工號是否正確' }, { status: 401 })
   }
 
-  // Step 2: Zimbra Basic Auth — 用 email prefix（@之前的帳號，e.g. williamhsiao）
-  // Zimbra REST API /home/{user}/inbox 接受 prefix，不需要完整 email
   let zimbraOk = false
+
   try {
     const zimbraUser = (employee.email || employee.emp_code).split('@')[0]
     const cred = Buffer.from(`${zimbraUser}:${password}`).toString('base64')
+
     const resp = await fetch(`${ZIMBRA_HOST}/home/${zimbraUser}/inbox?fmt=json&limit=1`, {
-      headers: { Authorization: `Basic ${cred}` },
+      headers: {
+        Authorization: `Basic ${cred}`,
+      },
+      cache: 'no-store',
     })
+
     zimbraOk = resp.ok
   } catch {
     zimbraOk = false
@@ -46,22 +74,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '密碼錯誤' }, { status: 401 })
   }
 
-  // Step 3: 查 allow_users 決定角色
-  const { data: allowUser } = await getSupabase()
+  const { data: allowUser } = await supabase
     .from('allow_users')
     .select('role')
-    .or(`email.eq.${employee.emp_code},email.eq.${employee.email},email.eq.${employee.emp_code}@aurotek.com`)
-    .single()
+    .or(
+      `email.eq.${employee.emp_code},email.eq.${employee.email},email.eq.${employee.emp_code}@aurotek.com`
+    )
+    .single<AllowUserRow>()
 
-  const role = allowUser?.role || 'user'
-
+  const role: SessionRole = allowUser?.role === 'admin' ? 'admin' : 'user'
   const token = await signSession(employee.email || employee.emp_code, role)
+
   const response = NextResponse.json({ ok: true, role })
   response.cookies.set(authCookieName, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 60 * 60 * 8,
+    path: '/',
   })
+
   return response
 }
