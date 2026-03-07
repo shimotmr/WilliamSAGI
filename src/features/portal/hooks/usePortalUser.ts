@@ -45,13 +45,14 @@ export function usePortalUser(): PortalUser {
           fetch(`/api/employees/lookup?employee_id=${encodeURIComponent(employeeId)}`)
             .then((r) => (r.ok ? r.json() : null))
             .catch(() => null) as Promise<any>,
-          supabase
-            .from('portal_admins')
-            .select('nickname, name, title')
-            .or(`employee_id.eq.${employeeId},email.ilike.${employeeId}@`)
-            .maybeSingle()
-            .then((r) => r.data)
-            .catch(() => null) as Promise<{ nickname: any; name: any; title: any } | null>,
+          Promise.resolve(
+            supabase
+              .from('portal_admins')
+              .select('nickname, name, title')
+              .or(`employee_id.eq.${employeeId},email.ilike.${employeeId}@`)
+              .maybeSingle()
+              .then((r) => r.data)
+          ).catch(() => null),
         ])
 
         const displayNameBase =
