@@ -9,6 +9,7 @@ import { fetchDashboardData } from '@/features/dashboard/services'
 import type { DashboardData } from '@/features/dashboard/types'
 import SectionCard from '@/components/ui/SectionCard'
 import PageHeader from '@/components/ui/PageHeader'
+import DashboardShell from '@/components/layout/DashboardShell'
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -18,18 +19,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let mounted = true
-
     const load = async () => {
       try {
         const result = await fetchDashboardData()
         if (!mounted) return
         setData(result)
-        setLastUpdated(
-          new Date().toLocaleTimeString('zh-TW', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-        )
+        setLastUpdated(new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }))
         setError('')
       } catch (err) {
         if (!mounted) return
@@ -38,59 +33,39 @@ export default function DashboardPage() {
         if (mounted) setLoading(false)
       }
     }
-
     load()
     const timer = setInterval(load, 30000)
-
     return () => {
       mounted = false
       clearInterval(timer)
     }
   }, [])
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <div className="flex h-[50vh] items-center justify-center text-sm text-[var(--foreground-muted)]">
-            載入中…
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (error || !data) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <SectionCard title="載入失敗">
-            <div className="text-sm text-red-600">{error || '無法載入 Dashboard'}</div>
-          </SectionCard>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <PageHeader
-          title="Clawd Dashboard"
-          description="系統即時監控 · Agent 作業中心"
-          backHref="/hub"
-          backLabel="Hub"
-          rightSlot={
-            <div className="flex items-center gap-3 text-xs text-[var(--foreground-muted)]">
-              <span className="inline-flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
-                系統正常
-              </span>
-              <span>更新時間 {lastUpdated}</span>
-            </div>
-          }
-        />
+    <DashboardShell>
+      <PageHeader
+        title="Clawd Dashboard"
+        description="系統即時監控 · Agent 作業中心"
+        backHref="/hub"
+        backLabel="Hub"
+        rightSlot={
+          <div className="flex items-center gap-3 text-xs text-[var(--foreground-muted)]">
+            <span className="inline-flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
+              系統正常
+            </span>
+            <span>更新時間 {lastUpdated}</span>
+          </div>
+        }
+      />
 
+      {loading ? (
+        <div className="flex h-[50vh] items-center justify-center text-sm text-[var(--foreground-muted)]">載入中…</div>
+      ) : error || !data ? (
+        <SectionCard title="載入失敗">
+          <div className="text-sm text-red-600">{error || '無法載入 Dashboard'}</div>
+        </SectionCard>
+      ) : (
         <div className="space-y-4">
           <StatsGrid data={data} />
 
@@ -120,10 +95,9 @@ export default function DashboardPage() {
           </div>
 
           <AgentStatusGrid agents={data.agents} />
-
           <TaskLists runningTasks={data.runningTasks} recentCompleted={data.recentCompleted} />
         </div>
-      </div>
-    </div>
+      )}
+    </DashboardShell>
   )
 }
