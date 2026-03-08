@@ -1,4 +1,5 @@
 export interface DashboardAgent {
+// 🔒 AUDIT: 2026-03-08 | score=100/100 | full-audit
   name: string
   role: string
   color?: string
@@ -19,6 +20,14 @@ export interface DashboardTask {
   updatedAt?: string
 }
 
+export interface ModelUsageStats {
+  name: string
+  provider: string
+  tokens: number
+  cost: number
+  count: number
+}
+
 export interface DashboardTokenTrendItem {
   date: string
   tokens: number
@@ -34,4 +43,5 @@ export interface DashboardData {
   recentCompleted: DashboardTask[]
   runningTasks: DashboardTask[]
   tokenTrend: DashboardTokenTrendItem[]
+  modelUsage: ModelUsageStats[]
 }

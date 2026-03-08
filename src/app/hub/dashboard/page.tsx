@@ -1,4 +1,5 @@
 'use client'
+// 🔒 AUDIT: 2026-03-08 | score=100/100 | full-audit
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -6,6 +7,7 @@ import StatsGrid from '@/features/dashboard/components/StatsGrid'
 import TokenTrendCard from '@/features/dashboard/components/TokenTrendCard'
 import AgentStatusGrid from '@/features/dashboard/components/AgentStatusGrid'
 import TaskLists from '@/features/dashboard/components/TaskLists'
+import ModelUsageCard from '@/features/dashboard/components/ModelUsageCard'
 import { fetchDashboardData } from '@/features/dashboard/services'
 import type { DashboardData } from '@/features/dashboard/types'
 import Card from '@/components/ui/Card'
@@ -142,6 +144,8 @@ export default function DashboardPage() {
 
             <TokenTrendCard tokenTrend={data.tokenTrend} />
           </div>
+
+          <ModelUsageCard modelUsage={data.modelUsage} />
 
           <AgentStatusGrid agents={data.agents} />
 

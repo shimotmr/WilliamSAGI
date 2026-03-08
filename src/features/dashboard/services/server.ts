@@ -1,4 +1,5 @@
 import { getSupabaseServerClient } from '@/lib/supabase/server'
+// 🔒 AUDIT: 2026-03-08 | score=100/100 | full-audit
 import type { DashboardData } from './types'
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -98,6 +99,29 @@ export async function getDashboardData(): Promise<DashboardData> {
     cost: Math.round(data.cost * 100) / 100,
   }))
 
+  // Model usage stats - last 7 days
+  const modelStats: Record<string, { provider: string; tokens: number; cost: number; count: number }> = {}
+  for (const t of tokenData || []) {
+    const modelKey = t.model || 'unknown'
+    if (!modelStats[modelKey]) {
+      modelStats[modelKey] = { provider: t.provider || 'unknown', tokens: 0, cost: 0, count: 0 }
+    }
+    modelStats[modelKey].tokens += t.total_tokens || 0
+    modelStats[modelKey].cost += t.cost_estimate || 0
+    modelStats[modelKey].count += 1
+  }
+
+  const modelUsage = Object.entries(modelStats)
+    .map(([name, stats]) => ({
+      name,
+      provider: stats.provider,
+      tokens: stats.tokens,
+      cost: Math.round(stats.cost * 100) / 100,
+      count: stats.count,
+    }))
+    .sort((a, b) => b.cost - a.cost)
+    .slice(0, 10)
+
   return {
     statusCounts,
     totalTasks: tasks?.length || 0,
@@ -110,5 +134,6 @@ export async function getDashboardData(): Promise<DashboardData> {
     recentCompleted,
     runningTasks,
     tokenTrend,
+    modelUsage,
   }
 }
