@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { isAdmin, isSuperAdmin } from '@/lib/admins'
+import { signPortalSession, portalSessionCookieName } from '@/lib/auth/portal'
 
 export async function POST(request: Request) {
   try {
@@ -23,15 +24,14 @@ export async function POST(request: Request) {
       const isUserAdmin = await isAdmin(account)
       const isUserSuperAdmin = await isSuperAdmin(account)
       
-      // 生成 session token
-      const token = generateToken()
-      const user = {
+      // 生成安全的 JWT session（取代明文 cookies）
+      const employeeId = accountName
+      const portalSession = await signPortalSession({
+        employeeId,
         email: account,
-        name: accountName,
-        isUserAdmin,
-        isUserSuperAdmin,
-        loginTime: new Date().toISOString()
-      }
+        isAdmin: isUserAdmin,
+        isSuperAdmin: isUserSuperAdmin,
+      })
       
       // 記錄登入 log
       await logActivity({
@@ -43,39 +43,20 @@ export async function POST(request: Request) {
         details: { isUserAdmin, isUserSuperAdmin }
       })
       
-      // 設置 cookies
+      // 設置 signed cookie（httpOnly，更安全）
       const cookieStore = await cookies()
       const maxAge = 60 * 60 * 24 * 7 // 7 天
       
-      cookieStore.set('auth_token', token, {
+      // 主要的 signed session cookie
+      cookieStore.set(portalSessionCookieName, portalSession, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge
       })
       
-      cookieStore.set('user_email', account, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge
-      })
-      
+      // 為了相容性，保留 user_name 但僅用於顯示用途（不再用於權限判斷）
       cookieStore.set('user_name', accountName, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge
-      })
-      
-      cookieStore.set('is_admin', isUserAdmin ? 'true' : 'false', {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge
-      })
-      
-      cookieStore.set('is_super_admin', isUserSuperAdmin ? 'true' : 'false', {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -84,7 +65,14 @@ export async function POST(request: Request) {
       
       return NextResponse.json({ 
         success: true, 
-        user
+        user: {
+          email: account,
+          name: accountName,
+          employeeId,
+          isUserAdmin,
+          isUserSuperAdmin,
+          loginTime: new Date().toISOString()
+        }
       })
     } else {
       // 記錄失敗登入
@@ -103,15 +91,6 @@ export async function POST(request: Request) {
     console.error('Auth error:', error)
     return NextResponse.json({ success: false, message: '驗證失敗，請稍後再試' }, { status: 500 })
   }
-}
-
-function generateToken(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let token = ''
-  for (let i = 0; i < 64; i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return token
 }
 
 async function verifyZimbraCredentials(account: string, password: string): Promise<boolean> {

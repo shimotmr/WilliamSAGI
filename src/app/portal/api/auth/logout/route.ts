@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { portalSessionCookieName } from '@/lib/auth/portal'
 
 export async function POST(request: Request) {
   try {
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
     cookieStore.delete('user_name')
     cookieStore.delete('is_admin')
     cookieStore.delete('is_super_admin')
+    cookieStore.delete(portalSessionCookieName)
     
     return NextResponse.json({ success: true })
   } catch (error) {

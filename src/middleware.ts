@@ -7,6 +7,7 @@ import {
   isPublicRoute,
 } from '@/lib/auth/guards'
 import { authCookieName } from '@/lib/auth/session'
+import { getPortalSessionFromRequest, isPortalPublicRoute, portalSessionCookieName } from '@/lib/auth/portal'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -15,6 +16,26 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
+  // Portal 路由保護（使用 signed session）
+  if (pathname.startsWith('/portal')) {
+    if (isPortalPublicRoute(pathname)) {
+      return NextResponse.next()
+    }
+    
+    // 驗證 signed portal session cookie
+    const portalSession = await getPortalSessionFromRequest(request)
+    
+    if (!portalSession) {
+      // 無效的 session，清除 cookie 並重導向登入
+      const res = NextResponse.redirect(new URL('/portal/login', request.url))
+      res.cookies.delete(portalSessionCookieName)
+      return res
+    }
+    
+    return NextResponse.next()
+  }
+
+  // Hub 路由保護（使用主系統 JWT session）
   if (isPublicRoute(pathname)) {
     return NextResponse.next()
   }
