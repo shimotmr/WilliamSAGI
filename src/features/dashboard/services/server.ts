@@ -72,7 +72,7 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const { data: tokenData } = await supabase
     .from('model_usage_log')
-    .select('created_at, total_tokens, cost_estimate')
+    .select('created_at, total_tokens, cost_estimate, model, provider')
     .gte('created_at', weekAgo.toISOString())
     .order('created_at', { ascending: true })
 
