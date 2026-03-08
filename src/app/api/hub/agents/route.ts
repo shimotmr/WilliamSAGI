@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const KNOWN_AGENTS = [
-  { name: 'main',       display: 'Travis',  role: 'System Coordinator', emoji: '🤖' },
-  { name: 'coder',      display: 'Blake',   role: 'Software Engineer',  emoji: '🔨' },
-  { name: 'coder-b',    display: 'Coder B', role: 'Coder B',            emoji: '💻' },
-  { name: 'researcher', display: 'Rex',     role: 'Data Analyst',       emoji: '🧠' },
-  { name: 'secretary',  display: 'Oscar',   role: 'Office Manager',     emoji: '📋' },
-  { name: 'writer',     display: 'Writer',  role: 'Content Creator',    emoji: '✍️' },
-  { name: 'designer',   display: 'Designer',role: 'UI/UX Designer',     emoji: '🎨' },
-  { name: 'analyst',    display: 'Analyst', role: 'Financial Analyst',  emoji: '📈' },
-  { name: 'trader',     display: 'Warren',  role: 'Trader',             emoji: '💰' },
-  { name: 'inspector',  display: 'Griffin', role: 'QA Inspector',       emoji: '🛡️' },
+  { name: 'main',       display: 'Travis',  role: 'System Coordinator', emoji: '' },
+  { name: 'coder',      display: 'Blake',   role: 'Software Engineer',  emoji: '' },
+  { name: 'coder-b',    display: 'Coder B', role: 'Coder B',            emoji: '' },
+  { name: 'researcher', display: 'Rex',     role: 'Data Analyst',       emoji: '' },
+  { name: 'secretary',  display: 'Oscar',   role: 'Office Manager',     emoji: '' },
+  { name: 'writer',     display: 'Writer',  role: 'Content Creator',    emoji: '' },
+  { name: 'designer',   display: 'Designer',role: 'UI/UX Designer',     emoji: '' },
+  { name: 'analyst',    display: 'Analyst', role: 'Financial Analyst',  emoji: '' },
+  { name: 'trader',     display: 'Warren',  role: 'Trader',             emoji: '' },
+  { name: 'inspector',  display: 'Griffin', role: 'QA Inspector',       emoji: '' },
 ];
 
 export async function GET() {

@@ -71,8 +71,8 @@ function getModelColor(provider: string): string {
 
 function getTrendIcon(direction: 'increasing' | 'decreasing' | 'stable'): string {
   switch (direction) {
-    case 'increasing': return '↗'
-    case 'decreasing': return '↘'
+    case 'increasing': return ''
+    case 'decreasing': return ''
     default: return '→'
   }
 }

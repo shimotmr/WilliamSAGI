@@ -14,11 +14,11 @@ export default function TradePage() {
   }, [])
 
   const links = [
-    {href:'/hub/trade/quotes',  label:'即時行情',  icon:'📈'},
-    {href:'/hub/trade/positions',label:'持倉',     icon:'💼'},
-    {href:'/hub/trade/orders',  label:'委託單',    icon:'📋'},
-    {href:'/hub/trade/order',   label:'下單',      icon:'🎯'},
-    {href:'/hub/trade/history', label:'成交記錄',  icon:'🕒'},
+    {href:'/hub/trade/quotes',  label:'即時行情',  icon:''},
+    {href:'/hub/trade/positions',label:'持倉',     icon:''},
+    {href:'/hub/trade/orders',  label:'委託單',    icon:''},
+    {href:'/hub/trade/order',   label:'下單',      icon:''},
+    {href:'/hub/trade/history', label:'成交記錄',  icon:''},
   ]
 
   const isConnected = summary?.connected === true
@@ -83,9 +83,9 @@ export default function TradePage() {
       {/* Account info */}
       {isConnected && summary?.account && (
         <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-700 flex flex-wrap gap-4">
-          <span>📍 帳號：{summary.account.accountId}</span>
-          <span>🏦 券商：{summary.account.brokerId}</span>
-          <span>📊 類型：{summary.account.accountType}</span>
+          <span> 帳號：{summary.account.accountId}</span>
+          <span> 券商：{summary.account.brokerId}</span>
+          <span> 類型：{summary.account.accountType}</span>
           {syncedAt && <span className="text-blue-400 ml-auto">最後同步：{syncedAt}</span>}
         </div>
       )}
@@ -104,12 +104,12 @@ export default function TradePage() {
       {/* Status note */}
       {!loading && !isConnected && (
         <div className="bg-yellow-50 rounded-xl p-4 text-sm text-yellow-700">
-          ⚠️ 尚未取得帳戶資料。請確認 Mac mini 上的 shioaji_sync.py 已執行。
+           尚未取得帳戶資料。請確認 Mac mini 上的 shioaji_sync.py 已執行。
         </div>
       )}
       {!loading && isConnected && summary?.positionCount === 0 && (
         <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-500">
-          📋 目前無持倉。交易時段（09:00–14:30）資料每 5 分鐘自動同步。
+           目前無持倉。交易時段（09:00–14:30）資料每 5 分鐘自動同步。
         </div>
       )}
     </div>

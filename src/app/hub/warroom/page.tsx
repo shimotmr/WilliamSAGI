@@ -218,10 +218,10 @@ function TaskPanel({ tasks, loading }: { tasks: BoardTask[], loading: boolean })
 // ============= Alert Panel =============
 function AlertPanel({ alerts, loading }: { alerts: Alert[], loading: boolean }) {
   const priorityConfig: Record<string, { bg: string; text: string; emoji: string }> = {
-    P0: { bg: 'bg-red-600', text: 'text-red-400', emoji: '🚨' },
-    P1: { bg: 'bg-orange-500', text: 'text-orange-400', emoji: '⚠️' },
-    P2: { bg: 'bg-yellow-500', text: 'text-yellow-400', emoji: '💡' },
-    P3: { bg: 'bg-green-500', text: 'text-green-400', emoji: 'ℹ️' }
+    P0: { bg: 'bg-red-600', text: 'text-red-400', emoji: '' },
+    P1: { bg: 'bg-orange-500', text: 'text-orange-400', emoji: '' },
+    P2: { bg: 'bg-yellow-500', text: 'text-yellow-400', emoji: '' },
+    P3: { bg: 'bg-green-500', text: 'text-green-400', emoji: '' }
   }
 
   const unreadCount = alerts.filter(a => !a.is_sent).length

@@ -82,7 +82,7 @@ const healthConfig = {
 }
 
 const agentEmoji: Record<string, string> = {
-  travis: '🤖', blake: '🔨', rex: '🧠', oscar: '📋', warren: '📈', griffin: '🛡️',
+  travis: '', blake: '', rex: '', oscar: '', warren: '', griffin: '',
 }
 
 // ─── Components ───────────────────────────────
@@ -388,7 +388,7 @@ export default function StatusPage() {
                     className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] transition"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">{agentEmoji[agent.name.toLowerCase()] || '🤖'}</span>
+                      <span className="text-lg">{agentEmoji[agent.name.toLowerCase()] || ''}</span>
                       <div>
                         <p className="font-medium text-sm capitalize">{agent.name}</p>
                         <p className="text-xs text-gray-500">{agent.model || 'N/A'}</p>

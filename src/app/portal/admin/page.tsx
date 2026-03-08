@@ -212,7 +212,7 @@ export default function AdminPage() {
           className="text-center text-xs mt-6 pb-6"
           style={{ color: 'var(--text-tertiary)' }}
         >
-          Aurotek Admin · Powered by Jarvis 🤖
+          Aurotek Admin · Powered by Jarvis 
         </footer>
       </div>
     </div>

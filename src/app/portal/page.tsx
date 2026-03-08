@@ -36,7 +36,7 @@ export default function PortalPage() {
       <PortalModuleGrid items={visibleItems} mode={mode} />
 
       <footer className="py-6 text-center text-xs md:text-sm" style={{ color: 'var(--foreground-muted)' }}>
-        Aurotek Sales Portal • Powered by Jarvis 🤖
+        Aurotek Sales Portal • Powered by Jarvis 
       </footer>
     </PortalShell>
   )

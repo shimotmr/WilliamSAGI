@@ -413,7 +413,7 @@ export default function TranscriptDetailPage() {
                       className="w-13 h-13 md:w-12 md:h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl shrink-0"
                       style={{ width: '52px', height: '52px' }}
                     >
-                      {isPlaying ? '⏸' : '▶'}
+                      {isPlaying ? '' : ''}
                     </button>
                     <div className="flex-1">
                       <div className="text-sm text-text-secondary mb-1.5">
@@ -507,13 +507,13 @@ export default function TranscriptDetailPage() {
         {/* Status Messages */}
         {transcript.status === 'processing' && (
           <div className="bg-blue-100 border border-blue-300 rounded-2xl p-4 md:p-4 mb-4 text-sm md:text-sm text-blue-800">
-            🔄 轉錄中... {polling && '(檢查狀態中)'}
+             轉錄中... {polling && '(檢查狀態中)'}
           </div>
         )}
 
         {transcript.status === 'error' && (
           <div className="bg-red-100 border border-red-300 rounded-2xl p-4 md:p-4 mb-4 text-sm md:text-sm text-red-800">
-            ❌ 轉錄失敗，請重新上傳
+             轉錄失敗，請重新上傳
           </div>
         )}
 
@@ -521,13 +521,13 @@ export default function TranscriptDetailPage() {
         {segments.length > 0 && (
           <div className="bg-surface-0 border border-surface-3 rounded-2xl p-4 md:p-4">
             <div className="flex justify-between items-center mb-4 md:mb-4 gap-3">
-              <h2 className="text-sm md:text-sm font-bold text-text-primary">📝 逐字稿內容</h2>
+              <h2 className="text-sm md:text-sm font-bold text-text-primary"> 逐字稿內容</h2>
               <button
                 onClick={handleCorrect}
                 disabled={correcting}
                 className="bg-purple-600 text-white px-3 md:px-3 py-1.5 md:py-1.5 rounded-md text-xs md:text-sm border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 min-h-11 whitespace-nowrap"
               >
-                {correcting ? '校正中...' : '📚 辭典校正'}
+                {correcting ? '校正中...' : ' 辭典校正'}
               </button>
             </div>
 
@@ -613,7 +613,7 @@ export default function TranscriptDetailPage() {
                           onClick={() => handleEditStart(seg)}
                           className="text-text-secondary bg-none border-none cursor-pointer text-lg md:text-sm min-h-11 min-w-11 shrink-0"
                         >
-                          ✏️
+                          
                         </button>
                       )}
                     </div>
@@ -637,7 +637,7 @@ export default function TranscriptDetailPage() {
         <div className="fixed bottom-[70px] md:bottom-20 left-0 right-0 bg-surface-0 border-t-2 border-blue-600 shadow-lg z-25 p-4">
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-sm font-bold text-text-primary">🔍 批量取代</h3>
+              <h3 className="text-sm font-bold text-text-primary"> 批量取代</h3>
               <button
                 onClick={() => setShowReplace(false)}
                 className="bg-none border-none text-xl cursor-pointer min-h-11 min-w-11 text-text-secondary"
@@ -677,7 +677,7 @@ export default function TranscriptDetailPage() {
                 disabled={replacing || !searchText}
                 className="bg-blue-600 text-white p-3 rounded-md text-sm font-medium border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 min-h-12"
               >
-                {replacing ? '⏳ 取代中...' : '執行取代'}
+                {replacing ? ' 取代中...' : '執行取代'}
               </button>
             </div>
           </div>
@@ -699,13 +699,13 @@ export default function TranscriptDetailPage() {
                 disabled={correcting}
                 className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 min-h-12 whitespace-nowrap shrink-0"
               >
-                {correcting ? '⏳ 校正中...' : '📚 辭典校正'}
+                {correcting ? ' 校正中...' : ' 辭典校正'}
               </button>
               <button
                 onClick={() => setShowReplace(!showReplace)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium border-none cursor-pointer min-h-12 whitespace-nowrap shrink-0 ${showReplace ? 'bg-blue-600 text-white' : 'bg-surface-2 text-text-primary'}`}
               >
-                🔍 批量取代
+                 批量取代
               </button>
               <button
                 onClick={handlePolish}
@@ -719,7 +719,7 @@ export default function TranscriptDetailPage() {
                     style={{ width: `${polishProgress}%` }}
                   />
                 )}
-                {polishing ? `⏳ ${polishProgress}% ${polishMessage}` : '✨ AI 潤稿'}
+                {polishing ? ` ${polishProgress}% ${polishMessage}` : ' AI 潤稿'}
               </button>
             </div>
           </div>

@@ -19,7 +19,7 @@ export default async function ApprovalsPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">簽核中心</h1>
       {!items.length
-        ? <p className="text-gray-500">目前無待簽核項目 ✅</p>
+        ? <p className="text-gray-500">目前無待簽核項目 </p>
         : (
           <div className="space-y-3">
             {items.map((item: any) => (

@@ -134,7 +134,7 @@ export default function TranscriptsPage() {
         ) : transcripts.length === 0 ? (
           // 空狀態
           <div className="empty-state">
-            <div className="empty-icon">🎤</div>
+            <div className="empty-icon"></div>
             <h2 className="empty-title">尚無逐字稿</h2>
             <p className="empty-description">上傳會議錄音，即可開始建立逐字稿</p>
             <Link href="/transcripts/new" className="btn-primary empty-cta">

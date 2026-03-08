@@ -15,7 +15,7 @@ export default function PortalHero({ greeting, displayName }: Props) {
             ，{displayName}
           </span>
         ) : null}
-        {' '}🌿
+        {' '}
       </h1>
 
       <p className="text-sm md:text-base" style={{ color: 'var(--foreground-muted)' }}>

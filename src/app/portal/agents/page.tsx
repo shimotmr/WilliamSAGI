@@ -483,11 +483,11 @@ export default function AgentsPage() {
             <p><strong className="text-slate-700">Phase 2（已完成）</strong>：+ Inspector + Researcher + Writer + Analyst + Coder + Designer（8 agents 全上線）</p>
             <p><strong className="text-slate-700">Phase 3（進行中）</strong>：</p>
             <div className="ml-4 space-y-0.5">
-              <p>✅ agent_tasks 任務佇列（DB 追蹤派工狀態）</p>
-              <p>✅ Designer→Coder→Inspector 開發流程</p>
-              <p>✅ Researcher→Writer 報告流程</p>
-              <p>🔄 Agent 間直接通訊（等 OpenClaw 支援）</p>
-              <p>🔄 Agent 自主排程</p>
+              <p> agent_tasks 任務佇列（DB 追蹤派工狀態）</p>
+              <p> Designer→Coder→Inspector 開發流程</p>
+              <p> Researcher→Writer 報告流程</p>
+              <p> Agent 間直接通訊（等 OpenClaw 支援）</p>
+              <p> Agent 自主排程</p>
             </div>
             <p className="text-slate-400 mt-2">通訊方式：Cron → Travis (調度) → sessions_spawn → 各 Agent → Telegram 通知</p>
             <p className="text-slate-400">跨 Agent 協作透過 Supabase agent_tasks 任務佇列 + Travis Daily 留言討論</p>
@@ -511,7 +511,7 @@ export default function AgentsPage() {
               </div>
               <div className="flex items-center gap-2 ml-3 shrink-0">
                 <a href={modalRun.result_url!} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-1.5 text-xs font-medium bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition">另開視窗 ↗</a>
+                  className="px-3 py-1.5 text-xs font-medium bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition">另開視窗 </a>
                 <button onClick={() => setModalRun(null)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 text-lg">✕</button>
               </div>

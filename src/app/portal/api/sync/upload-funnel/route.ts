@@ -237,7 +237,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: `資料更新成功！共 ${cases.length} 筆案件`,
-      details: `📊 案件統計：\n${summary}\n\n✅ 已更新 cases.json`
+      details: ` 案件統計：\n${summary}\n\n 已更新 cases.json`
     })
   } catch (error: any) {
     console.error('Upload error:', error)

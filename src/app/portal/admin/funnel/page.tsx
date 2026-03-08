@@ -287,7 +287,7 @@ export default function FunnelPage() {
           </div>
 
           <p className="text-center text-sm text-gray-500 mt-6">
-            💡 漏斗寬度依金額比例變化，點擊區塊查看案件
+             漏斗寬度依金額比例變化，點擊區塊查看案件
           </p>
         </div>
 

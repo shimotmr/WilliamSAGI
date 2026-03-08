@@ -193,7 +193,7 @@ const ReportSystem = () => {
       {/* 標題和統計 */}
       <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-          📊 工作報告系統
+           工作報告系統
         </h1>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -265,8 +265,8 @@ const ReportSystem = () => {
               onChange={(e) => handleFilterChange('category', e.target.value)}
             >
               <option value="">所有分類</option>
-              <option value="council">🏛️ 議事廳</option>
-              <option value="technical">💻 技術報告</option>
+              <option value="council"> 議事廳</option>
+              <option value="technical"> 技術報告</option>
               <option value="work-output">工作產出</option>
               <option value="project-analysis">專案分析</option>
               <option value="weekly-summary">週報</option>

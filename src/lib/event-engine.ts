@@ -50,7 +50,7 @@ const eventRules: EventRule[] = [
       return [{
         action: 'notify',
         target: 'telegram',
-        message: `✅ 任務 #${task_id || '?'} 完成\n📋 ${title || '未命名'}\n👤 ${assignee || '未指派'}\n📝 ${result || '無摘要'}`,
+        message: ` 任務 #${task_id || '?'} 完成\n ${title || '未命名'}\n ${assignee || '未指派'}\n ${result || '無摘要'}`,
         metadata: { task_id, channel: '-5209049869' }
       }]
     }
@@ -70,7 +70,7 @@ const eventRules: EventRule[] = [
         {
           action: 'alert',
           target: 'telegram',
-          message: `🚨 部署失敗: ${project || '未知專案'}\n❌ ${error_message || '未知錯誤'}`,
+          message: ` 部署失敗: ${project || '未知專案'}\n ${error_message || '未知錯誤'}`,
           metadata: { channel: '-5209049869' }
         },
         {
@@ -78,7 +78,7 @@ const eventRules: EventRule[] = [
           target: 'board_tasks',
           message: `修復部署失敗: ${project}`,
           metadata: {
-            title: `🔧 修復部署失敗: ${project}`,
+            title: ` 修復部署失敗: ${project}`,
             priority: 'P1',
             assignee: 'blake',
             board: 'agent',
@@ -103,7 +103,7 @@ const eventRules: EventRule[] = [
       return [{
         action: 'alert',
         target: 'telegram',
-        message: `⚠️ Token 用量告警\n📊 今日消耗: ${(total_tokens || 0).toLocaleString()} tokens\n🤖 最高模型: ${top_model || 'N/A'}\n👤 最高 Agent: ${top_agent || 'N/A'}`,
+        message: ` Token 用量告警\n 今日消耗: ${(total_tokens || 0).toLocaleString()} tokens\n 最高模型: ${top_model || 'N/A'}\n 最高 Agent: ${top_agent || 'N/A'}`,
         metadata: { channel: '1029808355', priority: 'high' }
       }]
     }

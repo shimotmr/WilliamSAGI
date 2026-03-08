@@ -31,10 +31,10 @@ export interface RuleSummary {
 // Map status to icon
 function getStatusIcon(status: string): string {
   switch (status) {
-    case 'complete': return '✅'
-    case 'partial': return '⚠️'
-    case 'dead': return '❌'
-    default: return '❓'
+    case 'complete': return ''
+    case 'partial': return ''
+    case 'dead': return ''
+    default: return ''
   }
 }
 

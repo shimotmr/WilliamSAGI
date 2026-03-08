@@ -150,7 +150,7 @@ export default function PrototypePage() {
       <div className="md:hidden bg-gradient-to-br from-blue-600 to-indigo-700 text-white px-4 pt-12 pb-6 rounded-b-3xl">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-blue-200 text-sm">{greeting} 👋</p>
+            <p className="text-blue-200 text-sm">{greeting} </p>
             <h1 className="text-xl font-bold">Aurotek Portal</h1>
           </div>
           <Link href="/admin" className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -177,7 +177,7 @@ export default function PrototypePage() {
       <div className="hidden md:block bg-white border-b border-slate-200 px-8 py-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
-            <p className="text-slate-500 text-sm">{greeting} 👋</p>
+            <p className="text-slate-500 text-sm">{greeting} </p>
             <h1 className="text-2xl font-bold text-slate-800">首頁 Dashboard</h1>
           </div>
           <div className="relative w-80">
@@ -215,7 +215,7 @@ export default function PrototypePage() {
           {/* Achievement Rate */}
           <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-4 shadow-lg shadow-green-500/5 border border-white/50">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-sm">🎯</div>
+              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-sm"></div>
               <span className="text-xs text-slate-500">達成率</span>
             </div>
             {loading ? (
@@ -236,7 +236,7 @@ export default function PrototypePage() {
           {/* Active Cases */}
           <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-4 shadow-lg shadow-orange-500/5 border border-white/50">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-sm">🔥</div>
+              <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-sm"></div>
               <span className="text-xs text-slate-500">進行中</span>
             </div>
             {loading ? (

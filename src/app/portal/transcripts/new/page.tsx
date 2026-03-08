@@ -52,7 +52,7 @@ const STT_ENGINES: STTEngine[] = [
       '處理較慢',
       '準確率略低於雲端'
     ],
-    icon: '🏠',
+    icon: '',
     recommended: false
   },
   {
@@ -80,7 +80,7 @@ const STT_ENGINES: STTEngine[] = [
       '超出免費額度需付費',
       '資料需上傳雲端'
     ],
-    icon: '☁️',
+    icon: '',
     recommended: true
   }
 ]
@@ -242,7 +242,7 @@ export default function NewTranscriptPage() {
         <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-              🤖 選擇轉錄引擎
+               選擇轉錄引擎
             </h2>
             <button
               onClick={() => setShowEngineDetails(!showEngineDetails)}
@@ -321,7 +321,7 @@ export default function NewTranscriptPage() {
               
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <h5 className="font-medium text-slate-700 mb-2">✅ 優點</h5>
+                  <h5 className="font-medium text-slate-700 mb-2"> 優點</h5>
                   <ul className="space-y-1">
                     {currentEngine.advantages.map((advantage, index) => (
                       <li key={index} className="text-slate-600 flex items-start gap-2">
@@ -333,7 +333,7 @@ export default function NewTranscriptPage() {
                 </div>
                 
                 <div>
-                  <h5 className="font-medium text-slate-700 mb-2">⚠️ 限制</h5>
+                  <h5 className="font-medium text-slate-700 mb-2"> 限制</h5>
                   <ul className="space-y-1">
                     {currentEngine.limitations.map((limitation, index) => (
                       <li key={index} className="text-slate-600 flex items-start gap-2">
@@ -373,7 +373,7 @@ export default function NewTranscriptPage() {
           {audioFile && (
             <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                📊 預估資訊
+                 預估資訊
               </h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
@@ -396,7 +396,7 @@ export default function NewTranscriptPage() {
         {/* Meeting Information Form */}
         <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
           <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-            📝 會議資訊
+             會議資訊
           </h2>
           
           <div className="grid md:grid-cols-2 gap-4">
@@ -426,7 +426,7 @@ export default function NewTranscriptPage() {
         {/* Audio Upload */}
         <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
           <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-            🎧 音檔上傳
+             音檔上傳
           </h2>
 
           <label className="block w-full p-8 border-2 border-dashed border-slate-300 rounded-lg text-center cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
@@ -438,7 +438,7 @@ export default function NewTranscriptPage() {
             />
             {audioFile ? (
               <>
-                <div className="text-4xl mb-3">🎵</div>
+                <div className="text-4xl mb-3"></div>
                 <div className="text-base font-semibold text-slate-800 mb-2">
                   {audioFile.name}
                 </div>
@@ -448,7 +448,7 @@ export default function NewTranscriptPage() {
               </>
             ) : (
               <>
-                <div className="text-4xl mb-3">📁</div>
+                <div className="text-4xl mb-3"></div>
                 <div className="text-base text-slate-600 mb-2">
                   點擊或拖曳音檔到此處
                 </div>
@@ -462,7 +462,7 @@ export default function NewTranscriptPage() {
           {audioFile && (
             <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
               <div className="text-sm text-green-800 flex items-center gap-2">
-                <span>✅</span>
+                <span></span>
                 檔案已選取，使用 <strong>{currentEngine.name}</strong> 引擎轉錄
               </div>
             </div>
@@ -480,8 +480,8 @@ export default function NewTranscriptPage() {
           }`}
         >
           {uploading 
-            ? '🔄 處理中...' 
-            : `🎙️ 使用 ${currentEngine.name} 開始轉錄`
+            ? ' 處理中...' 
+            : ` 使用 ${currentEngine.name} 開始轉錄`
           }
         </button>
       </div>

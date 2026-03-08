@@ -69,7 +69,7 @@ function LoginForm() {
     <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
       {/* Logo */}
       <div className="text-center mb-8">
-        <div className="text-5xl mb-4">🤖</div>
+        <div className="text-5xl mb-4"></div>
         <h1 className="text-2xl font-bold text-gray-800">通路營業管理系統</h1>
         <p className="text-gray-500 text-sm mt-2">請使用公司郵箱帳號登入</p>
       </div>
@@ -157,7 +157,7 @@ function LoginFallback() {
   return (
     <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
       <div className="text-center mb-8">
-        <div className="text-5xl mb-4">🤖</div>
+        <div className="text-5xl mb-4"></div>
         <h1 className="text-2xl font-bold text-gray-800">通路營業管理系統</h1>
         <p className="text-gray-500 text-sm mt-2">載入中...</p>
       </div>

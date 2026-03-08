@@ -47,7 +47,7 @@ export default function HumanoidDocsPage() {
   return (
     <div className="p-6">
       <div className="flex items-center gap-3 mb-6">
-        <span className="text-3xl">📄</span>
+        <span className="text-3xl"></span>
         <div>
           <h1 className="text-2xl font-bold">技術文件庫</h1>
           <p className="text-sm text-gray-500">人形機器人 SDK、API 文件、整合指南</p>
@@ -102,13 +102,13 @@ export default function HumanoidDocsPage() {
                 ))}
               </div>
               <div className="bg-yellow-50 rounded-lg p-4 text-sm text-yellow-700">
-                📎 完整文件內容正在整合中。如需原始文件，請至 /portal/marketing/walker-docs 查看天工 SDK 文件。
+                 完整文件內容正在整合中。如需原始文件，請至 /portal/marketing/walker-docs 查看天工 SDK 文件。
               </div>
             </div>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-400">
               <div className="text-center">
-                <p className="text-4xl mb-3">📄</p>
+                <p className="text-4xl mb-3"></p>
                 <p>選擇左側文件查看內容</p>
               </div>
             </div>

@@ -91,11 +91,11 @@ export default function VideosPage() {
             <Link href="/marketing" className="text-slate-400 hover:text-slate-700 transition">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/></svg>
             </Link>
-            <span className="text-lg bg-gradient-to-br from-violet-500 to-violet-600 bg-clip-text text-transparent">🎬</span>
+            <span className="text-lg bg-gradient-to-br from-violet-500 to-violet-600 bg-clip-text text-transparent"></span>
             <h1 className="text-lg font-bold text-slate-800">影片案例</h1>
           </div>
           <a href="/marketing/slides" className="btn bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 text-sm">
-            📑 簡報案例
+             簡報案例
           </a>
         </div>
       </header>
@@ -180,7 +180,7 @@ export default function VideosPage() {
 
         {filteredVideos.length === 0 && (
           <div className="text-center py-12 text-gray-500">
-            <p className="text-4xl mb-4">📭</p>
+            <p className="text-4xl mb-4"></p>
             <p>沒有符合條件的影片</p>
           </div>
         )}

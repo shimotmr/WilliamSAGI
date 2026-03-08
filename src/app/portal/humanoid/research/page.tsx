@@ -29,7 +29,7 @@ export default function HumanoidResearchPage() {
   return (
     <div className="p-6">
       <div className="flex items-center gap-3 mb-6">
-        <span className="text-3xl">🔬</span>
+        <span className="text-3xl"></span>
         <div>
           <h1 className="text-2xl font-bold">研究報告</h1>
           <p className="text-sm text-gray-500">VLA 模型、演算法研究、市場分析、競品調查</p>
@@ -67,7 +67,7 @@ export default function HumanoidResearchPage() {
         ))}
         {!filtered.length && (
           <div className="bg-white rounded-xl shadow p-8 text-center text-gray-400">
-            <p className="text-3xl mb-2">🔬</p>
+            <p className="text-3xl mb-2"></p>
             <p>尚無相關研究資料</p>
             <p className="text-xs mt-1">資料從 AI 報告庫自動匯入</p>
           </div>

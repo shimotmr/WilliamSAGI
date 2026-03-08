@@ -31,9 +31,9 @@ export default function DealersPage() {
               <span className={`px-2 py-0.5 rounded text-xs ${STATUS_COLORS[d.status]||'bg-gray-100'}`}>{d.status||'未知'}</span>
             </div>
             <p className="text-sm text-gray-500">{d.region}</p>
-            {d.contact && <p className="text-sm text-gray-600 mt-1">👤 {d.contact}</p>}
-            {d.phone && <p className="text-sm text-gray-500">📞 {d.phone}</p>}
-            {d.email && <a href={`mailto:${d.email}`} className="text-sm text-blue-500 hover:underline">✉️ {d.email}</a>}
+            {d.contact && <p className="text-sm text-gray-600 mt-1"> {d.contact}</p>}
+            {d.phone && <p className="text-sm text-gray-500"> {d.phone}</p>}
+            {d.email && <a href={`mailto:${d.email}`} className="text-sm text-blue-500 hover:underline"> {d.email}</a>}
           </div>
         ))}
         {!filtered.length && <p className="text-gray-400 col-span-3 text-sm">無資料</p>}

@@ -17,10 +17,10 @@ const docs = [
 
 ### 主要功能
 
-- 🤖 完整的机器人控制接口
-- 📡 实时通信和数据处理
-- 🔧 模块化设计，易于扩展
-- 📚 详细的 API 文档和示例代码
+-  完整的机器人控制接口
+-  实时通信和数据处理
+-  模块化设计，易于扩展
+-  详细的 API 文档和示例代码
 
 ## 版本信息
 
@@ -405,7 +405,7 @@ export default function WalkerDocsPage() {
             <Link href="/marketing" className="text-slate-400 hover:text-slate-700 transition">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/></svg>
             </Link>
-            <span className="text-lg bg-gradient-to-br from-violet-500 to-violet-600 bg-clip-text text-transparent">🤖</span>
+            <span className="text-lg bg-gradient-to-br from-violet-500 to-violet-600 bg-clip-text text-transparent"></span>
             <h1 className="text-lg font-bold text-slate-800">Walker 天工文档</h1>
           </div>
           <a 
@@ -413,7 +413,7 @@ export default function WalkerDocsPage() {
             target="_blank"
             className="text-sm text-slate-500 hover:text-slate-700"
           >
-            原站 ↗
+            原站 
           </a>
         </div>
       </header>

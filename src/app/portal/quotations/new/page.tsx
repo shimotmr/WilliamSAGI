@@ -291,7 +291,7 @@ export default function NewQuotationPage() {
       <div className="max-w-4xl mx-auto px-4 py-4 space-y-4">
         {/* Customer Section */}
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1">👤 客戶資訊</h2>
+          <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1"> 客戶資訊</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">經銷商（選填）</label>
@@ -334,7 +334,7 @@ export default function NewQuotationPage() {
 
         {/* Sales Rep Section */}
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1">👔 業務代表</h2>
+          <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1"> 業務代表</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">業務 *</label>
@@ -359,7 +359,7 @@ export default function NewQuotationPage() {
 
         {/* Terms */}
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <h2 className="text-sm font-bold text-gray-700 mb-3">⚙️ 交易條件</h2>
+          <h2 className="text-sm font-bold text-gray-700 mb-3"> 交易條件</h2>
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">交易條件</label>
@@ -387,7 +387,7 @@ export default function NewQuotationPage() {
         {/* Items */}
         <div className="bg-white rounded-xl border border-gray-100 p-4">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-sm font-bold text-gray-700">📦 產品明細</h2>
+            <h2 className="text-sm font-bold text-gray-700"> 產品明細</h2>
             <button onClick={() => setShowSearch(true)}
               className="text-white px-3 py-1.5 rounded-lg text-xs font-medium"
               style={{ backgroundColor: '#E60012' }}>
@@ -458,7 +458,7 @@ export default function NewQuotationPage() {
 
         {/* Notes */}
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <h2 className="text-sm font-bold text-gray-700 mb-3">📝 備註</h2>
+          <h2 className="text-sm font-bold text-gray-700 mb-3"> 備註</h2>
           <textarea value={notes} onChange={e => setNotes(e.target.value)}
             rows={7}
             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:border-red-300" />
@@ -469,7 +469,7 @@ export default function NewQuotationPage() {
           <button onClick={saveQuotation} disabled={saving}
             className="w-full text-white py-3 rounded-xl text-sm font-bold disabled:opacity-50"
             style={{ backgroundColor: '#E60012' }}>
-            {saving ? '儲存中...' : '💾 儲存報價單'}
+            {saving ? '儲存中...' : ' 儲存報價單'}
           </button>
         </div>
       </div>

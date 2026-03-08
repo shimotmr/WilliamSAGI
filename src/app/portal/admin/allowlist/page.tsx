@@ -25,8 +25,8 @@ export default function AllowlistPage() {
       body: JSON.stringify({ email, name, role })
     })
     const d = await r.json()
-    if (d.ok) { setMsg('✅ 已新增'); setEmail(''); setName(''); setRole('user'); load() }
-    else setMsg(`❌ ${d.error}`)
+    if (d.ok) { setMsg(' 已新增'); setEmail(''); setName(''); setRole('user'); load() }
+    else setMsg(` ${d.error}`)
     setSaving(false)
   }
 
@@ -70,7 +70,7 @@ export default function AllowlistPage() {
                 <span className="text-gray-500 text-xs mr-3">{e.email}</span>
                 <button onClick={async()=>{
                   await fetch('/api/portal/admin/allowlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e.email,name:e.name,role:'user'})})
-                  setMsg(`✅ 已新增 ${e.name}`); load()
+                  setMsg(` 已新增 ${e.name}`); load()
                 }} className="bg-green-600 text-white text-xs px-3 py-1 rounded-lg">新增</button>
               </div>
             ))}

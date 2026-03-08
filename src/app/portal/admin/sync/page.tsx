@@ -19,8 +19,8 @@ export default function SyncPage() {
     try {
       const res = await fetch('/api/portal/sync-upload', {method:'POST', body:form})
       const data = await res.json()
-      setStatus(data.ok ? `✅ 匯入 ${data.rows} 筆` : `❌ ${data.error}`)
-    } catch { setStatus('❌ 上傳失敗') }
+      setStatus(data.ok ? ` 匯入 ${data.rows} 筆` : ` ${data.error}`)
+    } catch { setStatus(' 上傳失敗') }
   }
   return (
     <div className="p-6 max-w-2xl mx-auto">

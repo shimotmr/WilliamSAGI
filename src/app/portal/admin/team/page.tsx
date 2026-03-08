@@ -142,7 +142,7 @@ export default function TeamPage() {
             <Link href="/admin" className="text-slate-400 hover:text-slate-700 transition">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/></svg>
             </Link>
-            <span className="text-lg bg-gradient-to-br from-gray-600 to-gray-800 bg-clip-text text-transparent">👥</span>
+            <span className="text-lg bg-gradient-to-br from-gray-600 to-gray-800 bg-clip-text text-transparent"></span>
             <h1 className="text-lg font-bold text-slate-800">業務團隊</h1>
           </div>
           <button
@@ -209,13 +209,13 @@ export default function TeamPage() {
                   onClick={() => handleEdit(member)}
                   className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition text-sm"
                 >
-                  ✏️ 編輯
+                   編輯
                 </button>
                 <button
                   onClick={() => handleDelete(member.id)}
                   className="px-3 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm"
                 >
-                  🗑️
+                  
                 </button>
               </div>
             </div>

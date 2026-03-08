@@ -48,7 +48,7 @@ export const STT_ENGINES: STTEngine[] = [
       '處理較慢',
       '準確率略低於雲端'
     ],
-    icon: '🏠',
+    icon: '',
     recommended: false
   },
   {
@@ -76,7 +76,7 @@ export const STT_ENGINES: STTEngine[] = [
       '超出免費額度需付費',
       '資料需上傳雲端'
     ],
-    icon: '☁️',
+    icon: '',
     recommended: true
   }
 ]
@@ -133,7 +133,7 @@ export default function STTEngineSelector({
     <div className={`bg-white rounded-xl border border-slate-200 p-6 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-          🤖 選擇轉錄引擎
+           選擇轉錄引擎
         </h2>
         <button
           onClick={() => setShowEngineDetails(!showEngineDetails)}
@@ -212,7 +212,7 @@ export default function STTEngineSelector({
           
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h5 className="font-medium text-slate-700 mb-2">✅ 優點</h5>
+              <h5 className="font-medium text-slate-700 mb-2"> 優點</h5>
               <ul className="space-y-1">
                 {currentEngine.advantages.map((advantage, index) => (
                   <li key={index} className="text-slate-600 flex items-start gap-2">
@@ -224,7 +224,7 @@ export default function STTEngineSelector({
             </div>
             
             <div>
-              <h5 className="font-medium text-slate-700 mb-2">⚠️ 限制</h5>
+              <h5 className="font-medium text-slate-700 mb-2"> 限制</h5>
               <ul className="space-y-1">
                 {currentEngine.limitations.map((limitation, index) => (
                   <li key={index} className="text-slate-600 flex items-start gap-2">
@@ -264,7 +264,7 @@ export default function STTEngineSelector({
       {audioFile && (
         <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
           <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-            📊 預估資訊
+             預估資訊
           </h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>

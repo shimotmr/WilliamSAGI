@@ -52,7 +52,7 @@ export default function SlidesPage() {
         {result && (
           <a href={result.url} target="_blank" rel="noopener"
             className="mt-4 block text-center bg-green-50 text-green-700 px-4 py-3 rounded-lg text-sm font-medium">
-            ✅ 開啟 Google Slides →
+             開啟 Google Slides →
           </a>
         )}
         {error && <p className="mt-3 text-red-500 text-sm">{error}</p>}

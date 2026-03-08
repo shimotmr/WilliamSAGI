@@ -13,7 +13,7 @@ const levelConfig = {
     color: '#ef4444',
     bg: 'rgba(239, 68, 68, 0.1)',
     border: 'rgba(239, 68, 68, 0.3)',
-    icon: '🔴',
+    icon: '',
     label: '紅級 (生死攸關)',
     description: '違反後會導致系統停機或安全漏洞'
   },
@@ -21,7 +21,7 @@ const levelConfig = {
     color: '#f59e0b',
     bg: 'rgba(245, 158, 11, 0.1)', 
     border: 'rgba(245, 158, 11, 0.3)',
-    icon: '🟡',
+    icon: '',
     label: '黃級 (影響效率)',
     description: '影響系統效能或開發效率'
   },
@@ -29,7 +29,7 @@ const levelConfig = {
     color: '#10b981',
     bg: 'rgba(16, 185, 129, 0.1)',
     border: 'rgba(16, 185, 129, 0.3)',
-    icon: '🟢',
+    icon: '',
     label: '綠級 (最佳實踐)',
     description: '代碼品質和流程規範'
   }
@@ -38,21 +38,21 @@ const levelConfig = {
 // 狀態配置
 const statusConfig = {
   complete: {
-    icon: '✅',
+    icon: '',
     label: '完整綁定',
     color: '#10b981',
     bg: 'rgba(16, 185, 129, 0.15)',
     description: '有觸發點+執行者+驗證方式'
   },
   partial: {
-    icon: '⚠️',
+    icon: '',
     label: '部分綁定',
     color: '#f59e0b', 
     bg: 'rgba(245, 158, 11, 0.15)',
     description: '缺少某些執行要素'
   },
   dead: {
-    icon: '❌',
+    icon: '',
     label: 'Dead Rule',
     color: '#ef4444',
     bg: 'rgba(239, 68, 68, 0.15)',

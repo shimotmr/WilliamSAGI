@@ -187,7 +187,7 @@ function OfficeView({
             Travis AI Office
           </h1>
           <p className="text-xl text-gray-700 font-medium">
-            ✨ 點擊任意工作站，進入 Agent 的工作場景 ✨
+             點擊任意工作站，進入 Agent 的工作場景 
           </p>
         </div>
 

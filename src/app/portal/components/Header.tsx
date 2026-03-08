@@ -33,7 +33,7 @@ export default function Header({ title = '和椿通路營業管理系統', showB
           className="text-gray-400 hover:text-gray-600 transition"
           title="後台管理"
         >
-          ⚙️
+          
         </Link>
         <UserMenu />
       </div>

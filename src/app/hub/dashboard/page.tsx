@@ -10,6 +10,7 @@ import type { DashboardData } from '@/features/dashboard/types'
 import SectionCard from '@/components/ui/SectionCard'
 import PageHeader from '@/components/ui/PageHeader'
 import DashboardShell from '@/components/layout/DashboardShell'
+import TeslaVehicleWidget from '@/features/dashboard/components/TeslaVehicleWidget'
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -94,6 +95,7 @@ export default function DashboardPage() {
             <TokenTrendCard tokenTrend={data.tokenTrend} />
           </div>
 
+          <TeslaVehicleWidget />
           <AgentStatusGrid agents={data.agents} />
           <TaskLists runningTasks={data.runningTasks} recentCompleted={data.recentCompleted} />
         </div>

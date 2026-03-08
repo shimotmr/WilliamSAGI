@@ -182,33 +182,33 @@ export default function ChatPage() {
             filter: `thread_id=eq.${selectedThread.id}`
           },
           (payload) => {
-            console.warn('🔥 New message received via Realtime:', payload)
+            console.warn(' New message received via Realtime:', payload)
             const newMessage = payload.new as SupabaseMessage
             setMessages(prev => [...prev, newMessage])
           }
         )
         .subscribe((status, err) => {
-          console.warn('🔄 Realtime subscription status:', status, err)
+          console.warn(' Realtime subscription status:', status, err)
           if (status === 'SUBSCRIBED') {
-            console.warn('✅ Successfully subscribed to agent_messages realtime')
+            console.warn(' Successfully subscribed to agent_messages realtime')
             setRealtimeConnected(true)
             isRealtimeConnected = true
             // 停止 fallback 輪詢
             if (pollInterval) {
               clearInterval(pollInterval)
               pollInterval = null
-              console.warn('🚫 Stopped fallback polling - Realtime is active')
+              console.warn(' Stopped fallback polling - Realtime is active')
             }
           } else if (status === 'CHANNEL_ERROR') {
-            console.error('❌ Failed to subscribe to realtime:', err)
+            console.error(' Failed to subscribe to realtime:', err)
             isRealtimeConnected = false
             setRealtimeConnected(false)
           } else if (status === 'TIMED_OUT') {
-            console.error('⏰ Realtime connection timed out')
+            console.error(' Realtime connection timed out')
             isRealtimeConnected = false
             setRealtimeConnected(false)
           } else if (status === 'CLOSED') {
-            console.warn('🔒 Realtime connection closed')
+            console.warn(' Realtime connection closed')
             isRealtimeConnected = false
             setRealtimeConnected(false)
           }
@@ -220,15 +220,15 @@ export default function ChatPage() {
     
     // 設定 fallback 輪詢（延遲啟動，給 Realtime 時間連接）
     const fallbackTimeout = setTimeout(() => {
-      console.warn('🕐 Checking Realtime connection status:', isRealtimeConnected)
+      console.warn(' Checking Realtime connection status:', isRealtimeConnected)
       if (!isRealtimeConnected) {
-        console.warn('⚠️  Realtime not connected, starting fallback polling every 30s')
+        console.warn('  Realtime not connected, starting fallback polling every 30s')
         pollInterval = setInterval(() => {
-          console.warn('🔄 Fallback polling for messages')
+          console.warn(' Fallback polling for messages')
           loadMessages()
         }, 30000) // 30 秒輪詢作為 fallback
       } else {
-        console.warn('🎯 Realtime connected, no fallback needed')
+        console.warn(' Realtime connected, no fallback needed')
       }
     }, 3000) // 3 秒後檢查 Realtime 是否連接成功
     

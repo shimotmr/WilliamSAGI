@@ -169,7 +169,7 @@ export default function AdminAgentsPage() {
         {/* 說明 */}
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
-            💡 功能說明
+             功能說明
           </h3>
           <ul className="space-y-1 text-sm text-blue-800 dark:text-blue-400">
             <li>• 性別設定：切換 Agent 的性別偏好（目前僅儲存於 localStorage）</li>

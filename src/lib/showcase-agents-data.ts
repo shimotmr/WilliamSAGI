@@ -19,7 +19,7 @@ export interface ShowcaseAgent {
 
 // 輔助函數：生成 UI Avatars URL（臨時方案，建議替換為真實角色立繪）
 function generateAvatar(name: string, color: string, gender: 'male' | 'female' = 'male'): string {
-  const genderSuffix = gender === 'male' ? '♂' : '♀'
+  const genderSuffix = gender === 'male' ? '' : ''
   const bgColor = color.replace('#', '')
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name + genderSuffix)}&size=512&background=${bgColor}&color=fff&bold=true&font-size=0.4`
 }

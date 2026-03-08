@@ -188,7 +188,7 @@ export default function AdminsManagementPage() {
                     disabled={!form.employee_id || lookupLoading}
                     className="px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-200 disabled:opacity-40 transition whitespace-nowrap"
                   >
-                    {lookupLoading ? '查詢中...' : '🔍 查詢'}
+                    {lookupLoading ? '查詢中...' : ' 查詢'}
                   </button>
                 </div>
               </div>

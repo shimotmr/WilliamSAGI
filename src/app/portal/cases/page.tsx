@@ -57,7 +57,7 @@ export default function CasesPage() {
         
         {/* 過期篩選 */}
         <button onClick={()=>setExpired('')} className={`px-3 py-1.5 rounded-lg text-sm ${!expired?'bg-gray-200':'bg-gray-100'}`}>不限</button>
-        <button onClick={()=>setExpired('true')} className={`px-3 py-1.5 rounded-lg text-sm ${expired==='true'?'bg-red-600 text-white':'bg-gray-100'}`}>⚠️ 過期</button>
+        <button onClick={()=>setExpired('true')} className={`px-3 py-1.5 rounded-lg text-sm ${expired==='true'?'bg-red-600 text-white':'bg-gray-100'}`}> 過期</button>
         <button onClick={()=>setExpired('false')} className={`px-3 py-1.5 rounded-lg text-sm ${expired==='false'?'bg-green-600 text-white':'bg-gray-100'}`}>✓ 未過期</button>
         
         <div className="flex-1"/>
@@ -91,7 +91,7 @@ export default function CasesPage() {
                 <tr key={c.id} className={`hover:bg-gray-50 ${isExpired?'bg-red-50':''}`}>
                   <td className="p-3">
                     <span className={`px-2 py-0.5 rounded text-xs font-medium ${STAGE_COLORS[c.stage]||'bg-gray-100'}`}>{c.stage}</span>
-                    {isExpired && <span className="ml-1 text-red-500 text-xs">⚠️</span>}
+                    {isExpired && <span className="ml-1 text-red-500 text-xs"></span>}
                   </td>
                   <td className="p-3 text-gray-500 text-xs">{c.order_id||'-'}</td>
                   <td className="p-3 font-medium">{c.end_customer}</td>

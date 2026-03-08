@@ -90,7 +90,7 @@ export default function PromptsPage() {
                 onClick={syncPrompts}
                 className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
               >
-                🔄 同步檔案系統
+                 同步檔案系統
               </button>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function PromptsPage() {
             {/* 同步狀態 */}
             <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="text-xs text-blue-800">
-                <div className="font-semibold mb-1">📌 同步說明</div>
+                <div className="font-semibold mb-1"> 同步說明</div>
                 <div>點擊「同步檔案系統」按鈕後，在終端執行：</div>
                 <code className="block mt-2 p-2 bg-white rounded text-blue-900 text-xs">
                   bash ~/clawd/scripts/sync_agent_prompts.sh
@@ -171,7 +171,7 @@ export default function PromptsPage() {
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-                <div className="text-gray-400 text-lg mb-2">👈</div>
+                <div className="text-gray-400 text-lg mb-2"></div>
                 <div className="text-gray-600">請從左側選擇一個 Agent 查看提示詞</div>
               </div>
             )}

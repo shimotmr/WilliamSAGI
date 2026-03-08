@@ -3,9 +3,9 @@ import Link from 'next/link'
 
 export default function MarketingPage() {
   const sections = [
-    {href:'/portal/marketing/videos',label:'產品影片',icon:'🎬',desc:'Pudu 機器人產品介紹影片'},
-    {href:'/portal/marketing/slides',label:'簡報資源',icon:'📊',desc:'銷售簡報、提案文件'},
-    {href:'/portal/marketing/walker-docs',label:'步行者文件',icon:'📄',desc:'Walker 系列技術文件'},
+    {href:'/portal/marketing/videos',label:'產品影片',icon:'',desc:'Pudu 機器人產品介紹影片'},
+    {href:'/portal/marketing/slides',label:'簡報資源',icon:'',desc:'銷售簡報、提案文件'},
+    {href:'/portal/marketing/walker-docs',label:'步行者文件',icon:'',desc:'Walker 系列技術文件'},
   ]
   return (
     <div className="p-6">

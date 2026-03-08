@@ -49,7 +49,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       name: a.name,
       role: a.role || a.name,
       color: a.color || '#5E6AD2',
-      emoji: a.emoji || '🤖',
+      emoji: a.emoji || '',
       total: stats.total,
       completed: stats.completed,
       todayCompleted: stats.todayCompleted,

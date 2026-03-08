@@ -80,7 +80,7 @@ export default function SlidesAdminPage() {
             <Link href="/admin" className="text-slate-400 hover:text-slate-700 transition">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/></svg>
             </Link>
-            <span className="text-lg bg-gradient-to-br from-gray-600 to-gray-800 bg-clip-text text-transparent">📑</span>
+            <span className="text-lg bg-gradient-to-br from-gray-600 to-gray-800 bg-clip-text text-transparent"></span>
             <h1 className="text-lg font-bold text-slate-800">簡報管理</h1>
           </div>
           <button
@@ -97,7 +97,7 @@ export default function SlidesAdminPage() {
         <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
           <input
             type="text"
-            placeholder="🔍 搜尋簡報標題、分類、客戶..."
+            placeholder=" 搜尋簡報標題、分類、客戶..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full p-3 border rounded-lg"
@@ -128,15 +128,15 @@ export default function SlidesAdminPage() {
                   <td className="p-4">
                     <div className="font-semibold truncate max-w-[250px]">{slide.title}</div>
                     <div className="text-xs text-gray-500 md:hidden">
-                      {slide.category} • {slide.permittedAdmins ? '🔒 受限' : '🌐 公開'}
+                      {slide.category} • {slide.permittedAdmins ? ' 受限' : ' 公開'}
                     </div>
                   </td>
                   <td className="p-4 text-sm hidden md:table-cell">{slide.category || '-'}</td>
                   <td className="p-4 text-center hidden md:table-cell">
                     {slide.permittedAdmins ? (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">🔒 受限</span>
+                      <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs"> 受限</span>
                     ) : (
-                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">🌐 公開</span>
+                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs"> 公開</span>
                     )}
                   </td>
                   <td className="p-4 text-center">
@@ -162,7 +162,7 @@ export default function SlidesAdminPage() {
         </div>
 
         <p className="text-sm text-gray-500 mt-4 text-center">
-          💡 簡報資料來源：Google Sheets，如需修改請前往 
+           簡報資料來源：Google Sheets，如需修改請前往 
           <a href="https://script.google.com/macros/s/AKfycbzaz_TGNZvwL5W_s7WfdnGxdzSPkOAiQuoQINnzTq0-FJ5OlMgF87GUt1OkeH-WbE1H/exec" 
              target="_blank" 
              className="text-blue-600 hover:underline ml-1">

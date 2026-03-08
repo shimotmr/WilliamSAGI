@@ -66,7 +66,7 @@ export default function ShowcasePage() {
             AI Agent Team
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 font-medium">
-            ✨ 6 位 AI 助理，各有所長 ✨
+             6 位 AI 助理，各有所長 
           </p>
         </div>
 

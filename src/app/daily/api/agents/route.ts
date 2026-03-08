@@ -18,7 +18,7 @@ const agentsConfig = [
   {
     id: 'main',
     name: 'Travis',
-    emoji: '🤖',
+    emoji: '',
     role: 'Manager',
     description: 'William 的 AI 助手，負責任務派發與流水線管理，協調所有執行者',
     color: '#8B5CF6',
@@ -30,7 +30,7 @@ const agentsConfig = [
   {
     id: 'blake',
     name: 'Blake',
-    emoji: '💻',
+    emoji: '',
     role: 'Builder',
     description: '專注於程式開發和技術實現',
     color: '#10B981',
@@ -41,7 +41,7 @@ const agentsConfig = [
   {
     id: 'rex',
     name: 'Rex',
-    emoji: '🔬',
+    emoji: '',
     role: 'Thinker',
     description: '負責市場研究和深度分析',
     color: '#3B82F6',
@@ -52,7 +52,7 @@ const agentsConfig = [
   {
     id: 'oscar',
     name: 'Oscar',
-    emoji: '📋',
+    emoji: '',
     role: 'Operator',
     description: '處理日程、郵件和行政事務',
     color: '#EC4899',
@@ -63,7 +63,7 @@ const agentsConfig = [
   {
     id: 'warren',
     name: 'Warren',
-    emoji: '📈',
+    emoji: '',
     role: 'Trader',
     description: '負責交易分析、風險管理和投資決策',
     color: '#F59E0B',
@@ -74,7 +74,7 @@ const agentsConfig = [
   {
     id: 'griffin',
     name: 'Griffin',
-    emoji: '🛡️',
+    emoji: '',
     role: 'Guardian',
     description: '負責品質稽核、安全審查和風險評估',
     color: '#EF4444',
@@ -179,7 +179,7 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
   if (!isGatewayRunning) {
     return {
       status: 'offline',
-      statusText: '🔴 系統離線',
+      statusText: ' 系統離線',
       statusColor: 'bg-red-500',
       pulse: false
     };
@@ -190,14 +190,14 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
     if (isCoordinator) {
       return {
         status: 'active',
-        statusText: '🟢 協調者 - 隨時可對話',
+        statusText: ' 協調者 - 隨時可對話',
         statusColor: 'bg-green-500',
         pulse: true
       };
     }
     return {
       status: 'idle',
-      statusText: '🟡 待機中',
+      statusText: ' 待機中',
       statusColor: 'bg-yellow-500',
       pulse: false
     };
@@ -208,14 +208,14 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
     if (isCoordinator) {
       return {
         status: 'active',
-        statusText: '🟢 協調者 - 隨時可對話',
+        statusText: ' 協調者 - 隨時可對話',
         statusColor: 'bg-green-500',
         pulse: true
       };
     }
     return {
       status: 'active',
-      statusText: '🟢 執行中',
+      statusText: ' 執行中',
       statusColor: 'bg-green-500',
       pulse: true
     };
@@ -227,14 +227,14 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
     if (isCoordinator) {
       return {
         status: 'idle',
-        statusText: `🟡 協調者 - 待機中（${idleMinutes}分鐘無對話）`,
+        statusText: ` 協調者 - 待機中（${idleMinutes}分鐘無對話）`,
         statusColor: 'bg-yellow-500',
         pulse: false
       };
     }
     return {
       status: 'idle',
-      statusText: `🟡 待機中（${idleMinutes}分鐘無活動）`,
+      statusText: ` 待機中（${idleMinutes}分鐘無活動）`,
       statusColor: 'bg-yellow-500',
       pulse: false
     };
@@ -245,7 +245,7 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
     const idleMinutes = Math.floor(diffMs / 60000);
     return {
       status: 'offline',
-      statusText: `🔴 離線（${idleMinutes}分鐘無活動）`,
+      statusText: ` 離線（${idleMinutes}分鐘無活動）`,
       statusColor: 'bg-red-500',
       pulse: false
     };
@@ -254,7 +254,7 @@ function determineStatus(lastActivityMs: number, isGatewayRunning: boolean, isCo
   // Very long time - likely stopped (still show red for offline)
   return {
     status: 'offline',
-    statusText: '🔴 系統停止',
+    statusText: ' 系統停止',
     statusColor: 'bg-red-500',
     pulse: false
   };
@@ -434,17 +434,17 @@ async function buildAgentsData() {
     if (taskStats) {
       if (taskStats.executing > 0) {
         finalStatus = 'executing';
-        finalStatusText = `🔶 執行中（${taskStats.executing}任務）`;
+        finalStatusText = ` 執行中（${taskStats.executing}任務）`;
         finalStatusColor = 'bg-orange-500';
         finalPulse = true;
       } else if (taskStats.completedToday > 0) {
-        finalStatusText = `✅ 今日完成 ${taskStats.completedToday} 項任務`;
+        finalStatusText = ` 今日完成 ${taskStats.completedToday} 項任務`;
       }
     }
     
     if (isExecuting) {
       finalStatus = 'executing';
-      finalStatusText = '🔶 執行任務中';
+      finalStatusText = ' 執行任務中';
       finalStatusColor = 'bg-orange-500';
       finalPulse = true;
     }

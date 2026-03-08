@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
 const sections = [
-  { href: '/portal/humanoid/docs', label: '技術文件庫', icon: '📄', desc: 'SDK 文檔、API 參考、整合指南', status: 'live' },
-  { href: '/portal/humanoid/research', label: '研究報告', icon: '🔬', desc: 'VLA 模型、演算法研究、市場分析', status: 'live' },
-  { href: '/portal/humanoid/projects', label: '專案追蹤', icon: '📋', desc: '里程碑、進度、任務看板', status: 'coming' },
-  { href: '/portal/humanoid/experiments', label: '實驗數據', icon: '🧪', desc: '測試記錄、演算法比較、數據分析', status: 'coming' },
-  { href: '/portal/humanoid/vla', label: 'VLA 模型研究', icon: '🧠', desc: 'Vision-Language-Action 模型整理', status: 'coming' },
+  { href: '/portal/humanoid/docs', label: '技術文件庫', icon: '', desc: 'SDK 文檔、API 參考、整合指南', status: 'live' },
+  { href: '/portal/humanoid/research', label: '研究報告', icon: '', desc: 'VLA 模型、演算法研究、市場分析', status: 'live' },
+  { href: '/portal/humanoid/projects', label: '專案追蹤', icon: '', desc: '里程碑、進度、任務看板', status: 'coming' },
+  { href: '/portal/humanoid/experiments', label: '實驗數據', icon: '', desc: '測試記錄、演算法比較、數據分析', status: 'coming' },
+  { href: '/portal/humanoid/vla', label: 'VLA 模型研究', icon: '', desc: 'Vision-Language-Action 模型整理', status: 'coming' },
 ]
 
 export default function HumanoidPage() {
@@ -21,16 +21,16 @@ export default function HumanoidPage() {
       {/* Hero */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-600 rounded-2xl p-8 text-white">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-4xl">🤖</span>
+          <span className="text-4xl"></span>
           <div>
             <h1 className="text-3xl font-bold">人形機器人專區</h1>
             <p className="opacity-70 text-sm mt-1">Humanoid Robot Research & Development Hub</p>
           </div>
         </div>
         <div className="flex gap-6 mt-4 text-sm opacity-80">
-          <span>📄 {reports.length} 份研究資料</span>
-          <span>🔧 天工 2.0 SDK 文件</span>
-          <span>🏢 宇樹、Agility Robotics 研究中</span>
+          <span> {reports.length} 份研究資料</span>
+          <span> 天工 2.0 SDK 文件</span>
+          <span> 宇樹、Agility Robotics 研究中</span>
         </div>
       </div>
 
