@@ -165,6 +165,7 @@ function Column({
   expandedCardId: string | null;
   onToggleCard: (id: string) => void;
   onDeleteColumn?: () => void;
+  onRenameColumn?: () => void;
 }) {
   const cardIds = cards.map((c) => c.id);
 
@@ -172,17 +173,18 @@ function Column({
     <div className="column">
       <div className="column-header">
         <div className="column-title">
-          <h3>{column.name}</h3>
+          <h3 style={{ cursor: !column.is_default && onRenameColumn ? 'pointer' : 'default' }} onDoubleClick={!column.is_default && onRenameColumn ? onRenameColumn : undefined} title={!column.is_default ? '雙擊可重新命名' : ''}>{column.name}</h3>
           <span className="column-count">{cards.length}</span>
         </div>
-        {!column.is_default && onDeleteColumn && (
-          <button
-            onClick={onDeleteColumn}
-            title="刪除此欄"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', padding: '2px 6px', borderRadius: '4px', lineHeight: 1 }}
-            onMouseOver={e => (e.currentTarget.style.color = '#f87171')}
-            onMouseOut={e => (e.currentTarget.style.color = '#6b7280')}
-          >✕</button>
+        {!column.is_default && (
+          <div style={{ display: 'flex', gap: '2px' }}>
+            {onRenameColumn && (
+              <button onClick={onRenameColumn} title="重新命名" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '0.85rem', padding: '2px 5px', borderRadius: '4px', lineHeight: 1 }} onMouseOver={e => (e.currentTarget.style.color = '#60a5fa')} onMouseOut={e => (e.currentTarget.style.color = '#6b7280')}>✎</button>
+            )}
+            {onDeleteColumn && (
+              <button onClick={onDeleteColumn} title="刪除此欄" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', padding: '2px 5px', borderRadius: '4px', lineHeight: 1 }} onMouseOver={e => (e.currentTarget.style.color = '#f87171')} onMouseOut={e => (e.currentTarget.style.color = '#6b7280')}>✕</button>
+            )}
+          </div>
         )}
       </div>
 
@@ -272,6 +274,21 @@ export default function WeComBoardPage() {
       setColumns(prev => prev.filter(c => c.id !== columnId));
       setCards(prev => prev.map(c => c.column_id === columnId ? { ...c, column_id: 1 } : c));
     } catch { alert('刪除失敗'); }
+  }
+
+  async function handleRenameColumn(columnId: number, currentName: string) {
+    const newName = prompt('輸入新的公司名稱：', currentName);
+    if (!newName || !newName.trim() || newName.trim() === currentName) return;
+    try {
+      const res = await fetch(`/api/hub/wecom-board/columns?id=${columnId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName.trim() }),
+      });
+      if (!res.ok) { const d = await res.json(); alert(d.error || '重新命名失敗'); return; }
+      const updated = await res.json();
+      setColumns(prev => prev.map(c => c.id === columnId ? { ...c, name: updated.name } : c));
+    } catch { alert('重新命名失敗'); }
   }
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
@@ -383,6 +400,7 @@ export default function WeComBoardPage() {
               expandedCardId={expandedCardId}
               onToggleCard={toggleCard}
               onDeleteColumn={column.is_default ? undefined : () => handleDeleteColumn(column.id)}
+              onRenameColumn={column.is_default ? undefined : () => handleRenameColumn(column.id, column.name)}
             />
           ))}
 

@@ -95,3 +95,31 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Failed to delete column' }, { status: 500 });
   }
 }
+
+// PATCH - 重新命名欄位
+export async function PATCH(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ error: '缺少 id' }, { status: 400 });
+
+    const body = await request.json();
+    const { name } = body;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return NextResponse.json({ error: '名稱不可為空' }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from('wecom_board_columns')
+      .update({ name: name.trim() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error renaming column:', error);
+    return NextResponse.json({ error: 'Failed to rename column' }, { status: 500 });
+  }
+}
