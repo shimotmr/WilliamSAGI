@@ -91,7 +91,7 @@ function CardItem({ card, onDragStart }: { card: Card; onDragStart: (id: string)
 function ColumnView({
   column,
   cards,
-  draggingId,
+  onCardDragStart,
   onDrop,
   onDelete,
   onRename,
