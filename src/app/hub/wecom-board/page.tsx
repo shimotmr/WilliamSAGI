@@ -12,6 +12,7 @@ import {
   DragStartEvent,
   DragEndEvent,
   UniqueIdentifier,
+  useDroppable,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -168,9 +169,10 @@ function Column({
   onRenameColumn?: () => void;
 }) {
   const cardIds = cards.map((c) => c.id);
+  const { setNodeRef, isOver } = useDroppable({ id: String(column.id) });
 
   return (
-    <div className="column">
+    <div className="column" ref={setNodeRef} style={{ outline: isOver ? '2px dashed #60a5fa' : 'none', borderRadius: '8px' }}>
       <div className="column-header">
         <div className="column-title">
           <h3 style={{ cursor: !column.is_default && onRenameColumn ? 'pointer' : 'default' }} onDoubleClick={!column.is_default && onRenameColumn ? onRenameColumn : undefined} title={!column.is_default ? '雙擊可重新命名' : ''}>{column.name}</h3>
