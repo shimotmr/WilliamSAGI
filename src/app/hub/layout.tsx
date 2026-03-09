@@ -11,6 +11,7 @@ import {
   MessageSquare, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
+  Menu, X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -75,6 +76,7 @@ const mobileLinks = [
 export default function HubLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === '/hub/dashboard') return pathname === '/hub/dashboard' || pathname === '/hub';
@@ -141,6 +143,93 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
         }
         .mobile-nav-item.active {
           color: #5E6AD2;
+        }
+        @media (max-width: 768px) {
+          .mobile-hamburger { display: flex !important; }
+        }
+        .mobile-drawer-overlay {
+          display: none;
+          position: fixed; inset: 0;
+          background: rgba(0,0,0,0.6);
+          z-index: 100;
+          opacity: 0;
+          transition: opacity 250ms ease;
+        }
+        .mobile-drawer-overlay.open {
+          opacity: 1;
+        }
+        .mobile-drawer {
+          display: none;
+          position: fixed; top: 0; left: 0; bottom: 0;
+          width: 280px;
+          background: #0a0a0c;
+          border-right: 1px solid rgba(255,255,255,0.08);
+          z-index: 110;
+          transform: translateX(-100%);
+          transition: transform 250ms ease;
+          overflow-y: auto;
+          flex-direction: column;
+        }
+        .mobile-drawer.open {
+          transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+          .mobile-drawer-overlay, .mobile-drawer { display: flex; }
+        }
+        .mobile-drawer-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 1rem 1rem 1rem 1.25rem;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .mobile-drawer-close {
+          display: flex; align-items: center; justify-content: center;
+          width: 32px; height: 32px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 8px;
+          color: #8A8F98; cursor: pointer;
+          transition: all 150ms;
+        }
+        .mobile-drawer-close:hover {
+          background: rgba(255,255,255,0.08);
+          color: #EDEDEF;
+        }
+        .mobile-drawer-logo {
+          display: flex; align-items: center;
+        }
+        .mobile-drawer-logo span {
+          font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; color: #EDEDEF;
+        }
+        .mobile-drawer-logo .badge {
+          margin-left: 0.4rem; font-size: 0.65rem;
+          color: #5E6AD2; font-weight: 600; letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .mobile-drawer-nav {
+          flex: 1; padding: 0.75rem 0.5rem;
+          display: flex; flex-direction: column; gap: 0.25rem;
+        }
+        .mobile-drawer-group-label {
+          font-size: 0.625rem; font-weight: 600;
+          color: rgba(138,143,152,0.5);
+          text-transform: uppercase; letter-spacing: 0.1em;
+          padding: 0.75rem 0.75rem 0.375rem;
+        }
+        .mobile-drawer-link {
+          display: flex; align-items: center; gap: 0.75rem;
+          padding: 0.625rem 0.75rem; border-radius: 8px;
+          color: #8A8F98; text-decoration: none;
+          font-size: 0.875rem; font-weight: 500;
+          transition: all 150ms;
+        }
+        .mobile-drawer-link:hover {
+          background: rgba(94,106,210,0.12);
+          color: #EDEDEF;
+        }
+        .mobile-drawer-link.active {
+          background: rgba(94,106,210,0.18);
+          color: #EDEDEF;
+          box-shadow: inset 0 0 0 1px rgba(94,106,210,0.25);
         }
       `}</style>
 
@@ -257,6 +346,22 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
             background: 'rgba(255,255,255,0.01)', backdropFilter: 'blur(8px)',
             position: 'sticky', top: 0, zIndex: 40,
           }}>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileDrawerOpen(true)}
+              className="mobile-hamburger"
+              style={{
+                display: 'none',
+                alignItems: 'center', justifyContent: 'center',
+                width: '36px', height: '36px',
+                background: 'transparent', border: 'none',
+                color: '#EDEDEF', cursor: 'pointer',
+                marginRight: '0.75rem', marginLeft: '-0.5rem',
+              }}
+              aria-label="打開選單"
+            >
+              <Menu size={22} />
+            </button>
             <span style={{ fontSize: '0.75rem', color: 'rgba(237,237,239,0.35)', letterSpacing: '0.04em' }}>WilliamSAGI</span>
             <div style={{ flex: 1 }} />
             <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#4ade80', marginRight: '0.5rem' }} />
@@ -288,6 +393,57 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
+
+        {/* Mobile drawer overlay */}
+        <div 
+          className={`mobile-drawer-overlay ${mobileDrawerOpen ? 'open' : ''}`}
+          onClick={() => setMobileDrawerOpen(false)}
+          style={{ pointerEvents: mobileDrawerOpen ? 'auto' : 'none' }}
+        />
+
+        {/* Mobile side drawer */}
+        <aside className={`mobile-drawer ${mobileDrawerOpen ? 'open' : ''}`}>
+          <div className="mobile-drawer-header">
+            <div className="mobile-drawer-logo">
+              <span>SAGI</span>
+              <span className="badge">Hub</span>
+            </div>
+            <button className="mobile-drawer-close" onClick={() => setMobileDrawerOpen(false)} aria-label="關閉選單">
+              <X size={18} />
+            </button>
+          </div>
+          <nav className="mobile-drawer-nav">
+            {navGroups.map(group => (
+              <div key={group.label}>
+                <div className="mobile-drawer-group-label">{group.label}</div>
+                {group.items.map(link => {
+                  const Icon = link.icon;
+                  const active = isActive(link.href);
+                  return (
+                    <Link 
+                      key={link.href} 
+                      href={link.href}
+                      className={`mobile-drawer-link ${active ? 'active' : ''}`}
+                      onClick={() => setMobileDrawerOpen(false)}
+                    >
+                      <Icon size={18} />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
+          </nav>
+          <div style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <Link href="/portal/dashboard" onClick={() => setMobileDrawerOpen(false)} style={{
+              display: 'flex', alignItems: 'center', gap: '0.5rem',
+              fontSize: '0.8125rem', color: 'rgba(237,237,239,0.5)',
+              textDecoration: 'none', padding: '0.5rem 0',
+            }}>
+              <span>⬡</span> Portal →
+            </Link>
+          </div>
+        </aside>
       </div>
     </ThemeProvider>
   );
