@@ -1,130 +1,119 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-interface Message {
-  id: string;
+interface WeComMessage {
+  id: number;
+  msg_id: string;
+  sender_name: string;
   content: string;
-  sender: string;
-  timestamp: string;
-  company?: string;
-  category?: string;
+  msg_type: string;
+  send_time: number;
+  external_userid: string;
+  open_kfid: string;
+  source_event: string;
+  parent_msg_id: string;
 }
 
-export default function WeComClassifierPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
+export default function WeComPage() {
+  const [messages, setMessages] = useState<WeComMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({ limit: '200' });
+      if (search) params.set('q', search);
+      const res = await fetch(`/api/hub/wecom?${params}`);
+      const data = await res.json();
+      setMessages(data.messages || []);
+      setLastUpdate(new Date());
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [search]);
 
   useEffect(() => {
-    // TODO: 從 Supabase 載入資料
-    setLoading(false);
-  }, []);
+    fetchMessages();
+    // 每 30 秒自動重整
+    const timer = setInterval(fetchMessages, 30000);
+    return () => clearInterval(timer);
+  }, [fetchMessages]);
 
-  const companies = [...new Set(messages.map(m => m.company).filter(Boolean))];
-
-  const filteredMessages = messages.filter(msg => {
-    const matchesSearch = !searchTerm || 
-      msg.content?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      msg.sender?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCompany = !selectedCompany || msg.company === selectedCompany;
-    return matchesSearch && matchesCompany;
-  });
-
-  if (loading) {
-    return (
-      <div className="p-8">
-        <div className="animate-pulse">載入中...</div>
-      </div>
-    );
-  }
+  const grouped = messages.reduce<Record<string, WeComMessage[]>>((acc, m) => {
+    const key = m.parent_msg_id || m.external_userid || 'direct';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(m);
+    return acc;
+  }, {});
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          🏢 WeCom 歸類系統
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          微信客服轉傳訊息的結構化解析與公司歸類
-        </p>
-      </header>
-
-      {/* 搜尋與篩選 */}
-      <div className="flex gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="搜尋訊息內容或發送者..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <select
-          value={selectedCompany}
-          onChange={(e) => setSelectedCompany(e.target.value)}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+    <div style={{ color: '#EDEDEF', padding: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+        <div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.25rem' }}>WeCom 訊息歸類</h1>
+          <p style={{ fontSize: '0.8rem', color: '#8A8F98' }}>
+            {messages.length} 則訊息
+            {lastUpdate && ` · 更新於 ${lastUpdate.toLocaleTimeString('zh-TW')}`}
+            {' · '}
+            <span style={{ color: '#4ade80' }}>● 每 30 秒自動更新</span>
+          </p>
+        </div>
+        <button
+          onClick={fetchMessages}
+          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '0.5rem 1rem', color: '#EDEDEF', cursor: 'pointer', fontSize: '0.85rem' }}
         >
-          <option value="">所有公司</option>
-          {companies.map(company => (
-            <option key={company} value={company}>{company}</option>
-          ))}
-        </select>
+          立即更新
+        </button>
       </div>
 
-      {/* 訊息列表 */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        {filteredMessages.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-            {messages.length === 0 
-              ? '尚無訊息資料。請透過 API 上傳或從 wecom_inbox.log 匯入。'
-              : '沒有符合條件的訊息'}
-          </div>
-        ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredMessages.map(msg => (
-              <div key={msg.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {msg.sender}
-                  </span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(msg.timestamp).toLocaleString('zh-TW')}
-                  </span>
+      <input
+        type="text"
+        placeholder="搜尋訊息內容或發送者..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.6rem 1rem', color: '#EDEDEF', marginBottom: '1.5rem', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+      />
+
+      {loading ? (
+        <div style={{ textAlign: 'center', color: '#8A8F98', padding: '4rem 0' }}>載入中…</div>
+      ) : messages.length === 0 ? (
+        <div style={{ textAlign: 'center', color: '#8A8F98', padding: '4rem 0' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💬</div>
+          <div>尚無訊息資料</div>
+          <div style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>傳訊息到 WeCom Bot 後自動更新</div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {Object.entries(grouped).map(([groupKey, msgs]) => {
+            const latest = msgs[0];
+            const isGroup = msgs.length > 1;
+            return (
+              <div key={groupKey} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1rem 1.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isGroup ? '0.75rem' : 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#EDEDEF' }}>
+                    {latest.sender_name || latest.external_userid || '未知發送者'}
+                    {isGroup && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: '#8A8F98', fontWeight: 400 }}>群組對話 {msgs.length} 則</span>}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#8A8F98' }}>
+                    {latest.send_time ? new Date(latest.send_time * 1000).toLocaleString('zh-TW') : ''}
+                  </div>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-2">{msg.content}</p>
-                {msg.company && (
-                  <span className="inline-block px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 
-                                   text-blue-800 dark:text-blue-200 rounded">
-                    {msg.company}
-                  </span>
-                )}
+                {msgs.slice(0, 3).map((m, i) => (
+                  <div key={i} style={{ fontSize: '0.85rem', color: i === 0 ? '#EDEDEF' : '#8A8F98', marginTop: i > 0 ? '0.35rem' : 0, lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    {isGroup && <span style={{ color: '#60a5fa', marginRight: '0.4rem' }}>{m.sender_name}:</span>}
+                    {m.content || `[${m.msg_type}]`}
+                  </div>
+                ))}
+                {msgs.length > 3 && <div style={{ fontSize: '0.75rem', color: '#8A8F98', marginTop: '0.35rem' }}>…還有 {msgs.length - 3} 則</div>}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* 統計 */}
-      <div className="mt-6 grid grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{messages.length}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">總訊息數</div>
+            );
+          })}
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{companies.length}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">已歸類公司</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {messages.filter(m => !m.company).length}
-          </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">待歸類</div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
