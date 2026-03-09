@@ -45,7 +45,7 @@ function CardItem({ card, onDragStart }: { card: Card; onDragStart: (id: string)
   return (
     <div
       draggable
-      onDragStart={(e) => { e.dataTransfer.effectAllowed = 'move'; onDragStart(card.id); }}
+      onDragStart={(e) => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', card.id); onDragStart(card.id); }}
       style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.75rem', cursor: 'grab', userSelect: 'none', marginBottom: '0.5rem' }}
     >
       <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
@@ -96,7 +96,7 @@ function ColumnView({
   column: Column;
   cards: Card[];
   onCardDragStart: (id: string) => void;
-  onDrop: (columnId: number) => void;
+  onDrop: (columnId: number, cardId?: string) => void;
   onDelete: () => void;
   onRename: () => void;
 }) {
@@ -113,7 +113,7 @@ function ColumnView({
       style={{ minWidth: 280, maxWidth: 300, background: dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)', border: dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0 }}
       onDragOver={handleDragOver}
       onDragLeave={() => setDragOver(false)}
-      onDrop={(e) => { e.preventDefault(); setDragOver(false); onDrop(column.id); }}
+      onDrop={(e) => { e.preventDefault(); setDragOver(false); const cardId = e.dataTransfer.getData('text/plain'); onDrop(column.id, cardId); }}
     >
       {/* 欄位標題 */}
       <div style={{ padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -175,18 +175,18 @@ export default function WeComBoardPage() {
     fetchData();
   }, []);
 
-  async function handleDrop(columnId: number) {
-    const draggingId = draggingRef.current;
-    if (!draggingId) return;
-    const card = cards.find(c => c.id === draggingId);
-    if (!card || card.column_id === columnId) { setDraggingId(null); return; }
+  async function handleDrop(columnId: number, cardId?: string) {
+    const id = cardId || draggingRef.current;
+    if (!id) return;
+    const card = cards.find(c => c.id === id);
+    if (!card || card.column_id === columnId) return;
 
     // 樂觀更新
-    setCards(prev => prev.map(c => c.id === draggingId ? { ...c, column_id: columnId } : c));
-    setDraggingId(null);
+    setCards(prev => prev.map(c => c.id === id ? { ...c, column_id: columnId } : c));
+    draggingRef.current = null;
 
     try {
-      await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(draggingId)}`, {
+      await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ column_id: columnId }),
