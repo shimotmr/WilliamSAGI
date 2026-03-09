@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-// 全局動畫樣式
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-`;
+// 全局動畫樣式（client-only，避免 SSR document is not defined）
 if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  `;
   document.head.appendChild(style);
 }
 
