@@ -135,14 +135,7 @@ export default function SchedulePage() {
       )}
 
       {/* Upcoming Calendar Events */}
-      <SectionCard>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-indigo-500/20 rounded-lg">
-            <Calendar className="w-5 h-5 text-indigo-400" />
-          </div>
-          <h2 className="text-lg font-semibold text-slate-100">即將到來的行程</h2>
-        </div>
-
+      <SectionCard title="即將到來的行程">
         {events.length === 0 ? (
           <div className="text-center py-12 text-slate-500">
             <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
@@ -151,7 +144,7 @@ export default function SchedulePage() {
         ) : (
           <div className="space-y-3">
             {events.slice(0, 10).map((event) => {
-              const estimation = estimateTrip(event.location)
+              const estimation = estimateTrip(event.location || '')
               return (
                 <div
                   key={event.id}
@@ -198,14 +191,7 @@ export default function SchedulePage() {
       </SectionCard>
 
       {/* Tesla Trip History */}
-      <SectionCard>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-emerald-500/20 rounded-lg">
-            <Car className="w-5 h-5 text-emerald-400" />
-          </div>
-          <h2 className="text-lg font-semibold text-slate-100">Tesla 行程歷史</h2>
-        </div>
-
+      <SectionCard title="Tesla 行程歷史">
         {trips.length === 0 ? (
           <div className="text-center py-12 text-slate-500">
             <Car className="w-12 h-12 mx-auto mb-3 opacity-50" />
