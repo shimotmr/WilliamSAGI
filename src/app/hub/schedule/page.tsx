@@ -125,7 +125,6 @@ export default function SchedulePage() {
       <PageHeader
         title="行程管理"
         description="Google Calendar 行程整合 · Tesla 車輛歷史"
-        lastUpdated={lastUpdated}
       />
 
       {error && (
