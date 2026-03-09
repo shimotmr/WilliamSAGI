@@ -11,7 +11,7 @@ import {
   MessageSquare, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car,
+  Menu, X, Car, MapPin,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -31,6 +31,7 @@ const navGroups = [
       { href: '/hub/agents', icon: Bot,           label: 'Agents' },
       { href: '/hub/today',  icon: CalendarCheck, label: '今日任務' },
       { href: '/hub/board',  icon: Kanban,        label: '任務看板' },
+      { href: '/hub/schedule', icon: MapPin,      label: '行程' },
     ],
   },
   {
