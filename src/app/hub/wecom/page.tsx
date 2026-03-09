@@ -21,16 +21,25 @@ export default function WeComPage() {
   const [search, setSearch] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
+  const [error, setError] = useState<string | null>(null);
+
   const fetchMessages = useCallback(async () => {
     try {
       const params = new URLSearchParams({ limit: '200' });
       if (search) params.set('q', search);
       const res = await fetch(`/api/hub/wecom?${params}`);
+      if (!res.ok) {
+        setError(`API 錯誤 ${res.status}：${res.statusText}`);
+        setLoading(false);
+        return;
+      }
       const data = await res.json();
+      if (data.error) { setError(data.error); setLoading(false); return; }
       setMessages(data.messages || []);
+      setError(null);
       setLastUpdate(new Date());
     } catch (e) {
-      console.error(e);
+      setError(String(e));
     } finally {
       setLoading(false);
     }
@@ -78,6 +87,7 @@ export default function WeComPage() {
         style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.6rem 1rem', color: '#EDEDEF', marginBottom: '1.5rem', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
       />
 
+      {error && <div style={{ color: '#f87171', marginBottom: '1rem', padding: '0.75rem', background: 'rgba(248,113,113,0.1)', borderRadius: '8px', fontSize: '0.85rem' }}>⚠️ {error}</div>}
       {loading ? (
         <div style={{ textAlign: 'center', color: '#8A8F98', padding: '4rem 0' }}>載入中…</div>
       ) : messages.length === 0 ? (
