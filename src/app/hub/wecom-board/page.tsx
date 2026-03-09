@@ -127,13 +127,6 @@ function SortableCard({
         // 允許點擊展開，但 dnd-kit 會處理長按拖曳
         e.stopPropagation();
       }}
-      onClickCapture={(e) => {
-        // 阻止拖曳觸發點擊
-        if (isDragging) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }}
       style={{
         ...style,
         background: 'rgba(255,255,255,0.06)',
