@@ -1,6 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+
+// 全局動畫樣式
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+`;
+if (typeof document !== 'undefined') {
+  document.head.appendChild(style);
+}
 
 // 模組層級拖曳狀態（React 外部，100% 同步）
 let _dragCardId: string | null = null;
@@ -42,7 +54,21 @@ function Avatar({ name }: { name: string }) {
   );
 }
 
-function CardItem({ card, onDragStart, onDelete }: { card: Card; onDragStart: (id: string) => void; onDelete: (id: string) => void }) {
+function CardItem({ 
+  card, 
+  onDragStart, 
+  onDelete,
+  isBeingDragged,
+  isInsertAbove,
+  isInsertBelow,
+}: { 
+  card: Card; 
+  onDragStart: (id: string) => void; 
+  onDelete: (id: string) => void;
+  isBeingDragged?: boolean;
+  isInsertAbove?: boolean;
+  isInsertBelow?: boolean;
+}) {
   const [expanded, setExpanded] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -53,14 +79,41 @@ function CardItem({ card, onDragStart, onDelete }: { card: Card; onDragStart: (i
     setExpanded(v => !v);
   };
 
+  // 排擠視覺效果：被拖曳的卡片讓開
+  const transform = isBeingDragged ? 'translateY(100%)' : '';
+  const marginTop = isInsertAbove ? '52px' : '0'; // 卡片高度大約 52px
+  const marginBottom = isInsertBelow ? '52px' : '0';
+
   return (
     <div
       draggable
-      onDragStart={(e) => { _dragCardId = card.id; e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', card.id); } catch(err) {} onDragStart(card.id); }}
+      onDragStart={(e) => { 
+        _dragCardId = card.id; 
+        e.dataTransfer.effectAllowed = 'move'; 
+        try { 
+          e.dataTransfer.setData('text/plain', card.id); 
+          e.dataTransfer.setData('drag-type', 'card');
+        } catch(err) {} 
+        onDragStart(card.id); 
+      }}
       onClick={handleClick}
       onMouseEnter={() => setShowDelete(true)}
       onMouseLeave={() => setShowDelete(false)}
-      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.75rem', cursor: 'grab', userSelect: 'none', marginBottom: '0.5rem', position: 'relative' }}
+      style={{ 
+        background: 'rgba(255,255,255,0.06)', 
+        border: '1px solid rgba(255,255,255,0.1)', 
+        borderRadius: '10px', 
+        padding: '0.75rem', 
+        cursor: 'grab', 
+        userSelect: 'none', 
+        marginBottom: '0.5rem', 
+        position: 'relative',
+        transform,
+        marginTop,
+        marginBottom,
+        transition: 'transform 0.2s ease, margin 0.2s ease',
+        opacity: isBeingDragged ? 0.4 : 1,
+      }}
     >
       {showDelete && (
         <button
@@ -116,24 +169,65 @@ function ColumnView({
   onDeleteCard,
   onColumnDragStart,
   onColumnDrop,
+  draggingCardId,
 }: {
   column: Column;
   cards: Card[];
   onCardDragStart: (id: string) => void;
-  onDrop: (columnId: number, cardId?: string) => void;
+  onDrop: (columnId: number, cardId?: string, insertIndex?: number) => void;
   onDeleteColumn: () => void;
   onRename: () => void;
   onDeleteCard: (id: string) => void;
   onColumnDragStart: (id: number) => void;
   onColumnDrop: (targetId: number) => void;
+  draggingCardId: string | null;
 }) {
   const [dragOver, setDragOver] = useState(false);
   const [columnDragOver, setColumnDragOver] = useState(false);
+  const [insertIndex, setInsertIndex] = useState<number | null>(null);
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  // 按 send_time 排序卡片（保持與 DB 一致）
+  const sortedCards = useMemo(() => {
+    return [...cards].sort((a, b) => {
+      // 先用 _order（本地排序）
+      if ((a as any)._order !== undefined && (b as any)._order !== undefined) {
+        return (a as any)._order - (b as any)._order;
+      }
+      // 再用 send_time
+      const aTime = a.messages[0]?.send_time || 0;
+      const bTime = b.messages[0]?.send_time || 0;
+      return aTime - bTime;
+    });
+  }, [cards]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOver(true);
+    
+    // 計算插入位置
+    if (draggingCardId) {
+      const clientY = e.clientY;
+      let newInsertIndex = sortedCards.length;
+      
+      for (let i = 0; i < sortedCards.length; i++) {
+        if (sortedCards[i].id === draggingCardId) continue; // 跳過自己
+        
+        const cardEl = cardRefs.current.get(sortedCards[i].id);
+        if (cardEl) {
+          const rect = cardEl.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          
+          if (clientY < midY) {
+            newInsertIndex = i;
+            break;
+          }
+        }
+      }
+      
+      setInsertIndex(newInsertIndex);
+    }
   };
 
   const handleColumnDragOver = (e: React.DragEvent) => {
@@ -142,13 +236,42 @@ function ColumnView({
     setColumnDragOver(true);
   };
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    setInsertIndex(null);
+    
+    const dragType = e.dataTransfer.getData('drag-type');
+    if (dragType === 'column') {
+      onColumnDrop(column.id);
+      return;
+    }
+    
+    const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId');
+    _dragCardId = null;
+    
+    if (cardId) {
+      // 取得插入索引（如果有的話）
+      onDrop(column.id, cardId, insertIndex ?? undefined);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // 檢查是否離開了 column 區域
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    if (!relatedTarget || !e.currentTarget.contains(relatedTarget)) {
+      setDragOver(false);
+      setInsertIndex(null);
+    }
+  };
+
   return (
     <div
       draggable
       onDragStart={(e) => { onColumnDragStart(column.id); try { e.dataTransfer.setData('drag-type', 'column'); e.dataTransfer.setData('column-id', String(column.id)); } catch(err) {} }}
       onDragOver={handleColumnDragOver}
       onDragLeave={() => setColumnDragOver(false)}
-      onDrop={(e) => { e.preventDefault(); setColumnDragOver(false); const dragType = e.dataTransfer.getData('drag-type'); if (dragType === 'column') { onColumnDrop(column.id); return; } const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
+      onDrop={handleDrop}
       style={{ minWidth: 280, maxWidth: 300, background: columnDragOver ? 'rgba(96,165,250,0.12)' : (dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)'), border: columnDragOver ? '2px solid #60a5fa' : (dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)'), borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0, cursor: 'grab' }}
     >
       {/* 欄位標題 */}
@@ -166,18 +289,48 @@ function ColumnView({
       </div>
 
       {/* 卡片區 */}
-      <div style={{ padding: '0.75rem', overflowY: 'auto', flex: 1 }}>
-        {cards.length === 0 ? (
+      <div 
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        style={{ padding: '0.75rem', overflowY: 'auto', flex: 1, position: 'relative' }}
+      >
+        {/* 插入指示線 */}
+        {insertIndex !== null && draggingCardId && (
+          <div 
+            style={{
+              position: 'absolute',
+              top: insertIndex === 0 ? '8px' : `${insertIndex * 52 + 8}px`,
+              left: '0.5rem',
+              right: '0.5rem',
+              height: '2px',
+              background: '#60a5fa',
+              borderRadius: '1px',
+              zIndex: 20,
+              animation: 'pulse 1s ease-in-out infinite',
+            }}
+          />
+        )}
+        {sortedCards.length === 0 ? (
           <div style={{ color: '#6b7280', fontSize: '0.82rem', textAlign: 'center', padding: '2rem 0' }}>拖曳卡片到這裡</div>
         ) : (
-          cards.map(card => (
-            <CardItem
-              key={card.id}
-              card={card}
-              onDragStart={onCardDragStart}
-              onDelete={onDeleteCard}
-            />
-          ))
+          sortedCards.map((card, index) => {
+            const isBeingDragged = card.id === draggingCardId;
+            const isInsertAbove = insertIndex !== null && index === insertIndex && insertIndex < cards.length;
+            const isInsertBelow = insertIndex !== null && index === insertIndex - 1 && insertIndex > 0;
+            
+            return (
+              <div key={card.id} ref={(el) => { if (el) cardRefs.current.set(card.id, el); }}>
+                <CardItem
+                  card={card}
+                  onDragStart={onCardDragStart}
+                  onDelete={onDeleteCard}
+                  isBeingDragged={isBeingDragged}
+                  isInsertAbove={isInsertAbove}
+                  isInsertBelow={isInsertBelow}
+                />
+              </div>
+            );
+          })
         )}
       </div>
     </div>
@@ -188,8 +341,12 @@ export default function WeComBoardPage() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
+  const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
   const draggingRef = useRef<string | null>(null);
-  const setDraggingId = useCallback((id: string | null) => { draggingRef.current = id; }, []);
+  const setDraggingId = useCallback((id: string | null) => { 
+    draggingRef.current = id; 
+    setDraggingCardId(id);
+  }, []);
   const [newColumnName, setNewColumnName] = useState('');
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
@@ -212,24 +369,61 @@ export default function WeComBoardPage() {
     fetchData();
   }, []);
 
-  async function handleDrop(columnId: number, cardId?: string) {
+  async function handleDrop(columnId: number, cardId?: string, insertIndex?: number) {
     const id = cardId || draggingRef.current;
     if (!id) return;
+    
     const card = cards.find(c => c.id === id);
-    if (!card || card.column_id === columnId) return;
-
-    // 樂觀更新
-    setCards(prev => prev.map(c => c.id === id ? { ...c, column_id: columnId } : c));
+    if (!card) return;
+    
+    // 清除拖曳狀態
+    setDraggingCardId(null);
     draggingRef.current = null;
 
-    try {
-      await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ column_id: columnId }),
+    // 取得該欄目前的卡片（按 send_time 排序）
+    const columnCards = cards
+      .filter(c => c.column_id === columnId)
+      .sort((a, b) => {
+        const aTime = a.messages[0]?.send_time || 0;
+        const bTime = b.messages[0]?.send_time || 0;
+        return aTime - bTime;
       });
-    } catch (e) {
-      console.error('Move failed', e);
+
+    if (card.column_id === columnId && insertIndex !== undefined) {
+      // 同欄排序：只在本地更新順序，不存 DB（重新整理會按 send_time 重新排序）
+      const currentIndex = columnCards.findIndex(c => c.id === id);
+      if (currentIndex !== -1 && currentIndex !== insertIndex) {
+        // 移除並重新插入
+        const newOrder = [...columnCards];
+        newOrder.splice(currentIndex, 1);
+        newOrder.splice(insertIndex > currentIndex ? insertIndex - 1 : insertIndex, 0, card);
+        
+        // 更新所有卡片的順序（透過更新 messages 陣列來觸發重渲染）
+        setCards(prev => prev.map(c => {
+          const newPos = newOrder.findIndex(oc => oc.id === c.id);
+          if (newPos !== -1) {
+            return { ...c, _order: newPos };
+          }
+          return c;
+        }));
+      }
+      return;
+    }
+
+    // 跨欄移動
+    if (card.column_id !== columnId) {
+      // 樂觀更新
+      setCards(prev => prev.map(c => c.id === id ? { ...c, column_id: columnId } : c));
+
+      try {
+        await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ column_id: columnId }),
+        });
+      } catch (e) {
+        console.error('Move failed', e);
+      }
     }
   }
 
@@ -343,6 +537,7 @@ export default function WeComBoardPage() {
             onDeleteCard={handleDeleteCard}
             onColumnDragStart={handleColumnDragStart}
             onColumnDrop={handleColumnReorder}
+            draggingCardId={draggingCardId}
           />
         ))}
 
