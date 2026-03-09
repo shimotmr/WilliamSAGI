@@ -235,6 +235,7 @@ export default function WeComBoardPage() {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [newColumnName, setNewColumnName] = useState('');
   const [showAddColumn, setShowAddColumn] = useState(false);
+  const [isAddingColumn, setIsAddingColumn] = useState(false);
 
   // 載入資料
   useEffect(() => {
@@ -352,21 +353,25 @@ export default function WeComBoardPage() {
   };
 
   const addColumn = async () => {
-    if (!newColumnName.trim()) return;
+    if (!newColumnName.trim() || isAddingColumn) return;
+    setIsAddingColumn(true);
+    const name = newColumnName.trim();
+    setNewColumnName('');
+    setShowAddColumn(false);
 
     try {
       const res = await fetch('/api/hub/wecom-board/columns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newColumnName.trim() }),
+        body: JSON.stringify({ name }),
       });
 
       const newColumn = await res.json();
       setColumns((prev) => [...prev, newColumn]);
-      setNewColumnName('');
-      setShowAddColumn(false);
     } catch (error) {
       console.error('Failed to add column:', error);
+    } finally {
+      setIsAddingColumn(false);
     }
   };
 
