@@ -95,13 +95,12 @@ function ColumnView({
 }: {
   column: Column;
   cards: Card[];
-  draggingId: string | null;
+  onCardDragStart: (id: string) => void;
   onDrop: (columnId: number) => void;
   onDelete: () => void;
   onRename: () => void;
 }) {
   const [dragOver, setDragOver] = useState(false);
-  const [localDragStart, setLocalDragStart] = useState<string | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -139,7 +138,7 @@ function ColumnView({
             <CardItem
               key={card.id}
               card={card}
-              onDragStart={setLocalDragStart}
+              onDragStart={onCardDragStart}
             />
           ))
         )}
@@ -247,7 +246,7 @@ export default function WeComBoardPage() {
             key={col.id}
             column={col}
             cards={cards.filter(c => c.column_id === col.id)}
-            draggingId={draggingId}
+            onCardDragStart={setDraggingId}
             onDrop={handleDrop}
             onDelete={() => handleDeleteColumn(col.id)}
             onRename={() => handleRenameColumn(col.id, col.name)}
