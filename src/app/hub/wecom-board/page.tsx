@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface Column {
   id: number;
@@ -151,7 +151,8 @@ export default function WeComBoardPage() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
-  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const draggingRef = useRef<string | null>(null);
+  const setDraggingId = useCallback((id: string | null) => { draggingRef.current = id; }, []);
   const [newColumnName, setNewColumnName] = useState('');
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
@@ -175,7 +176,8 @@ export default function WeComBoardPage() {
   }, []);
 
   async function handleDrop(columnId: number) {
-    if (!draggingId || !draggingId) return;
+    const draggingId = draggingRef.current;
+    if (!draggingId) return;
     const card = cards.find(c => c.id === draggingId);
     if (!card || card.column_id === columnId) { setDraggingId(null); return; }
 
@@ -239,7 +241,7 @@ export default function WeComBoardPage() {
 
       <div
         style={{ display: 'flex', gap: '1rem', overflowX: 'auto', flex: 1, paddingBottom: '1rem', alignItems: 'flex-start' }}
-        onDragEnd={() => setDraggingId(null)}
+        onDragEnd={() => { draggingRef.current = null; }}
       >
         {columns.map(col => (
           <ColumnView
