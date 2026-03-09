@@ -106,7 +106,6 @@ function CardItem({
         padding: '0.75rem', 
         cursor: 'grab', 
         userSelect: 'none', 
-        marginBottom: '0.5rem', 
         position: 'relative',
         transform,
         marginTop,
