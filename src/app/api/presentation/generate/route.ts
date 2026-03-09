@@ -63,37 +63,6 @@ export async function POST(request: NextRequest) {
       throw new Error('無法建立簡報')
     }
 
-    // 生成簡報內容
-    const contentPrompt = `
-請為以下主題生成簡報大綱：
-主題：${topic}
-目標受眾：${audiencePrompt}
-
-請生成大綱結構，包括：
-1. 標題頁
-2. 問題/背景介紹
-3. 解決方案
-4. 效益分析
-5. 結論與下一步
-
-這是 AI 輔助生成的大綱，請根據實際情況調整。`
-
-    // 在第一頁插入標題
-    await slides.presentations.batchUpdate({
-      presentationId,
-      requestBody: {
-        requests: [
-          {
-            createSlide: {
-              slideLayoutReference: {
-                presetId: 'title',
-              },
-            },
-          },
-        ],
-      },
-    })
-
     // 取得簡報連結
     const slidesUrl = `https://docs.google.com/presentation/d/${presentationId}/edit`
 

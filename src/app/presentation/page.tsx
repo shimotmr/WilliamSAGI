@@ -1,14 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Loader2, Download, FileText, Copy, Check } from 'lucide-react'
 
 interface PresentationResult {
   id: string
@@ -91,24 +83,33 @@ export default function PresentationPage() {
         </div>
 
         {/* Input Form */}
-        <Card className="mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-          <CardHeader>
-            <CardTitle style={{ color: 'var(--foreground)' }}>簡報設定</CardTitle>
-            <CardDescription style={{ color: 'var(--text-secondary)' }}>
-              設定簡報的主題和目標受眾
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div 
+          className="rounded-lg border p-6 mb-6"
+          style={{ 
+            backgroundColor: 'var(--card)', 
+            borderColor: 'var(--border)' 
+          }}
+        >
+          <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
+            簡報設定
+          </h2>
+          <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
+            設定簡報的主題和目標受眾
+          </p>
+
+          <div className="space-y-4">
             {/* Topic Input */}
             <div className="space-y-2">
-              <Label htmlFor="topic" style={{ color: 'var(--foreground)' }}>
+              <label htmlFor="topic" style={{ color: 'var(--foreground)' }}>
                 簡報主題 <span className="text-red-500">*</span>
-              </Label>
-              <Input
+              </label>
+              <input
                 id="topic"
+                type="text"
                 placeholder="例如：2026 Q1 產品發表會"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTopic(e.target.value)}
+                className="w-full px-3 py-2 rounded-md border"
                 style={{ 
                   backgroundColor: 'var(--input)', 
                   borderColor: 'var(--border)',
@@ -119,25 +120,27 @@ export default function PresentationPage() {
 
             {/* Audience Selection */}
             <div className="space-y-2">
-              <Label htmlFor="audience" style={{ color: 'var(--foreground)' }}>
+              <label htmlFor="audience" style={{ color: 'var(--foreground)' }}>
                 目標受眾 <span className="text-red-500">*</span>
-              </Label>
-              <Select value={audience} onValueChange={setAudience}>
-                <SelectTrigger style={{ 
+              </label>
+              <select
+                id="audience"
+                value={audience}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAudience(e.target.value)}
+                className="w-full px-3 py-2 rounded-md border"
+                style={{ 
                   backgroundColor: 'var(--input)', 
                   borderColor: 'var(--border)',
                   color: 'var(--foreground)'
-                }}>
-                  <SelectValue placeholder="選擇目標受眾" />
-                </SelectTrigger>
-                <SelectContent>
-                  {AUDIENCE_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                }}
+              >
+                <option value="">選擇目標受眾</option>
+                {AUDIENCE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Error Message */}
@@ -148,44 +151,61 @@ export default function PresentationPage() {
             )}
 
             {/* Generate Button */}
-            <Button
+            <button
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="w-full"
-              style={{ backgroundColor: 'var(--primary)' }}
+              className="w-full px-4 py-2 rounded-md font-medium transition-colors"
+              style={{ 
+                backgroundColor: isGenerating ? 'var(--muted)' : 'var(--primary)',
+                color: isGenerating ? 'var(--text-secondary)' : 'white'
+              }}
             >
               {isGenerating ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
                   生成中...
-                </>
+                </span>
               ) : (
-                <>
-                  <FileText className="w-4 h-4 mr-2" />
-                  生成簡報
-                </>
+                '生成簡報'
               )}
-            </Button>
-          </CardContent>
-        </Card>
+            </button>
+          </div>
+        </div>
 
         {/* Result Section */}
         {result && (
-          <Card style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle style={{ color: 'var(--foreground)' }}>生成結果</CardTitle>
-                  <CardDescription style={{ color: 'var(--text-secondary)' }}>
-                    您的簡報已成功生成
-                  </CardDescription>
-                </div>
-                <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
-                  完成
-                </Badge>
+          <div 
+            className="rounded-lg border p-6"
+            style={{ 
+              backgroundColor: 'var(--card)', 
+              borderColor: 'var(--border)' 
+            }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>
+                  生成結果
+                </h2>
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  您的簡報已成功生成
+                </p>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              <span 
+                className="px-3 py-1 rounded-full text-sm"
+                style={{ 
+                  backgroundColor: 'rgba(34, 197, 94, 0.1)', 
+                  color: '#22c55e',
+                  border: '1px solid rgba(34, 197, 94, 0.2)'
+                }}
+              >
+                完成
+              </span>
+            </div>
+
+            <div className="space-y-4">
               {/* Title */}
               <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--muted)' }}>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>簡報標題</p>
@@ -196,34 +216,36 @@ export default function PresentationPage() {
 
               {/* Slides URL */}
               <div className="space-y-2">
-                <Label style={{ color: 'var(--foreground)' }}>簡報連結</Label>
+                <label style={{ color: 'var(--foreground)' }}>簡報連結</label>
                 <div className="flex gap-2">
-                  <Input
+                  <input
                     readOnly
                     value={result.slidesUrl}
+                    className="flex-1 px-3 py-2 rounded-md border"
                     style={{ 
                       backgroundColor: 'var(--input)', 
                       borderColor: 'var(--border)',
                       color: 'var(--foreground)'
                     }}
                   />
-                  <Button
-                    variant="outline"
-                    size="icon"
+                  <button
                     onClick={handleCopy}
+                    className="px-3 py-2 rounded-md border hover:bg-muted"
+                    style={{ borderColor: 'var(--border)' }}
                     title="複製連結"
                   >
-                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    asChild
+                    {copied ? '✓' : '📋'}
+                  </button>
+                  <a
+                    href={result.slidesUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 rounded-md border hover:bg-muted"
+                    style={{ borderColor: 'var(--border)' }}
+                    title="開啟簡報"
                   >
-                    <a href={result.slidesUrl} target="_blank" rel="noopener noreferrer" title="開啟簡報">
-                      <Download className="w-4 h-4" />
-                    </a>
-                  </Button>
+                    ↗️
+                  </a>
                 </div>
               </div>
 
@@ -231,8 +253,8 @@ export default function PresentationPage() {
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 建立時間：{new Date(result.createdAt).toLocaleString('zh-TW')}
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>
