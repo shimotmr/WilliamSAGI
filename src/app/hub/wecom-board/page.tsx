@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+// 模組層級拖曳狀態（React 外部，100% 同步）
+let _dragCardId: string | null = null;
+
 interface Column {
   id: number;
   name: string;
@@ -45,7 +48,7 @@ function CardItem({ card, onDragStart }: { card: Card; onDragStart: (id: string)
   return (
     <div
       draggable
-      onDragStart={(e) => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', card.id); onDragStart(card.id); }}
+      onDragStart={(e) => { _dragCardId = card.id; e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', card.id); } catch(err) {} onDragStart(card.id); }}
       style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.75rem', cursor: 'grab', userSelect: 'none', marginBottom: '0.5rem' }}
     >
       <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
@@ -113,7 +116,7 @@ function ColumnView({
       style={{ minWidth: 280, maxWidth: 300, background: dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)', border: dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0 }}
       onDragOver={handleDragOver}
       onDragLeave={() => setDragOver(false)}
-      onDrop={(e) => { e.preventDefault(); setDragOver(false); const cardId = e.dataTransfer.getData('text/plain'); onDrop(column.id, cardId); }}
+      onDrop={(e) => { e.preventDefault(); setDragOver(false); const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
     >
       {/* 欄位標題 */}
       <div style={{ padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
