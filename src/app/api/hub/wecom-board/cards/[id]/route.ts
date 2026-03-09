@@ -14,13 +14,21 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // 刪除該 parent_msg_id 或 msg_id 的所有訊息
-    const { error } = await supabase
+    // 刪除所有子訊息（parent_msg_id = id）
+    const { error: e1 } = await supabase
       .from('wecom_messages')
       .delete()
       .eq('parent_msg_id', id);
 
-    if (error) throw error;
+    // 刪除根訊息（msg_id = id，parent_msg_id is null）
+    const { error: e2 } = await supabase
+      .from('wecom_messages')
+      .delete()
+      .eq('msg_id', id)
+      .is('parent_msg_id', null);
+
+    if (e1) throw e1;
+    if (e2) throw e2;
 
     return NextResponse.json({ success: true });
   } catch (error) {
