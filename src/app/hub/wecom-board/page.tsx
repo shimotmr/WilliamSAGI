@@ -101,10 +101,17 @@ function SortableCard({
     },
   });
 
-  const style = {
+  const combinedStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : 1,
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '10px',
+    padding: '0.75rem',
+    cursor: 'grab',
+    userSelect: 'none',
+    position: 'relative',
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -116,7 +123,7 @@ function SortableCard({
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={combinedStyle}
       {...attributes}
       {...listeners}
       onClick={handleClick}
@@ -126,16 +133,6 @@ function SortableCard({
       onTouchStart={(e) => {
         // 允許點擊展開，但 dnd-kit 會處理長按拖曳
         e.stopPropagation();
-      }}
-      style={{
-        ...style,
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '10px',
-        padding: '0.75rem',
-        cursor: 'grab',
-        userSelect: 'none',
-        position: 'relative',
       }}
     >
       {/* 刪除按鈕 */}
@@ -268,10 +265,19 @@ function SortableColumn({
     },
   });
 
-  const style = {
+  const combinedStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    minWidth: 280,
+    maxWidth: 300,
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '12px',
+    display: 'flex',
+    flexDirection: 'column',
+    maxHeight: 'calc(100vh - 160px)',
+    flexShrink: 0,
   };
 
   const cardIds = useMemo(() => cards.map(c => c.id), [cards]);
@@ -279,18 +285,7 @@ function SortableColumn({
   return (
     <div
       ref={setNodeRef}
-      style={{
-        ...style,
-        minWidth: 280,
-        maxWidth: 300,
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '12px',
-        display: 'flex',
-        flexDirection: 'column',
-        maxHeight: 'calc(100vh - 160px)',
-        flexShrink: 0,
-      }}
+      style={combinedStyle}
     >
       {/* 欄位標題 */}
       <div
