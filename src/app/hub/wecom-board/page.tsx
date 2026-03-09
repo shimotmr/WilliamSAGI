@@ -61,6 +61,8 @@ function CardItem({
   isBeingDragged,
   isInsertAbove,
   isInsertBelow,
+  isMobile,
+  onLongPress,
 }: { 
   card: Card; 
   onDragStart: (id: string) => void; 
@@ -68,15 +70,34 @@ function CardItem({
   isBeingDragged?: boolean;
   isInsertAbove?: boolean;
   isInsertBelow?: boolean;
+  isMobile: boolean;
+  onLongPress: (id: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClick = (e: React.MouseEvent) => {
     // 不切換展開狀態：點擊 ✕ 按鈕、連結、或拖曳時
     const target = e.target as HTMLElement;
     if (target.closest('button') || target.closest('a')) return;
     setExpanded(v => !v);
+  };
+
+  // 觸控事件處理（手機長按）
+  const handleTouchStart = () => {
+    if (isMobile) {
+      longPressTimer.current = setTimeout(() => {
+        onLongPress(card.id);
+      }, 500);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
 
   // 排擠視覺效果：被拖曳的卡片讓開
@@ -86,8 +107,8 @@ function CardItem({
 
   return (
     <div
-      draggable
-      onDragStart={(e) => { 
+      draggable={!isMobile} // 手機不啟用拖曳
+      onDragStart={!isMobile ? (e) => { 
         _dragCardId = card.id; 
         e.dataTransfer.effectAllowed = 'move'; 
         try { 
@@ -95,16 +116,18 @@ function CardItem({
           e.dataTransfer.setData('drag-type', 'card');
         } catch(err) {} 
         onDragStart(card.id); 
-      }}
+      } : undefined}
       onClick={handleClick}
-      onMouseEnter={() => setShowDelete(true)}
-      onMouseLeave={() => setShowDelete(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => !isMobile && setShowDelete(true)}
+      onMouseLeave={() => !isMobile && setShowDelete(false)}
       style={{ 
         background: 'rgba(255,255,255,0.06)', 
         border: '1px solid rgba(255,255,255,0.1)', 
         borderRadius: '10px', 
         padding: '0.75rem', 
-        cursor: 'grab', 
+        cursor: isMobile ? 'pointer' : 'grab', 
         userSelect: 'none', 
         position: 'relative',
         transform,
@@ -114,7 +137,8 @@ function CardItem({
         opacity: isBeingDragged ? 0.4 : 1,
       }}
     >
-      {showDelete && (
+      {/* 刪除按鈕：僅在非手機時顯示 */}
+      {showDelete && !isMobile && (
         <button
           onClick={(e) => { e.stopPropagation(); onDelete(card.id); }}
           title="刪除卡片"
@@ -169,6 +193,8 @@ function ColumnView({
   onColumnDragStart,
   onColumnDrop,
   draggingCardId,
+  isMobile,
+  onLongPress,
 }: {
   column: Column;
   cards: Card[];
@@ -180,6 +206,8 @@ function ColumnView({
   onColumnDragStart: (id: number) => void;
   onColumnDrop: (targetId: number) => void;
   draggingCardId: string | null;
+  isMobile: boolean;
+  onLongPress: (id: string) => void;
 }) {
   const [dragOver, setDragOver] = useState(false);
   const [columnDragOver, setColumnDragOver] = useState(false);
@@ -326,6 +354,8 @@ function ColumnView({
                   isBeingDragged={isBeingDragged}
                   isInsertAbove={isInsertAbove}
                   isInsertBelow={isInsertBelow}
+                  isMobile={isMobile}
+                  onLongPress={onLongPress}
                 />
               </div>
             );
@@ -349,6 +379,19 @@ export default function WeComBoardPage() {
   const [newColumnName, setNewColumnName] = useState('');
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
+  
+  // 手機狀態
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileMoveModal, setShowMobileMoveModal] = useState(false);
+  const [mobileMoveCardId, setMobileMoveCardId] = useState<string | null>(null);
+
+  // 檢測手機寬度
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -467,6 +510,35 @@ export default function WeComBoardPage() {
     } finally { setIsAddingColumn(false); }
   }
 
+  // 手機長按移動卡片
+  function handleLongPress(cardId: string) {
+    setMobileMoveCardId(cardId);
+    setShowMobileMoveModal(true);
+  }
+
+  async function handleMobileMove(targetColumnId: number) {
+    if (!mobileMoveCardId) return;
+    
+    const card = cards.find(c => c.id === mobileMoveCardId);
+    if (!card) return;
+    
+    // 樂觀更新
+    setCards(prev => prev.map(c => c.id === mobileMoveCardId ? { ...c, column_id: targetColumnId } : c));
+    
+    try {
+      await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(mobileMoveCardId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ column_id: targetColumnId }),
+      });
+    } catch (e) {
+      console.error('Mobile move failed', e);
+    }
+    
+    setShowMobileMoveModal(false);
+    setMobileMoveCardId(null);
+  }
+
   const [draggingColumnId, setDraggingColumnId] = useState<number | null>(null);
 
   function handleColumnDragStart(id: number) {
@@ -537,6 +609,8 @@ export default function WeComBoardPage() {
             onColumnDragStart={handleColumnDragStart}
             onColumnDrop={handleColumnReorder}
             draggingCardId={draggingCardId}
+            isMobile={isMobile}
+            onLongPress={handleLongPress}
           />
         ))}
 
@@ -572,6 +646,33 @@ export default function WeComBoardPage() {
           )}
         </div>
       </div>
+
+      {/* 手機版移動卡片 Modal */}
+      {showMobileMoveModal && (
+        <>
+          <div 
+            onClick={() => { setShowMobileMoveModal(false); setMobileMoveCardId(null); }}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 999 }}
+          />
+          <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#1e1e2e', borderRadius: '16px 16px 0 0', padding: '1.25rem', paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))', zIndex: 1000, maxHeight: '60vh', overflow: 'auto' }}>
+            <div style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '1rem', color: '#EDEDEF', textAlign: 'center' }}>移動到...</div>
+            {columns.map(col => (
+              <div 
+                key={col.id} 
+                onClick={() => handleMobileMove(col.id)}
+                style={{ padding: '0.875rem 1rem', borderRadius: '8px', marginBottom: '0.5rem', background: 'rgba(255,255,255,0.08)', cursor: 'pointer', color: '#EDEDEF', fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <span>{col.name}</span>
+                <span style={{ fontSize: '0.8rem', color: '#9ca3af', background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '999px' }}>{cards.filter(c => c.column_id === col.id).length}</span>
+              </div>
+            ))}
+            <div 
+              onClick={() => { setShowMobileMoveModal(false); setMobileMoveCardId(null); }}
+              style={{ padding: '0.875rem', textAlign: 'center', color: '#9ca3af', cursor: 'pointer', marginTop: '0.5rem', fontSize: '0.9rem' }}
+            >取消</div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
