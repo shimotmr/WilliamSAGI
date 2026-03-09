@@ -12,7 +12,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from('wecom_board_columns')
       .select('*')
-      .order('position');
+      .order('position', { ascending: true });
 
     if (error) throw error;
     return NextResponse.json(data);
@@ -96,14 +96,28 @@ export async function DELETE(request: Request) {
   }
 }
 
-// PATCH - 重新命名欄位
+// PATCH - 重新命名欄位 或 重新排序
 export async function PATCH(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    if (!id) return NextResponse.json({ error: '缺少 id' }, { status: 400 });
-
     const body = await request.json();
+
+    // 重新排序（接收 ids 陣列）
+    if (body.ids && Array.isArray(body.ids)) {
+      // 批量更新 position
+      for (let i = 0; i < body.ids.length; i++) {
+        const { error } = await supabase
+          .from('wecom_board_columns')
+          .update({ position: i })
+          .eq('id', body.ids[i]);
+        if (error) throw error;
+      }
+      return NextResponse.json({ success: true });
+    }
+
+    // 重新命名（需要 id）
+    if (!id) return NextResponse.json({ error: '缺少 id' }, { status: 400 });
     const { name } = body;
     if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: '名稱不可為空' }, { status: 400 });
@@ -119,7 +133,7 @@ export async function PATCH(request: Request) {
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error renaming column:', error);
-    return NextResponse.json({ error: 'Failed to rename column' }, { status: 500 });
+    console.error('Error patching column:', error);
+    return NextResponse.json({ error: 'Failed to patch column' }, { status: 500 });
   }
 }

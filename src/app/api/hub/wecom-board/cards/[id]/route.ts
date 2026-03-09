@@ -6,6 +6,29 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// DELETE - 刪除卡片
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    // 刪除該 parent_msg_id 或 msg_id 的所有訊息
+    const { error } = await supabase
+      .from('wecom_messages')
+      .delete()
+      .eq('parent_msg_id', id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting card:', error);
+    return NextResponse.json({ error: 'Failed to delete card' }, { status: 500 });
+  }
+}
+
 // PATCH - 移動卡片（更新 column_id）
 export async function PATCH(
   request: Request,

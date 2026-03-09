@@ -42,15 +42,33 @@ function Avatar({ name }: { name: string }) {
   );
 }
 
-function CardItem({ card, onDragStart }: { card: Card; onDragStart: (id: string) => void }) {
+function CardItem({ card, onDragStart, onDelete }: { card: Card; onDragStart: (id: string) => void; onDelete: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    // 不切換展開狀態：點擊 ✕ 按鈕、連結、或拖曳時
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('a')) return;
+    setExpanded(v => !v);
+  };
 
   return (
     <div
       draggable
       onDragStart={(e) => { _dragCardId = card.id; e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', card.id); } catch(err) {} onDragStart(card.id); }}
-      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.75rem', cursor: 'grab', userSelect: 'none', marginBottom: '0.5rem' }}
+      onClick={handleClick}
+      onMouseEnter={() => setShowDelete(true)}
+      onMouseLeave={() => setShowDelete(false)}
+      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '0.75rem', cursor: 'grab', userSelect: 'none', marginBottom: '0.5rem', position: 'relative' }}
     >
+      {showDelete && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete(card.id); }}
+          title="刪除卡片"
+          style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(239,68,68,0.9)', border: 'none', borderRadius: '4px', width: '20px', height: '20px', cursor: 'pointer', color: '#fff', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}
+        >✕</button>
+      )}
       <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
         <Avatar name={card.sender_name} />
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -93,17 +111,24 @@ function ColumnView({
   cards,
   onCardDragStart,
   onDrop,
-  onDelete,
+  onDeleteColumn,
   onRename,
+  onDeleteCard,
+  onColumnDragStart,
+  onColumnDrop,
 }: {
   column: Column;
   cards: Card[];
   onCardDragStart: (id: string) => void;
   onDrop: (columnId: number, cardId?: string) => void;
-  onDelete: () => void;
+  onDeleteColumn: () => void;
   onRename: () => void;
+  onDeleteCard: (id: string) => void;
+  onColumnDragStart: (id: number) => void;
+  onColumnDrop: (targetId: number) => void;
 }) {
   const [dragOver, setDragOver] = useState(false);
+  const [columnDragOver, setColumnDragOver] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -111,12 +136,23 @@ function ColumnView({
     setDragOver(true);
   };
 
+  const handleColumnDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setColumnDragOver(true);
+  };
+
   return (
     <div
-      style={{ minWidth: 280, maxWidth: 300, background: dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)', border: dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0 }}
+      draggable
+      onDragStart={(e) => { onColumnDragStart(column.id); try { e.dataTransfer.setData('drag-type', 'column'); e.dataTransfer.setData('column-id', String(column.id)); } catch(err) {} }}
+      onDragOver={handleColumnDragOver}
+      onDragLeave={() => setColumnDragOver(false)}
+      onDrop={(e) => { e.preventDefault(); setColumnDragOver(false); const dragType = e.dataTransfer.getData('drag-type'); if (dragType === 'column') { onColumnDrop(column.id); return; } const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
+      style={{ minWidth: 280, maxWidth: 300, background: columnDragOver ? 'rgba(96,165,250,0.12)' : (dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)'), border: columnDragOver ? '2px solid #60a5fa' : (dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)'), borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0, cursor: 'grab' }}
       onDragOver={handleDragOver}
       onDragLeave={() => setDragOver(false)}
-      onDrop={(e) => { e.preventDefault(); setDragOver(false); const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
+      onDrop={(e) => { e.preventDefault(); setDragOver(false); const dragType = e.dataTransfer.getData('drag-type'); if (dragType === 'column') { onColumnDrop(column.id); return; } const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
     >
       {/* 欄位標題 */}
       <div style={{ padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -127,7 +163,7 @@ function ColumnView({
         {!column.is_default && (
           <div style={{ display: 'flex', gap: '2px' }}>
             <button onClick={onRename} title="重新命名" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '0.85rem', padding: '2px 5px', borderRadius: '4px' }} onMouseOver={e => (e.currentTarget.style.color='#60a5fa')} onMouseOut={e => (e.currentTarget.style.color='#6b7280')}>✎</button>
-            <button onClick={onDelete} title="刪除此欄" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', padding: '2px 5px', borderRadius: '4px' }} onMouseOver={e => (e.currentTarget.style.color='#f87171')} onMouseOut={e => (e.currentTarget.style.color='#6b7280')}>✕</button>
+            <button onClick={onDeleteColumn} title="刪除此欄" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', padding: '2px 5px', borderRadius: '4px' }} onMouseOver={e => (e.currentTarget.style.color='#f87171')} onMouseOut={e => (e.currentTarget.style.color='#6b7280')}>✕</button>
           </div>
         )}
       </div>
@@ -142,6 +178,7 @@ function ColumnView({
               key={card.id}
               card={card}
               onDragStart={onCardDragStart}
+              onDelete={onDeleteCard}
             />
           ))
         )}
@@ -207,6 +244,13 @@ export default function WeComBoardPage() {
     setCards(prev => prev.map(c => c.column_id === id ? { ...c, column_id: 1 } : c));
   }
 
+  async function handleDeleteCard(id: string) {
+    if (!confirm('確定刪除此卡片？')) return;
+    const res = await fetch(`/api/hub/wecom-board/cards/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!res.ok) { alert('刪除失敗'); return; }
+    setCards(prev => prev.filter(c => c.id !== id));
+  }
+
   async function handleRenameColumn(id: number, name: string) {
     const newName = prompt('輸入新名稱：', name);
     if (!newName?.trim() || newName.trim() === name) return;
@@ -233,13 +277,57 @@ export default function WeComBoardPage() {
     } finally { setIsAddingColumn(false); }
   }
 
+  const [draggingColumnId, setDraggingColumnId] = useState<number | null>(null);
+
+  function handleColumnDragStart(id: number) {
+    setDraggingColumnId(id);
+  }
+
+  async function handleColumnReorder(targetColumnId: number) {
+    if (draggingColumnId === null || draggingColumnId === targetColumnId) return;
+    
+    const draggedId = draggingColumnId;
+    setDraggingColumnId(null);
+
+    // 取得目前排序
+    const currentOrder = columns.map(c => c.id);
+    const draggedIndex = currentOrder.indexOf(draggedId);
+    const targetIndex = currentOrder.indexOf(targetColumnId);
+    
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    // 重新排列
+    const newOrder = [...currentOrder];
+    newOrder.splice(draggedIndex, 1);
+    newOrder.splice(targetIndex, 0, draggedId);
+
+    // 樂觀更新
+    setColumns(prev => {
+      const reordered = newOrder.map((id, idx) => {
+        const col = prev.find(c => c.id === id);
+        return col ? { ...col, position: idx } : null;
+      }).filter(Boolean) as Column[];
+      return reordered;
+    });
+
+    try {
+      await fetch('/api/hub/wecom-board/columns?reorder=1', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: newOrder }),
+      });
+    } catch (e) {
+      console.error('Reorder failed', e);
+    }
+  }
+
   if (loading) return <div style={{ color: '#EDEDEF', padding: '2rem', textAlign: 'center' }}>載入中…</div>;
 
   return (
     <div style={{ color: '#EDEDEF', padding: '1.5rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ marginBottom: '1.25rem', flexShrink: 0 }}>
         <h1 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.25rem' }}>WeCom 看板</h1>
-        <p style={{ fontSize: '0.8rem', color: '#8A8F98' }}>整理轉傳訊息，拖曳卡片到對應公司欄</p>
+        <p style={{ fontSize: '0.8rem', color: '#8A8F98' }}>整理轉傳訊息，拖曳卡片到對應分類欄</p>
       </div>
 
       <div
@@ -253,8 +341,11 @@ export default function WeComBoardPage() {
             cards={cards.filter(c => c.column_id === col.id)}
             onCardDragStart={setDraggingId}
             onDrop={handleDrop}
-            onDelete={() => handleDeleteColumn(col.id)}
+            onDeleteColumn={() => handleDeleteColumn(col.id)}
             onRename={() => handleRenameColumn(col.id, col.name)}
+            onDeleteCard={handleDeleteCard}
+            onColumnDragStart={handleColumnDragStart}
+            onColumnDrop={handleColumnReorder}
           />
         ))}
 
@@ -265,7 +356,7 @@ export default function WeComBoardPage() {
               <input
                 autoFocus
                 type="text"
-                placeholder="輸入公司名稱"
+                placeholder="輸入分類名稱"
                 value={newColumnName}
                 onChange={e => setNewColumnName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addColumn(); } if (e.key === 'Escape') { setShowAddColumn(false); setNewColumnName(''); } }}
@@ -286,7 +377,7 @@ export default function WeComBoardPage() {
             <button
               onClick={() => setShowAddColumn(true)}
               style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px dashed rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.85rem', color: '#9ca3af', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
-            >＋ 新增公司欄位</button>
+            >＋ 新增分類欄位</button>
           )}
         </div>
       </div>
