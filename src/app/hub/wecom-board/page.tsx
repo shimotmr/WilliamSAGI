@@ -164,6 +164,7 @@ function Column({
   cards: BundleCard[];
   expandedCardId: string | null;
   onToggleCard: (id: string) => void;
+  onDeleteColumn?: () => void;
 }) {
   const cardIds = cards.map((c) => c.id);
 
@@ -174,6 +175,15 @@ function Column({
           <h3>{column.name}</h3>
           <span className="column-count">{cards.length}</span>
         </div>
+        {!column.is_default && onDeleteColumn && (
+          <button
+            onClick={onDeleteColumn}
+            title="刪除此欄"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', padding: '2px 6px', borderRadius: '4px', lineHeight: 1 }}
+            onMouseOver={e => (e.currentTarget.style.color = '#f87171')}
+            onMouseOut={e => (e.currentTarget.style.color = '#6b7280')}
+          >✕</button>
+        )}
       </div>
 
       <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
@@ -253,6 +263,16 @@ export default function WeComBoardPage() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  async function handleDeleteColumn(columnId: number) {
+    if (!confirm('確定要刪除此欄？欄內卡片將移回「未分類」。')) return;
+    try {
+      const res = await fetch(`/api/hub/wecom-board/columns?id=${columnId}`, { method: 'DELETE' });
+      if (!res.ok) { const d = await res.json(); alert(d.error || '刪除失敗'); return; }
+      setColumns(prev => prev.filter(c => c.id !== columnId));
+      setCards(prev => prev.map(c => c.column_id === columnId ? { ...c, column_id: 1 } : c));
+    } catch { alert('刪除失敗'); }
+  }
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setActiveId(event.active.id);
@@ -362,6 +382,7 @@ export default function WeComBoardPage() {
               cards={cards.filter((c) => c.column_id === column.id)}
               expandedCardId={expandedCardId}
               onToggleCard={toggleCard}
+              onDeleteColumn={column.is_default ? undefined : () => handleDeleteColumn(column.id)}
             />
           ))}
 

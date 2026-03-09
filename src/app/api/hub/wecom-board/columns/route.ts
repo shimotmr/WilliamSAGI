@@ -58,3 +58,40 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create column' }, { status: 500 });
   }
 }
+
+// DELETE - 刪除欄位（非預設欄才可刪）
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ error: '缺少 id' }, { status: 400 });
+
+    // 不允許刪除預設欄
+    const { data: col } = await supabase
+      .from('wecom_board_columns')
+      .select('is_default')
+      .eq('id', id)
+      .single();
+
+    if (col?.is_default) {
+      return NextResponse.json({ error: '無法刪除預設欄「未分類」' }, { status: 403 });
+    }
+
+    // 將此欄的卡片移回「未分類」(column_id=1)
+    await supabase
+      .from('wecom_messages')
+      .update({ column_id: 1 })
+      .eq('column_id', parseInt(id));
+
+    const { error } = await supabase
+      .from('wecom_board_columns')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error('Error deleting column:', error);
+    return NextResponse.json({ error: 'Failed to delete column' }, { status: 500 });
+  }
+}
