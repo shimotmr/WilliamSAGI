@@ -150,9 +150,6 @@ function ColumnView({
       onDragLeave={() => setColumnDragOver(false)}
       onDrop={(e) => { e.preventDefault(); setColumnDragOver(false); const dragType = e.dataTransfer.getData('drag-type'); if (dragType === 'column') { onColumnDrop(column.id); return; } const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
       style={{ minWidth: 280, maxWidth: 300, background: columnDragOver ? 'rgba(96,165,250,0.12)' : (dragOver ? 'rgba(96,165,250,0.08)' : 'rgba(255,255,255,0.03)'), border: columnDragOver ? '2px solid #60a5fa' : (dragOver ? '2px solid #60a5fa' : '1px solid rgba(255,255,255,0.08)'), borderRadius: '12px', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 160px)', transition: 'border 0.15s, background 0.15s', flexShrink: 0, cursor: 'grab' }}
-      onDragOver={handleDragOver}
-      onDragLeave={() => setDragOver(false)}
-      onDrop={(e) => { e.preventDefault(); setDragOver(false); const dragType = e.dataTransfer.getData('drag-type'); if (dragType === 'column') { onColumnDrop(column.id); return; } const cardId = _dragCardId || e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('cardId'); _dragCardId = null; if (cardId) onDrop(column.id, cardId); }}
     >
       {/* 欄位標題 */}
       <div style={{ padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>

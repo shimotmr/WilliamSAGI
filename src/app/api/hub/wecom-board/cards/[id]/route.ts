@@ -43,13 +43,18 @@ export async function PATCH(
       return NextResponse.json({ error: 'column_id 為必填' }, { status: 400 });
     }
 
-    // 更新該 parent_msg_id 下所有訊息的 column_id
-    const { error } = await supabase
+    // 更新：主訊息（msg_id = id）+ 子訊息（parent_msg_id = id）
+    const { error: e1 } = await supabase
+      .from('wecom_messages')
+      .update({ column_id })
+      .eq('msg_id', id);
+
+    const { error: e2 } = await supabase
       .from('wecom_messages')
       .update({ column_id })
       .eq('parent_msg_id', id);
 
-    if (error) throw error;
+    if (e1 && e2) throw e1;
 
     return NextResponse.json({ success: true, column_id });
   } catch (error) {
