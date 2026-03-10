@@ -5,7 +5,7 @@ const nextConfig = {
       root: __dirname,
     },
   },
-  generateBuildId: async () => require('crypto').randomBytes(8).toString('hex'),
+  // generateBuildId: async () => require('crypto').randomBytes(8).toString('hex'),
   async headers() {
     return [
       {
