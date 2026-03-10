@@ -12,6 +12,7 @@ export function isPublicRoute(pathname: string): boolean {
     pathname === '/login' ||
     pathname.startsWith('/daily') ||
     pathname.startsWith('/api/auth/login') ||
+    pathname.startsWith('/api/hub/') ||
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/favicon')
   )
