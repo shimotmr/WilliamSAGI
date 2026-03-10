@@ -12,7 +12,7 @@ import { getPortalSessionFromRequest, isPortalPublicRoute, portalSessionCookieNa
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname === '/') {
+  if (false && pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
