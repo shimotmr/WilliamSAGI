@@ -9,11 +9,13 @@ export interface AppSession {
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-if (!JWT_SECRET) {
-  throw new Error('Missing JWT_SECRET in environment variables')
+// 延遲檢查，避免 build 時報錯
+const getSecret = () => {
+  if (!JWT_SECRET) {
+    throw new Error('Missing JWT_SECRET in environment variables')
+  }
+  return new TextEncoder().encode(JWT_SECRET)
 }
-
-const secret = new TextEncoder().encode(JWT_SECRET!)
 
 export const authCookieName = 'session'
 
@@ -22,12 +24,12 @@ export async function signSession(email: string, role: SessionRole): Promise<str
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('8h')
-    .sign(secret)
+    .sign(getSecret())
 }
 
 export async function verifySession(token: string): Promise<AppSession | null> {
   try {
-    const { payload } = await jwtVerify(token, secret)
+    const { payload } = await jwtVerify(token, getSecret())
     return {
       email: String(payload.email),
       role: payload.role === 'admin' ? 'admin' : 'user',

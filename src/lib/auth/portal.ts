@@ -3,11 +3,13 @@ import type { NextRequest } from 'next/server'
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-if (!JWT_SECRET) {
-  throw new Error('Missing JWT_SECRET in environment variables')
+// 延遲檢查，避免 build 時報錯
+const getSecret = () => {
+  if (!JWT_SECRET) {
+    throw new Error('Missing JWT_SECRET in environment variables')
+  }
+  return new TextEncoder().encode(JWT_SECRET)
 }
-
-const secret = new TextEncoder().encode(JWT_SECRET!)
 
 // Portal cookie name
 export const portalSessionCookieName = 'portal_session'
@@ -28,7 +30,7 @@ export async function signPortalSession(data: Omit<PortalSession, 'loginTime'>):
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d') // 7 days, matching cookie maxAge
-    .sign(secret)
+    .sign(getSecret())
 }
 
 /**
@@ -36,7 +38,7 @@ export async function signPortalSession(data: Omit<PortalSession, 'loginTime'>):
  */
 export async function verifyPortalSession(token: string): Promise<PortalSession | null> {
   try {
-    const { payload } = await jwtVerify(token, secret)
+    const { payload } = await jwtVerify(token, getSecret())
     return {
       employeeId: String(payload.employeeId || ''),
       email: String(payload.email || ''),
