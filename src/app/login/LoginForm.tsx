@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/button'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
