@@ -9,5 +9,5 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
   
   const content = fs.readFileSync(reportPath, 'utf-8');
-  return NextResponse.text(content);
+  return NextResponse.json(content);
 }
