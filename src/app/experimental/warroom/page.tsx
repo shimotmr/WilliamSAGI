@@ -7,8 +7,8 @@ import {
 } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 
-// import { BackButton } from '@/components/BackButton'
-// import SystemMonitor from '@/components/SystemMonitor'
+import { BackButton } from '@/app/hub/components/BackButton' '@/components/BackButton'
+import SystemMonitor from '@/app/hub/components/SystemMonitor' '@/components/SystemMonitor'
 
 // ============= Types =============
 interface Agent {
