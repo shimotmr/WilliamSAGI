@@ -35,6 +35,7 @@ const navItems: Record<ContextType, NavItem[]> = {
   hub: [
     { label: '儀表板', href: '/hub' },
     { label: '任務', href: '/hub/tasks' },
+    { label: '實驗', href: '/experiments' },
     { label: '報告', href: '/hub/reports' },
     { label: '設置', href: '/hub/settings' },
   ],
