@@ -40,7 +40,7 @@ export default function Home() {
         {/* CTA */}
         <div className="pt-8 space-y-4">
           <Link href="/login">
-            <Button size="lg" className="text-lg px-8 py-6">
+            <Button className="text-lg px-8 py-6">
               登入系統
             </Button>
           </Link>
