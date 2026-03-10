@@ -1,146 +1,160 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-interface HubPermission {
+interface Permission {
   id: number
   user_email: string
   role: string
-  created_by: string
+  created_by: string | null
   created_at: string
 }
 
 const ROLES = ['admin', 'user', 'viewer']
+const ROLE_LABELS: Record<string, string> = { admin: '管理員', user: '使用者', viewer: '檢視者' }
+const ROLE_COLORS: Record<string, string> = {
+  admin: 'bg-red-500/20 text-red-400',
+  user: 'bg-blue-500/20 text-blue-400',
+  viewer: 'bg-zinc-500/20 text-zinc-400',
+}
 
 export default function HubPermissionsPage() {
-  const [permissions, setPermissions] = useState<HubPermission[]>([])
+  const [permissions, setPermissions] = useState<Permission[]>([])
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('viewer')
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
 
-  const load = () => fetch('/api/permissions/hub').then(r => r.json()).then(d => setPermissions(d.permissions || []))
+  const load = () =>
+    fetch('/api/hub/permissions')
+      .then((r) => r.json())
+      .then((d) => setPermissions(d.permissions || []))
+
   useEffect(() => { load() }, [])
 
   const add = async () => {
     if (!email) return
-    setSaving(true); setMsg('')
-    const r = await fetch('/api/permissions/hub', {
+    setSaving(true)
+    setMsg('')
+    const r = await fetch('/api/hub/permissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_email: email, role, created_by: 'admin' })
+      body: JSON.stringify({ user_email: email, role }),
     })
     const d = await r.json()
-    if (d.ok) { setMsg(' 已新增'); setEmail(''); setRole('viewer'); load() }
-    else setMsg(` ${d.error}`)
+    if (d.ok) { setMsg('✅ 已新增'); setEmail(''); load() }
+    else setMsg(`❌ ${d.error}`)
     setSaving(false)
   }
 
   const remove = async (userEmail: string) => {
     if (!confirm(`確定移除 ${userEmail}？`)) return
-    await fetch('/api/permissions/hub', {
+    await fetch('/api/hub/permissions', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_email: userEmail })
+      body: JSON.stringify({ user_email: userEmail }),
     })
     load()
   }
 
   const updateRole = async (userEmail: string, newRole: string) => {
-    await fetch('/api/permissions/hub', {
-      method: 'PATCH',
+    await fetch('/api/hub/permissions', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_email: userEmail, role: newRole })
+      body: JSON.stringify({ user_email: userEmail, role: newRole }),
     })
     load()
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Hub 權限管理</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">Hub 權限管理</h1>
+        <p className="text-sm text-[var(--foreground-muted)]">管理 Hub 系統的使用者存取權限</p>
+      </div>
 
       {/* 新增表單 */}
-      <div className="bg-white rounded-xl shadow p-4 mb-6">
-        <h2 className="font-semibold text-sm mb-3">新增權限</h2>
+      <div className="rounded-xl border border-white/10 bg-[var(--card)] p-4">
+        <h2 className="text-sm font-semibold mb-3">新增權限</h2>
         <div className="flex gap-2 flex-wrap">
           <input
             value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email"
-            className="border rounded-lg px-3 py-2 text-sm flex-1 min-w-[250px]"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="AD 帳號或 Email"
+            className="flex-1 min-w-[200px] rounded-lg border border-white/10 bg-[var(--background)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           />
           <select
             value={role}
-            onChange={e => setRole(e.target.value)}
-            className="border rounded-lg px-3 py-2 text-sm"
+            onChange={(e) => setRole(e.target.value)}
+            className="rounded-lg border border-white/10 bg-[var(--background)] px-3 py-2 text-sm"
           >
-            {ROLES.map(r => <option key={r} value={r}>{r === 'admin' ? '管理員' : r === 'user' ? '一般使用者' : '檢視者'}</option>)}
+            {ROLES.map((r) => (
+              <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+            ))}
           </select>
           <button
             onClick={add}
             disabled={saving || !email}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50"
+            className="rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white disabled:opacity-50 hover:opacity-90 transition"
           >
-            新增
+            {saving ? '新增中…' : '新增'}
           </button>
         </div>
         {msg && <p className="mt-2 text-sm">{msg}</p>}
       </div>
 
       {/* 權限列表 */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
-        <div className="px-4 py-3 border-b flex justify-between items-center">
-          <span className="font-semibold text-sm">目前權限（{permissions.length} 人）</span>
+      <div className="rounded-xl border border-white/10 bg-[var(--card)] overflow-hidden">
+        <div className="px-4 py-3 border-b border-white/5 flex justify-between items-center">
+          <span className="text-sm font-semibold">目前權限（{permissions.length} 人）</span>
         </div>
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
-            <tr>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">角色</th>
-              <th className="p-3 text-left">建立者</th>
-              <th className="p-3 text-left">建立時間</th>
-              <th className="p-3 text-left"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {permissions.map(p => (
-              <tr key={p.id} className="hover:bg-gray-50">
-                <td className="p-3 font-medium">{p.user_email}</td>
-                <td className="p-3">
-                  <select
-                    value={p.role}
-                    onChange={e => updateRole(p.user_email, e.target.value)}
-                    className={`border rounded px-2 py-1 text-xs font-medium ${
-                      p.role === 'admin' ? 'bg-red-100 text-red-700' :
-                      p.role === 'user' ? 'bg-blue-100 text-blue-700' :
-                      'bg-gray-100 text-gray-600'
-                    }`}
-                  >
-                    {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-                  </select>
-                </td>
-                <td className="p-3 text-gray-600">{p.created_by || '-'}</td>
-                <td className="p-3 text-gray-400 text-xs">
-                  {new Date(p.created_at).toLocaleDateString('zh-TW')}
-                </td>
-                <td className="p-3">
-                  <button
-                    onClick={() => remove(p.user_email)}
-                    className="text-red-400 hover:text-red-600 text-xs"
-                  >
-                    移除
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {permissions.length === 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="text-xs text-[var(--foreground-muted)] uppercase border-b border-white/5">
               <tr>
-                <td colSpan={5} className="p-8 text-center text-gray-400">
-                  尚無權限資料
-                </td>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">角色</th>
+                <th className="p-3 text-left">建立時間</th>
+                <th className="p-3 text-left">操作</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {permissions.map((p) => (
+                <tr key={p.id} className="hover:bg-white/5 transition">
+                  <td className="p-3 font-medium">{p.user_email}</td>
+                  <td className="p-3">
+                    <select
+                      value={p.role}
+                      onChange={(e) => updateRole(p.user_email, e.target.value)}
+                      className={`rounded-md px-2 py-1 text-xs font-medium border-0 ${ROLE_COLORS[p.role] || ''}`}
+                    >
+                      {ROLES.map((r) => (
+                        <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="p-3 text-[var(--foreground-muted)] text-xs">
+                    {new Date(p.created_at).toLocaleDateString('zh-TW')}
+                  </td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => remove(p.user_email)}
+                      className="text-red-400 hover:text-red-300 text-xs"
+                    >
+                      移除
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {permissions.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-8 text-center text-[var(--foreground-muted)]">
+                    尚無權限資料
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
