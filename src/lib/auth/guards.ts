@@ -9,6 +9,7 @@ export async function getSessionFromRequest(req: NextRequest): Promise<AppSessio
 
 export function isPublicRoute(pathname: string): boolean {
   return (
+    pathname === '/' ||
     pathname === '/login' ||
     pathname.startsWith('/daily') ||
     pathname.startsWith('/api/auth/login') ||
