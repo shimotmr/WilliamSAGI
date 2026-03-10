@@ -7,8 +7,8 @@ import {
 } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 
-import { BackButton } from '../../../hub/components/BackButton' '@/components/BackButton'
-import SystemMonitor from '../../../hub/components/SystemMonitor' '@/components/SystemMonitor'
+import Link from 'next/link' '@/components/BackButton'
+ '@/components/SystemMonitor'
 
 // ============= Types =============
 interface Agent {
@@ -325,7 +325,7 @@ export default function WarRoomPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        <BackButton />
+        <Link href="/hub">← 返回</Link>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
@@ -405,7 +405,7 @@ export default function WarRoomPage() {
 
         {/* System Monitor - Full Width */}
         <div className="mb-6">
-          <SystemMonitor />
+          <div>系統監控</div>
         </div>
 
         {/* Three Column Layout */}
