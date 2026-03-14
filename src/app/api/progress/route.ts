@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const API_BASE = process.env.PROGRESS_API_URL || 'http://localhost:18792';
+const API_BASE = process.env.PROGRESS_API_URL || 'http://localhost:18793';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
