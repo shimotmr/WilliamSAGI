@@ -11,7 +11,7 @@ import {
   MessageSquare, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car, MapPin,
+  Menu, X, Car, MapPin, Network,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -50,6 +50,12 @@ const navGroups = [
       { href: '/hub/trade',     icon: TrendingUp,  label: '交易' },
       { href: '/hub/growth',    icon: Sprout,      label: '成長' },
       { href: '/tesla',        icon: Car,         label: '交通評估' },
+    ],
+  },
+  {
+    label: 'V4 系統',
+    items: [
+      { href: '/hub/architecture', icon: Network, label: 'V4 架構圖' },
     ],
   },
   {
