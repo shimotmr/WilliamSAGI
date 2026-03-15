@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, Brain, Terminal, FileText, CheckCircle2,
   XCircle, Clock, Cpu, User, ChevronDown, ChevronRight,
-  Play, Pause, SkipForward, FastForward, RefreshCw, MessageSquare, Zap, AlertCircle,
+  Play, Pause, SkipForward, FastForward, RefreshCw, MessageSquare, Zap, AlertCircle, BarChart3, Hammer, Shield,
 } from 'lucide-react'
 
 interface StreamEvent {
@@ -34,8 +34,8 @@ interface TaskInfo {
   description: string
 }
 
-const agentEmoji: Record<string, string> = {
-  blake: '🔨', rex: '🧠', oscar: '📋', warren: '📈', griffin: '🛡️'
+const agentIconMap: Record<string, any> = {
+  blake: Hammer, rex: Brain, oscar: FileText, warren: BarChart3, griffin: Shield
 }
 
 const agentModel: Record<string, string> = {
@@ -126,7 +126,7 @@ export default function TaskReplayPage() {
           Task #{task.id}: {task.title}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.8125rem', color: '#8A8F98', flexWrap: 'wrap' }}>
-          <span>{agentEmoji[agent] || '🤖'} {agent.charAt(0).toUpperCase() + agent.slice(1)}</span>
+          <span style={{display:'flex',alignItems:'center',gap:'0.25rem'}}>{(() => { const I = agentIconMap[agent] || Cpu; return <I size={14} />; })()}{agent.charAt(0).toUpperCase() + agent.slice(1)}</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <Cpu size={12} /> {agentModel[agent] || 'unknown'}
           </span>
@@ -338,7 +338,7 @@ export default function TaskReplayPage() {
         <span><Brain size={12} style={{display:'inline',verticalAlign:'middle'}} /> {thinkingCount} thinking</span>
         <span><Zap size={12} style={{display:'inline',verticalAlign:'middle'}} /> {toolCallCount} tool calls</span>
         <span><MessageSquare size={12} style={{display:'inline',verticalAlign:'middle'}} /> {textCount} responses</span>
-        <span>📊 {events.length} total events</span>
+        <span><BarChart3 size={12} style={{display:'inline',verticalAlign:'middle'}} /> {events.length} total events</span>
         <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: '2px',
