@@ -113,9 +113,9 @@ export default function V4LiveFeed() {
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.125rem, 4vw, 1.5rem)', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Activity size={24} style={{ color: '#5E6AD2' }} />
             V4 System Center
           </h1>
@@ -138,7 +138,8 @@ export default function V4LiveFeed() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }} className="v4-grid">
+        <style>{`@media (min-width: 768px) { .v4-grid { grid-template-columns: 240px 1fr !important; } }`}</style>
         {/* Left column: stats */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Weekly stats */}
