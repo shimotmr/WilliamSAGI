@@ -26,8 +26,8 @@ interface RecentTask {
   result: string
 }
 
-const agentEmoji: Record<string, string> = {
-  blake: '🔨', rex: '🧠', oscar: '📋', warren: '📈', griffin: '🛡️'
+const agentIcon: Record<string, any> = {
+  blake: Hammer, rex: Brain, oscar: FileText, warren: BarChart3, griffin: Shield
 }
 
 const agentRole: Record<string, string> = {
@@ -111,7 +111,7 @@ export default function V4LiveFeed() {
   const healthColor = healthScore >= 70 ? '#4ade80' : healthScore >= 40 ? '#facc15' : '#f87171'
 
   return (
-    <div>
+    <div style={{ maxWidth: '100%', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
@@ -191,7 +191,7 @@ export default function V4LiveFeed() {
                   background: agent.active ? 'rgba(94,106,210,0.08)' : 'transparent',
                   border: agent.active ? '1px solid rgba(94,106,210,0.15)' : '1px solid transparent',
                 }}>
-                  <span style={{ fontSize: '1.25rem' }}>{agentEmoji[agent.name] || '🤖'}</span>
+                  <span style={{ fontSize: '1.25rem' }}>{(() => { const Icon = agentIcon[agent.name] || Bot; return <Icon size={18} style={{ color: "#8A8F98" }} />; })()}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span style={{ fontWeight: 600, fontSize: '0.8125rem' }}>
@@ -200,14 +200,14 @@ export default function V4LiveFeed() {
                       <span style={{ fontSize: '0.6875rem', color: '#6b7280' }}>{agentModel[agent.name]}</span>
                     </div>
                     {agent.active ? (
-                      <div style={{ fontSize: '0.75rem', color: '#60a5fa', marginTop: '0.125rem' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#60a5fa', marginTop: '0.125rem', wordBreak: 'break-word', lineHeight: 1.5 }}>
                         #{agent.active.id} {agent.active.title?.slice(0, 40)}
-                        <span style={{ color: '#8A8F98', marginLeft: '0.5rem' }}>
-                          {elapsed(agent.active.created_at)} ⏳
+                        <span style={{ color: '#8A8F98', marginLeft: '0.5rem', whiteSpace: 'nowrap' }}>
+                          {elapsed(agent.active.created_at)} <Clock size={10} style={{ display: 'inline', verticalAlign: 'middle' }} />
                         </span>
                       </div>
                     ) : (
-                      <div style={{ fontSize: '0.75rem', color: '#4b5563', marginTop: '0.125rem' }}>💤 閒置</div>
+                      <div style={{ fontSize: '0.75rem', color: '#4b5563', marginTop: '0.125rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Clock size={10} /> 閒置</div>
                     )}
                   </div>
                   {agent.active && (
@@ -258,12 +258,12 @@ export default function V4LiveFeed() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem' }}>
                       {statusIcon(task.status)}
                       <span style={{ fontWeight: 500 }}>#{task.id}</span>
-                      <span style={{ color: '#8A8F98', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ color: '#8A8F98', wordBreak: 'break-word' }}>
                         {task.title?.slice(0, 50)}
                       </span>
                     </div>
                     <div style={{ fontSize: '0.6875rem', color: '#4b5563', marginTop: '0.125rem' }}>
-                      {agentEmoji[task.assignee] || ''} {task.assignee}
+                      {(() => { const Icon = agentIcon[task.assignee] || Bot; return <Icon size={12} style={{ color: "#6b7280", display: "inline" }} />; })()} {task.assignee}
                     </div>
                   </div>
                   <Link href={`/hub/v4/task/${task.id}`} style={{

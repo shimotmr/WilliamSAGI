@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, Brain, Terminal, FileText, CheckCircle2,
   XCircle, Clock, Cpu, User, ChevronDown, ChevronRight,
-  Play, Pause, SkipForward, FastForward,
+  Play, Pause, SkipForward, FastForward, RefreshCw, MessageSquare, Zap, AlertCircle,
 } from 'lucide-react'
 
 interface StreamEvent {
@@ -173,7 +173,7 @@ export default function TaskReplayPage() {
                 }
                 break
               case 'toolResult': {
-                const success = !content.startsWith('Error') && !content.startsWith('❌')
+                const success = !content.startsWith('Error') && !content.startsWith('Error')
                 icon = success ? <CheckCircle2 size={14} /> : <XCircle size={14} />
                 color = success ? '#4ade80' : '#f87171'
                 bgColor = success ? 'rgba(74,222,128,0.06)' : 'rgba(248,113,113,0.06)'
@@ -249,11 +249,11 @@ export default function TaskReplayPage() {
                 {/* Detail header */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.8125rem', color: '#8A8F98' }}>
                   <span style={{ fontWeight: 600, color: '#EDEDEF' }}>
-                    {evt.event_type === 'thinking' && '💭 Thinking'}
-                    {evt.event_type === 'toolCall' && `⚡ Tool Call: ${evt.tool_name}`}
-                    {evt.event_type === 'toolResult' && (evt.tool_success !== false ? '✅ Result' : '❌ Error')}
-                    {evt.event_type === 'text' && '📝 Response'}
-                    {evt.event_type === 'model_change' && '🔄 Model Change'}
+                    {evt.event_type === 'thinking' && <><Brain size={14} style={{display:'inline',verticalAlign:'middle'}} /> Thinking</>}
+                    {evt.event_type === 'toolCall' && <><Zap size={14} style={{display:'inline',verticalAlign:'middle'}} /> Tool Call: {evt.tool_name}</>}
+                    {evt.event_type === 'toolResult' && (evt.tool_success !== false ? <><CheckCircle2 size={14} style={{display:'inline',verticalAlign:'middle',color:'#4ade80'}} /> Result</> : <><XCircle size={14} style={{display:'inline',verticalAlign:'middle',color:'#f87171'}} /> Error</>)}
+                    {evt.event_type === 'text' && <><MessageSquare size={14} style={{display:'inline',verticalAlign:'middle'}} /> Response</>}
+                    {evt.event_type === 'model_change' && <><RefreshCw size={14} style={{display:'inline',verticalAlign:'middle'}} /> Model Change</>}
                   </span>
                   {evt.created_at && <span>{formatTime(evt.created_at)}</span>}
                 </div>
@@ -335,9 +335,9 @@ export default function TaskReplayPage() {
         borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '1rem', paddingTop: '0.75rem',
         display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.75rem', color: '#6b7280',
       }}>
-        <span>💭 {thinkingCount} thinking</span>
-        <span>⚡ {toolCallCount} tool calls</span>
-        <span>📝 {textCount} responses</span>
+        <span><Brain size={12} style={{display:'inline',verticalAlign:'middle'}} /> {thinkingCount} thinking</span>
+        <span><Zap size={12} style={{display:'inline',verticalAlign:'middle'}} /> {toolCallCount} tool calls</span>
+        <span><MessageSquare size={12} style={{display:'inline',verticalAlign:'middle'}} /> {textCount} responses</span>
         <span>📊 {events.length} total events</span>
         <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
           <div style={{
