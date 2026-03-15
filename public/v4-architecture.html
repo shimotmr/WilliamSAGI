@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V4 自主系統架構 · WilliamSAGI</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #263347;
+    --border: #334155;
+    --purple: #7B68EE;
+    --teal: #20B2AA;
+    --blue: #4A90D9;
+    --green: #2ECC71;
+    --orange: #F39C12;
+    --red: #E74C3C;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --dim: #475569;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+  nav .brand { color: var(--purple); font-weight: 700; font-size: 1.1em; }
+  nav .badge { background: var(--purple); color: #fff; font-size: 0.7em; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  nav .score { margin-left: auto; color: var(--muted); font-size: 0.85em; display: flex; align-items: center; gap: 8px; }
+  nav .score span { color: var(--orange); font-weight: 700; font-size: 1.1em; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; padding: 20px 24px 0; overflow-x: auto; background: var(--bg); }
+  .tab { padding: 10px 18px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.85em; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-bottom: none; transition: all 0.2s; white-space: nowrap; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--purple); background: var(--surface2); border-color: var(--purple); }
+
+  /* CONTENT */
+  .content { padding: 0 24px 40px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* HERO */
+  .hero { padding: 32px 0 24px; text-align: center; }
+  .hero h1 { font-size: 1.8em; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .hero p { color: var(--muted); font-size: 0.95em; max-width: 600px; margin: 0 auto; }
+
+  /* SCORE CARDS */
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 24px 0; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .score-card .label { color: var(--muted); font-size: 0.75em; margin-bottom: 6px; }
+  .score-card .val { font-size: 1.6em; font-weight: 800; }
+  .score-card .arrow { font-size: 0.75em; color: var(--green); margin-top: 2px; }
+  .v3 { color: var(--red); }
+  .v4 { color: var(--green); }
+
+  /* DIAGRAM CARD */
+  .diagram-section { margin: 24px 0; }
+  .diagram-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+  .diagram-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+  .diagram-num { background: var(--purple); color: #fff; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; margin-top: 2px; }
+  .diagram-header h3 { font-size: 1em; font-weight: 600; margin-bottom: 4px; }
+  .diagram-header p { color: var(--muted); font-size: 0.82em; line-height: 1.5; }
+  .diagram-body { padding: 20px; overflow-x: auto; background: var(--surface2); }
+  .mermaid { display: flex; justify-content: center; }
+
+  /* TWO-COL DIAGRAMS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* AGENT TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+  th { background: var(--surface); color: var(--muted); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(123,104,238,0.05); }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75em; font-weight: 600; }
+  .chip-purple { background: rgba(123,104,238,0.2); color: var(--purple); }
+  .chip-blue { background: rgba(74,144,217,0.2); color: var(--blue); }
+  .chip-orange { background: rgba(243,156,18,0.2); color: var(--orange); }
+  .chip-green { background: rgba(46,204,113,0.2); color: var(--green); }
+  .chip-red { background: rgba(231,76,60,0.2); color: var(--red); }
+  .chip-teal { background: rgba(32,178,170,0.2); color: var(--teal); }
+  .cost-badge { font-size: 0.75em; padding: 2px 6px; border-radius: 4px; }
+  .cost-free { background: rgba(46,204,113,0.15); color: var(--green); }
+  .cost-mid { background: rgba(243,156,18,0.15); color: var(--orange); }
+  .cost-high { background: rgba(231,76,60,0.15); color: var(--red); }
+
+  /* PHASE CARDS */
+  .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+  .phase-card { border-radius: 12px; padding: 20px; border: 1px solid; }
+  .phase-1 { background: rgba(32,178,170,0.07); border-color: rgba(32,178,170,0.3); }
+  .phase-2 { background: rgba(123,104,238,0.07); border-color: rgba(123,104,238,0.3); }
+  .phase-3 { background: rgba(231,76,60,0.07); border-color: rgba(231,76,60,0.3); }
+  .phase-label { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .phase-1 .phase-label { color: var(--teal); }
+  .phase-2 .phase-label { color: var(--purple); }
+  .phase-3 .phase-label { color: var(--red); }
+  .phase-card h3 { font-size: 1.1em; margin-bottom: 4px; }
+  .phase-card .weeks { color: var(--muted); font-size: 0.78em; margin-bottom: 12px; }
+  .phase-card .target { font-size: 0.85em; font-weight: 600; margin-bottom: 10px; }
+  .phase-1 .target { color: var(--teal); }
+  .phase-2 .target { color: var(--purple); }
+  .phase-3 .target { color: var(--red); }
+  .task-list { list-style: none; }
+  .task-list li { font-size: 0.8em; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+  .task-list li::before { content: '▸'; color: var(--dim); }
+  .dod { margin-top: 12px; padding: 8px 12px; border-radius: 6px; font-size: 0.78em; font-weight: 600; }
+  .phase-1 .dod { background: rgba(32,178,170,0.1); color: var(--teal); }
+  .phase-2 .dod { background: rgba(123,104,238,0.1); color: var(--purple); }
+  .phase-3 .dod { background: rgba(231,76,60,0.1); color: var(--red); }
+
+  /* DATA FLOW */
+  .data-flow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .data-node { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .data-node .icon { font-size: 1.5em; margin-bottom: 6px; }
+  .data-node h4 { font-size: 0.85em; font-weight: 600; margin-bottom: 4px; }
+  .data-node p { font-size: 0.75em; color: var(--muted); line-height: 1.5; }
+  .data-arrow { text-align: center; color: var(--dim); font-size: 1.2em; display: flex; align-items: center; justify-content: center; }
+
+  /* FOOTER */
+  footer { text-align: center; color: var(--dim); font-size: 0.75em; padding: 24px; border-top: 1px solid var(--border); }
+  footer a { color: var(--purple); text-decoration: none; }
+
+  @media(max-width:900px){
+    .two-col { grid-template-columns: 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+  }
+
+  /* LUCIDE ICONS */
+  .icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; stroke: currentColor; }
+  .icon-lg { width: 20px; height: 20px; }
+  .icon-xl { width: 28px; height: 28px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand"><i data-lucide="bot" class="icon-lg"></i> WilliamSAGI</span>
+  <span class="badge">Architecture</span>
+  <div class="score">
+    V3 評分 <span class="v3">3.2</span> → V4 目標 <span class="v4">8.0</span> / 10
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('overview')"><i data-lucide="bar-chart-2" class="icon"></i> 系統總覽</div>
+  <div class="tab" onclick="showPanel('arch')"><i data-lucide="building" class="icon"></i> 架構圖</div>
+  <div class="tab" onclick="showPanel('agents')"><i data-lucide="bot" class="icon"></i> Agent 分工</div>
+  <div class="tab" onclick="showPanel('phases')"><i data-lucide="rocket" class="icon"></i> Phase 計畫</div>
+  <div class="tab" onclick="showPanel('loops')"><i data-lucide="heart-pulse" class="icon"></i> 閉環監控</div>
+  <div class="tab" onclick="showPanel('dataflow')"><i data-lucide="refresh-cw" class="icon"></i> 資料流</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="content">
+<div id="panel-overview" class="panel active">
+  <div class="hero">
+    <h1>V4 自主系統升級計畫</h1>
+    <p>從「人驅動的自動化」進化為「有意圖的自主系統」。12 週、3 個 Phase、21 個任務。</p>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-card"><div class="label">主動尋找任務</div><div class="val v3">1</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我思考</div><div class="val v3">2</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我執行</div><div class="val" style="color:#F39C12">4</div><div class="arrow">→ 目標 8</div></div>
+    <div class="score-card"><div class="label">自我審計</div><div class="val" style="color:#F39C12">3</div><div class="arrow">→ 目標 8</div></div>
+    <div class="score-card"><div class="label">自我除錯</div><div class="val v3">2</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我修復</div><div class="val" style="color:#F39C12">3</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我預防</div><div class="val v3">1</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我學習</div><div class="val v3">2</div><div class="arrow">→ 目標 7</div></div>
+    <div class="score-card"><div class="label">自我演進</div><div class="val v3">0</div><div class="arrow">→ 目標 6</div></div>
+  </div>
+
+  <div class="diagram-card" style="margin-top:8px">
+    <div class="diagram-header">
+      <div class="diagram-num">!</div>
+      <div>
+        <h3>核心診斷（Opus 4.6 + GPT-5.4 Council）</h3>
+        <p>V3 不是「自主系統」，是「人驅動的自動化派發系統」。任務來源 100% 依賴人工；閉環反覆失效（daily_analysis 空 6 天未被發現）；學習迴路剛修復未驗證。<br><br>
+        <strong>最大風險：自主幻覺（Autonomy Hallucination）</strong> — 593 個 SKILL 任務「完成了」，但系統能力無明顯提升。數量 ≠ 品質。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCH -->
+<div id="panel-arch" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>系統架構圖</h1>
+    <p>核心執行流程與學習閉環分開呈現，方便理解各層責任</p>
+  </div>
+
+  <div class="two-col">
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-num">1</div>
+        <div>
+          <h3>核心執行流程</h3>
+          <p>William 下達指令 → Travis 管理 → Pipeline 派發 → 大任務自動拆解 → 各 Agent 執行 → 測試驗收 → 結果入庫</p>
+        </div>
+      </div>
+      <div class="diagram-body">
+        <div class="mermaid">
+flowchart TD
+    n1["William
+人類決策者"]
+    n2["Travis
+主 Agent"]
+    n3["Pipeline Engine
+每 5 分鐘派發"]
+    n4["Task Decomposer
+大任務拆小任務"]
+    n5["DAG Executor
+依賴序執行"]
+    n6["Blake
+程式/前端"]
+    n7["Rex
+研究/分析"]
+    n8["Oscar
+行政/監控"]
+    n9["verify_and_complete
+正+反面測試"]
+    n10[("board_tasks
+Supabase")]
+    n1 -->|確認| n2
+    n2 -->|管理| n3
+    n3 --> n4
+    n4 -->|原子任務| n5
+    n5 --> n6
+    n5 --> n7
+    n5 --> n8
+    n6 --> n9
+    n7 --> n9
+    n8 --> n9
+    n9 -->|通過| n10
+    style n1 fill:#4A90D9,color:#fff
+    style n2 fill:#7B68EE,color:#fff
+    style n4 fill:#20B2AA,color:#fff
+    style n9 fill:#2ECC71,color:#fff
+    style n10 fill:#F39C12,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-num">2</div>
+        <div>
+          <h3>學習與感知閉環</h3>
+          <p>Intention Engine 主動發現問題 → 自動建任務。失敗記錄被學習 → 下次自動預防。Meta-heartbeat 確保所有閉環不停擺。</p>
+        </div>
+      </div>
+      <div class="diagram-body">
+        <div class="mermaid">
+flowchart TD
+    m1["Intention Engine
+每小時感知系統狀態
+自動發現問題建任務"]
+    m2["Meta-heartbeat
+每 15 分鐘
+監控所有閉環"]
+    m3["Pipeline Engine"]
+    m4[("failure_events
+失敗記錄")]
+    m5["Behavioral Memory
+pattern_rules
+失敗 → 規則 → 預防"]
+    m6["Auto Learning
+每日 04:30
+歸因 → 更新策略"]
+    m1 -->|自動建任務| m3
+    m2 -.->|監控| m1
+    m2 -.->|監控| m3
+    m2 -.->|監控| m6
+    m3 -->|失敗記錄| m4
+    m4 --> m6
+    m6 --> m5
+    m5 -->|注入規則| m3
+    style m1 fill:#20B2AA,color:#fff
+    style m2 fill:#FF6B6B,color:#fff
+    style m5 fill:#7B68EE,color:#fff
+    style m6 fill:#3498DB,color:#fff
+    style m4 fill:#E74C3C,color:#fff
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<div id="panel-agents" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>Agent 分工與模型調度</h1>
+    <p>6 個 AI 員工各有專長，成本策略讓系統能長期持續運行</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">3</div>
+      <div>
+        <h3>Agent 能力矩陣</h3>
+        <p>本地模型（qwen3:8b）用於行政/安全任務，零 API 費用。雲端模型用於需要深度推理的程式/研究任務。</p>
+      </div>
+    </div>
+    <div class="diagram-body" style="padding:0">
+      <table>
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>職責</th>
+            <th>主模型</th>
+            <th>備用模型</th>
+            <th>成本</th>
+            <th>典型任務</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><i data-lucide="bot" class="icon"></i> Travis</strong></td>
+            <td>決策・協調・緊急處理</td>
+            <td><span class="chip chip-purple">claude-sonnet-4-6</span></td>
+            <td><span class="chip chip-purple">opus-4-6</span></td>
+            <td><span class="cost-badge cost-high"><i data-lucide="circle" class="icon" style="color:var(--red)"></i> 高</span></td>
+            <td>主 session、重大決策、緊急修復</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="hammer" class="icon"></i> Blake</strong></td>
+            <td>程式・前端・腳本</td>
+            <td><span class="chip chip-blue">gpt-5.4</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
+            <td>建立腳本、前端開發、系統整合</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="microscope" class="icon"></i> Rex</strong></td>
+            <td>研究・分析・報告</td>
+            <td><span class="chip chip-orange">grok420-0309</span></td>
+            <td><span class="chip chip-teal">kimi</span></td>
+            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
+            <td>市場研究、系統分析、策略報告</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="clipboard-list" class="icon"></i> Oscar</strong></td>
+            <td>行政・監控・週期任務</td>
+            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-free"><i data-lucide="circle" class="icon" style="color:var(--green)"></i> 零費用</span></td>
+            <td>行事曆同步、heartbeat 檢查、清理任務</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="trending-up" class="icon"></i> Warren</strong></td>
+            <td>交易・風控・金融分析</td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td>—</td>
+            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
+            <td>股票分析、交易策略、風險評估</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="shield" class="icon"></i> Griffin</strong></td>
+            <td>安全審查・隱私保護</td>
+            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-free"><i data-lucide="circle" class="icon" style="color:var(--green)"></i> 零費用</span></td>
+            <td>Prompt Injection 偵測、安全審計、隱私合規</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="diagram-card" style="margin-top:16px">
+    <div class="diagram-header">
+      <div class="diagram-num">4</div>
+      <div>
+        <h3>模型調度策略圖</h3>
+        <p>任務依類型路由到最適合的 Agent，本地模型優先處理行政/監控，節省 API 配額</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart LR
+    TASK["新任務"]
+    subgraph ROUTE["任務路由"]
+        R1{"含 heartbeat\n監控・清理・行政"}
+        R2{"含 程式碼\n前端・腳本・整合"}
+        R3{"含 研究\n分析・報告・策略"}
+        R4{"含 交易\n風控・金融"}
+        R5{"含 安全\n審計・隱私"}
+    end
+    O2["Oscar\nqwen3 本地 "]
+    B2["Blake\ngpt-5.4 "]
+    R6["Rex\ngrok420 "]
+    W2["Warren\nminimax "]
+    G2["Griffin\nqwen3 本地 "]
+    TASK --> R1
+    TASK --> R2
+    TASK --> R3
+    TASK --> R4
+    TASK --> R5
+    R1 --> O2
+    R2 --> B2
+    R3 --> R6
+    R4 --> W2
+    R5 --> G2
+    style O2 fill:#27AE60,color:#fff
+    style B2 fill:#3498DB,color:#fff
+    style R6 fill:#E67E22,color:#fff
+    style W2 fill:#F39C12,color:#fff
+    style G2 fill:#E74C3C,color:#fff
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASES -->
+<div id="panel-phases" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>V4 升級 Phase 計畫</h1>
+    <p>12 週、3 個 Phase，每個 Phase DoD 通過後自動解鎖下一個</p>
+  </div>
+
+  <div class="phase-grid">
+    <div class="phase-card phase-1">
+      <div class="phase-label">Phase 1 · 第 1-4 週</div>
+      <h3><i data-lucide="eye" class="icon"></i> 能看見</h3>
+      <div class="weeks">目標：系統從「瞎的」變成「能感知問題的」</div>
+      <div class="target">成功率目標：50%</div>
+      <ul class="task-list">
+        <li>#3492 Meta-heartbeat（heartbeat 的 heartbeat）</li>
+        <li>#3493 Intention Engine v0.1</li>
+        <li>#3495 Task Decomposer v0.1</li>
+        <li>#3494 每小時系統狀態快照</li>
+        <li>#3496 提案品質校準機制</li>
+        <li>#3497 DAG Executor</li>
+        <li>#3498 Phase 1 DoD 驗收</li>
+      </ul>
+      <div class="dod"><i data-lucide="check-circle" class="icon"></i> DoD：連續 72 小時閉環無中斷・意圖引擎合格率 >60%</div>
+    </div>
+
+    <div class="phase-card phase-2">
+      <div class="phase-label">Phase 2 · 第 5-8 週</div>
+      <h3><i data-lucide="brain" class="icon"></i> 能學習</h3>
+      <div class="weeks">目標：系統行為因經驗而改變</div>
+      <div class="target">成功率目標：60%</div>
+      <ul class="task-list">
+        <li>#3499 Task Decomposer 結果聚合器</li>
+        <li>#3500 pattern_rules 規則引擎</li>
+        <li>#3501 failure_events 歸因分析</li>
+        <li>#3502 行為指紋系統</li>
+        <li>#3503 自適應派發策略</li>
+        <li>#3504 auto_learning_engine 升級</li>
+        <li>#3505 Phase 2 DoD 驗收</li>
+      </ul>
+      <div class="dod"><i data-lucide="check-circle" class="icon"></i> DoD：3 次可驗證自適應行為・10 條 active pattern_rules</div>
+    </div>
+
+    <div class="phase-card phase-3">
+      <div class="phase-label">Phase 3 · 第 9-12 週</div>
+      <h3><i data-lucide="dna" class="icon"></i> 能演進</h3>
+      <div class="weeks">目標：系統修改自己的規則和能力邊界</div>
+      <div class="target">成功率目標：75%</div>
+      <ul class="task-list">
+        <li>#3506 capability-evolver 完全整合</li>
+        <li>#3507 Evolution Engine v1</li>
+        <li>#3508 演進沙盒（規則 24h 驗證）</li>
+        <li>#3509 Intention Engine v0.2</li>
+        <li>#3510 自主幻覺防護</li>
+        <li>#3511 人工抽檢機制</li>
+        <li>#3512 Phase 3 DoD + V4 重評分</li>
+      </ul>
+      <div class="dod"><i data-lucide="check-circle" class="icon"></i> DoD：人工干預降到每週 2-3 次・系統自主完成 5 個改善任務</div>
+    </div>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">5</div>
+      <div>
+        <h3>自動串聯機制</h3>
+        <p>Phase DoD 通過後，phase_unlock.py 自動解鎖下一 Phase 的所有任務進入待派發，無需人工確認</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart LR
+    P1["Phase 1 任務\n#3492-3497"]
+    D1{"#3498\nPhase 1 DoD\n驗收"}
+    P2["Phase 2 任務\n#3499-3505\n（待確認）"]
+    D2{"#3505\nPhase 2 DoD\n驗收"}
+    P3["Phase 3 任務\n#3506-3512\n（待確認）"]
+    DONE["V4 完成\n重新評分"]
+    P1 --> D1
+    D1 -->|通過 phase_unlock.py\n自動解鎖| P2
+    D1 -->|失敗| P1
+    P2 --> D2
+    D2 -->|通過 phase_unlock.py\n自動解鎖| P3
+    D2 -->|失敗| P2
+    P3 --> DONE
+    style D1 fill:#20B2AA,color:#fff
+    style D2 fill:#7B68EE,color:#fff
+    style DONE fill:#2ECC71,color:#fff
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOOPS -->
+<div id="panel-loops" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>閉環監控關係圖</h1>
+    <p>「監控系統本身也被監控」是 V4 的核心設計原則</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">6</div>
+      <div>
+        <h3>Meta-heartbeat 監控網路</h3>
+        <p>Meta-heartbeat 每 15 分鐘掃描所有 7 個閉環。任何閉環超過 2 個預期週期未執行，立即 Telegram 告警，Travis 介入。不再有「分析腳本空跑 6 天沒人知道」的問題。</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+graph TD
+    MH["Meta-heartbeat\n每 15 分鐘\n這是監控的監控"]
+    subgraph LOOPS["受監控的 7 個閉環"]
+        PE["Pipeline Engine\n每 5 分鐘\n自動派發任務"]
+        SG["Status Guardian\n每 30 分鐘\n自動修正非法狀態"]
+        HS["Hourly Snapshot\n每 1 小時\n系統狀態快照"]
+        IE2["Intention Engine\n每 1 小時\n感知問題自動建任務"]
+        AU["Audit Database\n每 6 小時\n DB 健康檢查"]
+        AL["Auto Learning\n每日 04:30\n失敗模式學習"]
+        DA["Daily Analysis\n每日 03:30\n分層問題分析"]
+    end
+    ALERT["Telegram 告警\n+ Travis 介入"]
+    MH -->|掃描| PE
+    MH -->|掃描| SG
+    MH -->|掃描| HS
+    MH -->|掃描| IE2
+    MH -->|掃描| AU
+    MH -->|掃描| AL
+    MH -->|掃描| DA
+    MH -->|超過 2 個週期未執行| ALERT
+    ALERT -->|通知修復| T2["Travis"]
+    style MH fill:#FF6B6B,color:#fff
+    style ALERT fill:#E74C3C,color:#fff
+    style T2 fill:#7B68EE,color:#fff
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DATAFLOW -->
+<div id="panel-dataflow" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>資料流圖</h1>
+    <p>資料從哪裡來、存到哪裡去、誰在讀它</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">7</div>
+      <div>
+        <h3>完整資料流向圖</h3>
+        <p>從 William 的指令輸入，到任務執行、測試驗收、失敗學習，再到系統演進，每個資料的流向都清楚標示。</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart LR
+    subgraph INPUT["輸入來源"]
+        WI["William\nTelegram 指令"]
+        LOG["系統 Logs\n/clawd/logs/"]
+        CAL["Apple Calendar\ncalctl"]
+        EXT["外部信號\nGitHub・郵件"]
+    end
+    subgraph PROCESS["處理層"]
+        T3["Travis\n決策中樞"]
+        IE3["Intention Engine\n信號 → 任務意圖"]
+        TD3["Task Decomposer\n大任務 → DAG"]
+        PE3["Pipeline Engine\n任務調度派發"]
+    end
+    subgraph STORAGE["資料儲存"]
+        BT["board_tasks\nSupabase"]
+        FE3["failure_events\nSupabase"]
+        PR["pattern_rules\nSupabase"]
+        AF["agent-fingerprints\n~/clawd/memory/"]
+        MEM["記憶系統\nqmd + markdown"]
+        REP["reports 表\nSupabase"]
+    end
+    subgraph OUTPUT["輸出管道"]
+        TG["Telegram\n通知・告警・報告"]
+        HUB["WilliamSAGI\narchitecture 頁面"]
+        FILE["本地檔案\n~/clawd/logs/"]
+    end
+    WI --> T3
+    LOG --> IE3
+    CAL --> IE3
+    EXT --> IE3
+    IE3 --> T3
+    T3 --> PE3
+    PE3 --> TD3
+    TD3 --> BT
+    BT --> PE3
+    PE3 -->|執行結果| FE3
+    FE3 -->|歸因學習| PR
+    PR -->|注入規則| PE3
+    BT -->|歷史分析| AF
+    AF -->|能力畫像| PE3
+    T3 -->|摘要| MEM
+    PE3 -->|報告| REP
+    REP --> HUB
+    T3 --> TG
+    PE3 --> FILE
+    style T3 fill:#7B68EE,color:#fff
+    style IE3 fill:#20B2AA,color:#fff
+    style BT fill:#F39C12,color:#fff
+    style TG fill:#4A90D9,color:#fff
+    style HUB fill:#2ECC71,color:#fff
+      </div>
+    </div>
+  </div>
+
+  <div class="data-flow-grid" style="margin-top:16px">
+    <div class="data-node">
+      <div class="icon"><i data-lucide="database" class="icon-xl"></i></div>
+      <h4>board_tasks</h4>
+      <p>所有任務的主要資料庫。記錄狀態、AC、dispatch_prompt、結果。</p>
+    </div>
+    <div class="data-node">
+      <div class="icon"><i data-lucide="bar-chart-2" class="icon-xl"></i></div>
+      <h4>failure_events</h4>
+      <p>記錄所有失敗任務的錯誤訊息和歸因分類（timeout/prompt_vague/env_missing）</p>
+    </div>
+    <div class="data-node">
+      <div class="icon"><i data-lucide="clipboard-list" class="icon-xl"></i></div>
+      <h4>pattern_rules</h4>
+      <p>從失敗模式學習出的規則。自動注入到 dispatch_prompt 預防同類錯誤再發生。</p>
+    </div>
+    <div class="data-node">
+      <div class="icon"><i data-lucide="dna" class="icon-xl"></i></div>
+      <h4>evolution_log</h4>
+      <p>每日收集各 (agent, model) 組合的成功率。週度自動調參依據。</p>
+    </div>
+    <div class="data-node">
+      <div class="icon"><i data-lucide="brain" class="icon-xl"></i></div>
+      <h4>agent-fingerprints</h4>
+      <p>每個 Agent 的能力畫像：擅長類別/平均耗時/失敗率。動態派發策略的基礎。</p>
+    </div>
+    <div class="data-node">
+      <div class="icon"><i data-lucide="file-text" class="icon-xl"></i></div>
+      <h4>v4_test_results.jsonl</h4>
+      <p>每個任務完成時的正/反面測試結果。解決 85.4% 假完成率問題的核心機制。</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<footer>
+  V4 架構文件 · 2026-03-15 · 由 <a href="#">Opus 4.6 + GPT-5.4 Council</a> 聯合分析產出 · 每次 Phase DoD 通過後自動更新
+</footer>
+
+<script>
+mermaid.initialize({startOnLoad: false, theme: 'dark', flowchart: {curve: 'basis'}});
+// Render only the first panel on load
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    var active = document.querySelector('.panel.active');
+    if (active) {
+      var diagrams = active.querySelectorAll('.mermaid');
+      diagrams.forEach(function(el) {
+        mermaid.run({nodes: [el]});
+        el.setAttribute('data-rendered', '1');
+      });
+    }
+  }, 100);
+});
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  var panel = document.getElementById('panel-' + id);
+  panel.classList.add('active');
+  event.target.classList.add('active');
+  // Re-render mermaid in newly visible panel
+  var diagrams = panel.querySelectorAll('.mermaid');
+  if (diagrams.length > 0) {
+    diagrams.forEach(function(el) {
+      if (!el.getAttribute('data-rendered')) {
+        mermaid.run({nodes: [el]});
+        el.setAttribute('data-rendered', '1');
+      }
+    });
+  }
+}
+</script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
