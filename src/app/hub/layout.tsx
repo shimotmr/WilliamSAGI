@@ -55,6 +55,7 @@ const navGroups = [
   {
     label: 'V4 系統',
     items: [
+      { href: '/hub/v4', icon: Activity, label: 'V4 系統中心' },
       { href: '/hub/architecture', icon: Network, label: 'V4 架構圖' },
     ],
   },
