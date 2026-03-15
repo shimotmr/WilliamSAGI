@@ -185,11 +185,14 @@ export default function V4LiveFeed() {
             <h3 style={{ fontSize: '0.6875rem', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0.75rem' }}>Agent 活動</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {agentStats.map(agent => (
-                <div key={agent.name} style={{
+                <Link key={agent.name} href={agent.active ? `/hub/v4/task/${agent.active.id}` : '#'} style={{
                   display: 'flex', alignItems: 'center', gap: '0.75rem',
                   padding: '0.625rem 0.75rem', borderRadius: 8,
                   background: agent.active ? 'rgba(94,106,210,0.08)' : 'transparent',
                   border: agent.active ? '1px solid rgba(94,106,210,0.15)' : '1px solid transparent',
+                  textDecoration: 'none', color: 'inherit',
+                  cursor: agent.active ? 'pointer' : 'default',
+                  transition: 'background 150ms',
                 }}>
                   <span style={{ fontSize: '1.25rem' }}>{(() => { const Icon = agentIcon[agent.name] || Bot; return <Icon size={18} style={{ color: "#8A8F98" }} />; })()}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -224,7 +227,7 @@ export default function V4LiveFeed() {
                       {agent.completed}/{agent.total}
                     </span>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -245,11 +248,12 @@ export default function V4LiveFeed() {
                   本週尚無任務紀錄
                 </div>
               ) : recentTasks.map(task => (
-                <div key={task.id} style={{
+                <Link key={task.id} href={`/hub/v4/task/${task.id}`} style={{
                   display: 'flex', alignItems: 'flex-start', gap: '0.625rem',
                   padding: '0.5rem 0.625rem', borderRadius: 6,
                   background: 'rgba(255,255,255,0.01)',
                   borderLeft: `2px solid ${task.status === '已完成' ? '#22c55e' : task.status === '失敗' ? '#ef4444' : task.status === '執行中' ? '#3b82f6' : '#374151'}`,
+                  textDecoration: 'none', color: 'inherit', cursor: 'pointer',
                 }}>
                   <span style={{ fontSize: '0.6875rem', color: '#6b7280', whiteSpace: 'nowrap', marginTop: '0.125rem' }}>
                     {timeAgo(task.updated_at)}
@@ -266,13 +270,13 @@ export default function V4LiveFeed() {
                       {(() => { const Icon = agentIcon[task.assignee] || Bot; return <Icon size={12} style={{ color: "#6b7280", display: "inline" }} />; })()} {task.assignee}
                     </div>
                   </div>
-                  <Link href={`/hub/v4/task/${task.id}`} style={{
-                    fontSize: '0.6875rem', color: '#5E6AD2', textDecoration: 'none',
+                  <span style={{
+                    fontSize: '0.6875rem', color: '#5E6AD2',
                     whiteSpace: 'nowrap',
                   }}>
                     Replay →
-                  </Link>
-                </div>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
