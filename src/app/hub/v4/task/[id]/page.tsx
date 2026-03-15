@@ -16,6 +16,7 @@ interface StreamEvent {
   content?: string
   tool_name?: string
   tool_input?: any
+  tool_success?: boolean
   token_count?: number
   elapsed_ms?: number
 }
