@@ -518,23 +518,84 @@ graph TB
         <p>三週逐步推進，每階段獨立可驗證</p>
       </div>
     </div>
-    <div class="diagram-body">
-      <div class="mermaid">
-gantt
-    title 系統重整三階段
-    dateFormat YYYY-MM-DD
-    section Phase 1 安全清理
-        清理 _archive_v1/           :a1, 2026-03-16, 3d
-        刪除重複通知腳本             :a2, 2026-03-16, 2d
-        合併 incident_log           :a3, 2026-03-18, 2d
-    section Phase 2 地基補建
-        Dispatch 精簡 23→3          :b1, 2026-03-23, 3d
-        補建 agent_fingerprints     :b2, 2026-03-24, 3d
-        failure_events 自動歸因     :b3, 2026-03-25, 3d
-    section Phase 3 學習閉環
-        pattern_rules 自動化        :c1, 2026-03-30, 3d
-        adaptive_decisions 建表     :c2, 2026-03-31, 2d
-        Evolution Engine 啟動       :c3, 2026-04-01, 3d
+    <div class="diagram-body" style="padding:24px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+
+        <div style="background:#0f172a;border:1px solid #334155;border-top:3px solid #22c55e;border-radius:10px;padding:20px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="background:#22c55e;color:#fff;font-size:.7em;font-weight:700;padding:2px 8px;border-radius:99px">Phase 1</span>
+            <span style="color:#94a3b8;font-size:.8em">本週</span>
+          </div>
+          <div style="color:#e2e8f0;font-size:.9em;font-weight:600;margin-bottom:12px">安全清理</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#22c55e;margin-bottom:2px">清理 _archive_v1/</div>
+              <div style="color:#64748b">舊版前端頁面，無人使用</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#22c55e;margin-bottom:2px">刪除 10 個重複通知腳本</div>
+              <div style="color:#64748b">只保留 notify_telegram.sh</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#22c55e;margin-bottom:2px">合併 incident_log → failure_events</div>
+              <div style="color:#64748b">消除重複資料表</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;color:#94a3b8;font-size:.75em">
+            預期：腳本 591 → ~570，表數 11 → 10
+          </div>
+        </div>
+
+        <div style="background:#0f172a;border:1px solid #334155;border-top:3px solid #f59e0b;border-radius:10px;padding:20px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="background:#f59e0b;color:#fff;font-size:.7em;font-weight:700;padding:2px 8px;border-radius:99px">Phase 2</span>
+            <span style="color:#94a3b8;font-size:.8em">下週</span>
+          </div>
+          <div style="color:#e2e8f0;font-size:.9em;font-weight:600;margin-bottom:12px">地基補建</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#f59e0b;margin-bottom:2px">Dispatch 精簡 23 → 3 個</div>
+              <div style="color:#64748b">只留核心派發路徑</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#f59e0b;margin-bottom:2px">補建 agent_fingerprints</div>
+              <div style="color:#64748b">V4 P2-4 空殼真正落地</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#f59e0b;margin-bottom:2px">failure_events 自動歸因</div>
+              <div style="color:#64748b">V4 P2-3 空殼真正落地</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;color:#94a3b8;font-size:.75em">
+            預期：dispatch 23 → 3，V4 空殼 3 → 1
+          </div>
+        </div>
+
+        <div style="background:#0f172a;border:1px solid #334155;border-top:3px solid #7B68EE;border-radius:10px;padding:20px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="background:#7B68EE;color:#fff;font-size:.7em;font-weight:700;padding:2px 8px;border-radius:99px">Phase 3</span>
+            <span style="color:#94a3b8;font-size:.8em">兩週後</span>
+          </div>
+          <div style="color:#e2e8f0;font-size:.9em;font-weight:600;margin-bottom:12px">學習閉環</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#7B68EE;margin-bottom:2px">pattern_rules 自動化路徑</div>
+              <div style="color:#64748b">failure → rules 不再靠手動</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#7B68EE;margin-bottom:2px">adaptive_decisions 建表</div>
+              <div style="color:#64748b">V4 P2-5 空殼真正落地</div>
+            </div>
+            <div style="background:#1e293b;border-radius:6px;padding:8px 12px;font-size:.8em">
+              <div style="color:#7B68EE;margin-bottom:2px">Evolution Engine 啟動</div>
+              <div style="color:#64748b">V4 P3 真正開始</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;color:#94a3b8;font-size:.75em">
+            預期：假完成率 80% → &lt;30%
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
