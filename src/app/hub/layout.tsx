@@ -58,6 +58,7 @@ const navGroups = [
       { href: '/hub/v4', icon: Activity, label: 'V4 系統中心' },
       { href: '/hub/architecture', icon: Network, label: 'V4 架構圖' },
       { href: '/hub/system-refactor', icon: GitFork, label: '架構重整' },
+      { href: '/hub/system-architecture', icon: GitFork, label: '腳本流程圖' },
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
     ],
