@@ -1,130 +1,159 @@
 #!/usr/bin/env python3
-"""
-Refactor system-refactor.html:
-1. Rename 刪除清單 tab → 腳本檢查清單
-2. Replace cleanup panel content with 3 tables: 保留腳本, 合併腳本, 刪除腳本
-3. Remove script tables/lists from other tabs
-"""
 import re
 
 with open('public/system-refactor.html', 'r') as f:
-    lines = f.readlines()
+    content = f.read()
 
-html = ''.join(lines)
+lines = content.split('\n')
 
-# === Step 1: Rename tab ===
-html = html.replace(
-    '<div class="tab" onclick="showPanel(\'cleanup\')"><i data-lucide="trash-2" class="icon"></i> 刪除清單</div>',
-    '<div class="tab" onclick="showPanel(\'cleanup\')"><i data-lucide="clipboard-check" class="icon"></i> 腳本檢查清單</div>'
+# === Step 1: Rename tab button ===
+for i, line in enumerate(lines):
+    if "showPanel('cleanup')" in line and '刪除清單' in line:
+        lines[i] = line.replace('trash-2', 'clipboard-check').replace('刪除清單', '腳本檢查清單')
+    if '<!-- TAB 4: 刪除清單 -->' in line:
+        lines[i] = line.replace('刪除清單', '腳本檢查清單')
+
+# === Step 2: Extract data from existing tables ===
+content = '\n'.join(lines)
+
+# Extract from the 591-script table: scripts with data-sugg
+script_rows = re.findall(
+    r'<tr data-name="([^"]*)"[^>]*data-cat="([^"]*)"[^>]*data-sugg="([^"]*)"[^>]*>(.*?)</tr>',
+    content, re.DOTALL
 )
-html = html.replace('<!-- TAB 4: 刪除清單 -->', '<!-- TAB 4: 腳本檢查清單 -->')
 
-# === Step 2: Extract data from the 591-script table ===
-# Parse rows with data-sugg attributes
-import re
+keep_scripts = []  # Cron active / important
+delete_scripts_from_main = []
+archive_scripts = []
 
-# Extract keep scripts (Cron active - look for rows with cron checkmark)
-# Extract delete scripts (data-sugg="刪除")
-# For merge scripts, use overlap tab data
-
-# Find all table rows in the 591 table
-script_rows = re.findall(r'<tr data-name="([^"]*)"[^>]*data-cat="([^"]*)"[^>]*data-sugg="([^"]*)"[^>]*>(.*?)</tr>', html, re.DOTALL)
-
-keep_scripts = []
-delete_scripts = []
-archive_scripts = []  # 封存 → will be used as "合併" candidates
-
-for name, cat, sugg, content in script_rows:
-    # Extract description
-    desc_match = re.search(r'<td[^>]*>(?:<[^>]*>)*([^<]+)(?:</[^>]*>)*</td>\s*<td[^>]*>(?:<[^>]*>)*\s*</td>\s*<td', content)
-    # Simpler: get the 4th td (description)
-    tds = re.findall(r'<td[^>]*>(.*?)</td>', content, re.DOTALL)
-    desc = ''
-    if len(tds) >= 4:
-        desc = re.sub(r'<[^>]+>', '', tds[3]).strip()
-    
-    # Check if cron active (has a checkmark in cron column)
-    has_cron = '✅' in content or ('cron' in content.lower() and '活躍' in content)
-    
+for name, cat, sugg, row_content in script_rows:
+    tds = re.findall(r'<td[^>]*>(.*?)</td>', row_content, re.DOTALL)
+    desc = re.sub(r'<[^>]+>', '', tds[3]).strip() if len(tds) > 3 else ''
     if sugg == '刪除':
-        delete_scripts.append((name, cat, desc))
+        delete_scripts_from_main.append((name, cat, desc))
     elif sugg == '封存':
         archive_scripts.append((name, cat, desc))
-    elif has_cron:
-        keep_scripts.append((name, cat, desc))
 
-# Also check for cron active scripts that might not have data-sugg but have ✅ in cron column
-# Let's re-scan more carefully
-keep_scripts2 = []
-for name, cat, sugg, content in script_rows:
-    tds = re.findall(r'<td[^>]*>(.*?)</td>', content, re.DOTALL)
-    desc = ''
-    if len(tds) >= 4:
-        desc = re.sub(r'<[^>]+>', '', tds[3]).strip()
-    # Check 5th td for cron
-    cron_active = False
-    if len(tds) >= 5:
-        cron_td = tds[4]
-        if '✅' in cron_td or '🟢' in cron_td:
-            cron_active = True
-    if cron_active and sugg != '刪除':
-        keep_scripts2.append((name, cat, desc))
+# Extract from 確認刪除名單 (430 scripts)
+delete_section_start = content.find('確認刪除名單（430 個）')
+if delete_section_start != -1:
+    delete_section = content[delete_section_start:delete_section_start + 200000]
+    tbody_end = delete_section.find('</tbody>')
+    delete_section = delete_section[:tbody_end] if tbody_end != -1 else delete_section
 
-# Use keep_scripts2 if it found more
-if len(keep_scripts2) > len(keep_scripts):
-    keep_scripts = keep_scripts2
-
-# Extract merge info from overlap tab (TAB 7)
-# The overlap tab has "完全覆蓋" and "部分重疊" sections with keep/delete pairs
-overlap_start = html.find('id="panel-overlap"')
-overlap_end = html.find('</div>\n\n<script>', overlap_start) if overlap_start != -1 else -1
-
-merge_entries = []
+# Extract from overlap tab (TAB 7)
+overlap_start = content.find('id="panel-overlap"')
+merge_pairs = []
 if overlap_start != -1:
-    overlap_section = html[overlap_start:overlap_start+10000]
-    # Find keep/delete pairs
-    pairs = re.findall(r'✅ 保留.*?<code[^>]*>([^<]+)</code>.*?🗑️ 刪除.*?<code[^>]*>([^<]+)</code>', overlap_section, re.DOTALL)
+    overlap_section = content[overlap_start:overlap_start + 20000]
+    # Find ✅ 保留 / 🗑️ 刪除 pairs
+    pairs = re.findall(
+        r'✅ 保留\s*<code[^>]*>([^<]+)</code>[^🗑]*?🗑️ 刪除\s*<code[^>]*>([^<]+)</code>',
+        overlap_section, re.DOTALL
+    )
     for keep, delete in pairs:
-        merge_entries.append((keep.strip(), delete.strip()))
+        merge_pairs.append((keep.strip(), delete.strip()))
+    
+    # Also find additional delete targets
+    all_deletes = re.findall(r'🗑️ 刪除\s*<code[^>]*>([^<]+)</code>', overlap_section)
+    all_keeps = re.findall(r'✅ 保留\s*<code[^>]*>([^<]+)</code>', overlap_section)
 
-print(f"Found: {len(keep_scripts)} keep, {len(delete_scripts)} delete, {len(archive_scripts)} archive, {len(merge_entries)} merge pairs")
+# Get description from overlap for merge keeps
+merge_keep_descs = re.findall(
+    r'✅ 保留\s*<code[^>]*>([^<]+)</code>\s*—\s*([^<\n]+)',
+    content[overlap_start:overlap_start+20000] if overlap_start != -1 else ''
+)
+merge_desc_map = {name.strip(): desc.strip() for name, desc in merge_keep_descs}
 
-# Also get the 確認刪除名單 data
-delete_confirm_start = html.find('確認刪除名單')
-if delete_confirm_start != -1:
-    # Count rows in that table
-    section = html[delete_confirm_start:delete_confirm_start+50000]
-    confirm_rows = re.findall(r'<td[^>]*font-family:monospace[^>]*>([^<]+)</td>', section)
-    print(f"確認刪除名單 has {len(confirm_rows)} scripts")
+# For "保留腳本", we need the scripts that are in the "確認刪除名單" but marked as rescued
+# Look for scripts with "審核救回" or "—" as ID (meaning they were rescued)
+# Also, the overlap tab "保留" scripts
+keep_from_overlap = list(set(all_keeps)) if overlap_start != -1 else []
 
-# === Build new panel content ===
-def make_table_row(idx, name, cat, desc, color_bg, color_text):
+# Since the 591 table doesn't explicitly mark "keep", we'll use:
+# - Scripts from overlap tab marked ✅ 保留 (these are the confirmed keeps)
+# - Scripts at end of delete table with "審核救回" label
+keep_scripts_final = []
+seen = set()
+for name in keep_from_overlap:
+    if name not in seen:
+        desc = merge_desc_map.get(name, '')
+        keep_scripts_final.append((name, '', desc))
+        seen.add(name)
+
+# Also get rescued scripts from the delete table
+rescued_section = content[content.find('審核救回'):] if '審核救回' in content else ''
+if rescued_section:
+    rescued_start = content.find('審核救回') - 2000
+    rescued_names = re.findall(
+        r'font-family:monospace[^>]*>([^<]+)</td>\s*<td[^>]*>([^<]*審核救回[^<]*)</td>',
+        content[rescued_start:rescued_start + 5000]
+    )
+    for name, desc in rescued_names:
+        if name.strip() not in seen:
+            keep_scripts_final.append((name.strip(), '', desc.strip()))
+            seen.add(name.strip())
+
+# Also extract the scripts with 手動/被呼叫 frequency in the delete table (these are actually keeps)
+rescue_section = content[delete_section_start:delete_section_start + 200000] if delete_section_start != -1 else ''
+manual_scripts = re.findall(
+    r'font-family:monospace[^>]*>([^<]+)</td>\s*<td[^>]*>([^<]+)</td>\s*<td[^>]*>[^<]*(?:手動|被呼叫)[^<]*</td>',
+    rescue_section
+)
+for name, desc in manual_scripts:
+    if name.strip() not in seen:
+        keep_scripts_final.append((name.strip(), '', desc.strip()))
+        seen.add(name.strip())
+
+# For delete table, get ALL scripts from 確認刪除名單 that have actual numbered IDs
+delete_scripts_final = []
+if delete_section_start != -1:
+    delete_rows = re.findall(
+        r'<td[^>]*>(\d+)</td>\s*<td[^>]*font-family:monospace[^>]*>([^<]+)</td>\s*<td[^>]*>([^<]*)</td>\s*<td[^>]*>([^<]*)</td>',
+        rescue_section
+    )
+    for num, name, desc, freq in delete_rows:
+        delete_scripts_final.append((name.strip(), num, desc.strip()))
+
+# If we didn't get enough from the numbered rows, also get non-numbered ones that aren't rescued
+if not delete_scripts_final:
+    # Fallback: use the 12 from data-sugg="刪除" 
+    delete_scripts_final = [(n, '', d) for n, c, d in delete_scripts_from_main]
+
+print(f"保留: {len(keep_scripts_final)}, 合併: {len(merge_pairs)}, 刪除: {len(delete_scripts_final)}, 封存: {len(archive_scripts)}")
+
+# === Step 3: Build new panel content ===
+
+def row(i, name, extra, desc):
     return f'''      <tr style="border-bottom:1px solid #1e293b">
-        <td style="padding:8px;text-align:center;color:#64748b;font-size:12px">{idx}</td>
+        <td style="padding:8px;text-align:center;color:#64748b;font-size:12px">{i}</td>
         <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">{name}</td>
-        <td style="padding:8px;font-size:12px;color:#94a3b8">{cat}</td>
         <td style="padding:8px;font-size:12px;color:#e2e8f0">{desc}</td>
       </tr>'''
 
-def make_section(title, icon, num_style, scripts, desc_text):
-    rows = '\n'.join(make_table_row(i+1, s[0], s[1], s[2], '', '') for i, s in enumerate(scripts))
+def section(title, icon, color, scripts, note, cols=None):
+    if cols is None:
+        cols = ['#', '腳本名稱', '說明']
+    
+    header = ''.join(f'<th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">{c}</th>' for c in cols)
+    header = header.replace('text-align:left', 'text-align:center', 1)  # # column centered
+    
+    rows = '\n'.join(row(i+1, s[0], s[1], s[2] if len(s) > 2 else '') for i, s in enumerate(scripts))
+    
     return f'''
-  <div class="diagram-card" style="margin-bottom:24px;border-color:{num_style}">
-    <div class="diagram-header" style="border-bottom-color:{num_style}">
-      <div class="diagram-num" style="background:{num_style}">{icon}</div>
+  <div class="diagram-card" style="margin-bottom:24px;border-color:{color}">
+    <div class="diagram-header" style="border-bottom-color:{color}">
+      <div class="diagram-num" style="background:{color}">{icon}</div>
       <div>
         <h3>{title}（{len(scripts)} 個）</h3>
-        <p>{desc_text}</p>
+        <p>{note}</p>
       </div>
     </div>
     <div class="diagram-body" style="padding:0;overflow-x:auto">
       <table style="width:100%;border-collapse:collapse;font-size:13px;background:#1e293b">
         <thead>
           <tr style="background:#0f172a;border-bottom:2px solid #334155">
-            <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px">#</th>
-            <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">腳本名稱</th>
-            <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">類別</th>
-            <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">說明</th>
+            {header}
           </tr>
         </thead>
         <tbody>
@@ -134,15 +163,15 @@ def make_section(title, icon, num_style, scripts, desc_text):
     </div>
   </div>'''
 
-# Build merge table with different format
-def make_merge_section(pairs):
+def merge_section(pairs):
     rows = ''
     for i, (keep, delete) in enumerate(pairs):
         rows += f'''      <tr style="border-bottom:1px solid #1e293b">
         <td style="padding:8px;text-align:center;color:#64748b;font-size:12px">{i+1}</td>
-        <td style="padding:8px;font-family:monospace;font-size:12px;color:#4ade80">{keep}</td>
-        <td style="padding:8px;font-family:monospace;font-size:12px;color:#f87171">{delete}</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#4ade80">✅ {keep}</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#f87171">🗑️ {delete}</td>
       </tr>\n'''
+    
     return f'''
   <div class="diagram-card" style="margin-bottom:24px;border-color:#f59e0b">
     <div class="diagram-header" style="border-bottom-color:#f59e0b">
@@ -167,25 +196,7 @@ def make_merge_section(pairs):
     </div>
   </div>'''
 
-# Get delete list from 確認刪除名單 (more comprehensive)
-delete_from_confirm = []
-if delete_confirm_start != -1:
-    section = html[delete_confirm_start:delete_confirm_start+100000]
-    # Parse rows: each has script name, reason, safety, action
-    rows_match = re.findall(r'<tr>\s*<td[^>]*>(\d+)</td>\s*<td[^>]*font-family:monospace[^>]*>([^<]+)</td>\s*<td[^>]*>([^<]*)</td>', section)
-    for num, name, reason in rows_match:
-        delete_from_confirm.append((name.strip(), reason.strip()))
-
-print(f"Delete from confirm list: {len(delete_from_confirm)}")
-
-# Use confirm list for delete table if available
-if delete_from_confirm:
-    delete_for_table = [(name, '', reason) for name, reason in delete_from_confirm]
-else:
-    delete_for_table = delete_scripts
-
-# Build new panel
-new_panel = f'''<!-- TAB 4: 腳本檢查清單 -->
+new_panel_content = f'''<!-- TAB 4: 腳本檢查清單 -->
 <div id="panel-cleanup" class="panel">
   <div class="hero" style="padding-bottom:16px">
     <h1>腳本檢查清單</h1>
@@ -195,89 +206,89 @@ new_panel = f'''<!-- TAB 4: 腳本檢查清單 -->
   <!-- Score Cards -->
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#22c55e">{len(keep_scripts)}</div>
+      <div style="font-size:28px;font-weight:700;color:#22c55e">{len(keep_scripts_final)}</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">✅ 保留腳本</div>
     </div>
     <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#f59e0b">{len(merge_entries)}</div>
+      <div style="font-size:28px;font-weight:700;color:#f59e0b">{len(merge_pairs)}</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">🔄 合併腳本</div>
     </div>
     <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#ef4444">{len(delete_for_table)}</div>
+      <div style="font-size:28px;font-weight:700;color:#ef4444">{len(delete_scripts_final)}</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">🗑️ 刪除腳本</div>
     </div>
   </div>
-{make_section('保留腳本', '✅', '#22c55e', keep_scripts, 'Cron 活躍、系統核心腳本，確認保留。')}
-{make_merge_section(merge_entries)}
-{make_section('刪除腳本', '🗑️', '#ef4444', delete_for_table, '確認刪除的腳本。標記 ⚠️ 的需先處理引用再刪。')}
+{section('保留腳本', '✅', '#22c55e', keep_scripts_final, 'Cron 活躍、系統核心、被其他腳本引用的重要腳本。')}
+{merge_section(merge_pairs)}
+{section('刪除腳本', '🗑️', '#ef4444', delete_scripts_final, '確認可安全刪除的腳本。標記 ⚠️ 的需先處理引用。')}
 
 </div>
 '''
 
-# === Step 3: Replace the cleanup panel ===
-# Find panel start and end
-panel_start_marker = '<!-- TAB 4: 腳本檢查清單 -->'  # already renamed
-panel_start = html.find(panel_start_marker)
-if panel_start == -1:
-    # Try old name
-    panel_start_marker = '<!-- TAB 4: 刪除清單 -->'
-    panel_start = html.find(panel_start_marker)
+# === Step 4: Replace the cleanup panel ===
+# Find from TAB 4 comment to TAB 5 comment
+tab4_marker = '<!-- TAB 4: 腳本檢查清單 -->'
+tab5_marker = '<!-- TAB 5:'
 
-# Find the next tab marker
-next_tab = html.find('<!-- TAB 5:', panel_start)
+tab4_pos = content.find(tab4_marker)
+tab5_pos = content.find(tab5_marker)
 
-# Replace everything between panel_start and next_tab
-old_panel = html[panel_start:next_tab]
-html = html[:panel_start] + new_panel + '\n' + html[next_tab:]
+if tab4_pos == -1:
+    tab4_pos = content.find('<!-- TAB 4:')
+if tab5_pos == -1:
+    print("ERROR: Cannot find TAB 5 marker!")
+    exit(1)
 
-# === Step 4: Remove script tables from other tabs ===
+# Also need to remove the filter script between the table and delete list
+# Find script blocks related to scriptSearch/scriptTable
+new_content = content[:tab4_pos] + new_panel_content + '\n' + content[tab5_pos:]
 
-# TAB 1 (overview, lines ~145-213): Has problem list with "23個dispatch腳本", "11個通知腳本" - these are just text mentions, keep them
-# TAB 5 (phases): Has text mentions of "刪除 10 個重複通知腳本" - text references, keep
-# TAB 6 (models): No script tables
-# TAB 7 (overlap): Has 完全覆蓋/部分重疊/待確認 sections with script keep/delete pairs
-#   → Remove these since they're now consolidated in 腳本檢查清單
+# Remove any orphaned script blocks that reference scriptSearch/scriptTable
+# These should have been removed with the panel, but check
+orphan_script = re.search(
+    r"<script>\s*\(function\(\)\{.*?getElementById\('scriptSearch'\).*?\}\)\(\);\s*</script>",
+    new_content, re.DOTALL
+)
+if orphan_script:
+    new_content = new_content[:orphan_script.start()] + new_content[orphan_script.end():]
 
-# Remove overlap tab script content (keep the tab but remove script lists)
-overlap_panel_start = html.find('id="panel-overlap"')
+# === Step 5: Remove script lists from overlap tab (TAB 7) ===
+# Replace overlap tab script content with a redirect note
+overlap_panel_start = new_content.find('id="panel-overlap"')
 if overlap_panel_start != -1:
-    # Find the panel div start
-    panel_div_start = html.rfind('<div', 0, overlap_panel_start + 20)
-    # Find the end - next closing script tag or next tab
-    overlap_section_start = html.find('<h2', overlap_panel_start)
+    # Find the hero section end and the h2 sections
+    h2_start = new_content.find('\n\n  <h2', overlap_panel_start)
+    if h2_start == -1:
+        h2_start = new_content.find('<h2', overlap_panel_start)
     
-    # Find all three h2 sections and their content until end of panel
-    # Remove from first h2 to end of panel (before closing </div>)
-    last_script_in_overlap = html.find('<script>\n</script>\n<script>lucide.createIcons();</script>', overlap_panel_start)
-    if last_script_in_overlap != -1:
-        # Find the content between hero and the final scripts
-        hero_end = html.find('</div>\n\n  <h2', overlap_panel_start)
-        if hero_end != -1:
-            hero_end = html.find('\n\n  <h2', overlap_panel_start)
-            # Replace the three sections with a note
-            section_start = hero_end
-            section_end = last_script_in_overlap
-            old_sections = html[section_start:section_end]
-            new_sections = '''
+    # Find end of overlap panel content (before closing scripts)
+    # Look for the pattern at end of overlap
+    panel_end_pattern = new_content.find('<script>\n</script>', overlap_panel_start)
+    if panel_end_pattern == -1:
+        panel_end_pattern = new_content.find('</div>\n\n<script>', overlap_panel_start)
+    
+    if h2_start != -1 and panel_end_pattern != -1:
+        redirect_note = '''
 
   <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;text-align:center;margin:24px 0">
-    <p style="color:#94a3b8;font-size:14px">📋 腳本重疊分析已整合至「腳本檢查清單」tab，請切換查看完整的保留/合併/刪除清單。</p>
+    <p style="color:#94a3b8;font-size:14px">📋 腳本重疊分析已整合至「<strong style="color:#e2e8f0">腳本檢查清單</strong>」tab 的合併腳本表。</p>
   </div>
 
 '''
-            html = html[:section_start] + new_sections + html[section_end:]
+        new_content = new_content[:h2_start] + redirect_note + new_content[panel_end_pattern:]
 
-# Also remove the filter script that references scriptTable (which no longer exists)
-# Find and remove the script block for the old 591 table filter
-old_filter_script_start = html.find("const search = document.getElementById('scriptSearch')")
-if old_filter_script_start != -1:
-    script_tag_start = html.rfind('<script>', 0, old_filter_script_start)
-    script_tag_end = html.find('</script>', old_filter_script_start) + len('</script>')
-    html = html[:script_tag_start] + html[script_tag_end:]
+# === Step 6: Check other tabs for script tables to remove ===
+# TAB 1 (overview): just mentions "591個腳本" in text - keep as-is (descriptive)
+# TAB 2 (current-arch): diagram cards about architecture - no script tables
+# TAB 3 (new-arch): architecture diagrams - no script tables  
+# TAB 5 (phases): text mentions of deletion - keep as-is (plan description)
+# TAB 6 (models): model comparison - no script tables
 
-# Write output
 with open('public/system-refactor.html', 'w') as f:
-    f.write(html)
+    f.write(new_content)
 
-print("Done! File written.")
-print(f"Final stats: {len(keep_scripts)} keep, {len(merge_entries)} merge pairs, {len(delete_for_table)} delete")
+orig_lines = content.count('\n')
+new_lines = new_content.count('\n')
+print(f"Original: {orig_lines} lines, New: {new_lines} lines")
+print(f"Removed ~{orig_lines - new_lines} lines")
+print("Done!")

@@ -30,9 +30,20 @@ export async function GET() {
       .select('assignee, status, completed_at')
       .neq('assignee', '待分配');
 
+    // Normalize assignee aliases to canonical agent names
+    const ALIAS_MAP: Record<string, string> = {
+      'travis': 'main', 'main': 'main',
+      'blake': 'coder', 'coder': 'coder', 'coder-b': 'coder',
+      'rex': 'researcher', 'researcher': 'researcher',
+      'oscar': 'secretary', 'secretary': 'secretary',
+      'warren': 'trader', 'trader': 'trader',
+      'griffin': 'inspector', 'inspector': 'inspector',
+    };
+
     const taskStats: Record<string, { total: number; completed: number; running: number; pending: number }> = {};
     for (const t of (tasks || [])) {
-      const key = (t.assignee || '').toLowerCase();
+      const raw = (t.assignee || '').toLowerCase();
+      const key = ALIAS_MAP[raw] || raw;
       if (!taskStats[key]) taskStats[key] = { total: 0, completed: 0, running: 0, pending: 0 };
       taskStats[key].total++;
       if (t.status === '已完成') taskStats[key].completed++;
