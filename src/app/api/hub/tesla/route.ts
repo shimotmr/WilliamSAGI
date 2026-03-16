@@ -29,7 +29,7 @@ async function getAccessToken(region: string): Promise<string | null> {
   }
 
   // Try environment variable fallback
-  const envKey = `TESLA_${region.toUpperCase()}_TOKEN`
+  const envKey = `TESLA_${region.toUpperCase()}_ACCESS_TOKEN`
   if (process.env[envKey]) return process.env[envKey]!
 
   return null
