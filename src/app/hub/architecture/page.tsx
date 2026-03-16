@@ -2,7 +2,7 @@ export default function ArchitecturePage() {
   return (
     <div style={{ margin: '-2rem', height: 'calc(100vh - 4rem)' }}>
       <iframe
-        src="/v4-architecture.html"
+        src="/system-architecture.html"
         style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
         title="V4 系統架構圖"
       />
