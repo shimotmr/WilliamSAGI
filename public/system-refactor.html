@@ -137,6 +137,7 @@
   <div class="tab" onclick="showPanel('cleanup')"><i data-lucide="trash-2" class="icon"></i> 刪除清單</div>
   <div class="tab" onclick="showPanel('phases')"><i data-lucide="rocket" class="icon"></i> 執行計畫</div>
   <div class="tab" onclick="showPanel('models')"><i data-lucide="cpu" class="icon"></i> 模型對照</div>
+  <div class="tab" onclick="showPanel('overlap')"><i data-lucide="git-compare" class="icon"></i> 重疊分析</div>
 </div>
 
 <div class="content">
@@ -421,11 +422,11 @@ graph TB
   <!-- Score Cards -->
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px">
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#22c55e">32</div>
+      <div style="font-size:28px;font-weight:700;color:#22c55e">31</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">✅ Cron 活躍・保留</div>
     </div>
     <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#ef4444">10</div>
+      <div style="font-size:28px;font-weight:700;color:#ef4444">17</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">🗑️ 建議刪除</div>
     </div>
     <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;text-align:center">
@@ -433,7 +434,7 @@ graph TB
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">📦 建議封存</div>
     </div>
     <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:16px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#6b7280">522</div>
+      <div style="font-size:28px;font-weight:700;color:#6b7280">516</div>
       <div style="font-size:13px;color:#94a3b8;margin-top:4px">❓ 需確認</div>
     </div>
     <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:center">
@@ -766,14 +767,14 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="dispatch" data-rec="confirm">
+          <tr data-sup="active" data-cat="dispatch" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">32</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">queue_spawn.sh</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb40">🔵 Dispatch</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">queue_spawn.sh — 將 spawn 請求寫入 spawn_queue 表</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 queue_spawn.py 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="dispatch" data-rec="confirm">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">33</td>
@@ -820,14 +821,14 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="dispatch" data-rec="confirm">
+          <tr data-sup="active" data-cat="dispatch" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">38</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">spawn_queue_consumer.py</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb40">🔵 Dispatch</span></td>
-            <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">spawn_queue_consumer.py — 監控 spawn queue 並執行任務</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">spawn_queue_consumer.py — 讀本地 JSON，已改用 Supabase 表</td>
+            <td style="padding:6px 8px;text-align:center">被 auto_spawn_runner.sh 取代</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="dispatch" data-rec="confirm">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">39</td>
@@ -1036,14 +1037,14 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="monitor" data-rec="keep">
+          <tr data-sup="active" data-cat="monitor" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">62</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">claude_usage_monitor.py</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#fff7ed;color:#f97316;border:1px solid #f9731630">🟠 Monitor</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">停用：此功能已整合進 token_threshold_monitor.py (HEARTBEAT)</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 token_threshold_monitor.py 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">✅</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#052e16;color:#4ade80">✅ 保留</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="monitor" data-rec="confirm">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">63</td>
@@ -1783,14 +1784,14 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="notify" data-rec="confirm">
+          <tr data-sup="active" data-cat="notify" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">145</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">alert_notify.sh</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#052e16;color:#4ade80;border:1px solid #22c55e30">🟢 Notify</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">alert_notify.sh — 警示分級推播 CLI</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 notify_telegram.sh 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="notify" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">146</td>
@@ -1909,14 +1910,14 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="notify" data-rec="confirm">
+          <tr data-sup="active" data-cat="notify" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">159</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">notify.sh</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#052e16;color:#4ade80;border:1px solid #22c55e30">🟢 Notify</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">notify.sh - Agent Message Routing Helper</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 notify_telegram.sh 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="notify" data-rec="confirm">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">160</td>
@@ -1963,23 +1964,23 @@ graph TB
             <td style="padding:6px 8px;text-align:center">❌</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
           </tr>
-          <tr data-sup="active" data-cat="notify" data-rec="confirm">
+          <tr data-sup="active" data-cat="notify" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">165</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">smart_notify.py</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#052e16;color:#4ade80;border:1px solid #22c55e30">🟢 Notify</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">智能通知分級：P0 即時、P1 批次摘要、P2 靜默記錄</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 notify_telegram.sh 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
-          <tr data-sup="active" data-cat="notify" data-rec="confirm">
+          <tr data-sup="active" data-cat="notify" data-rec="delete">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">166</td>
             <td style="padding:6px 8px;font-family:monospace;font-size:12px">spawn_notify.sh</td>
             <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#052e16;color:#4ade80;border:1px solid #22c55e30">🟢 Notify</span></td>
             <td style="padding:6px 8px;font-size:12px;color:#e2e8f0">任務加入佇列時立刻通知</td>
-            <td style="padding:6px 8px;text-align:center">—</td>
+            <td style="padding:6px 8px;text-align:center">被 notify_telegram.sh 覆蓋</td>
             <td style="padding:6px 8px;text-align:center">❌</td>
-            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#9ca3af">❓ 確認</span></td>
+            <td style="padding:6px 8px;text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#450a0a;color:#f87171">🗑️ 刪除</span></td>
           </tr>
           <tr data-sup="active" data-cat="notify" data-rec="confirm">
             <td style="padding:6px 8px;text-align:center;color:#64748b;font-size:12px">167</td>
@@ -6039,6 +6040,165 @@ graph TB
   <div class="model-verdict">
     <h4><i data-lucide="lightbulb" class="icon"></i> 結論</h4>
     <p>本地 9B 模型適合簡單問答（heartbeat、狀態檢查、行政任務），<strong>不適合</strong>需要執行多步驟命令的 subagent 任務（bash 串接、DB 查詢、跨系統驗證）。複雜任務必須使用雲端推理模型。成本策略：Oscar/Griffin 用本地，Blake/Rex 用雲端。</p>
+  </div>
+</div>
+
+<!-- TAB 7: 重疊分析 -->
+<div id="panel-overlap" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>🔍 重疊分析</h1>
+    <p>功能覆蓋關係盤點：哪些腳本可以安全刪除、哪些需確認邊界、哪些待 William 拍板。</p>
+  </div>
+
+  <!-- 統計卡片 -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px">
+    <div style="background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.3);border-radius:12px;padding:16px;text-align:center">
+      <div style="font-size:28px;font-weight:700;color:#2ECC71">6 對</div>
+      <div style="font-size:13px;color:#94a3b8;margin-top:4px">✅ 完全覆蓋（可刪）</div>
+    </div>
+    <div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:12px;padding:16px;text-align:center">
+      <div style="font-size:28px;font-weight:700;color:#F39C12">6 對</div>
+      <div style="font-size:13px;color:#94a3b8;margin-top:4px">🔶 部分重疊（需確認）</div>
+    </div>
+    <div style="background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:12px;padding:16px;text-align:center">
+      <div style="font-size:28px;font-weight:700;color:#E74C3C">3 個</div>
+      <div style="font-size:13px;color:#94a3b8;margin-top:4px">❓ 待 William 確認</div>
+    </div>
+  </div>
+
+  <!-- 區塊 1：完全覆蓋 -->
+  <h2 style="font-size:1.2em;margin-bottom:16px;color:#2ECC71">✅ 完全覆蓋（可安全刪除）</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:12px;margin-bottom:32px">
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">通知系統整併</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">notify_telegram.sh</code> — 直打 Telegram Bot API，全系統通知核心</div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">notify.sh</code> — 早期版本，功能完全相同</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">智慧路由廢棄</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">notify_telegram.sh</code> — 穩定可靠</div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">smart_notify.py</code> — 智慧路由從未穩定，功能已完整覆蓋</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">警示通知整合</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">notify_telegram.sh</code></div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">alert_notify.sh</code> — 功能子集，已整合</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">Spawn 通知整合</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">notify_telegram.sh</code> — 已整合至 pipeline_engine_v2</div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">spawn_notify.sh</code> — 已整合至 pipeline_engine_v2</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">Queue Spawn 升級</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">queue_spawn.py</code> — Python 版，SQL 更安全</div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">queue_spawn.sh</code> — Shell 版，已被 Python 版覆蓋</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(46,204,113,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#2ECC71">Token 監控整合</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(46,204,113,0.15);color:#2ECC71;font-weight:600">信心：高</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">✅ 保留 <code style="background:#1e3a5f;padding:2px 6px;border-radius:4px;font-size:12px">token_threshold_monitor.py</code> — 完整 token 監控</div>
+      <div style="font-size:13px;color:#f87171">🗑️ 刪除 <code style="background:#450a0a;padding:2px 6px;border-radius:4px;font-size:12px">claude_usage_monitor.py</code> — 後者自己說「已整合進前者」</div>
+    </div>
+
+  </div>
+
+  <!-- 區塊 2：部分重疊 -->
+  <h2 style="font-size:1.2em;margin-bottom:16px;color:#F39C12">🔶 部分重疊（需確認邊界）</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:12px;margin-bottom:32px">
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">pipeline_master.sh vs auto_dispatch.sh</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A 是總協調器（呼叫 B），B 是讀 snapshot 決定是否派發的子流程。<strong style="color:var(--text)">不重疊，分工正確。</strong></div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(46,204,113,0.1);border-radius:6px;color:#2ECC71">📌 建議：兩者都保留</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">safe_spawn.py vs spawn_and_register.py</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A 負責寫入 spawn_queue（帶速率限制），B 負責把 session_key 登記到 agent_jobs 表。<strong style="color:var(--text)">功能互補，不重疊。</strong></div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(46,204,113,0.1);border-radius:6px;color:#2ECC71">📌 建議：兩者都保留</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">model_selector.py vs model_router.py</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A：根據任務類型選初始模型（簡單）。B：有升級邏輯+健康檢查（更完整）。<strong style="color:var(--text)">B 功能超集。</strong></div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(243,156,18,0.1);border-radius:6px;color:#F39C12">📌 建議：統一用 model_router.py，model_selector.py 可封存</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">model_failover.py vs model_router.py</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A：async 健康檢查框架。B：同步版健康+升級。<strong style="color:var(--text)">pipeline_engine_v2 已有 fallback chain</strong>，兩者都可能多餘。</div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#E74C3C">📌 建議：需確認 pipeline_engine 是否已覆蓋</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">auto_spawn_runner.sh vs spawn_queue_consumer.py</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A：讀 Supabase spawn_queue 表。B：讀本地 JSON 檔。<strong style="color:var(--text)">不同資料源，B 已廢棄。</strong></div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#f87171">📌 建議：spawn_queue_consumer.py 可刪（讀 pending.json，已廢棄）</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(243,156,18,0.4);border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#F39C12;margin-bottom:10px">dispatch_queue_manager.py vs safe_spawn.py</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">A：管理隊列（有 token 控制）。B：寫入 spawn_queue（有速率限制）。<strong style="color:var(--text)">功能相似但實作不同。</strong></div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#E74C3C">📌 建議：需確認哪個在 cron 被呼叫</div>
+    </div>
+
+  </div>
+
+  <!-- 區塊 3：待 William 確認 -->
+  <h2 style="font-size:1.2em;margin-bottom:16px;color:#E74C3C">❓ 待 William 確認</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px;margin-bottom:32px">
+
+    <div style="background:var(--surface);border:2px solid rgba(231,76,60,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:20px">❓</span>
+        <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:600">model_failover.py</code>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong style="color:#F39C12">疑慮：</strong>async 架構，但 pipeline_engine_v2 已有 fallback chain</div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#E74C3C">🤔 請確認：是否還有人在用？pipeline_engine 的 fallback 是否已覆蓋此功能？</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(231,76,60,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:20px">❓</span>
+        <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:600">dispatch_queue_manager.py</code>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong style="color:#F39C12">疑慮：</strong>跟 safe_spawn.py 功能相似，都有速率/token 控制</div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#E74C3C">🤔 請確認：哪個更新、哪個在 cron 被呼叫？</div>
+    </div>
+
+    <div style="background:var(--surface);border:2px solid rgba(231,76,60,0.4);border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:20px">❓</span>
+        <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:600">spawn_queue_consumer.py</code>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong style="color:#F39C12">疑慮：</strong>讀本地 pending.json，但系統已改用 Supabase spawn_queue 表</div>
+      <div style="font-size:12px;padding:6px 10px;background:rgba(231,76,60,0.1);border-radius:6px;color:#E74C3C">🤔 請確認：是否已完全廢棄？可以直接刪嗎？</div>
+    </div>
+
   </div>
 </div>
 
