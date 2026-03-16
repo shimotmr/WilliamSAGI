@@ -5021,7 +5021,7 @@ graph TB
   <div class="diagram-header" style="border-bottom-color:#ef4444">
     <div class="diagram-num" style="background:#ef4444">🗑</div>
     <div>
-      <h3>確認刪除名單（63 個）</h3>
+      <h3>確認刪除名單（76 個）</h3>
       <p>點「確認刪除」後我會記錄你的決定，由 Travis 執行實際刪除。⚠️ 標記的需先處理引用再刪。</p>
     </div>
   </div>
@@ -5616,6 +5616,72 @@ graph TB
           <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
         </td>
         <td style="padding:8px;text-align:center"><button onclick="confirmDelete('weekly_audit.sh',63)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-64">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">64</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">agent_job_watcher.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 services_all.sh 不存在，事實上是孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('agent_job_watcher.py',64)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-65">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">65</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_auto_fix.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 spawn_task.sh 不存在，事實上是孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_auto_fix.py',65)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-66">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">66</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_convergence.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 phase3_runner.py 不在 cron（V4 廢棄路徑）</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_convergence.py',66)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-67">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">67</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_design_vs_reality.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 weekly_quota_burndown.sh 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_design_vs_reality.py',67)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-68">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">68</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_to_learning.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 audit_helper.py 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_to_learning.py',68)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-69">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">69</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">css_sync_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">CSS 同步監控，呼叫者 deploy_css_sync.sh 不在 cron</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('css_sync_monitor.py',69)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-70">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">70</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">glm5_cost_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者是 setup 腳本，已完成一次性任務</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('glm5_cost_monitor.py',70)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-72">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">72</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">griffin_fswatch_daemon.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">與 script_audit_watcher 互相引用，兩者皆孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('griffin_fswatch_daemon.sh',72)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-73">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">73</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">health_score_engine.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 self_repair.py 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('health_score_engine.py',73)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-74">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">74</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">ollama_health_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">Ollama 已廢棄（改用 LM Studio），呼叫者是孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('ollama_health_check.sh',74)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-75">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">75</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">script_audit_watcher.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">與 griffin_fswatch_daemon.sh 互相引用，兩者皆孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('script_audit_watcher.sh',75)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
       </tr></tbody>
     </table>
   </div>
@@ -5645,7 +5711,7 @@ function confirmDelete(name) {
   <div class="diagram-header">
     <div class="diagram-num" style="background:#22c55e">✓</div>
     <div>
-      <h3>確認保留名單（45 個）</h3>
+      <h3>確認保留名單（55 個）</h3>
       <p>所有 Cron 活躍腳本。標記 ⚠️ 的建議評估是否真的需要。</p>
     </div>
   </div>
@@ -5924,6 +5990,66 @@ function confirmDelete(name) {
       <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
       <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_audit_detector_v2.py</td>
       <td style="padding:8px;font-size:12px;color:#e2e8f0">自動審計偵測器 v2，被 1 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">weekly_healthcheck.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">cron 每週執行，系統週健康報告</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">每週一</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">heartbeat_check_follow_ups.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">Heartbeat 後續任務檢查，被 heartbeat 流程引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">memory_audit.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">記憶系統品質審計（7天蒸餾執行率），有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">memory_write_auditor.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">記憶寫入異常審計，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">credential_health_check.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">憑證健康檢查與過期預警，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">system_health_monitor.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">系統健康監控，預防系統崩潰，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">disk_health_alert.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">磁碟健康警報，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">gateway_crash_monitor.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">Gateway 崩潰監控，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">linebot-log-monitor.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">LINE Bot 日誌監控，有引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">system_health_check.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">系統健康檢查，有引用</td>
       <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
       <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
     </tr></tbody>
