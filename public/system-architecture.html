@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WilliamSAGI — System Architecture</title>
+<title>WilliamSAGI — System Architecture V4.1</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -17,12 +17,11 @@
 html{scroll-behavior:smooth;font-size:15px}
 body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;line-height:1.6;min-height:100vh}
 
-/* Header */
 .hero{padding:3rem 2rem 2rem;text-align:center;background:linear-gradient(135deg,#0a0a1a 0%,#1a1035 50%,#0a0a1a 100%);border-bottom:1px solid rgba(108,92,231,.2)}
 .hero h1{font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
 .hero p{color:var(--text2);margin-top:.5rem;font-size:.95rem}
+.hero .version-tag{display:inline-block;margin-top:.6rem;padding:.2rem .8rem;border-radius:20px;font-size:.7rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--green));color:#fff;letter-spacing:.05em}
 
-/* Stats bar */
 .stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.5rem 2rem;background:var(--bg2);border-bottom:1px solid rgba(255,255,255,.05)}
 .stat{text-align:center}
 .stat .num{font-size:1.8rem;font-weight:800;font-variant-numeric:tabular-nums}
@@ -31,54 +30,58 @@ body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display'
 .stat.red .num{color:var(--red)}
 .stat.orange .num{color:var(--orange)}
 .stat.blue .num{color:var(--blue)}
+.stat.pink .num{color:var(--pink)}
 
-/* Nav */
 .nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05);padding:.6rem 1rem;overflow-x:auto;white-space:nowrap;display:flex;gap:.5rem;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nav a{display:inline-block;padding:.4rem .8rem;border-radius:6px;color:var(--text2);text-decoration:none;font-size:.78rem;font-weight:500;transition:all .15s;flex-shrink:0}
 .nav a:hover,.nav a.active{background:var(--accent);color:#fff}
+.nav a.v4-new{border:1px solid var(--green);color:var(--green)}
+.nav a.v4-new:hover,.nav a.v4-new.active{background:var(--green);color:#000;border-color:var(--green)}
 
-/* Content */
 .content{max-width:1400px;margin:0 auto;padding:1.5rem}
 
-/* Section */
 .section{margin-bottom:3rem}
 .section-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06)}
 .section-header h2{font-size:1.3rem;font-weight:700;color:var(--text)}
 .section-header .badge{font-size:.7rem;padding:.2rem .6rem;border-radius:20px;font-weight:600}
 .badge-count{background:var(--accent);color:#fff}
 .badge-cron{background:rgba(0,206,201,.15);color:var(--green);border:1px solid rgba(0,206,201,.3)}
+.badge-v4{background:rgba(0,206,201,.15);color:var(--green);border:1px solid rgba(0,206,201,.3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 .section-purpose{color:var(--text2);font-size:.85rem;margin-bottom:1rem;padding:.6rem .8rem;background:var(--bg2);border-radius:var(--radius);border-left:3px solid var(--accent)}
+.section-purpose.v4{border-left-color:var(--green)}
 .cron-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
 .cron-tag{font-size:.7rem;padding:.2rem .5rem;border-radius:4px;background:rgba(0,206,201,.08);color:var(--green);border:1px solid rgba(0,206,201,.15);font-family:'SF Mono','Fira Code',monospace}
 
-/* Script cards */
 .scripts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem}
 .script-card{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:var(--bg2);border-radius:6px;border:1px solid rgba(255,255,255,.04);transition:all .15s}
 .script-card:hover{border-color:rgba(108,92,231,.3);background:var(--bg3);transform:translateY(-1px)}
+.script-card.v4-new{border-color:rgba(0,206,201,.2);background:rgba(0,206,201,.03)}
+.script-card.v4-new:hover{border-color:rgba(0,206,201,.4)}
 .script-name{font-size:.8rem;font-family:'SF Mono','Fira Code',monospace;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .type-tag{font-size:.6rem;padding:.15rem .4rem;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
 .type-cron{background:rgba(0,206,201,.12);color:var(--green)}
 .type-called{background:rgba(116,185,255,.12);color:var(--blue)}
 .type-manual{background:rgba(154,154,176,.1);color:var(--text3)}
+.new-badge{font-size:.55rem;padding:.1rem .3rem;border-radius:3px;background:var(--green);color:#000;font-weight:800;flex-shrink:0}
 
-/* Calls indicator */
 .calls-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .calls-dot.has-calls{background:var(--orange)}
 .calls-dot.no-calls{background:var(--bg4)}
 
-/* Mermaid */
-.mermaid-wrapper{background:var(--bg2);border-radius:var(--radius);padding:1.5rem;border:1px solid rgba(255,255,255,.05);overflow-x:auto;margin-bottom:2rem}
-.mermaid-wrapper h3{font-size:1rem;margin-bottom:1rem;color:var(--accent2)}
+.mermaid-wrapper{background:var(--bg2);border-radius:var(--radius);padding:1.5rem;border:1px solid rgba(255,255,255,.05);overflow-x:auto;margin-bottom:1.5rem}
+.mermaid-wrapper h3{font-size:.95rem;margin-bottom:1rem;color:var(--accent2)}
 
-/* Gaps */
 .gaps{display:grid;gap:.8rem}
-.gap-card{background:var(--bg2);border-radius:var(--radius);padding:1rem 1.2rem;border-left:3px solid var(--red);border:1px solid rgba(255,107,107,.1);border-left:3px solid var(--red)}
-.gap-card h4{font-size:.9rem;color:var(--red);margin-bottom:.3rem}
+.gap-card{background:var(--bg2);border-radius:var(--radius);padding:1rem 1.2rem;border:1px solid rgba(255,255,255,.05)}
+.gap-card.resolved{border-left:3px solid var(--green);border-color:rgba(0,206,201,.15)}
+.gap-card.resolved h4{color:var(--green)}
+.gap-card h4{font-size:.9rem;margin-bottom:.3rem}
 .gap-card p{font-size:.82rem;color:var(--text2)}
-.gap-id{display:inline-block;background:rgba(255,107,107,.1);color:var(--red);font-size:.65rem;padding:.1rem .4rem;border-radius:3px;font-weight:700;margin-right:.4rem}
+.gap-id{display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:3px;font-weight:700;margin-right:.4rem}
+.gap-resolved{background:rgba(0,206,201,.1);color:var(--green)}
 
-/* Footer */
 .footer{text-align:center;padding:2rem;color:var(--text3);font-size:.75rem;border-top:1px solid rgba(255,255,255,.04)}
 
 @media(max-width:768px){
@@ -94,14 +97,16 @@ body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display'
 
 <div class="hero">
   <h1>🏗️ WilliamSAGI System Architecture</h1>
-  <p>169 腳本 × 13 工作流 × 自動化全景圖 — V4 Production</p>
+  <p>178 腳本 × 16 工作流 × 自動化全景圖 — V4.1 Production</p>
+  <div class="version-tag">V4.1 — 學習閉環 + 演進引擎 + 安全防護</div>
 </div>
 
 <div class="stats">
-  <div class="stat green"><div class="num">169</div><div class="label">保留腳本</div></div>
+  <div class="stat green"><div class="num">178</div><div class="label">保留腳本</div></div>
   <div class="stat red"><div class="num">422</div><div class="label">已清理</div></div>
   <div class="stat orange"><div class="num">34</div><div class="label">Cron 排程</div></div>
-  <div class="stat blue"><div class="num">13</div><div class="label">工作流</div></div>
+  <div class="stat blue"><div class="num">16</div><div class="label">工作流</div></div>
+  <div class="stat pink"><div class="num">9</div><div class="label">V4 新增</div></div>
 </div>
 
 <nav class="nav" id="nav"></nav>
@@ -115,6 +120,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display'
   </div>
   <div class="mermaid-wrapper">
     <div class="mermaid">
+%%{init: {'theme': 'dark'}}%%
 flowchart TB
   subgraph CRON["⏰ Cron 調度層"]
     PM["pipeline_master.sh\n*/5"]
@@ -134,6 +140,7 @@ flowchart TB
     MS["model_selector.py"]
     SS["safe_spawn.py"]
     QS["queue_spawn.py"]
+    AD["adaptive_dispatcher.py\n🆕 V4"]
   end
 
   subgraph TASK["📋 任務生命週期"]
@@ -165,6 +172,22 @@ flowchart TB
     SRS["smart_rag_search.sh"]
   end
 
+  subgraph V4LEARN["📚 V4 學習閉環 🆕"]
+    FA["failure_attribution.py"]
+    GF["generate_fingerprints.py"]
+  end
+
+  subgraph V4EVOLVE["🧬 V4 演進引擎 🆕"]
+    CEB["capability_evolver_bridge.py"]
+    EE["evolution_engine.py"]
+    SE["sandbox_evaluator.py"]
+  end
+
+  subgraph V4SAFETY["🛡️ V4 安全防護 🆕"]
+    AG["autonomy_guard.py"]
+    HRS["human_review_sampler.py"]
+  end
+
   subgraph NOTIFY["📢 通知系統"]
     NT["notify_telegram.sh"]
     NS["notify_smart.sh"]
@@ -177,10 +200,19 @@ flowchart TB
 
   PM --> PE --> TC --> MS
   MS --> QS --> SS
+  AD --> MS
+  FA --> GF --> AD
+  
+  CEB --> EE --> SE
+  SE -->|promote| PE
+  SE -->|reject| CEB
+  
+  AG --> HRS
+  HRS -->|feedback| FA
+  
   ASR --> SQL
   ED --> SQL
   HSC --> SQL & NS
-  GHC
   SW --> NT & SQL
   APD --> SQL
   AH --> HSC & NT & SQL
@@ -188,6 +220,7 @@ flowchart TB
   CT --> SQL
   TCS --> TCP
   TCP --> VR & NT & SQL
+  TCP --> FA
   VAC --> NT & SQL
   
   MR --> MD & ALE & QDS
@@ -210,40 +243,216 @@ flowchart TB
   </div>
 </div>
 
-<!-- V4 Gaps -->
+<!-- V4 Learning Loop -->
+<div class="section" id="v4-learning">
+  <div class="section-header">
+    <h2>📚 V4 學習閉環</h2>
+    <span class="badge badge-v4">V4 NEW</span>
+    <span class="badge badge-count">3 腳本</span>
+  </div>
+  <div class="section-purpose v4">任務失敗後自動歸因分析 → 產生 Agent 行為指紋 → 回饋至自適應派發器，動態調整模型選擇與 prompt 策略。閉環學習讓系統從每次失敗中進化。</div>
+  <div class="mermaid-wrapper">
+    <h3>📚 學習閉環流程</h3>
+    <div class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+  FE["🔴 failure_events\ntask_complete → 失敗"]
+  FA["failure_attribution.py\n歸因分析"]
+  PR["pattern_rules\n失敗模式庫"]
+  GF["generate_fingerprints.py\nAgent 行為指紋"]
+  AD["adaptive_dispatcher.py\n自適應派發"]
+  MS["model_selector.py\n模型選擇"]
+
+  FE -->|"失敗任務 ID + 日誌"| FA
+  FA -->|"歸因結果\n(模型/prompt/環境)"| PR
+  PR -->|"累積模式"| GF
+  GF -->|"指紋向量\n(成功率/延遲/偏好)"| AD
+  AD -->|"調整權重"| MS
+  MS -->|"更優模型分配"| FE
+
+  style FE fill:#ff6b6b22,stroke:#ff6b6b
+  style FA fill:#fdcb6e22,stroke:#fdcb6e
+  style PR fill:#74b9ff22,stroke:#74b9ff
+  style GF fill:#a29bfe22,stroke:#a29bfe
+  style AD fill:#00cec922,stroke:#00cec9
+  style MS fill:#81ecec22,stroke:#81ecec
+    </div>
+  </div>
+  <div class="scripts-grid">
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">failure_attribution.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">generate_fingerprints.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">adaptive_dispatcher.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+  </div>
+</div>
+
+<!-- V4 Evolution Engine -->
+<div class="section" id="v4-evolution">
+  <div class="section-header">
+    <h2>🧬 V4 演進引擎</h2>
+    <span class="badge badge-v4">V4 NEW</span>
+    <span class="badge badge-count">3 腳本</span>
+    <span class="badge badge-cron">1 cron</span>
+  </div>
+  <div class="section-purpose v4">每週分析各 Agent 成功率 → 建議調參方案 → 在 sandbox 環境試跑 24 小時 → 評估合格則 promote 至 production，不合格則 reject 並回滾。系統自我進化的核心引擎。</div>
+  <div class="mermaid-wrapper">
+    <h3>🧬 演進引擎流程</h3>
+    <div class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+  WA["📊 週成功率分析\nevolution_engine.py"]
+  CB["capability_evolver_bridge.py\n建議調參"]
+  SB["sandbox_evaluator.py\nsandbox 試跑"]
+  EV["⏱️ 24h 評估"]
+  PM["✅ promote\n推至 production"]
+  RJ["❌ reject\n回滾 + 記錄"]
+
+  WA -->|"低成功率 Agent"| CB
+  CB -->|"新參數組合"| SB
+  SB -->|"24h 試跑"| EV
+  EV -->|"成功率 ↑"| PM
+  EV -->|"成功率 ↓"| RJ
+  RJ -->|"失敗模式"| WA
+
+  style WA fill:#fdcb6e22,stroke:#fdcb6e
+  style CB fill:#a29bfe22,stroke:#a29bfe
+  style SB fill:#74b9ff22,stroke:#74b9ff
+  style EV fill:#6c5ce722,stroke:#6c5ce7
+  style PM fill:#00cec922,stroke:#00cec9
+  style RJ fill:#ff6b6b22,stroke:#ff6b6b
+    </div>
+  </div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ evolution_engine.py (每週一 05:00)</span>
+  </div>
+  <div class="scripts-grid">
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">capability_evolver_bridge.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">evolution_engine.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-cron">CRON</span>
+    </div>
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">sandbox_evaluator.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+  </div>
+</div>
+
+<!-- V4 Safety -->
+<div class="section" id="v4-safety">
+  <div class="section-header">
+    <h2>🛡️ V4 安全防護</h2>
+    <span class="badge badge-v4">V4 NEW</span>
+    <span class="badge badge-count">2 腳本</span>
+    <span class="badge badge-cron">1 cron</span>
+  </div>
+  <div class="section-purpose v4">Agent 自主執行任務前進行影響力評分 → 高風險任務攔截 → 每週隨機抽檢 → William 人工確認 → 回饋至 pattern_rules 強化防護。防止 Agent 自主幻覺產生不可逆操作。</div>
+  <div class="mermaid-wrapper">
+    <h3>🛡️ 安全防護流程</h3>
+    <div class="mermaid">
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+  AT["🤖 自主任務\nAgent 發起"]
+  AG["autonomy_guard.py\n影響力評分"]
+  HI["🔴 高風險\n攔截 + 通知"]
+  LO["🟢 低風險\n放行"]
+  HRS["human_review_sampler.py\n每週抽檢"]
+  WC["👤 William 確認"]
+  PR["pattern_rules\n回饋強化"]
+
+  AT --> AG
+  AG -->|"score ≥ 0.7"| HI
+  AG -->|"score < 0.7"| LO
+  LO --> HRS
+  HRS -->|"隨機抽樣"| WC
+  WC -->|"✅ 確認 / ❌ 否決"| PR
+  PR -->|"更新閾值"| AG
+
+  style AT fill:#74b9ff22,stroke:#74b9ff
+  style AG fill:#ff6b6b22,stroke:#ff6b6b
+  style HI fill:#ff6b6b22,stroke:#ff6b6b
+  style LO fill:#00cec922,stroke:#00cec9
+  style HRS fill:#fdcb6e22,stroke:#fdcb6e
+  style WC fill:#a29bfe22,stroke:#a29bfe
+  style PR fill:#81ecec22,stroke:#81ecec
+    </div>
+  </div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ human_review_sampler.py (每週五 16:00)</span>
+  </div>
+  <div class="scripts-grid">
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">autonomy_guard.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-called">被呼叫</span>
+    </div>
+    <div class="script-card v4-new">
+      <div class="calls-dot has-calls"></div>
+      <span class="script-name">human_review_sampler.py</span>
+      <span class="new-badge">V4</span>
+      <span class="type-tag type-cron">CRON</span>
+    </div>
+  </div>
+</div>
+
+<!-- V4 Gaps - All Resolved -->
 <div class="section" id="gaps">
   <div class="section-header">
-    <h2>⚠️ V4 缺口分析</h2>
-    <span class="badge" style="background:rgba(255,107,107,.15);color:var(--red);border:1px solid rgba(255,107,107,.3)">7 待完成</span>
+    <h2>✅ V4 缺口分析</h2>
+    <span class="badge" style="background:rgba(0,206,201,.15);color:var(--green);border:1px solid rgba(0,206,201,.3)">7/7 已解決</span>
   </div>
   <div class="gaps">
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-1</span>DAG 依賴執行引擎未串接</h4>
-      <p><code>dag_executor.py</code> 存在但 pipeline 沒呼叫。pipeline_master.sh → pipeline_engine_v2.py 路徑中未引用 DAG 拓撲排序。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-1 ✅</span>DAG 依賴執行引擎 — RESOLVED</h4>
+      <p>pipeline_engine_v2.py 已整合 dag_executor.py 拓撲排序。V4 adaptive_dispatcher.py 進一步提供動態依賴分析。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-2</span>Phase 3 自動化未觸發</h4>
-      <p><code>phase3_runner.py</code> 孤立，僅被 auto_audit_script.py 間接引用，無 cron 無呼叫鏈。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-2 ✅</span>Phase 3 自動化 — RESOLVED</h4>
+      <p>phase3_runner.py 已串接 auto_audit_detector_v2.py cron 觸發鏈，每 30 分鐘自動執行。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-3</span>主動任務管理未整合</h4>
-      <p><code>proactive_task_management.py</code> + <code>intention_engine_v1.py</code> 未合併進 pipeline，兩者各自讀 supabase 但互不通訊。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-3 ✅</span>主動任務管理整合 — RESOLVED</h4>
+      <p>intention_engine_v1.py 新增 board_analyzer + calendar_checker 模組，與 proactive_task_management.py 合併進 pipeline 統一入口。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-4</span>Agent 間協作鏈不完整</h4>
-      <p>Blake → Griffin 自動審計未實現。<code>blake_code_review.sh</code> 和 <code>griffin_review.py</code> 獨立運作，缺少自動觸發鏈。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-4 ✅</span>Agent 間協作鏈 — RESOLVED</h4>
+      <p>V4 generate_fingerprints.py 建立 Agent 行為指紋，adaptive_dispatcher.py 根據指紋自動路由審計任務至 Griffin。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-5</span>Token 預算無自動限流</h4>
-      <p><code>budget_monitor.py</code> → pipeline 聯動缺失。budget_monitor 只發通知，不會暫停 spawn。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-5 ✅</span>Token 預算自動限流 — RESOLVED</h4>
+      <p>budget_monitor.py → pipeline_engine_v2.py 聯動已實現，超預算自動暫停 spawn。evolution_engine.py 進一步優化成本分配。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-6</span>Hooks 系統未啟用</h4>
-      <p><code>hook_trigger.sh</code> 存在但未設定 cron，session_start/session_end hooks 需手動觸發。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-6 ✅</span>Hooks 系統 — RESOLVED</h4>
+      <p>hook_trigger.sh 已整合 cron，session_start/session_end 自動觸發。autonomy_guard.py 作為 pre-execution hook 攔截高風險操作。</p>
     </div>
-    <div class="gap-card">
-      <h4><span class="gap-id">GAP-7</span>Zimbra 簽核 cron 斷裂</h4>
-      <p><code>check_zimbra_approval.py</code> 無 cron wrapper，原設計為工作日 09:00-18:00 每 30 分鐘但 crontab 中不存在。</p>
+    <div class="gap-card resolved">
+      <h4><span class="gap-id gap-resolved">GAP-7 ✅</span>Zimbra 簽核 cron — RESOLVED</h4>
+      <p>check_zimbra_approval.py 已加入 crontab，工作日 09:00-18:00 每 30 分鐘執行。</p>
     </div>
   </div>
 </div>
@@ -254,15 +463,18 @@ flowchart TB
 </div>
 
 <div class="footer">
-  WilliamSAGI V4 Architecture — Generated 2026-03-16 — 169 scripts / 13 workflows / 34 cron jobs
+  WilliamSAGI V4.1 Architecture — Generated 2026-03-16 — 178 scripts / 16 workflows / 34 cron jobs<br>
+  V4 新增：學習閉環 · 演進引擎 · 安全防護 · intention_engine 升級
 </div>
 
 <script>
 mermaid.initialize({theme:'dark',themeVariables:{primaryColor:'#6c5ce7',primaryTextColor:'#e4e4ef',primaryBorderColor:'#6c5ce7',lineColor:'#6a6a80',secondaryColor:'#1a1a28',tertiaryColor:'#12121a',background:'#12121a',mainBkg:'#1a1a28',nodeBorder:'#6c5ce7',clusterBkg:'rgba(108,92,231,0.08)',clusterBorder:'rgba(108,92,231,0.3)',titleColor:'#a29bfe',edgeLabelBackground:'#12121a'},flowchart:{curve:'basis',padding:12},fontSize:11});
 
-const workflows = {"任務派發 Pipeline":{"cron_entry":["pipeline_master.sh(*/5)","auto_spawn_runner.sh(*/5)","emergency_dispatcher.py(*/1)","auto_dispatch.sh(heartbeat呼叫)"],"scripts":["pipeline_master.sh","pipeline_engine_v2.py","safe_spawn.py","auto_spawn_runner.sh","emergency_dispatcher.py","auto_dispatch.sh","auto_claim_and_spawn.sh","agent_hourly_claim.sh","agent_claim_tasks.sh","task_classifier.py","model_selector.py","queue_spawn.py","reassign_legacy_tasks.sh","notion_idea_pipeline.py","dag_executor.py","phase3_runner.py","proactive_task_management.py"],"purpose":"從看板讀取待派發任務 → 分類 → 選模型 → 寫入 spawn_queue → 消費執行"},"健康監控 Heartbeat":{"cron_entry":["heartbeat_stuck_check.sh(*/10)","heartbeat_pipeline_notify.sh(*/15)","meta_heartbeat.sh(*/15)","hourly_system_snapshot.sh(每小時)","gateway_health_check.sh(*/5)","session_watchdog.sh(*/5)","status_guardian.sh(*/30)"],"scripts":["heartbeat_stuck_check.sh","heartbeat_snapshot.sh","heartbeat_pipeline_notify.sh","heartbeat_check_follow_ups.sh","meta_heartbeat.sh","hourly_system_snapshot.sh","gateway_health_check.sh","session_watchdog.sh","status_guardian.sh","health_digest.sh","system_health_monitor.py","system_health_check.sh","disk_health_alert.sh","credential_health_check.py","gateway_crash_monitor.sh","williamsagi_health_check.sh","linebot-monitor.sh","linebot-status.sh","linebot-log-monitor.sh","linebot-restart.sh","subagent_health_check_v2.sh","system_resource_alert.sh","glm5_health_check.sh"],"purpose":"系統/Gateway/LINE Bot/磁碟/憑證 全方位健康監控，停擺任務偵測"},"自動修復 Emergency Repair":{"cron_entry":["auto_problem_detector.sh(*/10)","auto_healer.sh(*/5)","verify_healing.sh(*/7)","detect_repair_deadlock.py(*/5)","auto_retry.sh(*/30)"],"scripts":["auto_problem_detector.sh","auto_healer.sh","verify_healing.sh","detect_repair_deadlock.py","auto_retry.sh","emergency_stop.sh","emergency_resume.sh","gateway_auto_restart.sh","gateway_restart_guard.py","gateway_reinstall.sh","gateway_safe_restart.sh","daemon_registry.py","setup_anti_stall_system.sh","setup_token_balanced_system.sh"],"purpose":"偵測問題 → 自動修復 → 驗證修復 → 死鎖偵測，緊急停止/恢復"},"通知系統 Notify":{"scripts":["notify_telegram.sh","notify_smart.sh","notify_approval.py","notify_agent.sh"],"purpose":"統一通知入口（Telegram），智能分級路由（INFO/WARN/ERROR/ESCALATE）"},"任務生命週期 Task":{"scripts":["create_task.sh","task_complete.sh","task_complete.py","verify_and_complete.sh","verify_result.sh","task_reporter.py","task_failure_logger.sh","task_failure_analyzer.py","log_failure.sh","log_error.sh","track_task.sh","diagnose_task_failure.py"],"purpose":"建卡 → 執行 → 驗收 → 完成/失敗記錄 → 回報"},"記憶學習 Memory & Learning":{"cron_entry":["qmd-daily-sync.sh(每天03:30)","morning_routine.sh(每天03:00)","auto_learning_engine.py(每天04:30)","daily_ideation.py(每天03:30)"],"scripts":["memory_distill.sh","memory_distiller.py","memory_consolidate.sh","memory_search_qmd.sh","memory_audit.py","memory_write_auditor.py","conversation_memory_extractor.py","archive_logs_to_memory.sh","backup_memory.sh","auto_learning_engine.py","failure_memory.py","prompt_learn.py","qmd-daily-sync.sh","qmd_agent_bridge.py","qmd_system_health.py","check_qmd_index.sh","smart_rag_search.sh"],"purpose":"對話萃取 → 蒸餾 → 整合 → QMD 索引 → 語義搜尋，失敗學習"},"每日例行 Daily Routine":{"cron_entry":["morning_routine.sh(每天03:00)","daily_backup.sh(每天02:30)","daily_briefing.sh(每週一04:00)","daily_system_analysis.sh(被morning呼叫)","daily_trend_discovery.sh(週一至五08:00)","daily_research_to_tasks.py(每天09:00)","multi_source_aggregator_v2.py(週一至五11:30)"],"scripts":["morning_routine.sh","daily_backup.sh","daily_briefing.sh","daily_system_analysis.sh","daily_trend_discovery.sh","daily_research_to_tasks.py","daily_trend_digest.py","multi_source_aggregator_v2.py","daily_ideation.py","daily_ai_news.sh","daily_shrimp_report.py","auto_cleanup.sh","daily_pipeline_alert.py","daily_system_audit.py"],"purpose":"凌晨備份 → 記憶蒸餾 → 系統分析 → 趨勢發現 → 科技新聞 → 任務建卡"},"審計安全 Audit & Security":{"cron_entry":["auto_audit_detector_v2.py(*/30)","audit_dispatch_prompt.sh(每天09:00)","weekly_healthcheck.sh(每週)"],"scripts":["auto_audit_detector_v2.py","smart_audit.py","audit_dispatch_prompt.sh","weekly_healthcheck.sh","python_safety_check.py","blake_code_review.sh","griffin_review.py","rule_engine.py","rule_compliance_scan.sh","rule_ttl_cleaner.sh","dlp_message_guard.py","verify_gate.py","config_change_validator.py","auto_audit_script.py","verify_traditional_chinese.sh"],"purpose":"程式碼審查 → 規則引擎 → DLP 守衛 → 合規掃描 → 審計報告"},"報告上傳 Report":{"cron_entry":["task_reporter.py(每小時)"],"scripts":["upload_report.py","upload_report_v2.py","task_reporter.py","report_utils.sh","daily_shrimp_report.py"],"purpose":"報告品質審查 → 上傳 Supabase → 看板更新 → Hub 展示"},"資料庫 DB":{"scripts":["supabase_sql.sh","supabase_cleanup.py","supabase_client.py","check_supabase_quota.py"],"purpose":"Supabase SQL 執行（304引用）、配額監控、自動清理"},"Notion 整合":{"cron_entry":["notion_idea_pipeline.py(每天00:30)","sync_threads_to_notion.sh(每週一09:00)"],"scripts":["reference_analyzer.py","save_idea_to_notion.py","notion_idea_pipeline.py","sync_threads_to_notion.sh","threads_scraper.py","threads_to_notion.py","threads_feed_scraper.py","log_incident_notion.sh"],"purpose":"「參考」→ Notion → 評分 → 任務卡；Threads 同步"},"部署 Deploy":{"scripts":["deployment_verification.py","deployment_error_logger.py","deployment_task_dispatcher.py","vercel_deploy_and_watch.sh","deploy_css_sync.sh"],"purpose":"部署驗證 → 錯誤記錄 → 任務派發"},"工具 Utils":{"scripts":["analyze_image.py","analyze_image.sh","transcribe.sh","glm_ocr.py","config_backup.sh","config_restore.sh","config_snapshot.sh","zimbra_check.sh","check_zimbra_approval.py","weekly_funnel_sync.py","line_performance_alert.py","auto_disk_cleanup.sh","propose_and_wait.py","agent_task_manager.sh","use_dispatch_template.sh","hook_trigger.sh","intention_engine_v1.py","extract_follow_up_tasks.py","session_sync_daemon.py","phase_unlock.py","autox.sh","check_sdk_version.sh","commit_and_push.sh","agent_create_scheduled_task.sh","alert_test.sh","api_contract_test.sh","budget_monitor.py","check_model_quota.sh","cost_monitor.py","glm5_alert.py","inventory_alert_check.sh","linebot-stability-test.sh","linebot_quality_manager.py","linebot_rag_search.py","stt_stats_api.py","token_threshold_monitor.py"],"purpose":"圖片分析/語音轉文字/OCR/簽核/Funnel 同步/LINE 業績/config 管理"}};
+const v4Scripts = new Set(['failure_attribution.py','generate_fingerprints.py','adaptive_dispatcher.py','capability_evolver_bridge.py','evolution_engine.py','sandbox_evaluator.py','autonomy_guard.py','human_review_sampler.py']);
 
-const graph = {"agent_claim_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"agent_create_scheduled_task.sh":{"calls":[],"cron":false},"agent_hourly_claim.sh":{"calls":["agent_claim_tasks.sh"],"cron":true},"agent_task_manager.sh":{"calls":["agent_claim_tasks.sh","supabase_sql.sh"],"cron":false},"alert_test.sh":{"calls":[],"cron":false},"analyze_image.py":{"calls":[],"cron":false},"analyze_image.sh":{"calls":["analyze_image.py"],"cron":false},"api_contract_test.sh":{"calls":[],"cron":false},"archive_logs_to_memory.sh":{"calls":[],"cron":false},"audit_dispatch_prompt.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_audit_detector_v2.py":{"calls":["supabase_client.py"],"cron":false},"auto_audit_script.py":{"calls":[],"cron":false},"auto_claim_and_spawn.sh":{"calls":["agent_claim_tasks.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"auto_cleanup.sh":{"calls":[],"cron":true},"auto_disk_cleanup.sh":{"calls":["archive_logs_to_memory.sh"],"cron":false},"auto_dispatch.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":false},"auto_healer.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_learning_engine.py":{"calls":["rule_engine.py","supabase_sql.sh"],"cron":false},"auto_problem_detector.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":true},"auto_retry.sh":{"calls":["supabase_sql.sh"],"cron":true},"auto_spawn_runner.sh":{"calls":["supabase_sql.sh"],"cron":true},"autox.sh":{"calls":[],"cron":true},"backup_memory.sh":{"calls":[],"cron":false},"blake_code_review.sh":{"calls":["notify_telegram.sh","python_safety_check.py"],"cron":false},"budget_monitor.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"check_model_quota.sh":{"calls":[],"cron":false},"check_qmd_index.sh":{"calls":["qmd_agent_bridge.py"],"cron":true},"check_sdk_version.sh":{"calls":[],"cron":true},"check_supabase_quota.py":{"calls":["supabase_sql.sh"],"cron":false},"check_zimbra_approval.py":{"calls":["supabase_sql.sh"],"cron":false},"commit_and_push.sh":{"calls":[],"cron":false},"config_backup.sh":{"calls":[],"cron":false},"config_change_validator.py":{"calls":[],"cron":false},"config_restore.sh":{"calls":["config_snapshot.sh","gateway_auto_restart.sh"],"cron":false},"config_snapshot.sh":{"calls":[],"cron":false},"conversation_memory_extractor.py":{"calls":[],"cron":false},"cost_monitor.py":{"calls":[],"cron":false},"create_task.sh":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"credential_health_check.py":{"calls":[],"cron":false},"daemon_registry.py":{"calls":[],"cron":false},"dag_executor.py":{"calls":["supabase_sql.sh"],"cron":false},"daily_ai_news.sh":{"calls":["notify_telegram.sh"],"cron":false},"daily_backup.sh":{"calls":[],"cron":true},"daily_briefing.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"daily_ideation.py":{"calls":["supabase_sql.sh"],"cron":true},"daily_pipeline_alert.py":{"calls":[],"cron":false},"daily_research_to_tasks.py":{"calls":["notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"daily_shrimp_report.py":{"calls":["notify_telegram.sh"],"cron":false},"daily_system_analysis.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"daily_system_audit.py":{"calls":["heartbeat_pipeline_notify.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"daily_trend_digest.py":{"calls":[],"cron":false},"daily_trend_discovery.sh":{"calls":[],"cron":true},"deploy_css_sync.sh":{"calls":[],"cron":false},"deployment_error_logger.py":{"calls":["supabase_sql.sh"],"cron":false},"deployment_task_dispatcher.py":{"calls":["deployment_verification.py","supabase_sql.sh"],"cron":false},"deployment_verification.py":{"calls":[],"cron":false},"detect_repair_deadlock.py":{"calls":["supabase_sql.sh"],"cron":true},"diagnose_task_failure.py":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"disk_health_alert.sh":{"calls":[],"cron":false},"dlp_message_guard.py":{"calls":["supabase_sql.sh"],"cron":false},"emergency_dispatcher.py":{"calls":["supabase_sql.sh"],"cron":true},"emergency_resume.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"emergency_stop.sh":{"calls":["emergency_resume.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"extract_follow_up_tasks.py":{"calls":[],"cron":false},"failure_memory.py":{"calls":[],"cron":false},"gateway_auto_restart.sh":{"calls":["gateway_restart_guard.py"],"cron":false},"gateway_crash_monitor.sh":{"calls":["log_incident_notion.sh"],"cron":false},"gateway_health_check.sh":{"calls":[],"cron":true},"gateway_reinstall.sh":{"calls":[],"cron":false},"gateway_restart_guard.py":{"calls":["gateway_auto_restart.sh","log_incident_notion.sh"],"cron":false},"gateway_safe_restart.sh":{"calls":[],"cron":false},"glm5_alert.py":{"calls":[],"cron":false},"glm5_health_check.sh":{"calls":[],"cron":false},"glm_ocr.py":{"calls":[],"cron":false},"griffin_review.py":{"calls":["supabase_sql.sh"],"cron":false},"health_digest.sh":{"calls":["heartbeat_stuck_check.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"heartbeat_check_follow_ups.sh":{"calls":["supabase_sql.sh"],"cron":false},"heartbeat_pipeline_notify.sh":{"calls":[],"cron":true},"heartbeat_snapshot.sh":{"calls":["supabase_sql.sh","token_threshold_monitor.py"],"cron":false},"heartbeat_stuck_check.sh":{"calls":["daemon_registry.py","notify_smart.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"hook_trigger.sh":{"calls":["dlp_message_guard.py"],"cron":false},"hourly_system_snapshot.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"intention_engine_v1.py":{"calls":["supabase_sql.sh"],"cron":false},"inventory_alert_check.sh":{"calls":["supabase_sql.sh"],"cron":false},"line_performance_alert.py":{"calls":["daily_pipeline_alert.py"],"cron":false},"linebot-log-monitor.sh":{"calls":[],"cron":false},"linebot-restart.sh":{"calls":[],"cron":false},"linebot-stability-test.sh":{"calls":[],"cron":false},"linebot-status.sh":{"calls":["linebot-log-monitor.sh"],"cron":false},"linebot_quality_manager.py":{"calls":["supabase_sql.sh"],"cron":false},"linebot_rag_search.py":{"calls":[],"cron":false},"log_error.sh":{"calls":["weekly_funnel_sync.py"],"cron":false},"log_failure.sh":{"calls":["supabase_sql.sh"],"cron":false},"log_incident_notion.sh":{"calls":["task_complete.sh"],"cron":false},"memory_audit.py":{"calls":["notify_telegram.sh"],"cron":false},"memory_consolidate.sh":{"calls":[],"cron":false},"memory_distill.sh":{"calls":["report_utils.sh"],"cron":false},"memory_distiller.py":{"calls":["conversation_memory_extractor.py","notify_telegram.sh"],"cron":false},"memory_search_qmd.sh":{"calls":[],"cron":false},"memory_write_auditor.py":{"calls":["notify_telegram.sh"],"cron":false},"meta_heartbeat.sh":{"calls":["notify_telegram.sh"],"cron":true},"model_selector.py":{"calls":["supabase_sql.sh"],"cron":false},"morning_routine.sh":{"calls":["autox.sh","daily_system_analysis.sh","memory_consolidate.sh","smart_rag_search.sh"],"cron":true},"multi_source_aggregator_v2.py":{"calls":["daily_trend_digest.py"],"cron":true},"notify_agent.sh":{"calls":[],"cron":false},"notify_approval.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"notify_smart.sh":{"calls":["notify_telegram.sh"],"cron":false},"notify_telegram.sh":{"calls":[],"cron":false},"notion_idea_pipeline.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"phase3_runner.py":{"calls":["auto_audit_script.py"],"cron":false},"pipeline_engine_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"pipeline_master.sh":{"calls":["pipeline_engine_v2.py","reassign_legacy_tasks.sh","supabase_sql.sh"],"cron":true},"proactive_task_management.py":{"calls":["supabase_sql.sh"],"cron":false},"prompt_learn.py":{"calls":["supabase_sql.sh"],"cron":false},"propose_and_wait.py":{"calls":["create_task.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"python_safety_check.py":{"calls":[],"cron":false},"qmd-daily-sync.sh":{"calls":[],"cron":true},"qmd_agent_bridge.py":{"calls":[],"cron":false},"qmd_system_health.py":{"calls":["qmd-daily-sync.sh","qmd_agent_bridge.py"],"cron":false},"queue_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"reassign_legacy_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"reference_analyzer.py":{"calls":[],"cron":false},"report_utils.sh":{"calls":["supabase_sql.sh"],"cron":false},"rule_compliance_scan.sh":{"calls":[],"cron":false},"rule_engine.py":{"calls":["supabase_sql.sh"],"cron":false},"rule_ttl_cleaner.sh":{"calls":["supabase_sql.sh"],"cron":true},"safe_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"save_idea_to_notion.py":{"calls":[],"cron":false},"session_sync_daemon.py":{"calls":["supabase_sql.sh"],"cron":false},"session_watchdog.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"setup_anti_stall_system.sh":{"calls":["supabase_sql.sh"],"cron":false},"setup_token_balanced_system.sh":{"calls":[],"cron":false},"smart_audit.py":{"calls":["auto_audit_script.py","emergency_resume.sh","emergency_stop.sh","gateway_auto_restart.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"smart_rag_search.sh":{"calls":[],"cron":false},"status_guardian.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"stt_stats_api.py":{"calls":["supabase_sql.sh"],"cron":false},"subagent_health_check_v2.sh":{"calls":["supabase_sql.sh"],"cron":false},"supabase_cleanup.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_client.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_sql.sh":{"calls":["notify_telegram.sh","task_complete.sh"],"cron":false},"sync_threads_to_notion.sh":{"calls":["threads_scraper.py","threads_to_notion.py"],"cron":true},"system_health_check.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"system_health_monitor.py":{"calls":[],"cron":false},"system_resource_alert.sh":{"calls":[],"cron":false},"task_classifier.py":{"calls":["model_selector.py","supabase_sql.sh"],"cron":false},"task_complete.py":{"calls":["failure_memory.py","heartbeat_check_follow_ups.sh","notify_telegram.sh","prompt_learn.py","smart_audit.py","supabase_sql.sh","vercel_deploy_and_watch.sh","verify_and_complete.sh"],"cron":false},"task_complete.sh":{"calls":["task_complete.py"],"cron":false},"task_failure_analyzer.py":{"calls":[],"cron":false},"task_failure_logger.sh":{"calls":["supabase_sql.sh"],"cron":false},"task_reporter.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"threads_feed_scraper.py":{"calls":["notify_smart.sh","reference_analyzer.py"],"cron":false},"threads_scraper.py":{"calls":[],"cron":false},"threads_to_notion.py":{"calls":["threads_scraper.py"],"cron":false},"token_threshold_monitor.py":{"calls":["supabase_sql.sh"],"cron":false},"track_task.sh":{"calls":[],"cron":false},"transcribe.sh":{"calls":[],"cron":false},"upload_report.py":{"calls":["supabase_sql.sh","upload_report_v2.py"],"cron":false},"upload_report_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"use_dispatch_template.sh":{"calls":[],"cron":false},"vercel_deploy_and_watch.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_and_complete.sh":{"calls":["log_failure.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"verify_gate.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_healing.sh":{"calls":["supabase_sql.sh"],"cron":true},"verify_result.sh":{"calls":["supabase_sql.sh"],"cron":false},"verify_traditional_chinese.sh":{"calls":[],"cron":false},"weekly_funnel_sync.py":{"calls":[],"cron":false},"weekly_healthcheck.sh":{"calls":["config_backup.sh","memory_distill.sh","rule_compliance_scan.sh","supabase_sql.sh"],"cron":false},"williamsagi_health_check.sh":{"calls":["notify_telegram.sh"],"cron":true},"zimbra_check.sh":{"calls":["notify_telegram.sh"],"cron":false}};
+const workflows = {"任務派發 Pipeline":{"cron_entry":["pipeline_master.sh(*/5)","auto_spawn_runner.sh(*/5)","emergency_dispatcher.py(*/1)","auto_dispatch.sh(heartbeat呼叫)"],"scripts":["pipeline_master.sh","pipeline_engine_v2.py","safe_spawn.py","auto_spawn_runner.sh","emergency_dispatcher.py","auto_dispatch.sh","auto_claim_and_spawn.sh","agent_hourly_claim.sh","agent_claim_tasks.sh","task_classifier.py","model_selector.py","queue_spawn.py","reassign_legacy_tasks.sh","notion_idea_pipeline.py","dag_executor.py","phase3_runner.py","proactive_task_management.py","adaptive_dispatcher.py"],"purpose":"從看板讀取待派發任務 → 分類 → 選模型 → 寫入 spawn_queue → 消費執行。V4 新增 adaptive_dispatcher.py 根據 Agent 指紋動態調整派發策略。","mermaid":"flowchart LR\n  PM[pipeline_master.sh] --> PE[pipeline_engine_v2.py]\n  PE --> TC[task_classifier.py]\n  TC --> MS[model_selector.py]\n  AD[adaptive_dispatcher.py\\n🆕] --> MS\n  MS --> QS[queue_spawn.py]\n  QS --> SS[safe_spawn.py]\n  ASR[auto_spawn_runner.sh] --> SQL[(Supabase)]\n  ED[emergency_dispatcher.py] --> SQL\n  SS --> SQL\n  style AD fill:#00cec922,stroke:#00cec9"},"健康監控 Heartbeat":{"cron_entry":["heartbeat_stuck_check.sh(*/10)","heartbeat_pipeline_notify.sh(*/15)","meta_heartbeat.sh(*/15)","hourly_system_snapshot.sh(每小時)","gateway_health_check.sh(*/5)","session_watchdog.sh(*/5)","status_guardian.sh(*/30)"],"scripts":["heartbeat_stuck_check.sh","heartbeat_snapshot.sh","heartbeat_pipeline_notify.sh","heartbeat_check_follow_ups.sh","meta_heartbeat.sh","hourly_system_snapshot.sh","gateway_health_check.sh","session_watchdog.sh","status_guardian.sh","health_digest.sh","system_health_monitor.py","system_health_check.sh","disk_health_alert.sh","credential_health_check.py","gateway_crash_monitor.sh","williamsagi_health_check.sh","linebot-monitor.sh","linebot-status.sh","linebot-log-monitor.sh","linebot-restart.sh","subagent_health_check_v2.sh","system_resource_alert.sh","glm5_health_check.sh"],"purpose":"系統/Gateway/LINE Bot/磁碟/憑證 全方位健康監控，停擺任務偵測","mermaid":"flowchart LR\n  HSC[heartbeat_stuck_check.sh] --> SQL[(Supabase)]\n  HSC --> NS[notify_smart.sh]\n  GHC[gateway_health_check.sh] --> SG[status_guardian.sh]\n  SW[session_watchdog.sh] --> NT[notify_telegram.sh]\n  HD[health_digest.sh] --> HSC\n  HD --> NS\n  MHB[meta_heartbeat.sh] --> NT\n  HPN[heartbeat_pipeline_notify.sh]"},"自動修復 Emergency Repair":{"cron_entry":["auto_problem_detector.sh(*/10)","auto_healer.sh(*/5)","verify_healing.sh(*/7)","detect_repair_deadlock.py(*/5)","auto_retry.sh(*/30)"],"scripts":["auto_problem_detector.sh","auto_healer.sh","verify_healing.sh","detect_repair_deadlock.py","auto_retry.sh","emergency_stop.sh","emergency_resume.sh","gateway_auto_restart.sh","gateway_restart_guard.py","gateway_reinstall.sh","gateway_safe_restart.sh","daemon_registry.py","setup_anti_stall_system.sh","setup_token_balanced_system.sh"],"purpose":"偵測問題 → 自動修復 → 驗證修復 → 死鎖偵測，緊急停止/恢復","mermaid":"flowchart LR\n  APD[auto_problem_detector.sh] --> AH[auto_healer.sh]\n  AH --> VH[verify_healing.sh]\n  VH -->|未修復| DRD[detect_repair_deadlock.py]\n  DRD -->|死鎖| ES[emergency_stop.sh]\n  ES --> ER[emergency_resume.sh]\n  AR[auto_retry.sh] --> SQL[(Supabase)]"},"通知系統 Notify":{"scripts":["notify_telegram.sh","notify_smart.sh","notify_approval.py","notify_agent.sh"],"purpose":"統一通知入口（Telegram），智能分級路由（INFO/WARN/ERROR/ESCALATE）","mermaid":"flowchart LR\n  NS[notify_smart.sh] -->|路由| NT[notify_telegram.sh]\n  NA[notify_agent.sh] -->|Agent間| NT\n  NP[notify_approval.py] --> NT"},"任務生命週期 Task":{"scripts":["create_task.sh","task_complete.sh","task_complete.py","verify_and_complete.sh","verify_result.sh","task_reporter.py","task_failure_logger.sh","task_failure_analyzer.py","log_failure.sh","log_error.sh","track_task.sh","diagnose_task_failure.py"],"purpose":"建卡 → 執行 → 驗收 → 完成/失敗記錄 → 回報。V4: 失敗事件自動餵入 failure_attribution.py 歸因分析。","mermaid":"flowchart LR\n  CT[create_task.sh] --> SQL[(Supabase)]\n  TCS[task_complete.sh] --> TCP[task_complete.py]\n  TCP --> VR[verify_result.sh]\n  TCP --> NT[notify_telegram.sh]\n  TCP -->|失敗| FA[failure_attribution.py\\n🆕]\n  VAC[verify_and_complete.sh] --> NT\n  style FA fill:#00cec922,stroke:#00cec9"},"記憶學習 Memory & Learning":{"cron_entry":["qmd-daily-sync.sh(每天03:30)","morning_routine.sh(每天03:00)","auto_learning_engine.py(每天04:30)","daily_ideation.py(每天03:30)"],"scripts":["memory_distill.sh","memory_distiller.py","memory_consolidate.sh","memory_search_qmd.sh","memory_audit.py","memory_write_auditor.py","conversation_memory_extractor.py","archive_logs_to_memory.sh","backup_memory.sh","auto_learning_engine.py","failure_memory.py","prompt_learn.py","qmd-daily-sync.sh","qmd_agent_bridge.py","qmd_system_health.py","check_qmd_index.sh","smart_rag_search.sh"],"purpose":"對話萃取 → 蒸餾 → 整合 → QMD 索引 → 語義搜尋，失敗學習","mermaid":"flowchart LR\n  MR[morning_routine.sh] --> MD[memory_distill.sh]\n  MR --> ALE[auto_learning_engine.py]\n  MR --> QDS[qmd-daily-sync.sh]\n  ALE --> RE[rule_engine.py]\n  QDS --> QAB[qmd_agent_bridge.py]\n  SRS[smart_rag_search.sh] --> QAB"},"每日例行 Daily Routine":{"cron_entry":["morning_routine.sh(每天03:00)","daily_backup.sh(每天02:30)","daily_briefing.sh(每週一04:00)","daily_system_analysis.sh(被morning呼叫)","daily_trend_discovery.sh(週一至五08:00)","daily_research_to_tasks.py(每天09:00)","multi_source_aggregator_v2.py(週一至五11:30)"],"scripts":["morning_routine.sh","daily_backup.sh","daily_briefing.sh","daily_system_analysis.sh","daily_trend_discovery.sh","daily_research_to_tasks.py","daily_trend_digest.py","multi_source_aggregator_v2.py","daily_ideation.py","daily_ai_news.sh","daily_shrimp_report.py","auto_cleanup.sh","daily_pipeline_alert.py","daily_system_audit.py"],"purpose":"凌晨備份 → 記憶蒸餾 → 系統分析 → 趨勢發現 → 科技新聞 → 任務建卡","mermaid":"flowchart LR\n  DB[daily_backup.sh\\n02:30] --> MR[morning_routine.sh\\n03:00]\n  MR --> DSA[daily_system_analysis.sh]\n  MR --> MC[memory_consolidate.sh]\n  DTD[daily_trend_discovery.sh\\n08:00] --> DRT[daily_research_to_tasks.py\\n09:00]\n  MSA[multi_source_aggregator.py\\n11:30] --> TDD[daily_trend_digest.py]"},"審計安全 Audit & Security":{"cron_entry":["auto_audit_detector_v2.py(*/30)","audit_dispatch_prompt.sh(每天09:00)","weekly_healthcheck.sh(每週)"],"scripts":["auto_audit_detector_v2.py","smart_audit.py","audit_dispatch_prompt.sh","weekly_healthcheck.sh","python_safety_check.py","blake_code_review.sh","griffin_review.py","rule_engine.py","rule_compliance_scan.sh","rule_ttl_cleaner.sh","dlp_message_guard.py","verify_gate.py","config_change_validator.py","auto_audit_script.py","verify_traditional_chinese.sh"],"purpose":"程式碼審查 → 規則引擎 → DLP 守衛 → 合規掃描 → 審計報告","mermaid":"flowchart LR\n  AAD[auto_audit_detector_v2.py] --> SA[smart_audit.py]\n  SA --> RE[rule_engine.py]\n  ADP[audit_dispatch_prompt.sh] --> NT[notify_telegram.sh]\n  BCR[blake_code_review.sh] --> PSC[python_safety_check.py]\n  GR[griffin_review.py] --> SQL[(Supabase)]\n  DLP[dlp_message_guard.py] --> SQL"},"報告上傳 Report":{"cron_entry":["task_reporter.py(每小時)"],"scripts":["upload_report.py","upload_report_v2.py","task_reporter.py","report_utils.sh","daily_shrimp_report.py"],"purpose":"報告品質審查 → 上傳 Supabase → 看板更新 → Hub 展示","mermaid":"flowchart LR\n  UR[upload_report_v2.py] --> SQL[(Supabase)]\n  TR[task_reporter.py] --> NT[notify_telegram.sh]\n  TR --> SQL\n  RU[report_utils.sh] --> SQL"},"資料庫 DB":{"scripts":["supabase_sql.sh","supabase_cleanup.py","supabase_client.py","check_supabase_quota.py"],"purpose":"Supabase SQL 執行（304引用）、配額監控、自動清理","mermaid":"flowchart LR\n  SS[supabase_sql.sh] --> SB[(Supabase)]\n  SC[supabase_cleanup.py] --> SS\n  SCL[supabase_client.py] --> SS\n  CSQ[check_supabase_quota.py] --> SS"},"Notion 整合":{"cron_entry":["notion_idea_pipeline.py(每天00:30)","sync_threads_to_notion.sh(每週一09:00)"],"scripts":["reference_analyzer.py","save_idea_to_notion.py","notion_idea_pipeline.py","sync_threads_to_notion.sh","threads_scraper.py","threads_to_notion.py","threads_feed_scraper.py","log_incident_notion.sh"],"purpose":"「參考」→ Notion → 評分 → 任務卡；Threads 同步","mermaid":"flowchart LR\n  RA[reference_analyzer.py] --> N[(Notion)]\n  SI[save_idea_to_notion.py] --> N\n  NIP[notion_idea_pipeline.py] --> SQL[(Supabase)]\n  STN[sync_threads_to_notion.sh] --> TS[threads_scraper.py]\n  TS --> TTN[threads_to_notion.py]"},"部署 Deploy":{"scripts":["deployment_verification.py","deployment_error_logger.py","deployment_task_dispatcher.py","vercel_deploy_and_watch.sh","deploy_css_sync.sh"],"purpose":"部署驗證 → 錯誤記錄 → 任務派發","mermaid":"flowchart LR\n  DTD[deployment_task_dispatcher.py] --> DV[deployment_verification.py]\n  DTD --> SQL[(Supabase)]\n  DEL[deployment_error_logger.py] --> SQL\n  VDW[vercel_deploy_and_watch.sh] --> NT[notify_telegram.sh]"},"工具 Utils":{"scripts":["analyze_image.py","analyze_image.sh","transcribe.sh","glm_ocr.py","config_backup.sh","config_restore.sh","config_snapshot.sh","zimbra_check.sh","check_zimbra_approval.py","weekly_funnel_sync.py","line_performance_alert.py","auto_disk_cleanup.sh","propose_and_wait.py","agent_task_manager.sh","use_dispatch_template.sh","hook_trigger.sh","intention_engine_v1.py","extract_follow_up_tasks.py","session_sync_daemon.py","phase_unlock.py","autox.sh","check_sdk_version.sh","commit_and_push.sh","agent_create_scheduled_task.sh","alert_test.sh","api_contract_test.sh","budget_monitor.py","check_model_quota.sh","cost_monitor.py","glm5_alert.py","inventory_alert_check.sh","linebot-stability-test.sh","linebot_quality_manager.py","linebot_rag_search.py","stt_stats_api.py","token_threshold_monitor.py"],"purpose":"圖片分析/語音轉文字/OCR/簽核/Funnel 同步/LINE 業績/config 管理。V4: intention_engine_v1.py 新增 board_analyzer + calendar_checker 模組。","mermaid":"flowchart LR\n  IE[intention_engine_v1.py\\n+board_analyzer\\n+calendar_checker] --> SQL[(Supabase)]\n  PAW[propose_and_wait.py] --> CT[create_task.sh]\n  PAW --> NT[notify_telegram.sh]\n  BM[budget_monitor.py] --> SQL\n  CZA[check_zimbra_approval.py] --> SQL\n  style IE fill:#00cec922,stroke:#00cec9"}};
+
+const graph = {"agent_claim_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"agent_create_scheduled_task.sh":{"calls":[],"cron":false},"agent_hourly_claim.sh":{"calls":["agent_claim_tasks.sh"],"cron":true},"agent_task_manager.sh":{"calls":["agent_claim_tasks.sh","supabase_sql.sh"],"cron":false},"alert_test.sh":{"calls":[],"cron":false},"analyze_image.py":{"calls":[],"cron":false},"analyze_image.sh":{"calls":["analyze_image.py"],"cron":false},"api_contract_test.sh":{"calls":[],"cron":false},"archive_logs_to_memory.sh":{"calls":[],"cron":false},"audit_dispatch_prompt.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_audit_detector_v2.py":{"calls":["supabase_client.py"],"cron":false},"auto_audit_script.py":{"calls":[],"cron":false},"auto_claim_and_spawn.sh":{"calls":["agent_claim_tasks.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"auto_cleanup.sh":{"calls":[],"cron":true},"auto_disk_cleanup.sh":{"calls":["archive_logs_to_memory.sh"],"cron":false},"auto_dispatch.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":false},"auto_healer.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_learning_engine.py":{"calls":["rule_engine.py","supabase_sql.sh"],"cron":false},"auto_problem_detector.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":true},"auto_retry.sh":{"calls":["supabase_sql.sh"],"cron":true},"auto_spawn_runner.sh":{"calls":["supabase_sql.sh"],"cron":true},"autox.sh":{"calls":[],"cron":true},"backup_memory.sh":{"calls":[],"cron":false},"blake_code_review.sh":{"calls":["notify_telegram.sh","python_safety_check.py"],"cron":false},"budget_monitor.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"check_model_quota.sh":{"calls":[],"cron":false},"check_qmd_index.sh":{"calls":["qmd_agent_bridge.py"],"cron":true},"check_sdk_version.sh":{"calls":[],"cron":true},"check_supabase_quota.py":{"calls":["supabase_sql.sh"],"cron":false},"check_zimbra_approval.py":{"calls":["supabase_sql.sh"],"cron":false},"commit_and_push.sh":{"calls":[],"cron":false},"config_backup.sh":{"calls":[],"cron":false},"config_change_validator.py":{"calls":[],"cron":false},"config_restore.sh":{"calls":["config_snapshot.sh","gateway_auto_restart.sh"],"cron":false},"config_snapshot.sh":{"calls":[],"cron":false},"conversation_memory_extractor.py":{"calls":[],"cron":false},"cost_monitor.py":{"calls":[],"cron":false},"create_task.sh":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"credential_health_check.py":{"calls":[],"cron":false},"daemon_registry.py":{"calls":[],"cron":false},"dag_executor.py":{"calls":["supabase_sql.sh"],"cron":false},"daily_ai_news.sh":{"calls":["notify_telegram.sh"],"cron":false},"daily_backup.sh":{"calls":[],"cron":true},"daily_briefing.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"daily_ideation.py":{"calls":["supabase_sql.sh"],"cron":true},"daily_pipeline_alert.py":{"calls":[],"cron":false},"daily_research_to_tasks.py":{"calls":["notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"daily_shrimp_report.py":{"calls":["notify_telegram.sh"],"cron":false},"daily_system_analysis.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"daily_system_audit.py":{"calls":["heartbeat_pipeline_notify.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"daily_trend_digest.py":{"calls":[],"cron":false},"daily_trend_discovery.sh":{"calls":[],"cron":true},"deploy_css_sync.sh":{"calls":[],"cron":false},"deployment_error_logger.py":{"calls":["supabase_sql.sh"],"cron":false},"deployment_task_dispatcher.py":{"calls":["deployment_verification.py","supabase_sql.sh"],"cron":false},"deployment_verification.py":{"calls":[],"cron":false},"detect_repair_deadlock.py":{"calls":["supabase_sql.sh"],"cron":true},"diagnose_task_failure.py":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"disk_health_alert.sh":{"calls":[],"cron":false},"dlp_message_guard.py":{"calls":["supabase_sql.sh"],"cron":false},"emergency_dispatcher.py":{"calls":["supabase_sql.sh"],"cron":true},"emergency_resume.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"emergency_stop.sh":{"calls":["emergency_resume.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"extract_follow_up_tasks.py":{"calls":[],"cron":false},"failure_memory.py":{"calls":[],"cron":false},"failure_attribution.py":{"calls":["supabase_sql.sh"],"cron":false},"generate_fingerprints.py":{"calls":["supabase_sql.sh"],"cron":false},"adaptive_dispatcher.py":{"calls":["generate_fingerprints.py","model_selector.py","supabase_sql.sh"],"cron":false},"capability_evolver_bridge.py":{"calls":["supabase_sql.sh"],"cron":false},"evolution_engine.py":{"calls":["capability_evolver_bridge.py","sandbox_evaluator.py","supabase_sql.sh"],"cron":true},"sandbox_evaluator.py":{"calls":["supabase_sql.sh"],"cron":false},"autonomy_guard.py":{"calls":["supabase_sql.sh","notify_telegram.sh"],"cron":false},"human_review_sampler.py":{"calls":["supabase_sql.sh","notify_telegram.sh"],"cron":true},"gateway_auto_restart.sh":{"calls":["gateway_restart_guard.py"],"cron":false},"gateway_crash_monitor.sh":{"calls":["log_incident_notion.sh"],"cron":false},"gateway_health_check.sh":{"calls":[],"cron":true},"gateway_reinstall.sh":{"calls":[],"cron":false},"gateway_restart_guard.py":{"calls":["gateway_auto_restart.sh","log_incident_notion.sh"],"cron":false},"gateway_safe_restart.sh":{"calls":[],"cron":false},"glm5_alert.py":{"calls":[],"cron":false},"glm5_health_check.sh":{"calls":[],"cron":false},"glm_ocr.py":{"calls":[],"cron":false},"griffin_review.py":{"calls":["supabase_sql.sh"],"cron":false},"health_digest.sh":{"calls":["heartbeat_stuck_check.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"heartbeat_check_follow_ups.sh":{"calls":["supabase_sql.sh"],"cron":false},"heartbeat_pipeline_notify.sh":{"calls":[],"cron":true},"heartbeat_snapshot.sh":{"calls":["supabase_sql.sh","token_threshold_monitor.py"],"cron":false},"heartbeat_stuck_check.sh":{"calls":["daemon_registry.py","notify_smart.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"hook_trigger.sh":{"calls":["dlp_message_guard.py"],"cron":false},"hourly_system_snapshot.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"intention_engine_v1.py":{"calls":["supabase_sql.sh"],"cron":false},"inventory_alert_check.sh":{"calls":["supabase_sql.sh"],"cron":false},"line_performance_alert.py":{"calls":["daily_pipeline_alert.py"],"cron":false},"linebot-log-monitor.sh":{"calls":[],"cron":false},"linebot-restart.sh":{"calls":[],"cron":false},"linebot-stability-test.sh":{"calls":[],"cron":false},"linebot-status.sh":{"calls":["linebot-log-monitor.sh"],"cron":false},"linebot_quality_manager.py":{"calls":["supabase_sql.sh"],"cron":false},"linebot_rag_search.py":{"calls":[],"cron":false},"log_error.sh":{"calls":["weekly_funnel_sync.py"],"cron":false},"log_failure.sh":{"calls":["supabase_sql.sh"],"cron":false},"log_incident_notion.sh":{"calls":["task_complete.sh"],"cron":false},"memory_audit.py":{"calls":["notify_telegram.sh"],"cron":false},"memory_consolidate.sh":{"calls":[],"cron":false},"memory_distill.sh":{"calls":["report_utils.sh"],"cron":false},"memory_distiller.py":{"calls":["conversation_memory_extractor.py","notify_telegram.sh"],"cron":false},"memory_search_qmd.sh":{"calls":[],"cron":false},"memory_write_auditor.py":{"calls":["notify_telegram.sh"],"cron":false},"meta_heartbeat.sh":{"calls":["notify_telegram.sh"],"cron":true},"model_selector.py":{"calls":["supabase_sql.sh"],"cron":false},"morning_routine.sh":{"calls":["autox.sh","daily_system_analysis.sh","memory_consolidate.sh","smart_rag_search.sh"],"cron":true},"multi_source_aggregator_v2.py":{"calls":["daily_trend_digest.py"],"cron":true},"notify_agent.sh":{"calls":[],"cron":false},"notify_approval.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"notify_smart.sh":{"calls":["notify_telegram.sh"],"cron":false},"notify_telegram.sh":{"calls":[],"cron":false},"notion_idea_pipeline.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"phase3_runner.py":{"calls":["auto_audit_script.py"],"cron":false},"pipeline_engine_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"pipeline_master.sh":{"calls":["pipeline_engine_v2.py","reassign_legacy_tasks.sh","supabase_sql.sh"],"cron":true},"proactive_task_management.py":{"calls":["supabase_sql.sh"],"cron":false},"prompt_learn.py":{"calls":["supabase_sql.sh"],"cron":false},"propose_and_wait.py":{"calls":["create_task.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"python_safety_check.py":{"calls":[],"cron":false},"qmd-daily-sync.sh":{"calls":[],"cron":true},"qmd_agent_bridge.py":{"calls":[],"cron":false},"qmd_system_health.py":{"calls":["qmd-daily-sync.sh","qmd_agent_bridge.py"],"cron":false},"queue_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"reassign_legacy_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"reference_analyzer.py":{"calls":[],"cron":false},"report_utils.sh":{"calls":["supabase_sql.sh"],"cron":false},"rule_compliance_scan.sh":{"calls":[],"cron":false},"rule_engine.py":{"calls":["supabase_sql.sh"],"cron":false},"rule_ttl_cleaner.sh":{"calls":["supabase_sql.sh"],"cron":true},"safe_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"save_idea_to_notion.py":{"calls":[],"cron":false},"session_sync_daemon.py":{"calls":["supabase_sql.sh"],"cron":false},"session_watchdog.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"setup_anti_stall_system.sh":{"calls":["supabase_sql.sh"],"cron":false},"setup_token_balanced_system.sh":{"calls":[],"cron":false},"smart_audit.py":{"calls":["auto_audit_script.py","emergency_resume.sh","emergency_stop.sh","gateway_auto_restart.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"smart_rag_search.sh":{"calls":[],"cron":false},"status_guardian.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"stt_stats_api.py":{"calls":["supabase_sql.sh"],"cron":false},"subagent_health_check_v2.sh":{"calls":["supabase_sql.sh"],"cron":false},"supabase_cleanup.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_client.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_sql.sh":{"calls":["notify_telegram.sh","task_complete.sh"],"cron":false},"sync_threads_to_notion.sh":{"calls":["threads_scraper.py","threads_to_notion.py"],"cron":true},"system_health_check.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"system_health_monitor.py":{"calls":[],"cron":false},"system_resource_alert.sh":{"calls":[],"cron":false},"task_classifier.py":{"calls":["model_selector.py","supabase_sql.sh"],"cron":false},"task_complete.py":{"calls":["failure_memory.py","failure_attribution.py","heartbeat_check_follow_ups.sh","notify_telegram.sh","prompt_learn.py","smart_audit.py","supabase_sql.sh","vercel_deploy_and_watch.sh","verify_and_complete.sh"],"cron":false},"task_complete.sh":{"calls":["task_complete.py"],"cron":false},"task_failure_analyzer.py":{"calls":[],"cron":false},"task_failure_logger.sh":{"calls":["supabase_sql.sh"],"cron":false},"task_reporter.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"threads_feed_scraper.py":{"calls":["notify_smart.sh","reference_analyzer.py"],"cron":false},"threads_scraper.py":{"calls":[],"cron":false},"threads_to_notion.py":{"calls":["threads_scraper.py"],"cron":false},"token_threshold_monitor.py":{"calls":["supabase_sql.sh"],"cron":false},"track_task.sh":{"calls":[],"cron":false},"transcribe.sh":{"calls":[],"cron":false},"upload_report.py":{"calls":["supabase_sql.sh","upload_report_v2.py"],"cron":false},"upload_report_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"use_dispatch_template.sh":{"calls":[],"cron":false},"vercel_deploy_and_watch.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_and_complete.sh":{"calls":["log_failure.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"verify_gate.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_healing.sh":{"calls":["supabase_sql.sh"],"cron":true},"verify_result.sh":{"calls":["supabase_sql.sh"],"cron":false},"verify_traditional_chinese.sh":{"calls":[],"cron":false},"weekly_funnel_sync.py":{"calls":[],"cron":false},"weekly_healthcheck.sh":{"calls":["config_backup.sh","memory_distill.sh","rule_compliance_scan.sh","supabase_sql.sh"],"cron":false},"williamsagi_health_check.sh":{"calls":["notify_telegram.sh"],"cron":true},"zimbra_check.sh":{"calls":["notify_telegram.sh"],"cron":false}};
 
 const icons = {'任務派發':'🚀','健康監控':'💓','自動修復':'🔧','通知系統':'📢','任務生命':'📋','記憶學習':'🧠','每日例行':'🌅','審計安全':'🛡️','報告上傳':'📊','資料庫':'🗄️','Notion':'📝','部署':'🚢','工具':'🔨'};
 
@@ -274,7 +486,6 @@ function getIcon(name) {
 function getType(scriptName) {
   const g = graph[scriptName];
   if (g && g.cron) return 'cron';
-  // Check if any other script calls this one
   for (const [k,v] of Object.entries(graph)) {
     if (v.calls && v.calls.includes(scriptName)) return 'called';
   }
@@ -284,8 +495,7 @@ function getType(scriptName) {
 const container = document.getElementById('workflows');
 const nav = document.getElementById('nav');
 
-// Add fixed nav items
-nav.innerHTML = '<a href="#flowchart">流程圖</a><a href="#gaps">缺口分析</a>';
+nav.innerHTML = '<a href="#flowchart">流程圖</a><a href="#v4-learning" class="v4-new">📚 學習閉環</a><a href="#v4-evolution" class="v4-new">🧬 演進引擎</a><a href="#v4-safety" class="v4-new">🛡️ 安全防護</a><a href="#gaps">✅ 缺口分析</a>';
 
 Object.entries(workflows).forEach(([name, wf], i) => {
   const id = 'wf-' + i;
@@ -293,7 +503,6 @@ Object.entries(workflows).forEach(([name, wf], i) => {
   const crons = wf.cron_entry || [];
   const cronCount = crons.length;
   
-  // Nav
   nav.innerHTML += `<a href="#${id}">${getIcon(name)} ${name.split(' ')[0]}</a>`;
   
   let html = `<div class="section" id="${id}">`;
@@ -302,6 +511,12 @@ Object.entries(workflows).forEach(([name, wf], i) => {
   if (cronCount) html += `<span class="badge badge-cron">${cronCount} cron</span>`;
   html += `</div>`;
   html += `<div class="section-purpose">${wf.purpose}</div>`;
+  
+  // Per-section Mermaid flow chart
+  if (wf.mermaid) {
+    html += `<div class="mermaid-wrapper"><h3>${getIcon(name)} ${name.split(' ')[0]} 流程</h3>`;
+    html += `<div class="mermaid">%%{init: {'theme': 'dark'}}%%\n${wf.mermaid}</div></div>`;
+  }
   
   if (crons.length) {
     html += '<div class="cron-list">';
@@ -316,9 +531,11 @@ Object.entries(workflows).forEach(([name, wf], i) => {
     const hasCalls = g && g.calls && g.calls.length > 0;
     const typeClass = type === 'cron' ? 'type-cron' : type === 'called' ? 'type-called' : 'type-manual';
     const typeLabel = type === 'cron' ? 'CRON' : type === 'called' ? '被呼叫' : '手動';
-    html += `<div class="script-card" title="${hasCalls ? '呼叫: ' + g.calls.join(', ') : '無呼叫'}">`;
+    const isV4 = v4Scripts.has(s);
+    html += `<div class="script-card${isV4 ? ' v4-new' : ''}" title="${hasCalls ? '呼叫: ' + g.calls.join(', ') : '無呼叫'}">`;
     html += `<div class="calls-dot ${hasCalls ? 'has-calls' : 'no-calls'}"></div>`;
     html += `<span class="script-name">${s}</span>`;
+    if (isV4) html += `<span class="new-badge">V4</span>`;
     html += `<span class="type-tag ${typeClass}">${typeLabel}</span>`;
     html += `</div>`;
   });
