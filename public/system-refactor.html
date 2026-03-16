@@ -5021,7 +5021,7 @@ graph TB
   <div class="diagram-header" style="border-bottom-color:#ef4444">
     <div class="diagram-num" style="background:#ef4444">🗑</div>
     <div>
-      <h3>確認刪除名單（76 個）</h3>
+      <h3>確認刪除名單（107 個）</h3>
       <p>點「確認刪除」後我會記錄你的決定，由 Travis 執行實際刪除。⚠️ 標記的需先處理引用再刪。</p>
     </div>
   </div>
@@ -5682,6 +5682,192 @@ graph TB
         <td style="padding:8px;font-size:12px;color:#94a3b8">與 griffin_fswatch_daemon.sh 互相引用，兩者皆孤兒</td>
         <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（呼叫者本身已廢棄）</div></td>
         <td style="padding:8px;text-align:center"><button onclick="confirmDelete('script_audit_watcher.sh',75)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-76">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">76</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">analyze_pipeline_gap.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Pipeline 差距分析，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('analyze_pipeline_gap.py',76)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-77">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">77</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_dispatch_prompt.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，.sh 版本是 cron 版，.py 版是孤兒</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_dispatch_prompt.py',77)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-78">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">78</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">auto_dispatch_with_queue.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，功能被 pipeline_master 取代</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('auto_dispatch_with_queue.sh',78)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-79">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">79</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">auto_spawn_loop.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，功能被 auto_spawn_runner.sh 取代</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('auto_spawn_loop.sh',79)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-80">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">80</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">backfill_dispatch_prompts.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，一次性回填任務，已完成</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('backfill_dispatch_prompts.sh',80)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-81">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">81</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">check_dispatch_prompt.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，dispatch_prompt 檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('check_dispatch_prompt.py',81)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-82">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">82</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">deep_pipeline_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者是廢棄 setup 腳本</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('deep_pipeline_check.sh',82)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-83">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">83</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">deployment_task_dispatcher.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，部署任務派發，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('deployment_task_dispatcher.py',83)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-84">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">84</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">dispatch_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，派發前檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('dispatch_check.sh',84)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-85">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">85</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">dispatch_interval_controller.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，派發間隔控制，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('dispatch_interval_controller.py',85)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-86">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">86</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">dispatch_prompt_guard.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，dispatch prompt 守衛，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('dispatch_prompt_guard.py',86)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-87">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">87</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">dispatch_queue_manager.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 check_emergency_stop_coverage_v2 是非核心測試腳本</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('dispatch_queue_manager.py',87)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-88">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">88</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">dispatch_validator.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，派發前驗證，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('dispatch_validator.py',88)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-89">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">89</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">force_dispatch.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒（是 emergency_dispatcher 的呼叫者，但 force_dispatch 本身無人呼叫）</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('force_dispatch.sh',89)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-90">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">90</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">heartbeat_spawn_queue.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，舊架構讀本地 JSON，已改為 Supabase 表</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('heartbeat_spawn_queue.sh',90)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-91">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">91</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者是廢棄 setup_token_balanced_system.sh</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_check.sh',91)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-92">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">92</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_control_dispatch.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_control_dispatch.py',92)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-93">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">93</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_dispatcher.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 check_emergency_stop_coverage_v2 是非核心腳本</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_dispatcher.sh',93)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-94">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">94</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_health_check.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者是廢棄 setup_anti_stall_system.sh</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_health_check.py',94)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-95">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">95</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_state_sync_repair.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 priority_dispatcher.py/pipeline_dispatcher.py 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_state_sync_repair.py',95)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-96">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">96</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pipeline_status.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，pipeline 狀態查詢，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pipeline_status.sh',96)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-97">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">97</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">pre_dispatch_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，派發前檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('pre_dispatch_check.sh',97)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-98">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">98</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">restart_auto_dispatch.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，重啟派發器，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('restart_auto_dispatch.sh',98)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-99">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">99</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">safe_dispatch.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，safe_spawn.py 已是標準</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('safe_dispatch.sh',99)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-100">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">100</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">spawn_and_register.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，session 登記用但無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('spawn_and_register.py',100)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-101">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">101</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">spawn_guard.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，spawn 速率限制，safe_spawn 已整合</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('spawn_guard.py',101)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-102">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">102</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">stability_enhanced_pipeline.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，實驗性增強版，無人使用</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('stability_enhanced_pipeline.py',102)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-103">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">103</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">token_aware_pipeline.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 enhanced_heartbeat.py 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('token_aware_pipeline.py',103)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-104">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">104</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">trigger_dispatch.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">呼叫者 insert_roadmap_tasks.py 不存在</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('trigger_dispatch.sh',104)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-105">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">105</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">use_dispatch_template.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，dispatch 模板工具，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('use_dispatch_template.sh',105)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-106">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">106</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">web_deploy_pipeline.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，網站部署流水線，無人呼叫</td>
+        <td style="padding:8px;font-size:11px"><div style="color:#4ade80">✅ 可直接刪</div><div style="color:#64748b;font-size:10px;margin-top:2px">前提：無</div></td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('web_deploy_pipeline.sh',106)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
       </tr></tbody>
     </table>
   </div>
@@ -5711,7 +5897,7 @@ function confirmDelete(name) {
   <div class="diagram-header">
     <div class="diagram-num" style="background:#22c55e">✓</div>
     <div>
-      <h3>確認保留名單（55 個）</h3>
+      <h3>確認保留名單（64 個）</h3>
       <p>所有 Cron 活躍腳本。標記 ⚠️ 的建議評估是否真的需要。</p>
     </div>
   </div>
@@ -6051,6 +6237,36 @@ function confirmDelete(name) {
       <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">system_health_check.sh</td>
       <td style="padding:8px;font-size:12px;color:#e2e8f0">系統健康檢查，有引用</td>
       <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">pipeline_engine_v2.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">核心派發引擎，被 pipeline_master 呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">safe_spawn.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">被 pipeline_engine_v2 呼叫，帶速率限制寫入 spawn_queue</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_dispatch.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">被 heartbeat 呼叫，讀 snapshot 決定派發</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_claim_and_spawn.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">被 cron（SILENT_DISPATCH）呼叫，agent 認領任務</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">notion_idea_pipeline.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">⏰ 已加入 cron 每天00:30。Notion Ideas 自動評分 → 高分（≥15）自動建任務卡。54個待處理 Ideas</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">每天00:30</td>
       <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
     </tr></tbody>
     </table>
