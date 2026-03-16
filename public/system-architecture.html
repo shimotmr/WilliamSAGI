@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travis 系統架構流程圖</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0f172a; color:#e2e8f0; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
+  .header { padding:24px 32px; border-bottom:1px solid #1e293b; }
+  .header h1 { font-size:24px; margin-bottom:8px; }
+  .header .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .header .stat { background:#1e293b; padding:8px 16px; border-radius:8px; font-size:13px; }
+  .stat .num { color:#60a5fa; font-weight:700; font-size:18px; }
+  .nav { display:flex; gap:8px; padding:16px 32px; flex-wrap:wrap; position:sticky; top:0; background:#0f172a; z-index:10; border-bottom:1px solid #1e293b; }
+  .nav a { background:#1e293b; color:#94a3b8; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; transition:all .2s; }
+  .nav a:hover, .nav a.active { background:#3b82f6; color:#fff; }
+  .workflow { padding:24px 32px; border-bottom:1px solid #1e293b; }
+  .workflow h2 { font-size:18px; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .workflow .purpose { color:#94a3b8; font-size:13px; margin-bottom:16px; }
+  .workflow .cron-list { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .workflow .cron-tag { background:#1e3a5f; color:#60a5fa; padding:4px 10px; border-radius:6px; font-size:11px; font-family:monospace; }
+  .script-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; margin-top:12px; }
+  .script-card { background:#1e293b; padding:10px 14px; border-radius:8px; font-family:monospace; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+  .script-card .name { color:#e2e8f0; }
+  .script-card .badge { font-size:10px; padding:2px 8px; border-radius:4px; }
+  .badge.cron { background:#166534; color:#4ade80; }
+  .badge.called { background:#1e3a5f; color:#60a5fa; }
+  .badge.manual { background:#44403c; color:#d6d3d1; }
+  .mermaid { background:#1e293b; padding:20px; border-radius:12px; margin:16px 0; overflow-x:auto; }
+  .v4-section { padding:24px 32px; border-top:2px solid #3b82f6; margin-top:24px; }
+  .v4-section h2 { color:#60a5fa; }
+  .gap-card { background:#1e293b; border-left:3px solid #f59e0b; padding:12px 16px; border-radius:0 8px 8px 0; margin:8px 0; }
+  .gap-card .title { font-weight:600; color:#fbbf24; }
+  .gap-card .desc { color:#94a3b8; font-size:13px; margin-top:4px; }
+  @media(max-width:768px) { .header,.workflow,.nav,.v4-section { padding:16px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏗️ Travis 系統架構流程圖</h1>
+  <p style="color:#94a3b8;margin-bottom:12px">2026-03-16 審計後精簡版 — 591→169 個腳本（精簡 71%）</p>
+  <div class="stats">
+    <div class="stat"><div class="num">169</div>保留腳本</div>
+    <div class="stat"><div class="num">34</div>Cron 任務</div>
+    <div class="stat"><div class="num">13</div>工作流群組</div>
+    <div class="stat"><div class="num">422</div>已清理</div>
+  </div>
+</div>
+
+<div class="nav" id="nav">
+  <a href="#任務派發_Pipeline">🚀 任務派發</a>
+  <a href="#健康監控_Heartbeat">💓 健康監控</a>
+  <a href="#自動修復_Emergency_Repair">🔧 自動修復</a>
+  <a href="#通知系統_Notify">📢 通知系統</a>
+  <a href="#任務生命週期_Task">📋 任務生命週期</a>
+  <a href="#記憶學習_Memory__Learning">🧠 記憶學習</a>
+  <a href="#每日例行_Daily_Routine">🌅 每日例行</a>
+  <a href="#審計安全_Audit__Security">🛡️ 審計安全</a>
+  <a href="#報告上傳_Report">📊 報告上傳</a>
+  <a href="#資料庫_DB">🗄️ 資料庫</a>
+  <a href="#Notion_整合">📝 Notion</a>
+  <a href="#部署_Deploy">🚢 部署</a>
+  <a href="#工具_Utils">🔨 工具</a>
+  <a href="#v4gaps" style="background:#f59e0b;color:#000">⚡ V4 缺口</a>
+</div>
+
+<div class="workflow">
+<h2>🗺️ 系統總覽</h2>
+<div class="mermaid">
+graph LR
+  subgraph CRON["⏰ Cron 觸發"]
+    C1["pipeline_master<br/>*/5"]
+    C2["heartbeat_stuck<br/>*/10"]
+    C3["auto_healer<br/>*/5"]
+    C4["morning_routine<br/>03:00"]
+    C5["emergency_disp<br/>*/1"]
+  end
+  subgraph PIPELINE["🚀 任務派發"]
+    P1["pipeline_engine_v2"]
+    P2["safe_spawn"]
+    P3["auto_spawn_runner"]
+    P4["spawn_queue<br/>(Supabase)"]
+  end
+  subgraph MONITOR["💓 健康監控"]
+    M1["heartbeat_snapshot"]
+    M2["gateway_health"]
+    M3["session_watchdog"]
+  end
+  subgraph REPAIR["🔧 自動修復"]
+    R1["auto_problem_detector"]
+    R2["auto_healer"]
+    R3["verify_healing"]
+  end
+  subgraph TASK["📋 任務生命"]
+    T1["create_task"]
+    T2["task_complete"]
+    T3["verify_result"]
+  end
+  subgraph NOTIFY["📢 通知"]
+    N1["notify_telegram<br/>111 refs"]
+    N2["notify_smart"]
+  end
+  subgraph DB["🗄️ 資料庫"]
+    D1["supabase_sql<br/>304 refs"]
+    D2["board_tasks"]
+  end
+  
+  C1 --> P1 --> P2 --> P4 --> P3
+  C2 --> M1
+  C3 --> R1 --> R2 --> R3
+  C4 --> |daily| P1
+  C5 --> P2
+  P3 --> T1
+  T1 --> D1 --> D2
+  T2 --> N1
+  M1 --> N2 --> N1
+  R2 --> N1
+
+  style CRON fill:#1e3a5f,stroke:#3b82f6
+  style PIPELINE fill:#1e3a5f,stroke:#3b82f6
+  style MONITOR fill:#14532d,stroke:#22c55e
+  style REPAIR fill:#431407,stroke:#ea580c
+  style TASK fill:#1e293b,stroke:#64748b
+  style NOTIFY fill:#4a1d96,stroke:#a78bfa
+  style DB fill:#1c1917,stroke:#78716c
+</div>
+</div>
+<div class="workflow" id="任務派發_Pipeline">
+  <h2>🚀 任務派發 Pipeline</h2>
+  <div class="purpose">從看板讀取待派發任務 → 分類 → 選模型 → 寫入 spawn_queue → 消費執行</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ pipeline_master.sh(*/5)</span>
+    <span class="cron-tag">⏰ auto_spawn_runner.sh(*/5)</span>
+    <span class="cron-tag">⏰ emergency_dispatcher.py(*/1)</span>
+    <span class="cron-tag">⏰ auto_dispatch.sh(heartbeat呼叫)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">agent_claim_tasks.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">agent_hourly_claim.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">auto_claim_and_spawn.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">auto_dispatch.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">auto_spawn_runner.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">dag_executor.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">emergency_dispatcher.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">model_selector.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">notion_idea_pipeline.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">phase3_runner.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">pipeline_engine_v2.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">pipeline_master.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">proactive_task_management.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">queue_spawn.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">reassign_legacy_tasks.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">safe_spawn.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_classifier.py</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="健康監控_Heartbeat">
+  <h2>💓 健康監控 Heartbeat</h2>
+  <div class="purpose">系統/Gateway/LINE Bot/磁碟/憑證 全方位健康監控，停擺任務偵測</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ heartbeat_stuck_check.sh(*/10)</span>
+    <span class="cron-tag">⏰ heartbeat_pipeline_notify.sh(*/15)</span>
+    <span class="cron-tag">⏰ meta_heartbeat.sh(*/15)</span>
+    <span class="cron-tag">⏰ hourly_system_snapshot.sh(每小時)</span>
+    <span class="cron-tag">⏰ gateway_health_check.sh(*/5)</span>
+    <span class="cron-tag">⏰ session_watchdog.sh(*/5)</span>
+    <span class="cron-tag">⏰ status_guardian.sh(*/30)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">credential_health_check.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">disk_health_alert.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">gateway_crash_monitor.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">gateway_health_check.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">glm5_health_check.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">health_digest.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">heartbeat_check_follow_ups.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">heartbeat_pipeline_notify.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">heartbeat_snapshot.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">heartbeat_stuck_check.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">hourly_system_snapshot.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">linebot-log-monitor.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">linebot-monitor.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">linebot-restart.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">linebot-status.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">meta_heartbeat.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">session_watchdog.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">status_guardian.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">subagent_health_check_v2.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">system_health_check.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">system_health_monitor.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">system_resource_alert.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">williamsagi_health_check.sh</span><span class="badge cron">CRON</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="自動修復_Emergency_Repair">
+  <h2>🔧 自動修復 Emergency Repair</h2>
+  <div class="purpose">偵測問題 → 自動修復 → 驗證修復 → 死鎖偵測，緊急停止/恢復</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ auto_problem_detector.sh(*/10)</span>
+    <span class="cron-tag">⏰ auto_healer.sh(*/5)</span>
+    <span class="cron-tag">⏰ verify_healing.sh(*/7)</span>
+    <span class="cron-tag">⏰ detect_repair_deadlock.py(*/5)</span>
+    <span class="cron-tag">⏰ auto_retry.sh(*/30)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">auto_healer.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">auto_problem_detector.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">auto_retry.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daemon_registry.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">detect_repair_deadlock.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">emergency_resume.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">emergency_stop.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">gateway_auto_restart.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">gateway_reinstall.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">gateway_restart_guard.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">gateway_safe_restart.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">setup_anti_stall_system.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">setup_token_balanced_system.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">verify_healing.sh</span><span class="badge cron">CRON</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="通知系統_Notify">
+  <h2>📢 通知系統 Notify</h2>
+  <div class="purpose">統一通知入口（Telegram），智能分級路由（INFO/WARN/ERROR/ESCALATE）</div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">notify_agent.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">notify_approval.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">notify_smart.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">notify_telegram.sh</span><span class="badge manual">手動/工具</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="任務生命週期_Task">
+  <h2>📋 任務生命週期 Task</h2>
+  <div class="purpose">建卡 → 執行 → 驗收 → 完成/失敗記錄 → 回報</div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">create_task.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">diagnose_task_failure.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">log_error.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">log_failure.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_complete.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_complete.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_failure_analyzer.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">task_failure_logger.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_reporter.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">track_task.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">verify_and_complete.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">verify_result.sh</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="記憶學習_Memory__Learning">
+  <h2>🧠 記憶學習 Memory & Learning</h2>
+  <div class="purpose">對話萃取 → 蒸餾 → 整合 → QMD 索引 → 語義搜尋，失敗學習</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ qmd-daily-sync.sh(每天03:30)</span>
+    <span class="cron-tag">⏰ morning_routine.sh(每天03:00)</span>
+    <span class="cron-tag">⏰ auto_learning_engine.py(每天04:30)</span>
+    <span class="cron-tag">⏰ daily_ideation.py(每天03:30)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">archive_logs_to_memory.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">auto_learning_engine.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">backup_memory.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">check_qmd_index.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">conversation_memory_extractor.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">failure_memory.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">memory_audit.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">memory_consolidate.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">memory_distill.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">memory_distiller.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">memory_search_qmd.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">memory_write_auditor.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">prompt_learn.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">qmd-daily-sync.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">qmd_agent_bridge.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">qmd_system_health.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">smart_rag_search.sh</span><span class="badge manual">手動/工具</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="每日例行_Daily_Routine">
+  <h2>🌅 每日例行 Daily Routine</h2>
+  <div class="purpose">凌晨備份 → 記憶蒸餾 → 系統分析 → 趨勢發現 → 科技新聞 → 任務建卡</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ morning_routine.sh(每天03:00)</span>
+    <span class="cron-tag">⏰ daily_backup.sh(每天02:30)</span>
+    <span class="cron-tag">⏰ daily_briefing.sh(每週一04:00)</span>
+    <span class="cron-tag">⏰ daily_system_analysis.sh(被morning呼叫)</span>
+    <span class="cron-tag">⏰ daily_trend_discovery.sh(週一至五08:00)</span>
+    <span class="cron-tag">⏰ daily_research_to_tasks.py(每天09:00)</span>
+    <span class="cron-tag">⏰ multi_source_aggregator_v2.py(週一至五11:30)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">auto_cleanup.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daily_ai_news.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">daily_backup.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daily_briefing.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daily_ideation.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daily_pipeline_alert.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">daily_research_to_tasks.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">daily_shrimp_report.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">daily_system_analysis.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">daily_system_audit.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">daily_trend_digest.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">daily_trend_discovery.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">morning_routine.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">multi_source_aggregator_v2.py</span><span class="badge cron">CRON</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="審計安全_Audit__Security">
+  <h2>🛡️ 審計安全 Audit & Security</h2>
+  <div class="purpose">程式碼審查 → 規則引擎 → DLP 守衛 → 合規掃描 → 審計報告</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ auto_audit_detector_v2.py(*/30)</span>
+    <span class="cron-tag">⏰ audit_dispatch_prompt.sh(每天09:00)</span>
+    <span class="cron-tag">⏰ weekly_healthcheck.sh(每週)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">audit_dispatch_prompt.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">auto_audit_detector_v2.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">auto_audit_script.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">blake_code_review.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">config_change_validator.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">dlp_message_guard.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">griffin_review.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">python_safety_check.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">rule_compliance_scan.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">rule_engine.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">rule_ttl_cleaner.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">smart_audit.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">verify_gate.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">verify_traditional_chinese.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">weekly_healthcheck.sh</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="報告上傳_Report">
+  <h2>📊 報告上傳 Report</h2>
+  <div class="purpose">報告品質審查 → 上傳 Supabase → 看板更新 → Hub 展示</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ task_reporter.py(每小時)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">daily_shrimp_report.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">report_utils.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">task_reporter.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">upload_report.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">upload_report_v2.py</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="資料庫_DB">
+  <h2>🗄️ 資料庫 DB</h2>
+  <div class="purpose">Supabase SQL 執行（304引用）、配額監控、自動清理</div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">check_supabase_quota.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">supabase_cleanup.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">supabase_client.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">supabase_sql.sh</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="Notion_整合">
+  <h2>📝 Notion 整合</h2>
+  <div class="purpose">「參考」→ Notion → 評分 → 任務卡；Threads 同步</div>
+  <div class="cron-list">
+    <span class="cron-tag">⏰ notion_idea_pipeline.py(每天00:30)</span>
+    <span class="cron-tag">⏰ sync_threads_to_notion.sh(每週一09:00)</span>
+  </div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">log_incident_notion.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">notion_idea_pipeline.py</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">reference_analyzer.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">save_idea_to_notion.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">sync_threads_to_notion.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">threads_feed_scraper.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">threads_scraper.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">threads_to_notion.py</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="部署_Deploy">
+  <h2>🚢 部署 Deploy</h2>
+  <div class="purpose">部署驗證 → 錯誤記錄 → 任務派發</div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">deploy_css_sync.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">deployment_error_logger.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">deployment_task_dispatcher.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">deployment_verification.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">vercel_deploy_and_watch.sh</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="workflow" id="工具_Utils">
+  <h2>🔨 工具 Utils</h2>
+  <div class="purpose">圖片分析/語音轉文字/OCR/簽核/Funnel 同步/LINE 業績/config 管理</div>
+  <div class="script-grid">
+    <div class="script-card"><span class="name">agent_create_scheduled_task.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">agent_task_manager.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">alert_test.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">analyze_image.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">analyze_image.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">api_contract_test.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">auto_disk_cleanup.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">autox.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">budget_monitor.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">check_model_quota.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">check_sdk_version.sh</span><span class="badge cron">CRON</span></div>
+    <div class="script-card"><span class="name">check_zimbra_approval.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">commit_and_push.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">config_backup.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">config_restore.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">config_snapshot.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">cost_monitor.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">extract_follow_up_tasks.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">glm5_alert.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">glm_ocr.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">hook_trigger.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">intention_engine_v1.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">inventory_alert_check.sh</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">line_performance_alert.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">linebot-stability-test.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">linebot_quality_manager.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">linebot_rag_search.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">phase_unlock.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">propose_and_wait.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">session_sync_daemon.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">stt_stats_api.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">token_threshold_monitor.py</span><span class="badge called">被呼叫</span></div>
+    <div class="script-card"><span class="name">transcribe.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">use_dispatch_template.sh</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">weekly_funnel_sync.py</span><span class="badge manual">手動/工具</span></div>
+    <div class="script-card"><span class="name">zimbra_check.sh</span><span class="badge called">被呼叫</span></div>
+  </div>
+</div>
+
+<div class="v4-section" id="v4gaps">
+  <h2>⚡ V4 後續缺口分析</h2>
+  <p style="color:#94a3b8;margin-bottom:16px">以下是目前流程中缺少或未完成的 V4 功能模組</p>
+  
+  <div class="gap-card">
+    <div class="title">1. DAG 依賴執行引擎（dag_executor.py 存在但未串接）</div>
+    <div class="desc">V4 設計中任務之間有依賴關係（A 完成才能開始 B），dag_executor.py 已寫好但 pipeline_engine_v2 沒有呼叫它。需要：將 DAG 邏輯整合進派發流程，讓 phase_unlock.py 和 dag_executor.py 形成閉環。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">2. Phase 3 自動化（phase3_runner.py 孤立）</div>
+    <div class="desc">V4 分三個 Phase，Phase 1-2 的自動化已完成，但 Phase 3（進階功能）的 runner 沒有被任何 cron 或工作流觸發。需要：定義 Phase 3 任務清單 + 觸發條件 + 掛進 pipeline。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">3. 主動任務管理（proactive_task_management.py 孤立）</div>
+    <div class="desc">Travis 應該主動發現系統問題並建任務卡（intention_engine_v1.py 已有原型），但 proactive_task_management.py 沒有被整合。需要：與 intention_engine 合併，掛進 heartbeat 或每日例行。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">4. Agent 間協作鏈不完整</div>
+    <div class="desc">目前 Agent 只能透過 Travis 中轉通訊（notify_agent.sh 很少使用）。V4 設計中 Blake 完成開發後應直接通知 Griffin 審計，但實際上沒有自動觸發。需要：task_complete.sh 完成後根據任務類型自動觸發下游 Agent。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">5. 成本/Token 預算閉環</div>
+    <div class="desc">token_threshold_monitor.py 和 budget_monitor.py 只做監控告警，沒有自動限流。當 token 用量超標時應自動降頻或暫停低優先任務。需要：budget_monitor → pipeline_engine_v2 的速率限制聯動。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">6. Hooks 系統未啟用</div>
+    <div class="desc">hook_trigger.sh 存在但沒有任何 session 啟動/結束時自動觸發。AGENTS.md 描述的 session_start/session_end hooks 是設計但未實現。需要：在 OpenClaw config 中設定 session lifecycle hooks。</div>
+  </div>
+  
+  <div class="gap-card">
+    <div class="title">7. Zimbra 簽核自動化斷裂</div>
+    <div class="desc">check_zimbra_approval.py 存在但其 cron wrapper（714_zimbra_approval.sh）已刪除。需要：重新建立 cron 條目，工作日 09:00-18:00 每 30 分鐘檢查簽核郵件。</div>
+  </div>
+</div>
+
+<div style="padding:24px 32px;color:#475569;font-size:12px;text-align:center;border-top:1px solid #1e293b;margin-top:24px">
+  Generated by Travis System Audit • 2026-03-16 • 591→169 scripts (71% reduction)
+</div>
+
+<script>
+mermaid.initialize({ 
+  startOnLoad: true, 
+  theme: 'dark',
+  themeVariables: {
+    primaryColor: '#1e3a5f',
+    primaryTextColor: '#e2e8f0',
+    primaryBorderColor: '#3b82f6',
+    lineColor: '#64748b',
+    secondaryColor: '#1e293b',
+    tertiaryColor: '#0f172a'
+  }
+});
+
+// 滾動高亮導航
+const sections = document.querySelectorAll('.workflow, .v4-section');
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html>
