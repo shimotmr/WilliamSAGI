@@ -5021,7 +5021,7 @@ graph TB
   <div class="diagram-header" style="border-bottom-color:#ef4444">
     <div class="diagram-num" style="background:#ef4444">🗑</div>
     <div>
-      <h3>確認刪除名單（7 個）</h3>
+      <h3>確認刪除名單（63 個）</h3>
       <p>點「確認刪除」後我會記錄你的決定，由 Travis 執行實際刪除。⚠️ 標記的需先處理引用再刪。</p>
     </div>
   </div>
@@ -5112,7 +5112,511 @@ graph TB
         </td>
         <td style="padding:8px;text-align:center"><button disabled style="background:#374151;color:#6b7280;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:not-allowed">前提未滿足</button></td>
       </tr>
-      </tbody>
+      <tr id="del-row-8">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">8</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">acceptance_health_check.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，每日驗收健康檢查，被 weekly_healthcheck.sh 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('acceptance_health_check.py',8)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-9">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">9</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">agent_error_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，空殼 sh 腳本，無說明</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('agent_error_audit.sh',9)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-10">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">10</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">agent_monitoring_system.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，空殼 sh 腳本，無說明</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('agent_monitoring_system.sh',10)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-11">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">11</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">audit_comparator.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，審計結果比對，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('audit_comparator.py',11)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-12">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">12</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">auto_audit_detector.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">被 v2 版取代，已有 auto_audit_detector_v2.py</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('auto_audit_detector.py',12)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-13">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">13</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">classify_audit_failure.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，審計失敗分類，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('classify_audit_failure.py',13)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-14">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">14</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">claude_job_watcher.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Claude Job 監控（已廢棄架構）</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('claude_job_watcher.sh',14)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-15">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">15</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">cost_monitor_cron.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，只是 cost_monitor.py 的 cron wrapper，已在 crontab 直接設</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('cost_monitor_cron.sh',15)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-16">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">16</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">daily_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，空殼 sh，無說明</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('daily_audit.sh',16)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-17">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">17</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">daily_keyword_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，社群關鍵字監測，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('daily_keyword_monitor.py',17)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-18">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">18</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">db_audit.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，DB 品質審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('db_audit.py',18)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-19">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">19</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">gateway_watchdog.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，與 gateway_health_check.sh 功能重複</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('gateway_watchdog.sh',19)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-20">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">20</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">glm5_health_check.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，被 glm5_health_check.sh 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('glm5_health_check.py',20)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-21">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">21</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">griffin_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，被 smart_audit.py 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('griffin_audit.sh',21)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-22">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">22</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">griffin_audit_with_learning.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，功能已整合進更新的審計系統</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('griffin_audit_with_learning.sh',22)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-23">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">23</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">health_check_hourly.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，被 heartbeat_snapshot.sh 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('health_check_hourly.sh',23)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-24">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">24</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">health_score_recorder.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，heartbeat 已有更完整健康分數機制</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('health_score_recorder.py',24)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-25">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">25</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">heartbeat_check_reports.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，只有一行 SQL，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('heartbeat_check_reports.sh',25)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-26">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">26</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">hub_audit_scheduler.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Hub 審計排程，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('hub_audit_scheduler.sh',26)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-27">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">27</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">injection_detector.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Prompt injection 偵測，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('injection_detector.sh',27)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-28">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">28</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">lighthouse_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，前端 Lighthouse 審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('lighthouse_audit.sh',28)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-29">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">29</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">local_model_health.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，本地模型健康檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('local_model_health.sh',29)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-30">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">30</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">local_model_monitor.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，本地模型監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('local_model_monitor.sh',30)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-31">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">31</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">log_incident_with_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，寫 incident_log + audit trail，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('log_incident_with_audit.sh',31)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-32">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">32</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">meeting_monitor.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，會議監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('meeting_monitor.sh',32)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-33">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">33</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">model_abuse_detector.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，模型暴走熔斷，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('model_abuse_detector.py',33)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-34">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">34</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">monitor_all.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，空殼 sh，無說明</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('monitor_all.sh',34)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-35">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">35</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">monitor_aurotek_research.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Aurotek 研究監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('monitor_aurotek_research.sh',35)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-36">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">36</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">mova_competitor_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，競爭對手監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('mova_competitor_monitor.py',36)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-37">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">37</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">night_watchman.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，夜間守衛，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('night_watchman.sh',37)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-38">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">38</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">plist_health_check.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，plist 健康檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('plist_health_check.sh',38)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-39">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">39</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">quality_auditor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，品質檢查，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('quality_auditor.py',39)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-40">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">40</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">report_upload_detector.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，報告上傳偵測，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('report_upload_detector.py',40)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-41">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">41</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">retry_engine.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，統一重試引擎但無人呼叫，auto_retry.sh 已覆蓋</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('retry_engine.py',41)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-42">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">42</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">secretary_daily_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Secretary 日常審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('secretary_daily_audit.sh',42)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-43">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">43</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">setup_glm5_cost_monitor.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">設定腳本，已完成任務，無需保留</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('setup_glm5_cost_monitor.sh',43)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-44">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">44</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">setup_model_monitoring_cron.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">設定腳本，已完成任務，無需保留</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('setup_model_monitoring_cron.sh',44)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-45">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">45</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">setup_qmd_monitoring.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">設定腳本，已完成任務，無需保留</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('setup_qmd_monitoring.sh',45)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-46">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">46</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">setup_token_monitoring_system.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">設定腳本，已完成任務，無需保留</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('setup_token_monitoring_system.sh',46)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-47">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">47</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">skill_auditor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Skill 品質審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('skill_auditor.py',47)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-48">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">48</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">stt_stats_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，STT 統計監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('stt_stats_monitor.py',48)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-49">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">49</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">subagent_completion_watcher.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Subagent 完成監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('subagent_completion_watcher.py',49)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-50">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">50</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">subagent_health_check.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，被 subagent_health_check_v2.sh 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('subagent_health_check.py',50)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-51">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">51</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">system_anomaly_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，系統異常偵測，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('system_anomaly_monitor.py',51)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-52">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">52</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">task_card_audit.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，任務卡審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('task_card_audit.py',52)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-53">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">53</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">task_heartbeat.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Task heartbeat，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('task_heartbeat.sh',53)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-54">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">54</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">tesla_monitor.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Tesla 車輛監控，不在核心流程</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('tesla_monitor.py',54)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-55">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">55</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">test_audit_target.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">測試腳本，可刪</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('test_audit_target.py',55)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-56">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">56</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">test_audit_watcher.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">測試腳本，可刪</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('test_audit_watcher.sh',56)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-57">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">57</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">test_fswatch2_1772156491.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">臨時測試腳本，名稱含時間戳</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('test_fswatch2_1772156491.sh',57)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-58">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">58</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">test_fswatch_1772156423.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">臨時測試腳本，名稱含時間戳</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('test_fswatch_1772156423.sh',58)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-59">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">59</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">tos_audit.py</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，TOS 合規審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('tos_audit.py',59)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-60">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">60</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">vercel_build_monitor.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，被 vercel_deploy_and_watch.sh 取代</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('vercel_build_monitor.sh',60)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-61">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">61</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">verify_audit_trail.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，審計 trail 驗證，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('verify_audit_trail.sh',61)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-62">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">62</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">watch_prompts_sync.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，Prompts 同步監控，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('watch_prompts_sync.sh',62)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr><tr id="del-row-63">
+        <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">63</td>
+        <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">weekly_audit.sh</td>
+        <td style="padding:8px;font-size:12px;color:#94a3b8">孤兒，週審計，無人呼叫</td>
+        <td style="padding:8px;font-size:11px">
+          <div style="color:#4ade80">✅ 可直接刪</div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">前提：無（孤兒腳本）</div>
+        </td>
+        <td style="padding:8px;text-align:center"><button onclick="confirmDelete('weekly_audit.sh',63)" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+      </tr></tbody>
     </table>
   </div>
 </div>
@@ -5141,7 +5645,7 @@ function confirmDelete(name) {
   <div class="diagram-header">
     <div class="diagram-num" style="background:#22c55e">✓</div>
     <div>
-      <h3>確認保留名單（34 個）</h3>
+      <h3>確認保留名單（45 個）</h3>
       <p>所有 Cron 活躍腳本。標記 ⚠️ 的建議評估是否真的需要。</p>
     </div>
   </div>
@@ -5362,7 +5866,67 @@ function confirmDelete(name) {
       <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 09:30</td>
       <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
     </tr>
-      </tbody>
+      <tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">smart_audit.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">三層審計引擎核心，被 11 個腳本引用，不可刪</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">health_digest.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">健康摘要核心，被 5 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">qmd_system_health.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">QMD 語義搜尋健康監控，被 4 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">heartbeat_snapshot.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">Heartbeat 快照核心（auto_dispatch 依賴），被 2 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">vercel_deploy_and_watch.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">Vercel 部署監控，被 4 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_audit_script.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">自動化審計腳本，被 3 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_system_audit.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日系統審計，被 2 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">cost_monitor.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">API 成本監控，被 2 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">budget_monitor.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">預算監控，被 2 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">—</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_audit_detector_v2.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">自動審計偵測器 v2，被 1 個腳本引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#60a5fa;white-space:nowrap">被呼叫</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr></tbody>
     </table>
   </div>
 </div>
