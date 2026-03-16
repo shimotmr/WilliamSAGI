@@ -9,6 +9,14 @@ import {
   RefreshCw, MessageSquare, Zap, BarChart3, Hammer, Shield,
 } from 'lucide-react'
 
+interface TaskEvent {
+  id: number
+  task_id: number
+  event_type: string
+  content: Record<string, any>
+  created_at: string
+}
+
 interface StreamEvent {
   id: number
   event_type: string
@@ -153,19 +161,21 @@ export default function TaskReplayPage() {
   const taskId = params.id as string
   const [task, setTask] = useState<TaskInfo | null>(null)
   const [events, setEvents] = useState<StreamEvent[]>([])
+  const [taskEvents, setTaskEvents] = useState<TaskEvent[]>([])
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/v4/task/${taskId}`)
-      .then(r => r.json())
-      .then(data => {
-        setTask(data.task)
-        setEvents(data.events || [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+    Promise.all([
+      fetch(`/api/v4/task/${taskId}`).then(r => r.json()),
+      fetch(`/api/v4/task/${taskId}/events`).then(r => r.json()).catch(() => []),
+    ]).then(([taskData, eventsData]) => {
+      setTask(taskData.task)
+      setEvents(taskData.events || [])
+      setTaskEvents(Array.isArray(eventsData) ? eventsData : [])
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }, [taskId])
 
   const toggleExpand = (idx: number) => {
@@ -319,6 +329,39 @@ export default function TaskReplayPage() {
           )
         })}
       </div>
+
+      {/* Task Events Timeline */}
+      {taskEvents.length > 0 && (
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#8A8F98', marginBottom: '0.5rem' }}>執行流事件</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+            {taskEvents.map((te) => {
+              const c = te.content || {}
+              let icon = '📋'
+              let label = te.event_type
+              let detail = ''
+              switch (te.event_type) {
+                case 'started': icon = '🟢'; label = '任務開始'; detail = [c.agent && `Agent: ${c.agent}`, c.model && `Model: ${c.model}`, c.message].filter(Boolean).join(' · '); break
+                case 'completed': icon = '✅'; label = '任務完成'; detail = c.result || c.message || ''; break
+                case 'failed': icon = '❌'; label = '任務失敗'; detail = c.error || c.message || ''; break
+                case 'tool_call': icon = '🔧'; label = '工具呼叫'; detail = c.tool || c.message || ''; break
+                case 'thinking': icon = '💭'; label = '思考中'; detail = c.message || ''; break
+                default: detail = c.message || JSON.stringify(c).slice(0, 100)
+              }
+              return (
+                <div key={te.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', padding: '0.375rem 0.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '0.375rem', fontSize: '0.75rem' }}>
+                  <span>{icon}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontWeight: 600, color: '#EDEDEF' }}>{label}</span>
+                    {detail && <span style={{ color: '#8A8F98', marginLeft: '0.5rem' }}>{detail}</span>}
+                  </div>
+                  <span style={{ color: '#6b7280', fontSize: '0.6875rem', flexShrink: 0 }}>{formatTime(te.created_at)}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {statsBar}
 
