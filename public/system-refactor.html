@@ -5253,6 +5253,237 @@ graph TB
 })();
 </script>
 
+
+<div class="diagram-card" style="margin-top:24px">
+  <div class="diagram-header">
+    <div class="diagram-num" style="background:#22c55e">✓</div>
+    <div>
+      <h3>確認保留名單（34 個）</h3>
+      <p>所有 Cron 活躍腳本。標記 ⚠️ 的建議評估是否真的需要。</p>
+    </div>
+  </div>
+  <div class="diagram-body" style="padding:0;overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;background:#1e293b;color:#e2e8f0">
+      <thead>
+        <tr style="background:#0f172a;border-bottom:2px solid #334155">
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px">#</th>
+          <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">腳本名稱</th>
+          <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">用途</th>
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px;white-space:nowrap">執行頻率</th>
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px;white-space:nowrap">最後執行</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">9</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">agent_hourly_claim.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">Agent 每小時自動認領待執行任務</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每小時</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">39</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">audit_dispatch_prompt.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每天審計 dispatch_prompt 品質</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 09:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">46</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_cleanup.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">自動清理舊備份檔和臨時檔案</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每週日 03:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">50</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_healer.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">讀取 incidents 並執行對應修復動作</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">53</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_problem_detector.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">偵測系統問題並觸發修復流程</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每10分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">54</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_retry.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">自動重試失敗任務（有冷卻時間）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每30分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">56</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">auto_spawn_runner.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">定期掃描 spawn_queue 執行待派發任務</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">59</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">autox.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">自動化實驗框架（AutoX）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每週一 04:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">77</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">check_qmd_index.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每天驗證 QMD 語義搜尋索引健康狀態</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 06:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">79</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">check_sdk_version.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每週確認 SDK 版本是否需要更新</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每週日 07:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">92</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">⚠️ claude_usage_monitor.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">⚠️ 已整合進 token_threshold_monitor.py（建議廢棄）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每小時</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">129</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_backup.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日系統備份（config/memory）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 02:30</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">131</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_briefing.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每週一早晨簡報觸發腳本</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每週一 04:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">134</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_ideation.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日自動掃描系統產出改善提案</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 03:30</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">140</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_research_to_tasks.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日科技搜尋 → AI 分析 → 自動建任務卡</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 09:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">148</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">daily_trend_discovery.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日趨勢發現與整合</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">cron(0 8 *)</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">162</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">detect_repair_deadlock.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">修復任務死鎖偵測器（5分鐘一次）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">180</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">emergency_dispatcher.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">緊急派發器（P0 任務優先通道）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 0*:0*</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">211</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">gateway_health_check.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">確認 OpenClaw Gateway 存活狀態</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">242</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">heartbeat_pipeline_notify.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每 15 分鐘 pipeline 狀態通知</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每15分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">245</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">heartbeat_stuck_check.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">偵測卡住超過閾值的任務並重置</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每10分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">248</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">hourly_system_snapshot.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每小時系統狀態快照（Intention Engine 原料）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 0*:05</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">301</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">meta_heartbeat.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">監視所有 heartbeat 的 heartbeat（V4 核心）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每15分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">316</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">morning_routine.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每天早晨例行任務觸發（記憶整理/郵件檢查）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 03:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">319</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">multi_source_aggregator_v2.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">多來源趨勢聚合器（科技新聞+GitHub+HN）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">cron(30 11 *)</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">354</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">pipeline_master.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">任務派發主流程協調器（每5分鐘）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">373</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">qmd-daily-sync.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每日更新 QMD 語義搜尋索引</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 03:30</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">406</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">rule_ttl_cleaner.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">清理過期的 pattern_rules（TTL 機制）</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 03:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">427</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">session_watchdog.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">監控 subagent session 存活，死亡時通知</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每5分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">463</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">status_guardian.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每 30 分鐘修正非法 board_tasks 狀態</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每30分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">484</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">sync_threads_to_notion.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每週一同步 Threads 貼文到 Notion</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每週一 09:00</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#94a3b8">—</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">507</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">task_reporter.py</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每小時任務狀態自動回報</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每小時</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">570</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">verify_healing.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">驗證 auto_healer 的修復是否有效</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每7分鐘</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr><tr>
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">589</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#e2e8f0">williamsagi_health_check.sh</td>
+      <td style="padding:8px;font-size:12px;color:#e2e8f0">每天確認 WilliamSAGI 網站正常</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">每天 09:30</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80">今天</td>
+    </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <!-- TAB 5: 三階段執行計畫 -->
 <div id="panel-phases" class="panel">
   <div class="hero" style="padding-bottom:16px">
