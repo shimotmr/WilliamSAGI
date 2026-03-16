@@ -11,7 +11,7 @@ import {
   MessageSquare, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car, MapPin, Network, ScanText,
+  Menu, X, Car, MapPin, Network, ScanText, GitFork,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -57,6 +57,7 @@ const navGroups = [
     items: [
       { href: '/hub/v4', icon: Activity, label: 'V4 系統中心' },
       { href: '/hub/architecture', icon: Network, label: 'V4 架構圖' },
+      { href: '/hub/system-refactor', icon: GitFork, label: '架構重整' },
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
     ],
