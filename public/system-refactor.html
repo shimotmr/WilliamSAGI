@@ -257,12 +257,13 @@ graph TB
     H1[meta_heartbeat.sh] --> D1[auto_problem_detector.sh]
     H2[heartbeat_stuck_check.sh] --> D1
     H3[session_watchdog.sh] --> D2[auto_healer.sh]
-    H4[gateway_health_check.sh] --> D3[gateway 守衛]
-    H5[status_guardian.sh] --> D4[狀態修正]
+    H4[gateway_health_check.sh] --> D3[gateway守衛]
+    H5[status_guardian.sh] --> D3
     H6[heartbeat_pipeline_notify.sh] --> N[notify_telegram.sh]
     D1 --> A[auto_retry.sh]
     D1 --> H6
     D2 --> V[verify_healing.sh]
+    D3 --> N
     style D1 fill:#ef4444,color:#fff
     style H1 fill:#334155,color:#e2e8f0
     style H2 fill:#334155,color:#e2e8f0
@@ -284,11 +285,11 @@ graph TB
     <div class="diagram-body">
       <div class="mermaid">
 graph LR
-    F["failure_events\n68筆"] -->|手動| P[pattern_rules\n6筆]
-    I["incident_log\n49筆"] -->|重複!| P
+    F["failure_events 68筆"] -->|手動| P["pattern_rules 6筆"]
+    I["incident_log 49筆"] -->|重複!| P
     P -->|手動注入| D[pipeline_engine]
-    D -->|空殼!| FP["agent_fingerprints\n❌ 不存在"]
-    D -->|空殼!| AD["adaptive_decisions\n❌ 不存在"]
+    D -->|空殼!| FP["agent_fingerprints X不存在"]
+    D -->|空殼!| AD["adaptive_decisions X不存在"]
     style F fill:#ef4444,color:#fff
     style I fill:#ef4444,color:#fff
     style FP fill:#6b7280,color:#fff
