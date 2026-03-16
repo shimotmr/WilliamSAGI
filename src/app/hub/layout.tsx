@@ -49,7 +49,7 @@ const navGroups = [
       { href: '/hub/approvals', icon: CheckSquare, label: '審批' },
       { href: '/hub/trade',     icon: TrendingUp,  label: '交易' },
       { href: '/hub/growth',    icon: Sprout,      label: '成長' },
-      { href: '/tesla',        icon: Car,         label: '交通評估' },
+      { href: '/hub/tesla',     icon: Car,         label: 'Tesla' },
     ],
   },
   {
