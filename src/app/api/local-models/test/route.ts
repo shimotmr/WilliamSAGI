@@ -1,43 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic';
+const LM_STUDIO_URL = process.env.LM_STUDIO_URL || 'http://localhost:8080'
 
 export async function POST(req: NextRequest) {
+  const { model } = await req.json()
+  const start = Date.now()
   try {
-    const { model } = await req.json();
-    if (!model) {
-      return NextResponse.json({ error: '缺少 model 參數' }, { status: 400 });
-    }
-
-    const start = performance.now();
-    const res = await fetch('http://localhost:8080/v1/chat/completions', {
+    const res = await fetch(`${LM_STUDIO_URL}/v1/chat/completions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model,
-        messages: [{ role: 'user', content: 'Say "ok" in one word.' }],
+        messages: [{ role: 'user', content: 'Reply with one word: OK' }],
         max_tokens: 10,
-        temperature: 0,
       }),
       signal: AbortSignal.timeout(30000),
-    });
-
-    const elapsed = Math.round(performance.now() - start);
-
-    if (!res.ok) {
-      const body = await res.text();
-      return NextResponse.json({ error: '推理失敗', detail: body, ms: elapsed }, { status: 502 });
-    }
-
-    const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content ?? '';
-    const tokens = data.usage ?? {};
-
-    return NextResponse.json({ ms: elapsed, reply, tokens, model });
-  } catch (e: any) {
-    return NextResponse.json(
-      { error: 'LM Studio 無法回應', detail: e.message },
-      { status: 503 }
-    );
+    })
+    const data = await res.json()
+    const elapsed = Date.now() - start
+    return NextResponse.json({
+      ok: true,
+      elapsed_ms: elapsed,
+      tokens: data.usage?.completion_tokens ?? 0,
+      response: data.choices?.[0]?.message?.content ?? '',
+    })
+  } catch (e: unknown) {
+    return NextResponse.json({ ok: false, error: String(e) }, { status: 503 })
   }
 }
