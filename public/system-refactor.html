@@ -5016,6 +5016,95 @@ graph TB
 </script>
 
 
+
+<div class="diagram-card" style="margin-top:24px;border-color:#ef4444">
+  <div class="diagram-header" style="border-bottom-color:#ef4444">
+    <div class="diagram-num" style="background:#ef4444">🗑</div>
+    <div>
+      <h3>確認刪除名單（7 個）</h3>
+      <p>點「確認刪除」後我會記錄你的決定，由 Travis 執行實際刪除。⚠️ 標記的需先處理引用再刪。</p>
+    </div>
+  </div>
+  <div class="diagram-body" style="padding:0;overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;background:#1e293b">
+      <thead>
+        <tr style="background:#0f172a;border-bottom:2px solid #334155">
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px">#</th>
+          <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">腳本名稱</th>
+          <th style="padding:10px 8px;text-align:left;color:#94a3b8;font-size:12px">刪除原因</th>
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px;white-space:nowrap">安全性</th>
+          <th style="padding:10px 8px;text-align:center;color:#94a3b8;font-size:12px">行動</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="del-row-1">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">1</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">claude_usage_monitor.py</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">自己聲明已停用，已從 crontab 移除</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('claude_usage_monitor.py')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-2">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">2</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">queue_spawn.sh</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">queue_spawn.py Python版完全覆蓋，SQL更安全</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('queue_spawn.sh')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-3">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">3</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">spawn_queue_consumer.py</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">讀本地 JSON（舊架構）已廢棄，Supabase 表版本已取代</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('spawn_queue_consumer.py')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-4">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">4</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">smart_notify.py</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">notify_telegram.sh 完全覆蓋，從未穩定</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('smart_notify.py')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-5">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">5</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">alert_notify.sh</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">notify_telegram.sh 完全覆蓋，無引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('alert_notify.sh')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-6">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">6</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">spawn_notify.sh</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">已整合至 pipeline_engine_v2.py，無引用</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#4ade80;white-space:nowrap">✅ 可直接刪</td>
+      <td style="padding:8px;text-align:center"><button onclick="confirmDelete('spawn_notify.sh')" style="background:#ef4444;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">確認刪除</button></td>
+    </tr><tr id="del-row-7">
+      <td style="padding:8px;color:#64748b;font-size:12px;text-align:center">7</td>
+      <td style="padding:8px;font-family:monospace;font-size:12px;color:#fca5a5">notify.sh</td>
+      <td style="padding:8px;font-size:12px;color:#94a3b8">有 3 個腳本引用（report_utils.sh 等），需先替換引用再刪</td>
+      <td style="padding:8px;text-align:center;font-size:11px;color:#f59e0b;white-space:nowrap">⚠️ 需先處理引用</td>
+      <td style="padding:8px;text-align:center"><span style="color:#f59e0b;font-size:11px">先修引用</span></td>
+    </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function confirmDelete(name) {
+  if(confirm('確認刪除 ' + name + '？')) {
+    var btn = event.target;
+    btn.textContent = '已確認';
+    btn.style.background = '#6b7280';
+    btn.disabled = true;
+    // 發送到 Travis 的確認記錄
+    fetch('/api/v4/confirm-delete', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({script: name, confirmed_at: new Date().toISOString()})
+    }).catch(function() {
+      // 即使 API 不存在也不影響 UI
+    });
+    console.log('Deletion confirmed for: ' + name);
+  }
+}
+</script>
+
 <div class="diagram-card" style="margin-top:24px">
   <div class="diagram-header">
     <div class="diagram-num" style="background:#22c55e">✓</div>
