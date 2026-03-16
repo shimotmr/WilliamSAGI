@@ -1,17 +1,10 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getSessionFromRequest } from '@/lib/auth/guards'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Require valid admin session
-  const session = await getSessionFromRequest(request)
-  if (!session || session.role !== 'admin') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const { id } = await params
   const taskId = parseInt(id, 10)
   if (isNaN(taskId)) {
@@ -31,7 +24,7 @@ export async function GET(
     return NextResponse.json({ error: 'Task not found' }, { status: 404 })
   }
 
-  // Fetch stream events
+  // Fetch stream events from task_stream (11k+ records)
   const { data: events, error: eventsError } = await supabase
     .from('task_stream')
     .select('*')
