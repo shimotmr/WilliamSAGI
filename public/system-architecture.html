@@ -1,513 +1,345 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travis 系統架構流程圖</title>
+<title>WilliamSAGI — System Architecture</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#0f172a; color:#e2e8f0; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
-  .header { padding:24px 32px; border-bottom:1px solid #1e293b; }
-  .header h1 { font-size:24px; margin-bottom:8px; }
-  .header .stats { display:flex; gap:16px; flex-wrap:wrap; }
-  .header .stat { background:#1e293b; padding:8px 16px; border-radius:8px; font-size:13px; }
-  .stat .num { color:#60a5fa; font-weight:700; font-size:18px; }
-  .nav { display:flex; gap:8px; padding:16px 32px; flex-wrap:wrap; position:sticky; top:0; background:#0f172a; z-index:10; border-bottom:1px solid #1e293b; }
-  .nav a { background:#1e293b; color:#94a3b8; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; transition:all .2s; }
-  .nav a:hover, .nav a.active { background:#3b82f6; color:#fff; }
-  .workflow { padding:24px 32px; border-bottom:1px solid #1e293b; }
-  .workflow h2 { font-size:18px; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
-  .workflow .purpose { color:#94a3b8; font-size:13px; margin-bottom:16px; }
-  .workflow .cron-list { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
-  .workflow .cron-tag { background:#1e3a5f; color:#60a5fa; padding:4px 10px; border-radius:6px; font-size:11px; font-family:monospace; }
-  .script-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; margin-top:12px; }
-  .script-card { background:#1e293b; padding:10px 14px; border-radius:8px; font-family:monospace; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
-  .script-card .name { color:#e2e8f0; }
-  .script-card .badge { font-size:10px; padding:2px 8px; border-radius:4px; }
-  .badge.cron { background:#166534; color:#4ade80; }
-  .badge.called { background:#1e3a5f; color:#60a5fa; }
-  .badge.manual { background:#44403c; color:#d6d3d1; }
-  .mermaid { background:#1e293b; padding:20px; border-radius:12px; margin:16px 0; overflow-x:auto; }
-  .v4-section { padding:24px 32px; border-top:2px solid #3b82f6; margin-top:24px; }
-  .v4-section h2 { color:#60a5fa; }
-  .gap-card { background:#1e293b; border-left:3px solid #f59e0b; padding:12px 16px; border-radius:0 8px 8px 0; margin:8px 0; }
-  .gap-card .title { font-weight:600; color:#fbbf24; }
-  .gap-card .desc { color:#94a3b8; font-size:13px; margin-top:4px; }
-  @media(max-width:768px) { .header,.workflow,.nav,.v4-section { padding:16px; } }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--bg4:#222236;
+  --text:#e4e4ef;--text2:#9a9ab0;--text3:#6a6a80;
+  --accent:#6c5ce7;--accent2:#a29bfe;--green:#00cec9;--red:#ff6b6b;
+  --orange:#fdcb6e;--blue:#74b9ff;--pink:#fd79a8;--teal:#81ecec;
+  --radius:10px;--shadow:0 4px 24px rgba(0,0,0,.4);
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;line-height:1.6;min-height:100vh}
+
+/* Header */
+.hero{padding:3rem 2rem 2rem;text-align:center;background:linear-gradient(135deg,#0a0a1a 0%,#1a1035 50%,#0a0a1a 100%);border-bottom:1px solid rgba(108,92,231,.2)}
+.hero h1{font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+.hero p{color:var(--text2);margin-top:.5rem;font-size:.95rem}
+
+/* Stats bar */
+.stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.5rem 2rem;background:var(--bg2);border-bottom:1px solid rgba(255,255,255,.05)}
+.stat{text-align:center}
+.stat .num{font-size:1.8rem;font-weight:800;font-variant-numeric:tabular-nums}
+.stat .label{font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.stat.green .num{color:var(--green)}
+.stat.red .num{color:var(--red)}
+.stat.orange .num{color:var(--orange)}
+.stat.blue .num{color:var(--blue)}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05);padding:.6rem 1rem;overflow-x:auto;white-space:nowrap;display:flex;gap:.5rem;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{display:inline-block;padding:.4rem .8rem;border-radius:6px;color:var(--text2);text-decoration:none;font-size:.78rem;font-weight:500;transition:all .15s;flex-shrink:0}
+.nav a:hover,.nav a.active{background:var(--accent);color:#fff}
+
+/* Content */
+.content{max-width:1400px;margin:0 auto;padding:1.5rem}
+
+/* Section */
+.section{margin-bottom:3rem}
+.section-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.section-header h2{font-size:1.3rem;font-weight:700;color:var(--text)}
+.section-header .badge{font-size:.7rem;padding:.2rem .6rem;border-radius:20px;font-weight:600}
+.badge-count{background:var(--accent);color:#fff}
+.badge-cron{background:rgba(0,206,201,.15);color:var(--green);border:1px solid rgba(0,206,201,.3)}
+.section-purpose{color:var(--text2);font-size:.85rem;margin-bottom:1rem;padding:.6rem .8rem;background:var(--bg2);border-radius:var(--radius);border-left:3px solid var(--accent)}
+.cron-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.cron-tag{font-size:.7rem;padding:.2rem .5rem;border-radius:4px;background:rgba(0,206,201,.08);color:var(--green);border:1px solid rgba(0,206,201,.15);font-family:'SF Mono','Fira Code',monospace}
+
+/* Script cards */
+.scripts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem}
+.script-card{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:var(--bg2);border-radius:6px;border:1px solid rgba(255,255,255,.04);transition:all .15s}
+.script-card:hover{border-color:rgba(108,92,231,.3);background:var(--bg3);transform:translateY(-1px)}
+.script-name{font-size:.8rem;font-family:'SF Mono','Fira Code',monospace;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.type-tag{font-size:.6rem;padding:.15rem .4rem;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.type-cron{background:rgba(0,206,201,.12);color:var(--green)}
+.type-called{background:rgba(116,185,255,.12);color:var(--blue)}
+.type-manual{background:rgba(154,154,176,.1);color:var(--text3)}
+
+/* Calls indicator */
+.calls-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.calls-dot.has-calls{background:var(--orange)}
+.calls-dot.no-calls{background:var(--bg4)}
+
+/* Mermaid */
+.mermaid-wrapper{background:var(--bg2);border-radius:var(--radius);padding:1.5rem;border:1px solid rgba(255,255,255,.05);overflow-x:auto;margin-bottom:2rem}
+.mermaid-wrapper h3{font-size:1rem;margin-bottom:1rem;color:var(--accent2)}
+
+/* Gaps */
+.gaps{display:grid;gap:.8rem}
+.gap-card{background:var(--bg2);border-radius:var(--radius);padding:1rem 1.2rem;border-left:3px solid var(--red);border:1px solid rgba(255,107,107,.1);border-left:3px solid var(--red)}
+.gap-card h4{font-size:.9rem;color:var(--red);margin-bottom:.3rem}
+.gap-card p{font-size:.82rem;color:var(--text2)}
+.gap-id{display:inline-block;background:rgba(255,107,107,.1);color:var(--red);font-size:.65rem;padding:.1rem .4rem;border-radius:3px;font-weight:700;margin-right:.4rem}
+
+/* Footer */
+.footer{text-align:center;padding:2rem;color:var(--text3);font-size:.75rem;border-top:1px solid rgba(255,255,255,.04)}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.6rem}
+  .stats{gap:1rem}
+  .stat .num{font-size:1.4rem}
+  .scripts-grid{grid-template-columns:1fr}
+  .content{padding:1rem}
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>🏗️ Travis 系統架構流程圖</h1>
-  <p style="color:#94a3b8;margin-bottom:12px">2026-03-16 審計後精簡版 — 591→169 個腳本（精簡 71%）</p>
-  <div class="stats">
-    <div class="stat"><div class="num">169</div>保留腳本</div>
-    <div class="stat"><div class="num">34</div>Cron 任務</div>
-    <div class="stat"><div class="num">13</div>工作流群組</div>
-    <div class="stat"><div class="num">422</div>已清理</div>
+<div class="hero">
+  <h1>🏗️ WilliamSAGI System Architecture</h1>
+  <p>169 腳本 × 13 工作流 × 自動化全景圖 — V4 Production</p>
+</div>
+
+<div class="stats">
+  <div class="stat green"><div class="num">169</div><div class="label">保留腳本</div></div>
+  <div class="stat red"><div class="num">422</div><div class="label">已清理</div></div>
+  <div class="stat orange"><div class="num">34</div><div class="label">Cron 排程</div></div>
+  <div class="stat blue"><div class="num">13</div><div class="label">工作流</div></div>
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<div class="content">
+
+<!-- System Flow Chart -->
+<div class="section" id="flowchart">
+  <div class="section-header">
+    <h2>🔄 核心工作流互動圖</h2>
   </div>
-</div>
+  <div class="mermaid-wrapper">
+    <div class="mermaid">
+flowchart TB
+  subgraph CRON["⏰ Cron 調度層"]
+    PM["pipeline_master.sh\n*/5"]
+    ASR["auto_spawn_runner.sh\n*/5"]
+    ED["emergency_dispatcher.py\n*/1"]
+    HSC["heartbeat_stuck_check.sh\n*/10"]
+    GHC["gateway_health_check.sh\n*/5"]
+    SW["session_watchdog.sh\n*/5"]
+    AH["auto_healer.sh\n*/5"]
+    APD["auto_problem_detector.sh\n*/10"]
+    MR["morning_routine.sh\n03:00"]
+  end
 
-<div class="nav" id="nav">
-  <a href="#任務派發_Pipeline">🚀 任務派發</a>
-  <a href="#健康監控_Heartbeat">💓 健康監控</a>
-  <a href="#自動修復_Emergency_Repair">🔧 自動修復</a>
-  <a href="#通知系統_Notify">📢 通知系統</a>
-  <a href="#任務生命週期_Task">📋 任務生命週期</a>
-  <a href="#記憶學習_Memory__Learning">🧠 記憶學習</a>
-  <a href="#每日例行_Daily_Routine">🌅 每日例行</a>
-  <a href="#審計安全_Audit__Security">🛡️ 審計安全</a>
-  <a href="#報告上傳_Report">📊 報告上傳</a>
-  <a href="#資料庫_DB">🗄️ 資料庫</a>
-  <a href="#Notion_整合">📝 Notion</a>
-  <a href="#部署_Deploy">🚢 部署</a>
-  <a href="#工具_Utils">🔨 工具</a>
-  <a href="#v4gaps" style="background:#f59e0b;color:#000">⚡ V4 缺口</a>
-</div>
+  subgraph PIPELINE["🚀 任務派發 Pipeline"]
+    PE["pipeline_engine_v2.py"]
+    TC["task_classifier.py"]
+    MS["model_selector.py"]
+    SS["safe_spawn.py"]
+    QS["queue_spawn.py"]
+  end
 
-<div class="workflow">
-<h2>🗺️ 系統總覽</h2>
-<div class="mermaid">
-graph LR
-  subgraph CRON["⏰ Cron 觸發"]
-    C1["pipeline_master<br/>*/5"]
-    C2["heartbeat_stuck<br/>*/10"]
-    C3["auto_healer<br/>*/5"]
-    C4["morning_routine<br/>03:00"]
-    C5["emergency_disp<br/>*/1"]
+  subgraph TASK["📋 任務生命週期"]
+    CT["create_task.sh"]
+    TCS["task_complete.sh"]
+    TCP["task_complete.py"]
+    VR["verify_result.sh"]
+    VAC["verify_and_complete.sh"]
   end
-  subgraph PIPELINE["🚀 任務派發"]
-    P1["pipeline_engine_v2"]
-    P2["safe_spawn"]
-    P3["auto_spawn_runner"]
-    P4["spawn_queue<br/>(Supabase)"]
+
+  subgraph HEALTH["💓 健康監控"]
+    HD["health_digest.sh"]
+    HPN["heartbeat_pipeline_notify.sh"]
+    MHB["meta_heartbeat.sh"]
+    SG["status_guardian.sh"]
   end
-  subgraph MONITOR["💓 健康監控"]
-    M1["heartbeat_snapshot"]
-    M2["gateway_health"]
-    M3["session_watchdog"]
-  end
+
   subgraph REPAIR["🔧 自動修復"]
-    R1["auto_problem_detector"]
-    R2["auto_healer"]
-    R3["verify_healing"]
+    VH["verify_healing.sh"]
+    DRD["detect_repair_deadlock.py"]
+    ES["emergency_stop.sh"]
+    ER["emergency_resume.sh"]
   end
-  subgraph TASK["📋 任務生命"]
-    T1["create_task"]
-    T2["task_complete"]
-    T3["verify_result"]
+
+  subgraph MEMORY["🧠 記憶學習"]
+    MD["memory_distill.sh"]
+    ALE["auto_learning_engine.py"]
+    QDS["qmd-daily-sync.sh"]
+    SRS["smart_rag_search.sh"]
   end
-  subgraph NOTIFY["📢 通知"]
-    N1["notify_telegram<br/>111 refs"]
-    N2["notify_smart"]
+
+  subgraph NOTIFY["📢 通知系統"]
+    NT["notify_telegram.sh"]
+    NS["notify_smart.sh"]
+    NA["notify_agent.sh"]
   end
+
   subgraph DB["🗄️ 資料庫"]
-    D1["supabase_sql<br/>304 refs"]
-    D2["board_tasks"]
+    SQL["supabase_sql.sh"]
   end
+
+  PM --> PE --> TC --> MS
+  MS --> QS --> SS
+  ASR --> SQL
+  ED --> SQL
+  HSC --> SQL & NS
+  GHC
+  SW --> NT & SQL
+  APD --> SQL
+  AH --> HSC & NT & SQL
   
-  C1 --> P1 --> P2 --> P4 --> P3
-  C2 --> M1
-  C3 --> R1 --> R2 --> R3
-  C4 --> |daily| P1
-  C5 --> P2
-  P3 --> T1
-  T1 --> D1 --> D2
-  T2 --> N1
-  M1 --> N2 --> N1
-  R2 --> N1
-
-  style CRON fill:#1e3a5f,stroke:#3b82f6
-  style PIPELINE fill:#1e3a5f,stroke:#3b82f6
-  style MONITOR fill:#14532d,stroke:#22c55e
-  style REPAIR fill:#431407,stroke:#ea580c
-  style TASK fill:#1e293b,stroke:#64748b
-  style NOTIFY fill:#4a1d96,stroke:#a78bfa
-  style DB fill:#1c1917,stroke:#78716c
-</div>
-</div>
-<div class="workflow" id="任務派發_Pipeline">
-  <h2>🚀 任務派發 Pipeline</h2>
-  <div class="purpose">從看板讀取待派發任務 → 分類 → 選模型 → 寫入 spawn_queue → 消費執行</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ pipeline_master.sh(*/5)</span>
-    <span class="cron-tag">⏰ auto_spawn_runner.sh(*/5)</span>
-    <span class="cron-tag">⏰ emergency_dispatcher.py(*/1)</span>
-    <span class="cron-tag">⏰ auto_dispatch.sh(heartbeat呼叫)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">agent_claim_tasks.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">agent_hourly_claim.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">auto_claim_and_spawn.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">auto_dispatch.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">auto_spawn_runner.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">dag_executor.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">emergency_dispatcher.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">model_selector.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">notion_idea_pipeline.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">phase3_runner.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">pipeline_engine_v2.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">pipeline_master.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">proactive_task_management.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">queue_spawn.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">reassign_legacy_tasks.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">safe_spawn.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_classifier.py</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="健康監控_Heartbeat">
-  <h2>💓 健康監控 Heartbeat</h2>
-  <div class="purpose">系統/Gateway/LINE Bot/磁碟/憑證 全方位健康監控，停擺任務偵測</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ heartbeat_stuck_check.sh(*/10)</span>
-    <span class="cron-tag">⏰ heartbeat_pipeline_notify.sh(*/15)</span>
-    <span class="cron-tag">⏰ meta_heartbeat.sh(*/15)</span>
-    <span class="cron-tag">⏰ hourly_system_snapshot.sh(每小時)</span>
-    <span class="cron-tag">⏰ gateway_health_check.sh(*/5)</span>
-    <span class="cron-tag">⏰ session_watchdog.sh(*/5)</span>
-    <span class="cron-tag">⏰ status_guardian.sh(*/30)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">credential_health_check.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">disk_health_alert.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">gateway_crash_monitor.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">gateway_health_check.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">glm5_health_check.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">health_digest.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">heartbeat_check_follow_ups.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">heartbeat_pipeline_notify.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">heartbeat_snapshot.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">heartbeat_stuck_check.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">hourly_system_snapshot.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">linebot-log-monitor.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">linebot-monitor.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">linebot-restart.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">linebot-status.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">meta_heartbeat.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">session_watchdog.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">status_guardian.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">subagent_health_check_v2.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">system_health_check.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">system_health_monitor.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">system_resource_alert.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">williamsagi_health_check.sh</span><span class="badge cron">CRON</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="自動修復_Emergency_Repair">
-  <h2>🔧 自動修復 Emergency Repair</h2>
-  <div class="purpose">偵測問題 → 自動修復 → 驗證修復 → 死鎖偵測，緊急停止/恢復</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ auto_problem_detector.sh(*/10)</span>
-    <span class="cron-tag">⏰ auto_healer.sh(*/5)</span>
-    <span class="cron-tag">⏰ verify_healing.sh(*/7)</span>
-    <span class="cron-tag">⏰ detect_repair_deadlock.py(*/5)</span>
-    <span class="cron-tag">⏰ auto_retry.sh(*/30)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">auto_healer.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">auto_problem_detector.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">auto_retry.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daemon_registry.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">detect_repair_deadlock.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">emergency_resume.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">emergency_stop.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">gateway_auto_restart.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">gateway_reinstall.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">gateway_restart_guard.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">gateway_safe_restart.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">setup_anti_stall_system.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">setup_token_balanced_system.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">verify_healing.sh</span><span class="badge cron">CRON</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="通知系統_Notify">
-  <h2>📢 通知系統 Notify</h2>
-  <div class="purpose">統一通知入口（Telegram），智能分級路由（INFO/WARN/ERROR/ESCALATE）</div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">notify_agent.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">notify_approval.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">notify_smart.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">notify_telegram.sh</span><span class="badge manual">手動/工具</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="任務生命週期_Task">
-  <h2>📋 任務生命週期 Task</h2>
-  <div class="purpose">建卡 → 執行 → 驗收 → 完成/失敗記錄 → 回報</div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">create_task.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">diagnose_task_failure.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">log_error.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">log_failure.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_complete.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_complete.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_failure_analyzer.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">task_failure_logger.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_reporter.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">track_task.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">verify_and_complete.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">verify_result.sh</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="記憶學習_Memory__Learning">
-  <h2>🧠 記憶學習 Memory & Learning</h2>
-  <div class="purpose">對話萃取 → 蒸餾 → 整合 → QMD 索引 → 語義搜尋，失敗學習</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ qmd-daily-sync.sh(每天03:30)</span>
-    <span class="cron-tag">⏰ morning_routine.sh(每天03:00)</span>
-    <span class="cron-tag">⏰ auto_learning_engine.py(每天04:30)</span>
-    <span class="cron-tag">⏰ daily_ideation.py(每天03:30)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">archive_logs_to_memory.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">auto_learning_engine.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">backup_memory.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">check_qmd_index.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">conversation_memory_extractor.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">failure_memory.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">memory_audit.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">memory_consolidate.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">memory_distill.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">memory_distiller.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">memory_search_qmd.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">memory_write_auditor.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">prompt_learn.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">qmd-daily-sync.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">qmd_agent_bridge.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">qmd_system_health.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">smart_rag_search.sh</span><span class="badge manual">手動/工具</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="每日例行_Daily_Routine">
-  <h2>🌅 每日例行 Daily Routine</h2>
-  <div class="purpose">凌晨備份 → 記憶蒸餾 → 系統分析 → 趨勢發現 → 科技新聞 → 任務建卡</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ morning_routine.sh(每天03:00)</span>
-    <span class="cron-tag">⏰ daily_backup.sh(每天02:30)</span>
-    <span class="cron-tag">⏰ daily_briefing.sh(每週一04:00)</span>
-    <span class="cron-tag">⏰ daily_system_analysis.sh(被morning呼叫)</span>
-    <span class="cron-tag">⏰ daily_trend_discovery.sh(週一至五08:00)</span>
-    <span class="cron-tag">⏰ daily_research_to_tasks.py(每天09:00)</span>
-    <span class="cron-tag">⏰ multi_source_aggregator_v2.py(週一至五11:30)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">auto_cleanup.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daily_ai_news.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">daily_backup.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daily_briefing.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daily_ideation.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daily_pipeline_alert.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">daily_research_to_tasks.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">daily_shrimp_report.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">daily_system_analysis.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">daily_system_audit.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">daily_trend_digest.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">daily_trend_discovery.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">morning_routine.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">multi_source_aggregator_v2.py</span><span class="badge cron">CRON</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="審計安全_Audit__Security">
-  <h2>🛡️ 審計安全 Audit & Security</h2>
-  <div class="purpose">程式碼審查 → 規則引擎 → DLP 守衛 → 合規掃描 → 審計報告</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ auto_audit_detector_v2.py(*/30)</span>
-    <span class="cron-tag">⏰ audit_dispatch_prompt.sh(每天09:00)</span>
-    <span class="cron-tag">⏰ weekly_healthcheck.sh(每週)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">audit_dispatch_prompt.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">auto_audit_detector_v2.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">auto_audit_script.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">blake_code_review.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">config_change_validator.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">dlp_message_guard.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">griffin_review.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">python_safety_check.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">rule_compliance_scan.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">rule_engine.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">rule_ttl_cleaner.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">smart_audit.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">verify_gate.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">verify_traditional_chinese.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">weekly_healthcheck.sh</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="報告上傳_Report">
-  <h2>📊 報告上傳 Report</h2>
-  <div class="purpose">報告品質審查 → 上傳 Supabase → 看板更新 → Hub 展示</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ task_reporter.py(每小時)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">daily_shrimp_report.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">report_utils.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">task_reporter.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">upload_report.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">upload_report_v2.py</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="資料庫_DB">
-  <h2>🗄️ 資料庫 DB</h2>
-  <div class="purpose">Supabase SQL 執行（304引用）、配額監控、自動清理</div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">check_supabase_quota.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">supabase_cleanup.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">supabase_client.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">supabase_sql.sh</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="Notion_整合">
-  <h2>📝 Notion 整合</h2>
-  <div class="purpose">「參考」→ Notion → 評分 → 任務卡；Threads 同步</div>
-  <div class="cron-list">
-    <span class="cron-tag">⏰ notion_idea_pipeline.py(每天00:30)</span>
-    <span class="cron-tag">⏰ sync_threads_to_notion.sh(每週一09:00)</span>
-  </div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">log_incident_notion.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">notion_idea_pipeline.py</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">reference_analyzer.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">save_idea_to_notion.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">sync_threads_to_notion.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">threads_feed_scraper.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">threads_scraper.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">threads_to_notion.py</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="部署_Deploy">
-  <h2>🚢 部署 Deploy</h2>
-  <div class="purpose">部署驗證 → 錯誤記錄 → 任務派發</div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">deploy_css_sync.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">deployment_error_logger.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">deployment_task_dispatcher.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">deployment_verification.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">vercel_deploy_and_watch.sh</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="workflow" id="工具_Utils">
-  <h2>🔨 工具 Utils</h2>
-  <div class="purpose">圖片分析/語音轉文字/OCR/簽核/Funnel 同步/LINE 業績/config 管理</div>
-  <div class="script-grid">
-    <div class="script-card"><span class="name">agent_create_scheduled_task.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">agent_task_manager.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">alert_test.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">analyze_image.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">analyze_image.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">api_contract_test.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">auto_disk_cleanup.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">autox.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">budget_monitor.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">check_model_quota.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">check_sdk_version.sh</span><span class="badge cron">CRON</span></div>
-    <div class="script-card"><span class="name">check_zimbra_approval.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">commit_and_push.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">config_backup.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">config_restore.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">config_snapshot.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">cost_monitor.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">extract_follow_up_tasks.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">glm5_alert.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">glm_ocr.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">hook_trigger.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">intention_engine_v1.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">inventory_alert_check.sh</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">line_performance_alert.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">linebot-stability-test.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">linebot_quality_manager.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">linebot_rag_search.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">phase_unlock.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">propose_and_wait.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">session_sync_daemon.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">stt_stats_api.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">token_threshold_monitor.py</span><span class="badge called">被呼叫</span></div>
-    <div class="script-card"><span class="name">transcribe.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">use_dispatch_template.sh</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">weekly_funnel_sync.py</span><span class="badge manual">手動/工具</span></div>
-    <div class="script-card"><span class="name">zimbra_check.sh</span><span class="badge called">被呼叫</span></div>
-  </div>
-</div>
-
-<div class="v4-section" id="v4gaps">
-  <h2>⚡ V4 後續缺口分析</h2>
-  <p style="color:#94a3b8;margin-bottom:16px">以下是目前流程中缺少或未完成的 V4 功能模組</p>
+  CT --> SQL
+  TCS --> TCP
+  TCP --> VR & NT & SQL
+  VAC --> NT & SQL
   
-  <div class="gap-card">
-    <div class="title">1. DAG 依賴執行引擎（dag_executor.py 存在但未串接）</div>
-    <div class="desc">V4 設計中任務之間有依賴關係（A 完成才能開始 B），dag_executor.py 已寫好但 pipeline_engine_v2 沒有呼叫它。需要：將 DAG 邏輯整合進派發流程，讓 phase_unlock.py 和 dag_executor.py 形成閉環。</div>
-  </div>
+  MR --> MD & ALE & QDS
+  ALE --> SQL
   
-  <div class="gap-card">
-    <div class="title">2. Phase 3 自動化（phase3_runner.py 孤立）</div>
-    <div class="desc">V4 分三個 Phase，Phase 1-2 的自動化已完成，但 Phase 3（進階功能）的 runner 沒有被任何 cron 或工作流觸發。需要：定義 Phase 3 任務清單 + 觸發條件 + 掛進 pipeline。</div>
-  </div>
+  PE --> SQL
+  TC --> SQL
+  SS --> SQL
+  QS --> SQL
   
-  <div class="gap-card">
-    <div class="title">3. 主動任務管理（proactive_task_management.py 孤立）</div>
-    <div class="desc">Travis 應該主動發現系統問題並建任務卡（intention_engine_v1.py 已有原型），但 proactive_task_management.py 沒有被整合。需要：與 intention_engine 合併，掛進 heartbeat 或每日例行。</div>
-  </div>
+  NS --> NT
+  HD --> HSC & NS & NT & SQL
+  SG --> NT & SQL
   
-  <div class="gap-card">
-    <div class="title">4. Agent 間協作鏈不完整</div>
-    <div class="desc">目前 Agent 只能透過 Travis 中轉通訊（notify_agent.sh 很少使用）。V4 設計中 Blake 完成開發後應直接通知 Griffin 審計，但實際上沒有自動觸發。需要：task_complete.sh 完成後根據任務類型自動觸發下游 Agent。</div>
-  </div>
-  
-  <div class="gap-card">
-    <div class="title">5. 成本/Token 預算閉環</div>
-    <div class="desc">token_threshold_monitor.py 和 budget_monitor.py 只做監控告警，沒有自動限流。當 token 用量超標時應自動降頻或暫停低優先任務。需要：budget_monitor → pipeline_engine_v2 的速率限制聯動。</div>
-  </div>
-  
-  <div class="gap-card">
-    <div class="title">6. Hooks 系統未啟用</div>
-    <div class="desc">hook_trigger.sh 存在但沒有任何 session 啟動/結束時自動觸發。AGENTS.md 描述的 session_start/session_end hooks 是設計但未實現。需要：在 OpenClaw config 中設定 session lifecycle hooks。</div>
-  </div>
-  
-  <div class="gap-card">
-    <div class="title">7. Zimbra 簽核自動化斷裂</div>
-    <div class="desc">check_zimbra_approval.py 存在但其 cron wrapper（714_zimbra_approval.sh）已刪除。需要：重新建立 cron 條目，工作日 09:00-18:00 每 30 分鐘檢查簽核郵件。</div>
+  VH --> SQL
+  DRD --> SQL
+  ES --> NT & SQL
+  ER --> NT & SQL
+    </div>
   </div>
 </div>
 
-<div style="padding:24px 32px;color:#475569;font-size:12px;text-align:center;border-top:1px solid #1e293b;margin-top:24px">
-  Generated by Travis System Audit • 2026-03-16 • 591→169 scripts (71% reduction)
+<!-- V4 Gaps -->
+<div class="section" id="gaps">
+  <div class="section-header">
+    <h2>⚠️ V4 缺口分析</h2>
+    <span class="badge" style="background:rgba(255,107,107,.15);color:var(--red);border:1px solid rgba(255,107,107,.3)">7 待完成</span>
+  </div>
+  <div class="gaps">
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-1</span>DAG 依賴執行引擎未串接</h4>
+      <p><code>dag_executor.py</code> 存在但 pipeline 沒呼叫。pipeline_master.sh → pipeline_engine_v2.py 路徑中未引用 DAG 拓撲排序。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-2</span>Phase 3 自動化未觸發</h4>
+      <p><code>phase3_runner.py</code> 孤立，僅被 auto_audit_script.py 間接引用，無 cron 無呼叫鏈。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-3</span>主動任務管理未整合</h4>
+      <p><code>proactive_task_management.py</code> + <code>intention_engine_v1.py</code> 未合併進 pipeline，兩者各自讀 supabase 但互不通訊。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-4</span>Agent 間協作鏈不完整</h4>
+      <p>Blake → Griffin 自動審計未實現。<code>blake_code_review.sh</code> 和 <code>griffin_review.py</code> 獨立運作，缺少自動觸發鏈。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-5</span>Token 預算無自動限流</h4>
+      <p><code>budget_monitor.py</code> → pipeline 聯動缺失。budget_monitor 只發通知，不會暫停 spawn。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-6</span>Hooks 系統未啟用</h4>
+      <p><code>hook_trigger.sh</code> 存在但未設定 cron，session_start/session_end hooks 需手動觸發。</p>
+    </div>
+    <div class="gap-card">
+      <h4><span class="gap-id">GAP-7</span>Zimbra 簽核 cron 斷裂</h4>
+      <p><code>check_zimbra_approval.py</code> 無 cron wrapper，原設計為工作日 09:00-18:00 每 30 分鐘但 crontab 中不存在。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Workflow Sections (generated by JS) -->
+<div id="workflows"></div>
+
+</div>
+
+<div class="footer">
+  WilliamSAGI V4 Architecture — Generated 2026-03-16 — 169 scripts / 13 workflows / 34 cron jobs
 </div>
 
 <script>
-mermaid.initialize({ 
-  startOnLoad: true, 
-  theme: 'dark',
-  themeVariables: {
-    primaryColor: '#1e3a5f',
-    primaryTextColor: '#e2e8f0',
-    primaryBorderColor: '#3b82f6',
-    lineColor: '#64748b',
-    secondaryColor: '#1e293b',
-    tertiaryColor: '#0f172a'
+mermaid.initialize({theme:'dark',themeVariables:{primaryColor:'#6c5ce7',primaryTextColor:'#e4e4ef',primaryBorderColor:'#6c5ce7',lineColor:'#6a6a80',secondaryColor:'#1a1a28',tertiaryColor:'#12121a',background:'#12121a',mainBkg:'#1a1a28',nodeBorder:'#6c5ce7',clusterBkg:'rgba(108,92,231,0.08)',clusterBorder:'rgba(108,92,231,0.3)',titleColor:'#a29bfe',edgeLabelBackground:'#12121a'},flowchart:{curve:'basis',padding:12},fontSize:11});
+
+const workflows = {"任務派發 Pipeline":{"cron_entry":["pipeline_master.sh(*/5)","auto_spawn_runner.sh(*/5)","emergency_dispatcher.py(*/1)","auto_dispatch.sh(heartbeat呼叫)"],"scripts":["pipeline_master.sh","pipeline_engine_v2.py","safe_spawn.py","auto_spawn_runner.sh","emergency_dispatcher.py","auto_dispatch.sh","auto_claim_and_spawn.sh","agent_hourly_claim.sh","agent_claim_tasks.sh","task_classifier.py","model_selector.py","queue_spawn.py","reassign_legacy_tasks.sh","notion_idea_pipeline.py","dag_executor.py","phase3_runner.py","proactive_task_management.py"],"purpose":"從看板讀取待派發任務 → 分類 → 選模型 → 寫入 spawn_queue → 消費執行"},"健康監控 Heartbeat":{"cron_entry":["heartbeat_stuck_check.sh(*/10)","heartbeat_pipeline_notify.sh(*/15)","meta_heartbeat.sh(*/15)","hourly_system_snapshot.sh(每小時)","gateway_health_check.sh(*/5)","session_watchdog.sh(*/5)","status_guardian.sh(*/30)"],"scripts":["heartbeat_stuck_check.sh","heartbeat_snapshot.sh","heartbeat_pipeline_notify.sh","heartbeat_check_follow_ups.sh","meta_heartbeat.sh","hourly_system_snapshot.sh","gateway_health_check.sh","session_watchdog.sh","status_guardian.sh","health_digest.sh","system_health_monitor.py","system_health_check.sh","disk_health_alert.sh","credential_health_check.py","gateway_crash_monitor.sh","williamsagi_health_check.sh","linebot-monitor.sh","linebot-status.sh","linebot-log-monitor.sh","linebot-restart.sh","subagent_health_check_v2.sh","system_resource_alert.sh","glm5_health_check.sh"],"purpose":"系統/Gateway/LINE Bot/磁碟/憑證 全方位健康監控，停擺任務偵測"},"自動修復 Emergency Repair":{"cron_entry":["auto_problem_detector.sh(*/10)","auto_healer.sh(*/5)","verify_healing.sh(*/7)","detect_repair_deadlock.py(*/5)","auto_retry.sh(*/30)"],"scripts":["auto_problem_detector.sh","auto_healer.sh","verify_healing.sh","detect_repair_deadlock.py","auto_retry.sh","emergency_stop.sh","emergency_resume.sh","gateway_auto_restart.sh","gateway_restart_guard.py","gateway_reinstall.sh","gateway_safe_restart.sh","daemon_registry.py","setup_anti_stall_system.sh","setup_token_balanced_system.sh"],"purpose":"偵測問題 → 自動修復 → 驗證修復 → 死鎖偵測，緊急停止/恢復"},"通知系統 Notify":{"scripts":["notify_telegram.sh","notify_smart.sh","notify_approval.py","notify_agent.sh"],"purpose":"統一通知入口（Telegram），智能分級路由（INFO/WARN/ERROR/ESCALATE）"},"任務生命週期 Task":{"scripts":["create_task.sh","task_complete.sh","task_complete.py","verify_and_complete.sh","verify_result.sh","task_reporter.py","task_failure_logger.sh","task_failure_analyzer.py","log_failure.sh","log_error.sh","track_task.sh","diagnose_task_failure.py"],"purpose":"建卡 → 執行 → 驗收 → 完成/失敗記錄 → 回報"},"記憶學習 Memory & Learning":{"cron_entry":["qmd-daily-sync.sh(每天03:30)","morning_routine.sh(每天03:00)","auto_learning_engine.py(每天04:30)","daily_ideation.py(每天03:30)"],"scripts":["memory_distill.sh","memory_distiller.py","memory_consolidate.sh","memory_search_qmd.sh","memory_audit.py","memory_write_auditor.py","conversation_memory_extractor.py","archive_logs_to_memory.sh","backup_memory.sh","auto_learning_engine.py","failure_memory.py","prompt_learn.py","qmd-daily-sync.sh","qmd_agent_bridge.py","qmd_system_health.py","check_qmd_index.sh","smart_rag_search.sh"],"purpose":"對話萃取 → 蒸餾 → 整合 → QMD 索引 → 語義搜尋，失敗學習"},"每日例行 Daily Routine":{"cron_entry":["morning_routine.sh(每天03:00)","daily_backup.sh(每天02:30)","daily_briefing.sh(每週一04:00)","daily_system_analysis.sh(被morning呼叫)","daily_trend_discovery.sh(週一至五08:00)","daily_research_to_tasks.py(每天09:00)","multi_source_aggregator_v2.py(週一至五11:30)"],"scripts":["morning_routine.sh","daily_backup.sh","daily_briefing.sh","daily_system_analysis.sh","daily_trend_discovery.sh","daily_research_to_tasks.py","daily_trend_digest.py","multi_source_aggregator_v2.py","daily_ideation.py","daily_ai_news.sh","daily_shrimp_report.py","auto_cleanup.sh","daily_pipeline_alert.py","daily_system_audit.py"],"purpose":"凌晨備份 → 記憶蒸餾 → 系統分析 → 趨勢發現 → 科技新聞 → 任務建卡"},"審計安全 Audit & Security":{"cron_entry":["auto_audit_detector_v2.py(*/30)","audit_dispatch_prompt.sh(每天09:00)","weekly_healthcheck.sh(每週)"],"scripts":["auto_audit_detector_v2.py","smart_audit.py","audit_dispatch_prompt.sh","weekly_healthcheck.sh","python_safety_check.py","blake_code_review.sh","griffin_review.py","rule_engine.py","rule_compliance_scan.sh","rule_ttl_cleaner.sh","dlp_message_guard.py","verify_gate.py","config_change_validator.py","auto_audit_script.py","verify_traditional_chinese.sh"],"purpose":"程式碼審查 → 規則引擎 → DLP 守衛 → 合規掃描 → 審計報告"},"報告上傳 Report":{"cron_entry":["task_reporter.py(每小時)"],"scripts":["upload_report.py","upload_report_v2.py","task_reporter.py","report_utils.sh","daily_shrimp_report.py"],"purpose":"報告品質審查 → 上傳 Supabase → 看板更新 → Hub 展示"},"資料庫 DB":{"scripts":["supabase_sql.sh","supabase_cleanup.py","supabase_client.py","check_supabase_quota.py"],"purpose":"Supabase SQL 執行（304引用）、配額監控、自動清理"},"Notion 整合":{"cron_entry":["notion_idea_pipeline.py(每天00:30)","sync_threads_to_notion.sh(每週一09:00)"],"scripts":["reference_analyzer.py","save_idea_to_notion.py","notion_idea_pipeline.py","sync_threads_to_notion.sh","threads_scraper.py","threads_to_notion.py","threads_feed_scraper.py","log_incident_notion.sh"],"purpose":"「參考」→ Notion → 評分 → 任務卡；Threads 同步"},"部署 Deploy":{"scripts":["deployment_verification.py","deployment_error_logger.py","deployment_task_dispatcher.py","vercel_deploy_and_watch.sh","deploy_css_sync.sh"],"purpose":"部署驗證 → 錯誤記錄 → 任務派發"},"工具 Utils":{"scripts":["analyze_image.py","analyze_image.sh","transcribe.sh","glm_ocr.py","config_backup.sh","config_restore.sh","config_snapshot.sh","zimbra_check.sh","check_zimbra_approval.py","weekly_funnel_sync.py","line_performance_alert.py","auto_disk_cleanup.sh","propose_and_wait.py","agent_task_manager.sh","use_dispatch_template.sh","hook_trigger.sh","intention_engine_v1.py","extract_follow_up_tasks.py","session_sync_daemon.py","phase_unlock.py","autox.sh","check_sdk_version.sh","commit_and_push.sh","agent_create_scheduled_task.sh","alert_test.sh","api_contract_test.sh","budget_monitor.py","check_model_quota.sh","cost_monitor.py","glm5_alert.py","inventory_alert_check.sh","linebot-stability-test.sh","linebot_quality_manager.py","linebot_rag_search.py","stt_stats_api.py","token_threshold_monitor.py"],"purpose":"圖片分析/語音轉文字/OCR/簽核/Funnel 同步/LINE 業績/config 管理"}};
+
+const graph = {"agent_claim_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"agent_create_scheduled_task.sh":{"calls":[],"cron":false},"agent_hourly_claim.sh":{"calls":["agent_claim_tasks.sh"],"cron":true},"agent_task_manager.sh":{"calls":["agent_claim_tasks.sh","supabase_sql.sh"],"cron":false},"alert_test.sh":{"calls":[],"cron":false},"analyze_image.py":{"calls":[],"cron":false},"analyze_image.sh":{"calls":["analyze_image.py"],"cron":false},"api_contract_test.sh":{"calls":[],"cron":false},"archive_logs_to_memory.sh":{"calls":[],"cron":false},"audit_dispatch_prompt.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_audit_detector_v2.py":{"calls":["supabase_client.py"],"cron":false},"auto_audit_script.py":{"calls":[],"cron":false},"auto_claim_and_spawn.sh":{"calls":["agent_claim_tasks.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"auto_cleanup.sh":{"calls":[],"cron":true},"auto_disk_cleanup.sh":{"calls":["archive_logs_to_memory.sh"],"cron":false},"auto_dispatch.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":false},"auto_healer.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"auto_learning_engine.py":{"calls":["rule_engine.py","supabase_sql.sh"],"cron":false},"auto_problem_detector.sh":{"calls":["heartbeat_snapshot.sh","supabase_sql.sh"],"cron":true},"auto_retry.sh":{"calls":["supabase_sql.sh"],"cron":true},"auto_spawn_runner.sh":{"calls":["supabase_sql.sh"],"cron":true},"autox.sh":{"calls":[],"cron":true},"backup_memory.sh":{"calls":[],"cron":false},"blake_code_review.sh":{"calls":["notify_telegram.sh","python_safety_check.py"],"cron":false},"budget_monitor.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"check_model_quota.sh":{"calls":[],"cron":false},"check_qmd_index.sh":{"calls":["qmd_agent_bridge.py"],"cron":true},"check_sdk_version.sh":{"calls":[],"cron":true},"check_supabase_quota.py":{"calls":["supabase_sql.sh"],"cron":false},"check_zimbra_approval.py":{"calls":["supabase_sql.sh"],"cron":false},"commit_and_push.sh":{"calls":[],"cron":false},"config_backup.sh":{"calls":[],"cron":false},"config_change_validator.py":{"calls":[],"cron":false},"config_restore.sh":{"calls":["config_snapshot.sh","gateway_auto_restart.sh"],"cron":false},"config_snapshot.sh":{"calls":[],"cron":false},"conversation_memory_extractor.py":{"calls":[],"cron":false},"cost_monitor.py":{"calls":[],"cron":false},"create_task.sh":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"credential_health_check.py":{"calls":[],"cron":false},"daemon_registry.py":{"calls":[],"cron":false},"dag_executor.py":{"calls":["supabase_sql.sh"],"cron":false},"daily_ai_news.sh":{"calls":["notify_telegram.sh"],"cron":false},"daily_backup.sh":{"calls":[],"cron":true},"daily_briefing.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":true},"daily_ideation.py":{"calls":["supabase_sql.sh"],"cron":true},"daily_pipeline_alert.py":{"calls":[],"cron":false},"daily_research_to_tasks.py":{"calls":["notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"daily_shrimp_report.py":{"calls":["notify_telegram.sh"],"cron":false},"daily_system_analysis.sh":{"calls":["notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"daily_system_audit.py":{"calls":["heartbeat_pipeline_notify.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"daily_trend_digest.py":{"calls":[],"cron":false},"daily_trend_discovery.sh":{"calls":[],"cron":true},"deploy_css_sync.sh":{"calls":[],"cron":false},"deployment_error_logger.py":{"calls":["supabase_sql.sh"],"cron":false},"deployment_task_dispatcher.py":{"calls":["deployment_verification.py","supabase_sql.sh"],"cron":false},"deployment_verification.py":{"calls":[],"cron":false},"detect_repair_deadlock.py":{"calls":["supabase_sql.sh"],"cron":true},"diagnose_task_failure.py":{"calls":["supabase_sql.sh","task_complete.sh"],"cron":false},"disk_health_alert.sh":{"calls":[],"cron":false},"dlp_message_guard.py":{"calls":["supabase_sql.sh"],"cron":false},"emergency_dispatcher.py":{"calls":["supabase_sql.sh"],"cron":true},"emergency_resume.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"emergency_stop.sh":{"calls":["emergency_resume.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"extract_follow_up_tasks.py":{"calls":[],"cron":false},"failure_memory.py":{"calls":[],"cron":false},"gateway_auto_restart.sh":{"calls":["gateway_restart_guard.py"],"cron":false},"gateway_crash_monitor.sh":{"calls":["log_incident_notion.sh"],"cron":false},"gateway_health_check.sh":{"calls":[],"cron":true},"gateway_reinstall.sh":{"calls":[],"cron":false},"gateway_restart_guard.py":{"calls":["gateway_auto_restart.sh","log_incident_notion.sh"],"cron":false},"gateway_safe_restart.sh":{"calls":[],"cron":false},"glm5_alert.py":{"calls":[],"cron":false},"glm5_health_check.sh":{"calls":[],"cron":false},"glm_ocr.py":{"calls":[],"cron":false},"griffin_review.py":{"calls":["supabase_sql.sh"],"cron":false},"health_digest.sh":{"calls":["heartbeat_stuck_check.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"heartbeat_check_follow_ups.sh":{"calls":["supabase_sql.sh"],"cron":false},"heartbeat_pipeline_notify.sh":{"calls":[],"cron":true},"heartbeat_snapshot.sh":{"calls":["supabase_sql.sh","token_threshold_monitor.py"],"cron":false},"heartbeat_stuck_check.sh":{"calls":["daemon_registry.py","notify_smart.sh","supabase_sql.sh","task_complete.sh"],"cron":true},"hook_trigger.sh":{"calls":["dlp_message_guard.py"],"cron":false},"hourly_system_snapshot.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"intention_engine_v1.py":{"calls":["supabase_sql.sh"],"cron":false},"inventory_alert_check.sh":{"calls":["supabase_sql.sh"],"cron":false},"line_performance_alert.py":{"calls":["daily_pipeline_alert.py"],"cron":false},"linebot-log-monitor.sh":{"calls":[],"cron":false},"linebot-restart.sh":{"calls":[],"cron":false},"linebot-stability-test.sh":{"calls":[],"cron":false},"linebot-status.sh":{"calls":["linebot-log-monitor.sh"],"cron":false},"linebot_quality_manager.py":{"calls":["supabase_sql.sh"],"cron":false},"linebot_rag_search.py":{"calls":[],"cron":false},"log_error.sh":{"calls":["weekly_funnel_sync.py"],"cron":false},"log_failure.sh":{"calls":["supabase_sql.sh"],"cron":false},"log_incident_notion.sh":{"calls":["task_complete.sh"],"cron":false},"memory_audit.py":{"calls":["notify_telegram.sh"],"cron":false},"memory_consolidate.sh":{"calls":[],"cron":false},"memory_distill.sh":{"calls":["report_utils.sh"],"cron":false},"memory_distiller.py":{"calls":["conversation_memory_extractor.py","notify_telegram.sh"],"cron":false},"memory_search_qmd.sh":{"calls":[],"cron":false},"memory_write_auditor.py":{"calls":["notify_telegram.sh"],"cron":false},"meta_heartbeat.sh":{"calls":["notify_telegram.sh"],"cron":true},"model_selector.py":{"calls":["supabase_sql.sh"],"cron":false},"morning_routine.sh":{"calls":["autox.sh","daily_system_analysis.sh","memory_consolidate.sh","smart_rag_search.sh"],"cron":true},"multi_source_aggregator_v2.py":{"calls":["daily_trend_digest.py"],"cron":true},"notify_agent.sh":{"calls":[],"cron":false},"notify_approval.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"notify_smart.sh":{"calls":["notify_telegram.sh"],"cron":false},"notify_telegram.sh":{"calls":[],"cron":false},"notion_idea_pipeline.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"phase3_runner.py":{"calls":["auto_audit_script.py"],"cron":false},"pipeline_engine_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"pipeline_master.sh":{"calls":["pipeline_engine_v2.py","reassign_legacy_tasks.sh","supabase_sql.sh"],"cron":true},"proactive_task_management.py":{"calls":["supabase_sql.sh"],"cron":false},"prompt_learn.py":{"calls":["supabase_sql.sh"],"cron":false},"propose_and_wait.py":{"calls":["create_task.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"python_safety_check.py":{"calls":[],"cron":false},"qmd-daily-sync.sh":{"calls":[],"cron":true},"qmd_agent_bridge.py":{"calls":[],"cron":false},"qmd_system_health.py":{"calls":["qmd-daily-sync.sh","qmd_agent_bridge.py"],"cron":false},"queue_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"reassign_legacy_tasks.sh":{"calls":["supabase_sql.sh"],"cron":false},"reference_analyzer.py":{"calls":[],"cron":false},"report_utils.sh":{"calls":["supabase_sql.sh"],"cron":false},"rule_compliance_scan.sh":{"calls":[],"cron":false},"rule_engine.py":{"calls":["supabase_sql.sh"],"cron":false},"rule_ttl_cleaner.sh":{"calls":["supabase_sql.sh"],"cron":true},"safe_spawn.py":{"calls":["supabase_sql.sh"],"cron":false},"save_idea_to_notion.py":{"calls":[],"cron":false},"session_sync_daemon.py":{"calls":["supabase_sql.sh"],"cron":false},"session_watchdog.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"setup_anti_stall_system.sh":{"calls":["supabase_sql.sh"],"cron":false},"setup_token_balanced_system.sh":{"calls":[],"cron":false},"smart_audit.py":{"calls":["auto_audit_script.py","emergency_resume.sh","emergency_stop.sh","gateway_auto_restart.sh","notify_smart.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"smart_rag_search.sh":{"calls":[],"cron":false},"status_guardian.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"stt_stats_api.py":{"calls":["supabase_sql.sh"],"cron":false},"subagent_health_check_v2.sh":{"calls":["supabase_sql.sh"],"cron":false},"supabase_cleanup.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_client.py":{"calls":["supabase_sql.sh"],"cron":false},"supabase_sql.sh":{"calls":["notify_telegram.sh","task_complete.sh"],"cron":false},"sync_threads_to_notion.sh":{"calls":["threads_scraper.py","threads_to_notion.py"],"cron":true},"system_health_check.sh":{"calls":["heartbeat_stuck_check.sh","notify_telegram.sh","supabase_sql.sh"],"cron":false},"system_health_monitor.py":{"calls":[],"cron":false},"system_resource_alert.sh":{"calls":[],"cron":false},"task_classifier.py":{"calls":["model_selector.py","supabase_sql.sh"],"cron":false},"task_complete.py":{"calls":["failure_memory.py","heartbeat_check_follow_ups.sh","notify_telegram.sh","prompt_learn.py","smart_audit.py","supabase_sql.sh","vercel_deploy_and_watch.sh","verify_and_complete.sh"],"cron":false},"task_complete.sh":{"calls":["task_complete.py"],"cron":false},"task_failure_analyzer.py":{"calls":[],"cron":false},"task_failure_logger.sh":{"calls":["supabase_sql.sh"],"cron":false},"task_reporter.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":true},"threads_feed_scraper.py":{"calls":["notify_smart.sh","reference_analyzer.py"],"cron":false},"threads_scraper.py":{"calls":[],"cron":false},"threads_to_notion.py":{"calls":["threads_scraper.py"],"cron":false},"token_threshold_monitor.py":{"calls":["supabase_sql.sh"],"cron":false},"track_task.sh":{"calls":[],"cron":false},"transcribe.sh":{"calls":[],"cron":false},"upload_report.py":{"calls":["supabase_sql.sh","upload_report_v2.py"],"cron":false},"upload_report_v2.py":{"calls":["supabase_sql.sh"],"cron":false},"use_dispatch_template.sh":{"calls":[],"cron":false},"vercel_deploy_and_watch.sh":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_and_complete.sh":{"calls":["log_failure.sh","notify_telegram.sh","supabase_sql.sh","task_complete.sh"],"cron":false},"verify_gate.py":{"calls":["notify_telegram.sh","supabase_sql.sh"],"cron":false},"verify_healing.sh":{"calls":["supabase_sql.sh"],"cron":true},"verify_result.sh":{"calls":["supabase_sql.sh"],"cron":false},"verify_traditional_chinese.sh":{"calls":[],"cron":false},"weekly_funnel_sync.py":{"calls":[],"cron":false},"weekly_healthcheck.sh":{"calls":["config_backup.sh","memory_distill.sh","rule_compliance_scan.sh","supabase_sql.sh"],"cron":false},"williamsagi_health_check.sh":{"calls":["notify_telegram.sh"],"cron":true},"zimbra_check.sh":{"calls":["notify_telegram.sh"],"cron":false}};
+
+const icons = {'任務派發':'🚀','健康監控':'💓','自動修復':'🔧','通知系統':'📢','任務生命':'📋','記憶學習':'🧠','每日例行':'🌅','審計安全':'🛡️','報告上傳':'📊','資料庫':'🗄️','Notion':'📝','部署':'🚢','工具':'🔨'};
+
+function getIcon(name) {
+  for (const [k,v] of Object.entries(icons)) { if (name.includes(k)) return v; }
+  return '📦';
+}
+
+function getType(scriptName) {
+  const g = graph[scriptName];
+  if (g && g.cron) return 'cron';
+  // Check if any other script calls this one
+  for (const [k,v] of Object.entries(graph)) {
+    if (v.calls && v.calls.includes(scriptName)) return 'called';
   }
+  return 'manual';
+}
+
+const container = document.getElementById('workflows');
+const nav = document.getElementById('nav');
+
+// Add fixed nav items
+nav.innerHTML = '<a href="#flowchart">流程圖</a><a href="#gaps">缺口分析</a>';
+
+Object.entries(workflows).forEach(([name, wf], i) => {
+  const id = 'wf-' + i;
+  const scripts = wf.scripts || [];
+  const crons = wf.cron_entry || [];
+  const cronCount = crons.length;
+  
+  // Nav
+  nav.innerHTML += `<a href="#${id}">${getIcon(name)} ${name.split(' ')[0]}</a>`;
+  
+  let html = `<div class="section" id="${id}">`;
+  html += `<div class="section-header"><h2>${getIcon(name)} ${name}</h2>`;
+  html += `<span class="badge badge-count">${scripts.length} 腳本</span>`;
+  if (cronCount) html += `<span class="badge badge-cron">${cronCount} cron</span>`;
+  html += `</div>`;
+  html += `<div class="section-purpose">${wf.purpose}</div>`;
+  
+  if (crons.length) {
+    html += '<div class="cron-list">';
+    crons.forEach(c => { html += `<span class="cron-tag">⏰ ${c}</span>`; });
+    html += '</div>';
+  }
+  
+  html += '<div class="scripts-grid">';
+  scripts.forEach(s => {
+    const type = getType(s);
+    const g = graph[s];
+    const hasCalls = g && g.calls && g.calls.length > 0;
+    const typeClass = type === 'cron' ? 'type-cron' : type === 'called' ? 'type-called' : 'type-manual';
+    const typeLabel = type === 'cron' ? 'CRON' : type === 'called' ? '被呼叫' : '手動';
+    html += `<div class="script-card" title="${hasCalls ? '呼叫: ' + g.calls.join(', ') : '無呼叫'}">`;
+    html += `<div class="calls-dot ${hasCalls ? 'has-calls' : 'no-calls'}"></div>`;
+    html += `<span class="script-name">${s}</span>`;
+    html += `<span class="type-tag ${typeClass}">${typeLabel}</span>`;
+    html += `</div>`;
+  });
+  html += '</div></div>';
+  
+  container.innerHTML += html;
 });
 
-// 滾動高亮導航
-const sections = document.querySelectorAll('.workflow, .v4-section');
+// Highlight nav on scroll
+const sections = document.querySelectorAll('.section');
 const navLinks = document.querySelectorAll('.nav a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 120) current = s.id; });
-  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
-});
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
 </script>
 </body>
 </html>
