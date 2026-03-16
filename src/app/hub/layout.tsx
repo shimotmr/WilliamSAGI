@@ -57,6 +57,7 @@ const navGroups = [
     items: [
       { href: '/hub/v4', icon: Activity, label: 'V4 系統中心' },
       { href: '/hub/architecture', icon: Network, label: 'V4 架構圖' },
+      { href: '/hub/intel-graph', icon: GitFork, label: '情報關係圖' },
       { href: '/hub/system-refactor', icon: GitFork, label: '架構重整' },
       { href: '/hub/system-architecture', icon: GitFork, label: 'V4.1 架構圖' },
       { href: '/hub/v4-2', icon: GitFork, label: 'V4.2 Pipeline' },
