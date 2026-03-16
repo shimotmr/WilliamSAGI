@@ -3,16 +3,12 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const KNOWN_AGENTS = [
-  { name: 'main',       display: 'Travis',  role: 'System Coordinator', emoji: '' },
-  { name: 'coder',      display: 'Blake',   role: 'Software Engineer',  emoji: '' },
-  { name: 'coder-b',    display: 'Coder B', role: 'Coder B',            emoji: '' },
-  { name: 'researcher', display: 'Rex',     role: 'Data Analyst',       emoji: '' },
-  { name: 'secretary',  display: 'Oscar',   role: 'Office Manager',     emoji: '' },
-  { name: 'writer',     display: 'Writer',  role: 'Content Creator',    emoji: '' },
-  { name: 'designer',   display: 'Designer',role: 'UI/UX Designer',     emoji: '' },
-  { name: 'analyst',    display: 'Analyst', role: 'Financial Analyst',  emoji: '' },
-  { name: 'trader',     display: 'Warren',  role: 'Trader',             emoji: '' },
-  { name: 'inspector',  display: 'Griffin', role: 'QA Inspector',       emoji: '' },
+  { name: 'main',       display: 'Travis',  role: 'Manager · Sonnet 4.6',        emoji: '🤖' },
+  { name: 'coder',      display: 'Blake',   role: 'Builder · GPT-5.4 Codex',     emoji: '🔨' },
+  { name: 'researcher', display: 'Rex',     role: 'Thinker · Grok 4.20',         emoji: '🧠' },
+  { name: 'secretary',  display: 'Oscar',   role: 'Operator · Qwen3 8B',         emoji: '📋' },
+  { name: 'trader',     display: 'Warren',  role: 'Trader · MiniMax M2.5',       emoji: '📈' },
+  { name: 'inspector',  display: 'Griffin', role: 'Guardian · Qwen3 8B',         emoji: '🛡️' },
 ];
 
 export async function GET() {
