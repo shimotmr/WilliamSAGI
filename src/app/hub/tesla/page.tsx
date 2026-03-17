@@ -254,8 +254,21 @@ export default function TeslaPage() {
         <p className="text-xs text-slate-600">最後更新：{lastUpdated}</p>
       )}
 
+      {/* Auth button when no credentials */}
+      {current.error && current.error.includes('No credentials') && (
+        <div className="flex flex-col items-center gap-3 py-8">
+          <p className="text-slate-400 text-sm">尚未連結 Tesla 帳號</p>
+          <a
+            href={`/api/tesla/login`}
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-indigo-500/25"
+          >
+            連結 Tesla 帳號
+          </a>
+        </div>
+      )}
+
       {/* Error */}
-      {current.error && (
+      {current.error && !current.error.includes('No credentials') && (
         <div className="flex items-center gap-2 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
           <AlertCircle size={18} />
           <span className="text-sm">{current.error}</span>

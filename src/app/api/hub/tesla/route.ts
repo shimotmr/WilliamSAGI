@@ -1,29 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// 舊版 owner-api 端點（用 SSO token 直接打）
+// Fleet API 端點（取代已關閉的 owner-api）
 const ENDPOINTS: Record<string, string> = {
-  tw: 'https://owner-api.teslamotors.com/api/1/vehicles',
-  cn: 'https://owner-api.vn.cloud.tesla.cn/api/1/vehicles',
+  tw: 'https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles',
+  cn: 'https://fleet-api.prd.cn.vn.cloud.tesla.cn/api/1/vehicles',
 }
 
-async function getAccessToken(region: string): Promise<string | null> {
-  // 優先從 Supabase 讀（動態更新，不需 redeploy）
+async function refreshToken(region: string, refreshTokenStr: string): Promise<string | null> {
+  const clientId = process.env.TESLA_FLEET_CLIENT_ID
+  const clientSecret = process.env.TESLA_FLEET_CLIENT_SECRET
+  if (!clientId || !clientSecret) return null
+
   try {
+    const res = await fetch('https://auth.tesla.com/oauth2/v3/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: clientId,
+        client_secret: clientSecret,
+        refresh_token: refreshTokenStr,
+      }),
+    })
+    if (!res.ok) return null
+    const tokens = await res.json()
+    const expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in || 3600)
+
+    // Update Supabase
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     if (supabaseUrl && supabaseKey) {
+      await fetch(`${supabaseUrl}/rest/v1/tesla_tokens?region=eq.${region}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_token: tokens.access_token,
+          refresh_token: tokens.refresh_token || refreshTokenStr,
+          expires_at: expiresAt,
+          updated_at: new Date().toISOString(),
+        }),
+      })
+    }
+    return tokens.access_token
+  } catch {
+    return null
+  }
+}
+
+async function getAccessToken(region: string): Promise<string | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  try {
+    if (supabaseUrl && supabaseKey) {
       const res = await fetch(
-        `${supabaseUrl}/rest/v1/tesla_tokens?region=eq.${region}&select=access_token,expires_at`,
+        `${supabaseUrl}/rest/v1/tesla_tokens?region=eq.${region}&select=access_token,refresh_token,expires_at`,
         { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }, cache: 'no-store' }
       )
       if (res.ok) {
         const rows = await res.json()
-        if (rows[0]?.access_token) return rows[0].access_token
+        const row = rows[0]
+        if (!row?.access_token) return null
+
+        // Auto-refresh if expired (with 60s buffer)
+        const now = Math.floor(Date.now() / 1000)
+        if (row.expires_at && now >= row.expires_at - 60 && row.refresh_token) {
+          const newToken = await refreshToken(region, row.refresh_token)
+          if (newToken) return newToken
+        }
+        return row.access_token
       }
     }
   } catch {}
 
-  // fallback: env var
   return process.env[`TESLA_${region.toUpperCase()}_ACCESS_TOKEN`] || null
 }
 
