@@ -12,6 +12,11 @@ import { getPortalSessionFromRequest, isPortalPublicRoute, portalSessionCookieNa
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Early exit for all /api routes (especially OAuth callbacks)
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
+
   if (false && pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url))
   }
