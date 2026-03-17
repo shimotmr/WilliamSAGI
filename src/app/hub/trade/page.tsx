@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { TrendingUp, ShoppingCart, Briefcase, History, BarChart3, RefreshCw, Wifi, WifiOff, ClipboardList, DollarSign, Shield } from 'lucide-react'
 
+// Force dynamic rendering to avoid prerender errors
+export const dynamic = 'force-dynamic'
+
 const API_URL = process.env.NEXT_PUBLIC_SHIOAJI_API_URL || 'https://shioaji.williamhsiao.tw'
 const API_TOKEN = process.env.NEXT_PUBLIC_SHIOAJI_TOKEN || 'shioaji-william-2026'
 

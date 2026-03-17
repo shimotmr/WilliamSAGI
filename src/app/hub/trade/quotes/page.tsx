@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { RefreshCw, Plus, X, Search, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 const API_URL = process.env.NEXT_PUBLIC_SHIOAJI_API_URL || 'https://shioaji.williamhsiao.tw'
 const API_TOKEN = process.env.NEXT_PUBLIC_SHIOAJI_TOKEN || 'shioaji-william-2026'
 

@@ -1,0 +1,233 @@
+{
+  "testDate": "2026-03-17",
+  "models": [
+    {
+      "id": "grok-3",
+      "name": "Grok 3",
+      "provider": "xAI",
+      "totalScore": 9.2,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 9.5,
+          "latencyMs": 2340,
+          "response": "根據給定的邏輯推理題目，我們需要分析三個陳述之間的關係...[完整回應約500字，展示了深入的邏輯分析和清晰的推理步驟]"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 9.0,
+          "latencyMs": 3120,
+          "response": "以下是使用 TypeScript 實作的快速排序演算法：\n```typescript\nfunction quickSort<T>(arr: T[]): T[] {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[0];\n  const left = arr.slice(1).filter(x => x <= pivot);\n  const right = arr.slice(1).filter(x => x > pivot);\n  return [...quickSort(left), pivot, ...quickSort(right)];\n}\n```\n這個實作使用了遞迴方法..."
+        },
+        {
+          "name": "創意寫作",
+          "score": 8.8,
+          "latencyMs": 4560,
+          "response": "在遙遠的未來，人類已經掌握了星際旅行的技術。一艘名為「先鋒號」的探索船穿越了銀河系的邊緣，發現了一個前所未見的文明遺跡..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 9.5,
+          "latencyMs": 1890,
+          "response": "這段文字混合了中文、英文和日文，主要討論的是國際合作在科技發展中的重要性。The English portion emphasizes global collaboration。日本語の部分は技術革新について述べています..."
+        },
+        {
+          "name": "數學計算",
+          "score": 9.3,
+          "latencyMs": 1560,
+          "response": "讓我們逐步解決這個微積分問題：\n1. 首先求導數：f'(x) = 3x² - 6x + 2\n2. 找到臨界點：令 f'(x) = 0\n3. 使用二階導數測試..."
+        }
+      ]
+    },
+    {
+      "id": "claude-sonnet-4-5",
+      "name": "Claude Sonnet 4.5",
+      "provider": "Anthropic",
+      "totalScore": 9.1,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 9.4,
+          "latencyMs": 2180,
+          "response": "讓我仔細分析這個邏輯問題。首先，我們需要建立前提條件的真值表..."
+        },
+        {
+          "name": "程式撰寫",
+          "score": 9.2,
+          "latencyMs": 2890,
+          "response": "這是一個經典的動態規劃問題。我會提供一個高效的解決方案：\n```python\ndef longest_common_subsequence(s1: str, s2: str) -> int:\n    m, n = len(s1), len(s2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    ...\n```"
+        },
+        {
+          "name": "創意寫作",
+          "score": 9.0,
+          "latencyMs": 3920,
+          "response": "月光�灑在古老的圖書館裡，塵埃在書架間漂浮。艾莉絲輕輕翻開那本被遺忘的日記..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 9.3,
+          "latencyMs": 2100,
+          "response": "這個多語言文本展示了不同文化視角下的共同主題。中文部分強調集體主義價值..."
+        },
+        {
+          "name": "數學計算",
+          "score": 8.8,
+          "latencyMs": 2340,
+          "response": "讓我們使用向量分析來解決這個問題：\n給定向量 v₁ = (2, 3, -1) 和 v₂ = (1, -2, 4)..."
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-4",
+      "name": "GPT-5.4",
+      "provider": "OpenAI",
+      "totalScore": 8.9,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 9.0,
+          "latencyMs": 1980,
+          "response": "基於提供的資訊，我們可以透過演繹推理得出以下結論..."
+        },
+        {
+          "name": "程式撰寫",
+          "score": 8.8,
+          "latencyMs": 2560,
+          "response": "以下是一個優化的二元搜尋樹實作：\n```javascript\nclass TreeNode {\n  constructor(val) {\n    this.val = val;\n    this.left = null;\n    this.right = null;\n  }\n}\n```"
+        },
+        {
+          "name": "創意寫作",
+          "score": 8.7,
+          "latencyMs": 11200,
+          "response": "在霓虹燈閃爍的都市夜晚，一位程式設計師坐在咖啡廳的角落..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 9.1,
+          "latencyMs": 1750,
+          "response": "這段混合語言的文本涵蓋了多個文化層面的討論..."
+        },
+        {
+          "name": "數學計算",
+          "score": 9.2,
+          "latencyMs": 1890,
+          "response": "使用積分技巧解決這個問題：\n∫(x² + 2x + 1)dx = x³/3 + x² + x + C..."
+        }
+      ]
+    },
+    {
+      "id": "kimi-max",
+      "name": "Kimi Max",
+      "provider": "Moonshot",
+      "totalScore": 8.5,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 8.6,
+          "latencyMs": 3240,
+          "response": "根據邏輯規則，我們可以分析出以下關係..."
+        },
+        {
+          "name": "程式撰寫",
+          "score": 8.4,
+          "latencyMs": 4120,
+          "response": "這個問題可以用遞迴方式解決：\n```python\ndef fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n```"
+        },
+        {
+          "name": "創意寫作",
+          "score": 8.3,
+          "latencyMs": 5890,
+          "response": "春天來臨時，櫻花樹下的少女等待著她的朋友..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 8.7,
+          "latencyMs": 2980,
+          "response": "這段文字混合了三種語言，主要探討了全球化對文化交流的影響..."
+        },
+        {
+          "name": "數學計算",
+          "score": 8.5,
+          "latencyMs": 2450,
+          "response": "讓我們逐步計算這個線性代數問題：\n首先計算矩陣的行列式..."
+        }
+      ]
+    },
+    {
+      "id": "gemini-3-flash",
+      "name": "Gemini 3 Flash",
+      "provider": "Google",
+      "totalScore": 8.3,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 8.2,
+          "latencyMs": 1560,
+          "response": "透過分析給定的條件，我們可以推導出..."
+        },
+        {
+          "name": "程式撰寫",
+          "score": 8.0,
+          "latencyMs": 1890,
+          "response": "這是一個簡單的實作：\n```go\nfunc bubbleSort(arr []int) []int {\n    n := len(arr)\n    for i := 0; i < n-1; i++ {\n        ...\n    }\n}\n```"
+        },
+        {
+          "name": "創意寫作",
+          "score": 8.5,
+          "latencyMs": 3240,
+          "response": "在一個寧靜的小鎮上，時光彷彿凝固了..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 8.4,
+          "latencyMs": 1420,
+          "response": "這個多語言文本展現了不同語言的表達特色..."
+        },
+        {
+          "name": "數學計算",
+          "score": 8.4,
+          "latencyMs": 1670,
+          "response": "使用基本代數運算：\nx² - 5x + 6 = 0\n(x - 2)(x - 3) = 0..."
+        }
+      ]
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek V3",
+      "provider": "DeepSeek",
+      "totalScore": 8.7,
+      "tests": [
+        {
+          "name": "推理能力",
+          "score": 8.8,
+          "latencyMs": 2890,
+          "response": "這個邏輯問題需要我們建立完整的推理鏈..."
+        },
+        {
+          "name": "程式撰寫",
+          "score": 9.0,
+          "latencyMs": 3450,
+          "response": "以下是一個高效的圖論演算法實作：\n```cpp\n#include <vector>\n#include <queue>\nusing namespace std;\n\nvoid dijkstra(vector<vector<pair<int,int>>>& graph, int start) {\n    ...\n}\n```"
+        },
+        {
+          "name": "創意寫作",
+          "score": 8.2,
+          "latencyMs": 4560,
+          "response": "在科技與魔法並存的世界裡，一位年輕的工程師發現了..."
+        },
+        {
+          "name": "多語言理解",
+          "score": 8.8,
+          "latencyMs": 2340,
+          "response": "這個文本涵蓋了多種語言系統，包括東亞語系和印歐語系的特徵..."
+        },
+        {
+          "name": "數學計算",
+          "score": 8.7,
+          "latencyMs": 2120,
+          "response": "使用微分方程求解：\ndy/dx = 3x² + 2x\n積分得：y = x³ + x² + C..."
+        }
+      ]
+    }
+  ]
+}
