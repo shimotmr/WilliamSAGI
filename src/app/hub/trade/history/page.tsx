@@ -1,162 +1,160 @@
 'use client'
+import { useState } from 'react'
+import { Search, TrendingUp, TrendingDown } from 'lucide-react'
 
-import { Calendar, Filter } from 'lucide-react'
-import { useState, useEffect } from 'react'
+const API_URL = process.env.NEXT_PUBLIC_SHIOAJI_API_URL || 'https://shioaji.williamhsiao.tw'
+const API_TOKEN = process.env.NEXT_PUBLIC_SHIOAJI_TOKEN || 'shioaji-william-2026'
 
-interface PaperOrder {
-  id: string
-  symbol: string
-  symbol_name: string
-  action: 'buy' | 'sell'
-  price: number
-  quantity: number
-  amount: number
-  commission: number
-  tax: number
-  total_cost: number
-  status: string
-  created_at: string
+interface ProfitLoss {
+  code: string; quantity: number; price: number; pnl: number
+  date: string; pr_ratio?: number; cond?: string
+}
+
+interface Summary {
+  code: string; quantity: number; entry_price: number; cover_price: number
+  pnl: number; pr_ratio: number; buy_cost: number; sell_cost: number
 }
 
 export default function HistoryPage() {
-  const [orders, setOrders] = useState<PaperOrder[]>([])
-  const [loading, setLoading] = useState(true)
-  const [typeFilter, setTypeFilter] = useState<'all' | 'buy' | 'sell'>('all')
+  const today = new Date().toISOString().split('T')[0]
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
+  
+  const [beginDate, setBeginDate] = useState(thirtyDaysAgo)
+  const [endDate, setEndDate] = useState(today)
+  const [tab, setTab] = useState<'detail' | 'summary'>('summary')
+  const [details, setDetails] = useState<ProfitLoss[]>([])
+  const [summaries, setSummaries] = useState<Summary[]>([])
+  const [total, setTotal] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/trade/paper?type=orders')
-      .then(r => r.json())
-      .then(d => { setOrders(d.data || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      if (tab === 'detail') {
+        const res = await fetch(`${API_URL}/api/profit-loss?begin_date=${beginDate}&end_date=${endDate}`, {
+          headers: { Authorization: `Bearer ${API_TOKEN}` },
+        })
+        const data = await res.json()
+        setDetails(data.profit_loss || [])
+      } else {
+        const res = await fetch(`${API_URL}/api/profit-loss/summary?begin_date=${beginDate}&end_date=${endDate}`, {
+          headers: { Authorization: `Bearer ${API_TOKEN}` },
+        })
+        const data = await res.json()
+        setSummaries(data.items || [])
+        setTotal(data.total || null)
+      }
+    } catch {}
+    setLoading(false)
+  }
 
-  const filtered = orders.filter(o => typeFilter === 'all' || o.action === typeFilter)
-
-  const totalFees = filtered.reduce((s, o) => s + (o.commission || 0), 0)
-  const totalTax = filtered.reduce((s, o) => s + (o.tax || 0), 0)
+  const totalPnl = tab === 'summary' ? (total?.pnl ?? 0) : details.reduce((s, d) => s + d.pnl, 0)
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <h1 className="text-xl md:text-2xl font-bold text-slate-100">成交記錄</h1>
+    <div className="space-y-4">
+      <h1 className="text-xl md:text-2xl font-bold text-slate-100">損益記錄</h1>
 
-      {/* 篩選 */}
-      <div className="flex flex-wrap items-center gap-3 p-3 bg-slate-900/30 border border-slate-800 rounded-lg">
-        <div className="flex items-center gap-1.5">
-          <Filter className="text-slate-500" size={14} />
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as any)}
-            className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300 text-sm"
-          >
-            <option value="all">全部</option>
-            <option value="buy">買進</option>
-            <option value="sell">賣出</option>
-          </select>
-        </div>
-        <span className="text-xs text-slate-500 ml-auto">共 {filtered.length} 筆</span>
+      {/* Tabs */}
+      <div className="flex gap-1 bg-slate-900 rounded-lg p-0.5">
+        {(['summary', 'detail'] as const).map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className={`flex-1 py-2 text-sm rounded-md transition-colors ${
+              tab === t ? 'bg-slate-700 text-slate-100' : 'text-slate-500'
+            }`}>
+            {t === 'summary' ? '彙總' : '明細'}
+          </button>
+        ))}
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[0,1,2].map(i => (
-            <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 animate-pulse">
-              <div className="h-4 bg-slate-800 rounded w-24 mb-2" />
-              <div className="h-3 bg-slate-800 rounded w-40" />
+      {/* Date Range */}
+      <div className="flex gap-2 items-end">
+        <div className="flex-1">
+          <label className="text-[10px] text-slate-500 block mb-1">起始日期</label>
+          <input type="date" value={beginDate} onChange={e => setBeginDate(e.target.value)}
+            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-slate-300" />
+        </div>
+        <div className="flex-1">
+          <label className="text-[10px] text-slate-500 block mb-1">結束日期</label>
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
+            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-slate-300" />
+        </div>
+        <button onClick={fetchData} disabled={loading}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm text-white whitespace-nowrap">
+          {loading ? '查詢中...' : '查詢'}
+        </button>
+      </div>
+
+      {/* Total */}
+      {(details.length > 0 || summaries.length > 0) && (
+        <div className={`rounded-xl p-4 border ${totalPnl >= 0 ? 'bg-red-500/5 border-red-500/20' : 'bg-green-500/5 border-green-500/20'}`}>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-400">期間損益合計</span>
+            <div className={`flex items-center gap-1 font-mono font-bold text-lg ${totalPnl >= 0 ? 'text-red-400' : 'text-green-400'}`}>
+              {totalPnl >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+              {totalPnl >= 0 ? '+' : ''}${totalPnl.toLocaleString()}
+              {total?.pr_ratio != null && <span className="text-sm ml-1">({total.pr_ratio.toFixed(2)}%)</span>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Summary View */}
+      {tab === 'summary' && summaries.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-slate-500 text-xs border-b border-slate-800">
+                <th className="text-left py-2 px-2">代碼</th>
+                <th className="text-right py-2 px-1">數量</th>
+                <th className="text-right py-2 px-1">買入均價</th>
+                <th className="text-right py-2 px-1">賣出均價</th>
+                <th className="text-right py-2 px-2">損益</th>
+                <th className="text-right py-2 px-2">報酬率</th>
+              </tr>
+            </thead>
+            <tbody>
+              {summaries.map((s, i) => (
+                <tr key={i} className="border-b border-slate-800/50">
+                  <td className="py-2.5 px-2 font-mono text-slate-200">{s.code}</td>
+                  <td className="py-2.5 px-1 text-right font-mono text-slate-400">{s.quantity}</td>
+                  <td className="py-2.5 px-1 text-right font-mono text-slate-400">{s.entry_price}</td>
+                  <td className="py-2.5 px-1 text-right font-mono text-slate-400">{s.cover_price}</td>
+                  <td className={`py-2.5 px-2 text-right font-mono ${s.pnl >= 0 ? 'text-red-400' : 'text-green-400'}`}>
+                    {s.pnl >= 0 ? '+' : ''}${s.pnl.toLocaleString()}
+                  </td>
+                  <td className={`py-2.5 px-2 text-right font-mono text-xs ${s.pr_ratio >= 0 ? 'text-red-400' : 'text-green-400'}`}>
+                    {s.pr_ratio >= 0 ? '+' : ''}{s.pr_ratio.toFixed(2)}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Detail View */}
+      {tab === 'detail' && details.length > 0 && (
+        <div className="space-y-2">
+          {details.map((d, i) => (
+            <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-xl p-3 flex justify-between items-center">
+              <div>
+                <span className="font-mono text-slate-200">{d.code}</span>
+                <span className="text-xs text-slate-500 ml-2">{d.date}</span>
+                <span className="text-xs text-slate-500 ml-2">{d.quantity}張 @ ${d.price}</span>
+              </div>
+              <div className={`font-mono font-medium ${d.pnl >= 0 ? 'text-red-400' : 'text-green-400'}`}>
+                {d.pnl >= 0 ? '+' : ''}${d.pnl.toLocaleString()}
+                {d.pr_ratio != null && <span className="text-xs ml-1">({d.pr_ratio.toFixed(2)}%)</span>}
+              </div>
             </div>
           ))}
         </div>
-      ) : filtered.length === 0 ? (
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
-          尚無成交記錄
+      )}
+
+      {!loading && details.length === 0 && summaries.length === 0 && (
+        <div className="text-center py-12 text-slate-500 text-sm">
+          選擇日期範圍後按「查詢」查看損益記錄
         </div>
-      ) : (
-        <>
-          {/* 桌面表格 */}
-          <div className="hidden md:block bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-800 bg-slate-800/30">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-400">日期</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-400">股票</th>
-                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-400">類型</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">數量</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">成交價</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">成交金額</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">手續費</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">稅</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(o => (
-                  <tr key={o.id} className="border-b border-slate-800 hover:bg-slate-800/20">
-                    <td className="px-4 py-3 text-xs text-slate-400">
-                      {new Date(o.created_at).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="font-bold text-slate-100">{o.symbol}</span>
-                      <span className="text-slate-400 text-sm ml-1">{o.symbol_name}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        o.action === 'buy' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
-                      }`}>
-                        {o.action === 'buy' ? '買進' : '賣出'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-300">{o.quantity.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-300">{o.price.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-200">${o.amount.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-slate-400">${o.commission.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-slate-400">${o.tax.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* 手機卡片 */}
-          <div className="md:hidden space-y-2">
-            {filtered.map(o => (
-              <div key={o.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-3">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <span className="font-bold text-slate-100">{o.symbol}</span>
-                    <span className="text-slate-400 text-xs ml-1">{o.symbol_name}</span>
-                  </div>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
-                    o.action === 'buy' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
-                  }`}>
-                    {o.action === 'buy' ? '買進' : '賣出'}
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div>
-                    <span className="text-slate-500">價格</span>
-                    <p className="font-mono text-slate-300">{o.price.toFixed(2)}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">數量</span>
-                    <p className="font-mono text-slate-300">{o.quantity.toLocaleString()}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">金額</span>
-                    <p className="font-mono text-slate-200">${o.amount.toLocaleString()}</p>
-                  </div>
-                </div>
-                <div className="flex justify-between mt-2 text-[10px] text-slate-500">
-                  <span>手續費 ${o.commission} / 稅 ${o.tax}</span>
-                  <span>{new Date(o.created_at).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* 摘要 */}
-          <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-3 flex flex-wrap gap-4 text-xs text-slate-400">
-            <span>總手續費：<span className="font-mono text-slate-300">${totalFees.toLocaleString()}</span></span>
-            <span>總交易稅：<span className="font-mono text-slate-300">${totalTax.toLocaleString()}</span></span>
-          </div>
-        </>
       )}
     </div>
   )
