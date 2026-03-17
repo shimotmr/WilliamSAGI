@@ -11,8 +11,9 @@ async function refreshToken(region: string, refreshTokenStr: string): Promise<st
   const clientSecret = process.env.TESLA_FLEET_CLIENT_SECRET
   if (!clientId || !clientSecret) return null
 
+  const authHost = region === 'cn' ? 'auth.tesla.cn' : 'auth.tesla.com'
   try {
-    const res = await fetch('https://auth.tesla.com/oauth2/v3/token', {
+    const res = await fetch(`https://${authHost}/oauth2/v3/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
@@ -96,7 +97,7 @@ async function fetchVehiclesWithDetails(apiBase: string, token: string) {
     vehicles.map(async (v: any) => {
       const id = v.id
       try {
-        const dataRes = await fetch(`${apiBase}/${id}/vehicle_data`, { headers, cache: 'no-store' })
+        const dataRes = await fetch(`${apiBase}/${id}/vehicle_data?endpoints=${encodeURIComponent('charge_state;drive_state;vehicle_state;climate_state;location_data')}`, { headers, cache: 'no-store' })
         if (dataRes.ok) {
           const d = await dataRes.json()
           const r = d.response || {}
@@ -131,6 +132,29 @@ export async function GET(request: NextRequest) {
     const vehicles = await fetchVehiclesWithDetails(ENDPOINTS[region], token)
     return NextResponse.json({ vehicles, error: null })
   } catch (err: any) {
+    // Retry once with forced token refresh on 401
+    if (err.message?.includes('401')) {
+      try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        if (supabaseUrl && supabaseKey) {
+          const res = await fetch(
+            `${supabaseUrl}/rest/v1/tesla_tokens?region=eq.${region}&select=refresh_token`,
+            { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }, cache: 'no-store' }
+          )
+          if (res.ok) {
+            const rows = await res.json()
+            if (rows[0]?.refresh_token) {
+              const newToken = await refreshToken(region, rows[0].refresh_token)
+              if (newToken) {
+                const vehicles = await fetchVehiclesWithDetails(ENDPOINTS[region], newToken)
+                return NextResponse.json({ vehicles, error: null })
+              }
+            }
+          }
+        }
+      } catch {}
+    }
     return NextResponse.json({ error: err.message || 'API request failed', vehicles: [] })
   }
 }
