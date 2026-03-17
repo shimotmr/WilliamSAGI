@@ -15,7 +15,7 @@ export async function GET() {
     // 1. Task Statistics
     const { data: allTasks } = await supabase
       .from('board_tasks')
-      .select('id, title, status, priority, assignee, created_at, completed_at')
+      .select('id, title, status, priority, assignee, created_at, completed_at, updated_at')
 
     const taskStats = {
       total: allTasks?.length || 0,
