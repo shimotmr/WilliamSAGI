@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// 舊版 owner-api 端點（用 SSO token 直接打）
 const ENDPOINTS: Record<string, string> = {
-  tw: 'https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles',
-  cn: 'https://fleet-api.prd.cn.vn.cloud.tesla.com/api/1/vehicles',
+  tw: 'https://owner-api.teslamotors.com/api/1/vehicles',
+  cn: 'https://owner-api.vn.cloud.tesla.cn/api/1/vehicles',
 }
 
 async function getAccessToken(region: string): Promise<string | null> {
-  // 優先從 Supabase 讀取（動態更新，不需要 redeploy）
+  // 優先從 Supabase 讀（動態更新，不需 redeploy）
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -17,18 +18,13 @@ async function getAccessToken(region: string): Promise<string | null> {
       )
       if (res.ok) {
         const rows = await res.json()
-        if (rows[0]?.access_token) {
-          return rows[0].access_token
-        }
+        if (rows[0]?.access_token) return rows[0].access_token
       }
     }
-  } catch {
-    // fallthrough to env var
-  }
+  } catch {}
 
   // fallback: env var
-  const envKey = `TESLA_${region.toUpperCase()}_ACCESS_TOKEN`
-  return process.env[envKey] || null
+  return process.env[`TESLA_${region.toUpperCase()}_ACCESS_TOKEN`] || null
 }
 
 async function fetchVehiclesWithDetails(apiBase: string, token: string) {
