@@ -179,30 +179,60 @@ export default function OrderForm({ onOrderSubmit }: OrderFormProps) {
     }
   }
 
-  const handleConfirmOrder = () => {
-    // TODO: 實際下單 API 呼叫
-    
-    setShowConfirm(false)
-    
-    // 重置表單
-    setOrderData({
-      symbol: '',
-      stockName: '',
-      action: 'buy',
-      orderType: 'limit',
-      shareType: 'lot',
-      price: 0,
-      quantity: 1
-    })
-    setSearchInput('')
-    setCurrentStock(null)
-    
-    onOrderSubmit?.()
+  const [submitting, setSubmitting] = useState(false)
+  const [submitResult, setSubmitResult] = useState<{ ok: boolean; message: string } | null>(null)
+
+  const handleConfirmOrder = async () => {
+    setSubmitting(true)
+    setSubmitResult(null)
+    try {
+      const res = await fetch('/api/trade/paper', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbol: orderData.symbol,
+          symbol_name: orderData.stockName,
+          action: orderData.action,
+          price: orderData.orderType === 'market' ? currentStock!.currentPrice : orderData.price,
+          quantity: orderData.quantity,
+          share_type: orderData.shareType,
+        }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        setSubmitResult({ ok: true, message: data.message || '下單成功' })
+        setShowConfirm(false)
+        // 重置表單
+        setOrderData({ symbol: '', stockName: '', action: 'buy', orderType: 'limit', shareType: 'lot', price: 0, quantity: 1 })
+        setSearchInput('')
+        setCurrentStock(null)
+        onOrderSubmit?.()
+      } else {
+        setSubmitResult({ ok: false, message: data.error || '下單失敗' })
+        setShowConfirm(false)
+      }
+    } catch (err: any) {
+      setSubmitResult({ ok: false, message: err.message || '網路錯誤' })
+      setShowConfirm(false)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-      <h2 className="text-xl font-semibold text-slate-100 mb-6">建立委託單</h2>
+    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 md:p-6">
+      <h2 className="text-lg md:text-xl font-semibold text-slate-100 mb-4 md:mb-6">建立委託單</h2>
+
+      {/* 下單結果提示 */}
+      {submitResult && (
+        <div className={`mb-4 p-3 rounded-lg text-sm ${
+          submitResult.ok
+            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+        }`}>
+          {submitResult.ok ? '✅' : '❌'} {submitResult.message}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 股票搜尋 */}

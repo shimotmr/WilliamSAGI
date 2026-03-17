@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { TrendingUp, ShoppingCart, Briefcase, History, BarChart3 } from 'lucide-react'
 
 export default function TradePage() {
   const [summary, setSummary] = useState<any>(null)
@@ -14,104 +15,75 @@ export default function TradePage() {
   }, [])
 
   const links = [
-    {href:'/hub/trade/quotes',  label:'即時行情',  icon:''},
-    {href:'/hub/trade/positions',label:'持倉',     icon:''},
-    {href:'/hub/trade/orders',  label:'委託單',    icon:''},
-    {href:'/hub/trade/order',   label:'下單',      icon:''},
-    {href:'/hub/trade/history', label:'成交記錄',  icon:''},
+    { href: '/hub/trade/quotes',    label: '即時行情', icon: <TrendingUp size={20} /> },
+    { href: '/hub/trade/positions', label: '模擬持倉', icon: <Briefcase size={20} /> },
+    { href: '/hub/trade/order',     label: '模擬下單', icon: <ShoppingCart size={20} /> },
+    { href: '/hub/trade/orders',    label: '委託記錄', icon: <BarChart3 size={20} /> },
+    { href: '/hub/trade/history',   label: '成交記錄', icon: <History size={20} /> },
   ]
 
-  const isConnected = summary?.connected === true
+  const balance = summary?.account?.availableBalance
   const pnl = summary?.totalPnl ?? null
-  const syncedAt = summary?.syncedAt
-    ? new Date(summary.syncedAt).toLocaleString('zh-TW')
-    : null
+  const posCount = summary?.positionCount ?? 0
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">程式交易</h1>
-        <div className={`flex items-center gap-2 text-sm px-3 py-1 rounded-full ${
-          isConnected ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-        }`}>
-          <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}/>
-          {isConnected ? `已連線 · ${summary?.account?.username ?? ''}` : '未連線'}
-        </div>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-100">交易總覽</h1>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 font-medium">
+          模擬模式
+        </span>
       </div>
 
-      {/* Stats */}
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[0,1,2].map(i => (
-            <div key={i} className="bg-white rounded-xl shadow p-4 animate-pulse">
-              <div className="h-3 bg-gray-200 rounded w-16 mb-2"/>
-              <div className="h-8 bg-gray-200 rounded w-24"/>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
+        {loading ? (
+          [0,1,2].map(i => (
+            <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-xl p-3 md:p-4 animate-pulse">
+              <div className="h-3 bg-slate-800 rounded w-12 mb-2"/>
+              <div className="h-6 bg-slate-800 rounded w-16"/>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[
-            {
-              label: '可用餘額',
-              val: summary?.account?.availableBalance != null
-                ? `$${Number(summary.account.availableBalance).toLocaleString()}`
-                : '-',
-            },
-            {
-              label: '未實現損益',
-              val: pnl != null ? `${pnl >= 0 ? '+' : ''}${Number(pnl).toLocaleString()}` : '-',
-              pos: pnl != null ? pnl >= 0 : null,
-            },
-            {
-              label: '持倉數',
-              val: summary?.positionCount ?? '-',
-            },
-          ].map(c => (
-            <div key={c.label} className="bg-white rounded-xl shadow p-4">
-              <p className="text-xs text-gray-400 mb-1">{c.label}</p>
-              <p className={`text-2xl font-bold ${
-                c.pos === false ? 'text-red-500' :
-                c.pos === true  ? 'text-green-600' : ''
-              }`}>{c.val}</p>
+          ))
+        ) : (
+          <>
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-3 md:p-4">
+              <p className="text-[10px] md:text-xs text-slate-500 mb-1">可用餘額</p>
+              <p className="text-sm md:text-xl font-bold text-slate-100 font-mono">
+                {balance != null ? `$${Number(balance).toLocaleString()}` : '$10,000,000'}
+              </p>
             </div>
-          ))}
-        </div>
-      )}
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-3 md:p-4">
+              <p className="text-[10px] md:text-xs text-slate-500 mb-1">未實現損益</p>
+              <p className={`text-sm md:text-xl font-bold font-mono ${
+                pnl === null ? 'text-slate-400' : pnl >= 0 ? 'text-red-400' : 'text-green-400'
+              }`}>
+                {pnl != null ? `${pnl >= 0 ? '+' : ''}${Number(pnl).toLocaleString()}` : '$0'}
+              </p>
+            </div>
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-3 md:p-4">
+              <p className="text-[10px] md:text-xs text-slate-500 mb-1">持倉數</p>
+              <p className="text-sm md:text-xl font-bold text-slate-100 font-mono">{posCount}</p>
+            </div>
+          </>
+        )}
+      </div>
 
-      {/* Account info */}
-      {isConnected && summary?.account && (
-        <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-700 flex flex-wrap gap-4">
-          <span> 帳號：{summary.account.accountId}</span>
-          <span> 券商：{summary.account.brokerId}</span>
-          <span> 類型：{summary.account.accountType}</span>
-          {syncedAt && <span className="text-blue-400 ml-auto">最後同步：{syncedAt}</span>}
-        </div>
-      )}
-
-      {/* Nav links */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Quick Nav */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
         {links.map(l => (
           <Link key={l.href} href={l.href}
-            className="bg-white rounded-xl shadow p-5 flex items-center gap-3 hover:shadow-md transition-shadow">
-            <span className="text-3xl">{l.icon}</span>
-            <span className="font-medium">{l.label}</span>
+            className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 md:p-5 flex items-center gap-3 hover:bg-slate-800/50 active:bg-slate-800/70 transition-colors">
+            <span className="text-slate-400">{l.icon}</span>
+            <span className="font-medium text-sm md:text-base text-slate-200">{l.label}</span>
           </Link>
         ))}
       </div>
 
-      {/* Status note */}
-      {!loading && !isConnected && (
-        <div className="bg-yellow-50 rounded-xl p-4 text-sm text-yellow-700">
-           尚未取得帳戶資料。請確認 Mac mini 上的 shioaji_sync.py 已執行。
-        </div>
-      )}
-      {!loading && isConnected && summary?.positionCount === 0 && (
-        <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-500">
-           目前無持倉。交易時段（09:00–14:30）資料每 5 分鐘自動同步。
-        </div>
-      )}
+      {/* Info */}
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 md:p-4 text-xs md:text-sm text-blue-400">
+        📝 模擬交易模式：所有交易均為紙上交易，不涉及真實資金。初始資金 $10,000,000。
+      </div>
     </div>
   )
 }

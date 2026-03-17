@@ -1,310 +1,162 @@
 'use client'
 
-import { Calendar, Filter, Download, ArrowUpDown } from 'lucide-react'
-import { useState } from 'react'
+import { Calendar, Filter } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
-import { StockPrice } from '@/components/trading/StockPrice'
-
-type TransactionType = 'buy' | 'sell' | 'dividend'
-
-interface Transaction {
+interface PaperOrder {
   id: string
-  date: string
-  time: string
   symbol: string
-  name: string
-  type: TransactionType
-  quantity: number
+  symbol_name: string
+  action: 'buy' | 'sell'
   price: number
+  quantity: number
   amount: number
-  fee: number
+  commission: number
   tax: number
-  netAmount: number
+  total_cost: number
+  status: string
+  created_at: string
 }
 
-/**
- * 交易記錄頁面
- */
 export default function HistoryPage() {
-  const [dateFilter, setDateFilter] = useState('7d')
-  const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all')
+  const [orders, setOrders] = useState<PaperOrder[]>([])
+  const [loading, setLoading] = useState(true)
+  const [typeFilter, setTypeFilter] = useState<'all' | 'buy' | 'sell'>('all')
 
-  // Mock 交易記錄
-  const transactions: Transaction[] = [
-    {
-      id: 'TXN001',
-      date: '2024-02-17',
-      time: '09:18:45',
-      symbol: '2317',
-      name: '鴻海',
-      type: 'sell',
-      quantity: 2000,
-      price: 110.00,
-      amount: 220000,
-      fee: 110,
-      tax: 660,
-      netAmount: 219230
-    },
-    {
-      id: 'TXN002', 
-      date: '2024-02-16',
-      time: '13:45:12',
-      symbol: '2330',
-      name: '台積電',
-      type: 'buy',
-      quantity: 1000,
-      price: 595.00,
-      amount: 595000,
-      fee: 595,
-      tax: 0,
-      netAmount: -595595
-    },
-    {
-      id: 'TXN003',
-      date: '2024-02-16',
-      time: '10:30:25',
-      symbol: '2454',
-      name: '聯發科',
-      type: 'buy',
-      quantity: 500,
-      price: 1020.00,
-      amount: 510000,
-      fee: 510,
-      tax: 0,
-      netAmount: -510510
-    },
-    {
-      id: 'TXN004',
-      date: '2024-02-15',
-      time: '14:25:18',
-      symbol: '2412',
-      name: '中華電',
-      type: 'sell',
-      quantity: 1000,
-      price: 125.00,
-      amount: 125000,
-      fee: 125,
-      tax: 375,
-      netAmount: 124500
-    },
-    {
-      id: 'TXN005',
-      date: '2024-02-14',
-      time: '11:15:33',
-      symbol: '2330',
-      name: '台積電',
-      type: 'dividend',
-      quantity: 2000,
-      price: 2.75,
-      amount: 5500,
-      fee: 0,
-      tax: 0,
-      netAmount: 5500
-    }
-  ]
+  useEffect(() => {
+    fetch('/api/trade/paper?type=orders')
+      .then(r => r.json())
+      .then(d => { setOrders(d.data || []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
 
-  const getTypeConfig = (type: TransactionType) => {
-    switch (type) {
-      case 'buy':
-        return { text: '買進', color: 'bg-red-500/20 text-red-400' }
-      case 'sell':
-        return { text: '賣出', color: 'bg-green-500/20 text-green-400' }
-      case 'dividend':
-        return { text: '配息', color: 'bg-blue-500/20 text-blue-400' }
-    }
-  }
+  const filtered = orders.filter(o => typeFilter === 'all' || o.action === typeFilter)
 
-  const filteredTransactions = transactions.filter(txn => {
-    if (typeFilter !== 'all' && txn.type !== typeFilter) return false
-    
-    const txnDate = new Date(txn.date)
-    const now = new Date()
-    const daysDiff = Math.floor((now.getTime() - txnDate.getTime()) / (1000 * 60 * 60 * 24))
-    
-    switch (dateFilter) {
-      case '1d': return daysDiff <= 1
-      case '7d': return daysDiff <= 7
-      case '30d': return daysDiff <= 30
-      case '90d': return daysDiff <= 90
-      default: return true
-    }
-  })
-
-  const totalNetAmount = filteredTransactions.reduce((sum, txn) => sum + txn.netAmount, 0)
+  const totalFees = filtered.reduce((s, o) => s + (o.commission || 0), 0)
+  const totalTax = filtered.reduce((s, o) => s + (o.tax || 0), 0)
 
   return (
-    <div className="space-y-6">
-      {/* 頁面標題與操作 */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-100">交易記錄</h1>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 text-sm transition-colors">
-            <Download size={16} />
-            匯出
-          </button>
-        </div>
-      </div>
+    <div className="space-y-4 md:space-y-6">
+      <h1 className="text-xl md:text-2xl font-bold text-slate-100">成交記錄</h1>
 
-      {/* 篩選器 */}
-      <div className="flex flex-wrap items-center gap-4 p-4 bg-slate-900/30 rounded-lg">
-        <div className="flex items-center gap-2">
-          <Calendar className="text-slate-400" size={16} />
-          <span className="text-sm text-slate-400">時間範圍：</span>
-          <select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded text-slate-300 text-sm"
-          >
-            <option value="1d">今日</option>
-            <option value="7d">近7天</option>
-            <option value="30d">近30天</option>
-            <option value="90d">近90天</option>
-            <option value="all">全部</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Filter className="text-slate-400" size={16} />
-          <span className="text-sm text-slate-400">交易類型：</span>
+      {/* 篩選 */}
+      <div className="flex flex-wrap items-center gap-3 p-3 bg-slate-900/30 border border-slate-800 rounded-lg">
+        <div className="flex items-center gap-1.5">
+          <Filter className="text-slate-500" size={14} />
           <select
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as TransactionType | 'all')}
-            className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded text-slate-300 text-sm"
+            onChange={(e) => setTypeFilter(e.target.value as any)}
+            className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300 text-sm"
           >
             <option value="all">全部</option>
             <option value="buy">買進</option>
             <option value="sell">賣出</option>
-            <option value="dividend">配息</option>
           </select>
         </div>
-
-        <div className="ml-auto">
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-slate-400">淨損益：</span>
-            <StockPrice 
-              price={Math.abs(totalNetAmount)}
-              change={totalNetAmount}
-              showChange={false}
-              size="sm"
-            />
-          </div>
-        </div>
+        <span className="text-xs text-slate-500 ml-auto">共 {filtered.length} 筆</span>
       </div>
 
-      {/* 交易記錄表格 */}
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-800">
-                <th className="text-left px-6 py-4 text-sm font-medium text-slate-400">
-                  <div className="flex items-center gap-2">
-                    日期/時間
-                    <ArrowUpDown size={14} className="cursor-pointer hover:text-slate-300" />
-                  </div>
-                </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-slate-400">股票</th>
-                <th className="text-center px-6 py-4 text-sm font-medium text-slate-400">類型</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">數量</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">成交價</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">成交金額</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">手續費</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">交易稅</th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-slate-400">淨額</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTransactions.map((transaction) => {
-                const typeConfig = getTypeConfig(transaction.type)
-                
-                return (
-                  <tr key={transaction.id} className="border-b border-slate-800 hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="text-sm">
-                        <div className="text-slate-300">{transaction.date}</div>
-                        <div className="font-mono text-slate-500 text-xs">{transaction.time}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-bold text-slate-100">{transaction.symbol}</div>
-                        <div className="text-sm text-slate-400">{transaction.name}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${typeConfig.color}`}>
-                        {typeConfig.text}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-slate-300">
-                        {transaction.quantity.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-slate-300">
-                        {transaction.price.toFixed(2)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono font-bold text-slate-100">
-                        {transaction.amount.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-slate-400 text-sm">
-                        {transaction.fee.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-slate-400 text-sm">
-                        {transaction.tax.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <StockPrice 
-                        price={Math.abs(transaction.netAmount)}
-                        change={transaction.netAmount}
-                        showChange={false}
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* 空狀態 */}
-      {filteredTransactions.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-slate-400">找不到符合條件的交易記錄</p>
-        </div>
-      )}
-
-      {/* 統計摘要 */}
-      {filteredTransactions.length > 0 && (
-        <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">共 {filteredTransactions.length} 筆交易</span>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400">總手續費：</span>
-                <span className="font-mono text-slate-300">
-                  {filteredTransactions.reduce((sum, txn) => sum + txn.fee, 0).toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400">總交易稅：</span>
-                <span className="font-mono text-slate-300">
-                  {filteredTransactions.reduce((sum, txn) => sum + txn.tax, 0).toLocaleString()}
-                </span>
-              </div>
+      {loading ? (
+        <div className="space-y-3">
+          {[0,1,2].map(i => (
+            <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 bg-slate-800 rounded w-24 mb-2" />
+              <div className="h-3 bg-slate-800 rounded w-40" />
             </div>
-          </div>
+          ))}
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+          尚無成交記錄
+        </div>
+      ) : (
+        <>
+          {/* 桌面表格 */}
+          <div className="hidden md:block bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-800 bg-slate-800/30">
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-400">日期</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-400">股票</th>
+                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-400">類型</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">數量</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">成交價</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">成交金額</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">手續費</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-400">稅</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(o => (
+                  <tr key={o.id} className="border-b border-slate-800 hover:bg-slate-800/20">
+                    <td className="px-4 py-3 text-xs text-slate-400">
+                      {new Date(o.created_at).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="font-bold text-slate-100">{o.symbol}</span>
+                      <span className="text-slate-400 text-sm ml-1">{o.symbol_name}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        o.action === 'buy' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                      }`}>
+                        {o.action === 'buy' ? '買進' : '賣出'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-300">{o.quantity.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-300">{o.price.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-sm text-slate-200">${o.amount.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right font-mono text-xs text-slate-400">${o.commission.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right font-mono text-xs text-slate-400">${o.tax.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 手機卡片 */}
+          <div className="md:hidden space-y-2">
+            {filtered.map(o => (
+              <div key={o.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-3">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <span className="font-bold text-slate-100">{o.symbol}</span>
+                    <span className="text-slate-400 text-xs ml-1">{o.symbol_name}</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
+                    o.action === 'buy' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                  }`}>
+                    {o.action === 'buy' ? '買進' : '賣出'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <span className="text-slate-500">價格</span>
+                    <p className="font-mono text-slate-300">{o.price.toFixed(2)}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500">數量</span>
+                    <p className="font-mono text-slate-300">{o.quantity.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500">金額</span>
+                    <p className="font-mono text-slate-200">${o.amount.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between mt-2 text-[10px] text-slate-500">
+                  <span>手續費 ${o.commission} / 稅 ${o.tax}</span>
+                  <span>{new Date(o.created_at).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 摘要 */}
+          <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-3 flex flex-wrap gap-4 text-xs text-slate-400">
+            <span>總手續費：<span className="font-mono text-slate-300">${totalFees.toLocaleString()}</span></span>
+            <span>總交易稅：<span className="font-mono text-slate-300">${totalTax.toLocaleString()}</span></span>
+          </div>
+        </>
       )}
     </div>
   )
