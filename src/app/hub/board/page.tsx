@@ -27,11 +27,17 @@ export default function BoardPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch('/api/hub/board')
+  const fetchTasks = () => {
+    fetch('/api/hub/board', { cache: 'no-store' })
       .then(r => r.json())
       .then(d => { setTasks(d.data || []); setLoading(false); })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchTasks();
+    const interval = setInterval(fetchTasks, 15000); // Poll every 15s
+    return () => clearInterval(interval);
   }, []);
 
   const groups = tasks.reduce<Record<string, Task[]>>((acc, t) => {
