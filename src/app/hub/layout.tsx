@@ -72,8 +72,7 @@ const navGroups = [
       { href: '/hub/rules',   icon: ShieldCheck,   label: '規則' },
       { href: '/hub/wecom',       icon: MessageCircle, label: 'WeCom 歸類' },
       { href: '/hub/wecom-board', icon: LayoutGrid,    label: 'WeCom 看板' },
-      { href: '/hub/schedules',   icon: Calendar,      label: '排程管理' },
-      { href: '/hub/db-explorer', icon: Database,      label: 'DB Explorer' },
+
       { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
