@@ -3,171 +3,59 @@
 import { useSearchParams } from 'next/navigation'
 import { useState, useEffect, Suspense } from 'react'
 
-import { logActionWithIP } from '@/lib/audit'
-
 function LoginForm() {
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/'
-  
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(true)
-  const [error, setError] = useState(searchParams.get('error') || '')
+  const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // 從 localStorage 讀取保存的帳號
-    const savedUsername = localStorage.getItem('saved_username')
-    if (savedUsername) {
-      setUsername(savedUsername)
-    }
-  }, [])
+    const err = searchParams.get('error')
+    if (err) setError(err)
+  }, [searchParams])
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      setError('請輸入帳號和密碼')
-      return
-    }
-
+  const handleMicrosoftLogin = () => {
     setIsLoading(true)
     setError('')
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        if (rememberMe) {
-          localStorage.setItem('saved_username', username)
-        } else {
-          localStorage.removeItem('saved_username')
-        }
-        
-        // 記錄登入成功
-        logActionWithIP('login', JSON.stringify({ redirect }), '/login', username)
-        
-        // Hard navigation to ensure session cookie is sent on full page load
-        window.location.href = redirect
-      } else {
-        // 記錄登入失敗
-        logActionWithIP('login_failed', JSON.stringify({ reason: data.message }), '/login', username)
-        setError(data.message || '登入失敗')
-      }
-    } catch (err) {
-      setError('連線錯誤，請稍後再試')
-    }
-
-    setIsLoading(false)
+    window.location.href = '/api/auth/login/azure'
   }
 
   return (
     <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
       {/* Logo */}
       <div className="text-center mb-8">
-        <div className="text-5xl mb-4"></div>
+        <div className="text-5xl mb-4">🤖</div>
         <h1 className="text-2xl font-bold text-gray-800">通路營業管理系統</h1>
-        <p className="text-gray-500 text-sm mt-2">請使用公司郵箱帳號登入</p>
-      </div>
-      
-      <div className="space-y-4">
-        {/* 帳號欄位 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">帳號</label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="例如: u1612 或 u1612@aurotek.com"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-700"
-            />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* 密碼欄位 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
-          <div className="relative">
-            <input
-              type="password"
-              placeholder="公司郵箱密碼"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-              className="w-full p-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-700"
-            />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* 記住帳號 */}
-        <label className="flex items-center gap-3 cursor-pointer">
-          <div 
-            onClick={() => setRememberMe(!rememberMe)}
-            className={`w-5 h-5 rounded flex items-center justify-center border-2 transition ${
-              rememberMe ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
-            }`}
-          >
-            {rememberMe && (
-              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-            )}
-          </div>
-          <span className="text-gray-600 text-sm">記住我的帳號</span>
-        </label>
+        <p className="text-gray-500 text-sm mt-2">請使用公司 Microsoft 帳號登入</p>
       </div>
 
       {error && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-red-600 text-sm text-center">{error}</p>
         </div>
       )}
-      
+
       <button
-        onClick={handleLogin}
+        onClick={handleMicrosoftLogin}
         disabled={isLoading}
-        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-lg font-bold text-lg hover:from-blue-600 hover:to-purple-700 transition mt-6 disabled:opacity-50 shadow-lg"
+        className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-700 py-4 rounded-lg font-semibold text-base hover:bg-gray-50 hover:border-gray-300 transition disabled:opacity-50 shadow-sm"
       >
-        {isLoading ? '驗證中...' : '登 入'}
+        {isLoading ? (
+          <span>跳轉中...</span>
+        ) : (
+          <>
+            {/* Microsoft logo */}
+            <svg width="21" height="21" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+            </svg>
+            <span>使用公司 Microsoft 帳號登入</span>
+          </>
+        )}
       </button>
-      
-      {/* 分隔線 */}
-      <div className="flex items-center mt-6 mb-4">
-        <div className="flex-1 border-t border-gray-200"></div>
-        <span className="px-4 text-gray-400 text-sm">或</span>
-        <div className="flex-1 border-t border-gray-200"></div>
-      </div>
 
-      {/* Microsoft SSO 按鈕 */}
-      <a
-        href="/api/auth/login/azure"
-        className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] text-white py-3.5 rounded-lg font-medium hover:bg-[#1a1a1a] transition shadow-md"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21">
-          <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-          <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-          <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-          <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
-        </svg>
-        使用公司 Microsoft 帳號登入
-      </a>
-
-      <p className="text-center mt-6 text-gray-400 text-xs">
+      <p className="text-center mt-8 text-gray-400 text-xs">
         和椿科技 · 機器人事業處 · 通路營業部
       </p>
     </div>
@@ -178,7 +66,7 @@ function LoginFallback() {
   return (
     <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
       <div className="text-center mb-8">
-        <div className="text-5xl mb-4"></div>
+        <div className="text-5xl mb-4">🤖</div>
         <h1 className="text-2xl font-bold text-gray-800">通路營業管理系統</h1>
         <p className="text-gray-500 text-sm mt-2">載入中...</p>
       </div>
