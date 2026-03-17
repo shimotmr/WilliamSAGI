@@ -44,6 +44,7 @@ interface VehicleData {
 interface ApiResponse {
   vehicles: VehicleData[]
   error: string | null
+  needsReauth?: boolean
 }
 
 const TABS = [
@@ -268,7 +269,19 @@ export default function TeslaPage() {
       )}
 
       {/* Error */}
-      {current.error && !current.error.includes('No credentials') && (
+      {current.needsReauth && (
+        <div className="flex flex-col items-center gap-3 py-8">
+          <p className="text-slate-400 text-sm">Tesla 授權已過期，請重新連結</p>
+          <a
+            href={`/api/tesla/login`}
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-indigo-500/25"
+          >
+            重新連結 Tesla 帳號
+          </a>
+        </div>
+      )}
+
+      {current.error && !current.needsReauth && !current.error.includes('No credentials') && (
         <div className="flex items-center gap-2 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
           <AlertCircle size={18} />
           <span className="text-sm">{current.error}</span>

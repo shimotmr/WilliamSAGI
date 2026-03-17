@@ -6,10 +6,10 @@ const ENDPOINTS: Record<string, string> = {
   cn: 'https://fleet-api.prd.cn.vn.cloud.tesla.cn/api/1/vehicles',
 }
 
-async function refreshToken(region: string, refreshTokenStr: string): Promise<string | null> {
+async function refreshToken(region: string, refreshTokenStr: string): Promise<{ token: string | null; error?: string }> {
   const clientId = process.env.TESLA_FLEET_CLIENT_ID
   const clientSecret = process.env.TESLA_FLEET_CLIENT_SECRET
-  if (!clientId || !clientSecret) return null
+  if (!clientId || !clientSecret) return { token: null, error: 'TESLA_FLEET_CLIENT_ID or CLIENT_SECRET not configured' }
 
   const authHost = region === 'cn' ? 'auth.tesla.cn' : 'auth.tesla.com'
   try {
@@ -23,7 +23,11 @@ async function refreshToken(region: string, refreshTokenStr: string): Promise<st
         refresh_token: refreshTokenStr,
       }),
     })
-    if (!res.ok) return null
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '')
+      console.error(`Tesla refresh failed for ${region}:`, res.status, errBody)
+      return { token: null, error: `Token refresh failed (${res.status}): ${errBody.slice(0, 200)}` }
+    }
     const tokens = await res.json()
     const expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in || 3600)
 
@@ -46,9 +50,9 @@ async function refreshToken(region: string, refreshTokenStr: string): Promise<st
         }),
       })
     }
-    return tokens.access_token
-  } catch {
-    return null
+    return { token: tokens.access_token }
+  } catch (e: any) {
+    return { token: null, error: `Refresh exception: ${e.message}` }
   }
 }
 
@@ -70,8 +74,8 @@ async function getAccessToken(region: string): Promise<string | null> {
         // Auto-refresh if expired (with 60s buffer)
         const now = Math.floor(Date.now() / 1000)
         if (row.expires_at && now >= row.expires_at - 60 && row.refresh_token) {
-          const newToken = await refreshToken(region, row.refresh_token)
-          if (newToken) return newToken
+          const result = await refreshToken(region, row.refresh_token)
+          if (result.token) return result.token
         }
         return row.access_token
       }
@@ -145,15 +149,27 @@ export async function GET(request: NextRequest) {
           if (res.ok) {
             const rows = await res.json()
             if (rows[0]?.refresh_token) {
-              const newToken = await refreshToken(region, rows[0].refresh_token)
-              if (newToken) {
-                const vehicles = await fetchVehiclesWithDetails(ENDPOINTS[region], newToken)
+              const result = await refreshToken(region, rows[0].refresh_token)
+              if (result.token) {
+                const vehicles = await fetchVehiclesWithDetails(ENDPOINTS[region], result.token)
                 return NextResponse.json({ vehicles, error: null })
               }
+              // Refresh failed — need re-authentication
+              return NextResponse.json({
+                error: `Token expired and refresh failed for region ${region}. Please re-authenticate via /api/tesla/login. Detail: ${result.error || 'unknown'}`,
+                needsReauth: true,
+                vehicles: [],
+              }, { status: 401 })
             }
           }
         }
       } catch {}
+      // Fallback: no refresh token available
+      return NextResponse.json({
+        error: `Token invalid for region ${region}. Please re-authenticate via /api/tesla/login.`,
+        needsReauth: true,
+        vehicles: [],
+      }, { status: 401 })
     }
     return NextResponse.json({ error: err.message || 'API request failed', vehicles: [] })
   }
