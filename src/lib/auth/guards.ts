@@ -13,6 +13,7 @@ export function isPublicRoute(pathname: string): boolean {
     pathname === '/login' ||
     pathname.startsWith('/daily') ||
     pathname.startsWith('/api/auth/login') ||
+    pathname.startsWith('/api/auth/callback') ||
     pathname.startsWith('/api/hub/') ||
     pathname.startsWith('/api/v4/') ||
     pathname.startsWith('/_next/') ||
