@@ -115,7 +115,7 @@ export default function ReportDetailPage({
         {/* Header */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
           <button 
-            onClick={() => router.push('/reports')}
+            onClick={() => router.push('/hub/reports')}
             className="text-foreground-muted hover:text-foreground transition-colors"
           >
             <ArrowLeft size={18} />
@@ -139,7 +139,7 @@ export default function ReportDetailPage({
         {/* Header */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
           <button 
-            onClick={() => router.push('/reports')}
+            onClick={() => router.push('/hub/reports')}
             className="text-foreground-muted hover:text-foreground transition-colors"
           >
             <ArrowLeft size={18} />
@@ -154,7 +154,7 @@ export default function ReportDetailPage({
             <FileText size={48} className="mx-auto mb-4 text-foreground-subtle" />
             <p className="text-lg font-medium text-foreground mb-2">{error}</p>
             <button
-              onClick={() => router.push('/reports')}
+              onClick={() => router.push('/hub/reports')}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Back to Reports
@@ -173,7 +173,7 @@ export default function ReportDetailPage({
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
         <button 
-          onClick={() => router.push('/reports')}
+          onClick={() => router.push('/hub/reports')}
           className="text-foreground-muted hover:text-foreground transition-colors"
         >
           <ArrowLeft size={18} />
@@ -244,7 +244,7 @@ export default function ReportDetailPage({
           {/* Back button (mobile) */}
           <div className="md:hidden mb-6">
             <button
-              onClick={() => router.push('/reports')}
+              onClick={() => router.push('/hub/reports')}
               className="flex items-center gap-2 px-4 py-2 text-sm bg-muted hover:bg-accent rounded-lg transition-colors"
             >
               <ArrowLeft size={16} />
@@ -265,7 +265,7 @@ export default function ReportDetailPage({
           {/* Back button (bottom) */}
           <div className="mt-12 pt-8 border-t border-border">
             <button
-              onClick={() => router.push('/reports')}
+              onClick={() => router.push('/hub/reports')}
               className="flex items-center gap-2 px-4 py-2 text-sm bg-muted hover:bg-accent rounded-lg transition-colors"
             >
               <ArrowLeft size={16} />
