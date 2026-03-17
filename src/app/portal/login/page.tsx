@@ -12,7 +12,7 @@ function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState(searchParams.get('error') || '')
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -146,6 +146,27 @@ function LoginForm() {
         {isLoading ? '驗證中...' : '登 入'}
       </button>
       
+      {/* 分隔線 */}
+      <div className="flex items-center mt-6 mb-4">
+        <div className="flex-1 border-t border-gray-200"></div>
+        <span className="px-4 text-gray-400 text-sm">或</span>
+        <div className="flex-1 border-t border-gray-200"></div>
+      </div>
+
+      {/* Microsoft SSO 按鈕 */}
+      <a
+        href="/api/auth/login/azure"
+        className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] text-white py-3.5 rounded-lg font-medium hover:bg-[#1a1a1a] transition shadow-md"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21">
+          <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+          <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+          <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+          <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+        </svg>
+        使用公司 Microsoft 帳號登入
+      </a>
+
       <p className="text-center mt-6 text-gray-400 text-xs">
         和椿科技 · 機器人事業處 · 通路營業部
       </p>

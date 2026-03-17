@@ -49,7 +49,7 @@ export async function loginWithDirectory(body: LoginRequestBody): Promise<LoginR
   }
 
   if (!zimbraOk) {
-    throw new Error('密碼錯誤')
+    throw new Error('密碼驗證失敗，請使用上方「Microsoft 帳號登入」按鈕')
   }
 
   const { data: allowUser } = await supabase
