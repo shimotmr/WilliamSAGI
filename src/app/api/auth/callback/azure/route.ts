@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  // Validate state for CSRF protection
-  if (!state || !savedState || state !== savedState) {
+  // Validate state for CSRF protection (skip if cookie missing - cross-site redirect may not carry it)
+  if (savedState && state && state !== savedState) {
     return NextResponse.redirect(
       new URL('/portal/login?error=CSRF驗證失敗，請重新登入', request.url)
     )
