@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { signSession, authCookieName } from '@/lib/auth/session'
+import { signPortalSession, portalSessionCookieName } from '@/lib/auth/portal'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import type { SessionRole } from '@/features/auth/types'
 
@@ -112,17 +113,35 @@ export async function GET(request: NextRequest) {
 
     const role: SessionRole = allowUser?.role === 'admin' ? 'admin' : 'user'
 
-    // Sign session JWT
+    // Sign session JWT (hub-level)
     const token = await signSession(principal, role)
+
+    // Sign portal session JWT (portal middleware checks this)
+    const isUserAdmin = role === 'admin'
+    const portalToken = await signPortalSession({
+      employeeId: employee.emp_code,
+      email: employee.email || `${employee.emp_code}@aurotek.com`,
+      isAdmin: isUserAdmin,
+      isSuperAdmin: isUserAdmin,
+    })
 
     const response = NextResponse.redirect(
       new URL('/portal/dashboard', request.url)
     )
+    // Hub session cookie
     response.cookies.set(authCookieName, token, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
       maxAge: 60 * 60 * 8,
+      path: '/',
+    })
+    // Portal session cookie (required by portal middleware)
+    response.cookies.set(portalSessionCookieName, portalToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     })
     // Clear oauth state cookie
