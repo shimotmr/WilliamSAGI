@@ -12,8 +12,8 @@ import { getPortalSessionFromRequest, isPortalPublicRoute, portalSessionCookieNa
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Early exit for all /api routes (especially OAuth callbacks)
-  if (pathname.startsWith('/api/')) {
+  // Early exit for all /api routes and .well-known
+  if (pathname.startsWith('/api/') || pathname.startsWith('/.well-known')) {
     return NextResponse.next()
   }
 
