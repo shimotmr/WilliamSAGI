@@ -11,9 +11,10 @@ async function refreshToken(region: string, refreshTokenStr: string): Promise<{ 
   const clientSecret = process.env.TESLA_FLEET_CLIENT_SECRET
   if (!clientId || !clientSecret) return { token: null, error: 'TESLA_FLEET_CLIENT_ID or CLIENT_SECRET not configured' }
 
-  const authHost = region === 'cn' ? 'auth.tesla.cn' : 'auth.tesla.com'
+  // Token endpoint MUST use fleet-auth domain per Tesla docs
+  const tokenHost = region === 'cn' ? 'fleet-auth.prd.cn.vn.cloud.tesla.cn' : 'fleet-auth.prd.vn.cloud.tesla.com'
   try {
-    const res = await fetch(`https://${authHost}/oauth2/v3/token`, {
+    const res = await fetch(`https://${tokenHost}/oauth2/v3/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
