@@ -92,6 +92,9 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
+  // 交易頁面有自己的底部導航，隱藏 Hub 的
+  const isTradeRoute = pathname?.startsWith('/hub/trade');
+
   const isActive = (href: string) => {
     if (href === '/hub/dashboard') return pathname === '/hub/dashboard' || pathname === '/hub';
     return pathname === href || pathname?.startsWith(href + '/');
@@ -386,10 +389,11 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
               {children}
             </div>
           </main>
-          <div className="hub-mobile-spacer" style={{ height: '64px' }} />
+          {!isTradeRoute && <div className="hub-mobile-spacer" style={{ height: '64px' }} />}
         </div>
 
-        {/* Mobile bottom nav */}
+        {/* Mobile bottom nav — 交易頁面隱藏（使用自己的 tab） */}
+        {!isTradeRoute && (
         <nav className="hub-mobile-nav" style={{
           position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
           background: '#0c0c0e', borderTop: '1px solid rgba(255,255,255,0.06)',
@@ -407,6 +411,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
+        )}
 
         {/* Mobile drawer overlay */}
         <div 

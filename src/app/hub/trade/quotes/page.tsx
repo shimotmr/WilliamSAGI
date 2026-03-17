@@ -222,9 +222,9 @@ export default function QuotesPage() {
   return (
     <QueryClientProvider client={queryClient}>
     <div className="min-h-screen bg-slate-950">
-      <div className="flex h-screen">
-        {/* 左側面板 - 搜尋和監視清單 */}
-        <div className="w-1/3 border-r border-slate-800 flex flex-col bg-slate-900/30">
+      <div className="flex flex-col md:flex-row h-screen">
+        {/* 左側面板 - 搜尋和監視清單（手機隱藏，由底部 tab 的「報價」頁面替代） */}
+        <div className="hidden md:flex md:w-1/3 border-r border-slate-800 flex-col bg-slate-900/30">
           {/* 標頭區域 */}
           <div className="p-4 border-b border-slate-800">
             <div className="flex items-center justify-between mb-4">
@@ -325,24 +325,74 @@ export default function QuotesPage() {
           </div>
         </div>
 
+        {/* 手機版：精簡股票列表 + 搜尋 */}
+        <div className="md:hidden p-3 space-y-3">
+          {/* 手機標頭 */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-bold text-slate-100">即時報價</h1>
+            <div className="flex items-center gap-2">
+              <ConnectionStatus className="!text-xs !px-2 !py-1" />
+              <button
+                onClick={handleManualRefresh}
+                disabled={quotesLoading}
+                className="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={14} className={quotesLoading ? 'animate-spin' : ''} />
+              </button>
+            </div>
+          </div>
+
+          {/* 手機搜尋 */}
+          <QuoteSearch
+            onSearch={handleSearch}
+            onSelect={handleAddToWatchList}
+            searchResults={searchResults}
+            isLoading={false}
+            placeholder="搜尋股票..."
+          />
+
+          {/* 手機版橫向捲動股票卡片 */}
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-3 px-3 scrollbar-hide">
+            {quotes.map((quote) => (
+              <button
+                key={quote.symbol}
+                onClick={() => handleSymbolSelect(quote.symbol)}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg border text-left min-w-[100px] transition-colors ${
+                  selectedSymbol === quote.symbol
+                    ? 'bg-blue-600/20 border-blue-500/30 text-blue-400'
+                    : 'bg-slate-900/50 border-slate-800 text-slate-300'
+                }`}
+              >
+                <div className="text-xs font-bold">{quote.symbol}</div>
+                <div className="text-[10px] text-slate-500 truncate">{quote.symbol_name}</div>
+                <div className={`text-xs font-mono mt-0.5 ${
+                  quote.change > 0 ? 'text-red-400' : quote.change < 0 ? 'text-green-400' : 'text-slate-400'
+                }`}>
+                  {quote.last_price.toFixed(2)}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* 右側面板 - 選中股票詳細資訊 */}
-        <div className="flex-1 bg-slate-950/50">
+        <div className="flex-1 bg-slate-950/50 min-w-0">
           {selectedQuote ? (
             <div className="h-full overflow-y-auto">
               {/* 股票標頭 */}
-              <div className="sticky top-0 bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <h2 className="text-2xl font-bold text-slate-100">
+              <div className="sticky top-0 bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 p-3 md:p-6">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 md:gap-3 mb-1">
+                      <h2 className="text-lg md:text-2xl font-bold text-slate-100">
                         {selectedQuote.symbol}
                       </h2>
-                      <span className="text-lg text-slate-400">
+                      <span className="text-sm md:text-lg text-slate-400 truncate">
                         {selectedQuote.symbol_name || STOCK_NAMES[selectedQuote.symbol]}
                       </span>
                     </div>
-                    <div className="flex items-end gap-4">
-                      <span className={`text-3xl font-bold font-mono font-variant-numeric: tabular-nums ${
+                    <div className="flex items-end gap-2 md:gap-4 flex-wrap">
+                      <span className={`text-xl md:text-3xl font-bold font-mono ${
                         selectedQuote.change > 0 
                           ? 'text-red-400' 
                           : selectedQuote.change < 0 
@@ -375,11 +425,11 @@ export default function QuotesPage() {
                   </div>
 
                   {/* 快速操作按鈕 */}
-                  <div className="flex items-center gap-2">
-                    <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button className="px-3 md:px-4 py-1.5 md:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm md:text-base font-medium transition-colors">
                       買進
                     </button>
-                    <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
+                    <button className="px-3 md:px-4 py-1.5 md:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm md:text-base font-medium transition-colors">
                       賣出
                     </button>
                   </div>
@@ -387,9 +437,9 @@ export default function QuotesPage() {
               </div>
 
               {/* 詳細資訊 */}
-              <div className="p-6 space-y-6">
+              <div className="p-3 md:p-6 space-y-4 md:space-y-6">
                 {/* 基本資訊卡片 */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2 md:gap-4">
                   <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
                     <h3 className="text-sm font-medium text-slate-400 mb-2">成交量</h3>
                     <p className="text-lg font-mono font-variant-numeric: tabular-nums text-slate-100">
@@ -430,19 +480,19 @@ export default function QuotesPage() {
               </div>
             </div>
           ) : (
-            <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center p-4">
               <div className="text-center">
-                <Search size={48} className="mx-auto mb-4 text-slate-600" />
+                <Search size={36} className="mx-auto mb-4 text-slate-600" />
                 <p className="text-slate-400 mb-2">請選擇股票</p>
-                <p className="text-sm text-slate-500">從左側清單中選擇股票查看詳細報價</p>
+                <p className="text-sm text-slate-500">從清單中選擇股票查看詳細報價</p>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* 設定面板 (隱藏) */}
-      <div className="fixed bottom-4 right-4">
+      {/* 設定面板 - 手機上隱藏避免遮擋底部導航 */}
+      <div className="hidden md:block fixed bottom-4 right-4">
         <div className="bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-lg p-3">
           <div className="flex items-center gap-2 text-xs text-slate-400">
             <span>重新整理間隔:</span>
