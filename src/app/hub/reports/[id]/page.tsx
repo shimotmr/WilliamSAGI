@@ -3,7 +3,6 @@
 // ============================================================
 'use client'
 
-import html2pdf from 'html2pdf.js'
 import {
   ArrowLeft, User, Calendar, FileText, Loader2, Tag, Download,
 } from 'lucide-react'
@@ -98,7 +97,9 @@ export default function ReportDetailPage({
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       }
       
-      // @ts-ignore
+      // Dynamic import — only load html2pdf when user clicks download
+      // @ts-expect-error html2pdf.js has no type declarations
+      const html2pdf = (await import('html2pdf.js')).default
       await html2pdf().set(opt).from(contentRef.current).save()
     } catch (err) {
       console.error('Error generating PDF:', err)
