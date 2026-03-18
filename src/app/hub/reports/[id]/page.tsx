@@ -98,8 +98,8 @@ export default function ReportDetailPage({
       }
       
       // Dynamic import — only load html2pdf when user clicks download
-      // @ts-expect-error html2pdf.js has no type declarations
-      const html2pdf = (await import('html2pdf.js')).default
+      const html2pdfModule = await import('html2pdf.js')
+      const html2pdf = html2pdfModule.default
       await html2pdf().set(opt).from(contentRef.current).save()
     } catch (err) {
       console.error('Error generating PDF:', err)
