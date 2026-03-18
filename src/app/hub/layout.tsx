@@ -63,6 +63,7 @@ const navGroups = [
       { href: '/hub/v4-2', icon: GitFork, label: 'V4.2 Pipeline' },
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
+      { href: '/hub/chat', icon: MessageSquare, label: '本地 Chat' },
     ],
   },
   {
