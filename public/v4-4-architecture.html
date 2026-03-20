@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V4.4 智能任務 Pipeline — Two-Stage Review + TDD + Systematic Debugging</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #263347;
+    --border: #334155;
+    --purple: #7B68EE;
+    --teal: #20B2AA;
+    --blue: #4A90D9;
+    --green: #2ECC71;
+    --orange: #F39C12;
+    --red: #E74C3C;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --dim: #475569;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+  nav .brand { color: var(--purple); font-weight: 700; font-size: 1.1em; }
+  nav .badge { background: var(--purple); color: #fff; font-size: 0.7em; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  nav .badge-new { background: var(--green); color: #fff; font-size: 0.7em; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  nav .score { margin-left: auto; color: var(--muted); font-size: 0.85em; display: flex; align-items: center; gap: 8px; }
+  nav .score span { font-weight: 700; font-size: 1.1em; }
+  .v3 { color: var(--red); }
+  .v4 { color: var(--green); }
+
+  .tabs { display: flex; gap: 4px; padding: 20px 24px 0; overflow-x: auto; background: var(--bg); }
+  .tab { padding: 10px 18px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.85em; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-bottom: none; transition: all 0.2s; white-space: nowrap; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--purple); background: var(--surface2); border-color: var(--purple); }
+  .tab-new { position: relative; }
+  .tab-new::after { content: 'NEW'; position: absolute; top: -6px; right: -6px; background: var(--green); color: #fff; font-size: 0.55em; padding: 1px 5px; border-radius: 99px; font-weight: 700; }
+
+  .content { padding: 0 24px 40px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .hero { padding: 32px 0 24px; text-align: center; }
+  .hero h1 { font-size: 1.8em; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .hero p { color: var(--muted); font-size: 0.95em; max-width: 700px; margin: 0 auto; }
+
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 24px 0; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .score-card .label { color: var(--muted); font-size: 0.75em; margin-bottom: 6px; }
+  .score-card .val { font-size: 1.6em; font-weight: 800; }
+  .score-card .arrow { font-size: 0.75em; color: var(--green); margin-top: 2px; }
+  .score-card.upgraded { border-color: var(--green); box-shadow: 0 0 12px rgba(46,204,113,0.15); }
+
+  .diagram-section { margin: 24px 0; }
+  .diagram-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+  .diagram-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+  .diagram-num { background: var(--purple); color: #fff; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; margin-top: 2px; }
+  .diagram-header h3 { font-size: 1em; font-weight: 600; margin-bottom: 4px; }
+  .diagram-header p { color: var(--muted); font-size: 0.82em; line-height: 1.5; }
+  .diagram-body { padding: 20px; overflow-x: auto; background: var(--surface2); }
+  .mermaid { display: flex; justify-content: center; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+  th { background: var(--surface); color: var(--muted); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(123,104,238,0.05); }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75em; font-weight: 600; }
+  .chip-purple { background: rgba(123,104,238,0.2); color: var(--purple); }
+  .chip-blue { background: rgba(74,144,217,0.2); color: var(--blue); }
+  .chip-orange { background: rgba(243,156,18,0.2); color: var(--orange); }
+  .chip-green { background: rgba(46,204,113,0.2); color: var(--green); }
+  .chip-red { background: rgba(231,76,60,0.2); color: var(--red); }
+  .chip-teal { background: rgba(32,178,170,0.2); color: var(--teal); }
+  .cost-badge { font-size: 0.75em; padding: 2px 6px; border-radius: 4px; }
+  .cost-free { background: rgba(46,204,113,0.15); color: var(--green); }
+  .cost-mid { background: rgba(243,156,18,0.15); color: var(--orange); }
+  .cost-high { background: rgba(231,76,60,0.15); color: var(--red); }
+
+  .phase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+  .phase-card { border-radius: 12px; padding: 20px; border: 1px solid; }
+  .phase-1 { background: rgba(32,178,170,0.07); border-color: rgba(32,178,170,0.3); }
+  .phase-2 { background: rgba(123,104,238,0.07); border-color: rgba(123,104,238,0.3); }
+  .phase-3 { background: rgba(74,144,217,0.07); border-color: rgba(74,144,217,0.3); }
+  .phase-4 { background: rgba(231,76,60,0.07); border-color: rgba(231,76,60,0.3); }
+  .phase-label { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .phase-1 .phase-label { color: var(--teal); }
+  .phase-2 .phase-label { color: var(--purple); }
+  .phase-3 .phase-label { color: var(--blue); }
+  .phase-4 .phase-label { color: var(--red); }
+  .phase-card h3 { font-size: 1.1em; margin-bottom: 4px; }
+  .phase-card .weeks { color: var(--muted); font-size: 0.78em; margin-bottom: 12px; }
+  .phase-card .target { font-size: 0.85em; font-weight: 600; margin-bottom: 10px; }
+  .phase-1 .target { color: var(--teal); }
+  .phase-2 .target { color: var(--purple); }
+  .phase-3 .target { color: var(--blue); }
+  .phase-4 .target { color: var(--red); }
+  .task-list { list-style: none; }
+  .task-list li { font-size: 0.8em; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+  .task-list li::before { content: '▸'; color: var(--dim); }
+  .dod { margin-top: 12px; padding: 8px 12px; border-radius: 6px; font-size: 0.78em; font-weight: 600; }
+  .phase-1 .dod { background: rgba(32,178,170,0.1); color: var(--teal); }
+  .phase-2 .dod { background: rgba(123,104,238,0.1); color: var(--purple); }
+  .phase-3 .dod { background: rgba(74,144,217,0.1); color: var(--blue); }
+  .phase-4 .dod { background: rgba(231,76,60,0.1); color: var(--red); }
+
+  .data-flow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .data-node { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .data-node .icon { font-size: 1.5em; margin-bottom: 6px; }
+  .data-node h4 { font-size: 0.85em; font-weight: 600; margin-bottom: 4px; }
+  .data-node p { font-size: 0.75em; color: var(--muted); line-height: 1.5; }
+
+  .script-table { width: 100%; }
+  .script-table td:first-child { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--teal); }
+
+  footer { text-align: center; color: var(--dim); font-size: 0.75em; padding: 24px; border-top: 1px solid var(--border); }
+  footer a { color: var(--purple); text-decoration: none; }
+
+  /* V4.4 NEW FEATURE CARDS */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 20px; margin: 20px 0; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .feature-card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .feature-card-header .feat-num { background: var(--green); color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9em; flex-shrink: 0; }
+  .feature-card-header h3 { font-size: 1.05em; font-weight: 700; }
+  .feature-card-header .feat-tag { font-size: 0.7em; color: var(--green); font-weight: 600; }
+  .feature-card-body { padding: 16px 20px; }
+  .feature-card-body .desc { font-size: 0.85em; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+  .feature-card-body .desc strong { color: var(--text); }
+  .feature-card-diagram { padding: 16px 20px; background: var(--surface2); border-top: 1px solid var(--border); overflow-x: auto; }
+  .feature-card .pros { list-style: none; padding: 0 20px 16px; }
+  .feature-card .pros li { font-size: 0.8em; color: var(--muted); padding: 3px 0; }
+  .feature-card .pros li::before { content: '✅ '; }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; margin: 24px 0; }
+  .compare-table th { text-align: center; }
+  .compare-table th:first-child { text-align: left; }
+  .compare-table td { text-align: center; }
+  .compare-table td:first-child { text-align: left; font-weight: 600; }
+  .compare-table .old { color: var(--red); }
+  .compare-table .new { color: var(--green); font-weight: 600; }
+
+  @media(max-width:900px){
+    .two-col { grid-template-columns: 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+
+  .icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; stroke: currentColor; }
+  .icon-lg { width: 20px; height: 20px; }
+  .icon-xl { width: 28px; height: 28px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand"><i data-lucide="bot" class="icon-lg"></i> WilliamSAGI</span>
+  <span class="badge">Architecture</span>
+  <span class="badge-new">V4.4</span>
+  <div class="score">
+    V4.2 評分 <span class="v3">6.5</span> → V4.4 目標 <span class="v4">9.0</span> / 10
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('overview')"><i data-lucide="bar-chart-2" class="icon"></i> 系統總覽</div>
+  <div class="tab" onclick="showPanel('arch')"><i data-lucide="building" class="icon"></i> 架構圖</div>
+  <div class="tab" onclick="showPanel('agents')"><i data-lucide="bot" class="icon"></i> Agent 分工</div>
+  <div class="tab" onclick="showPanel('phases')"><i data-lucide="rocket" class="icon"></i> Phase 計畫</div>
+  <div class="tab" onclick="showPanel('loops')"><i data-lucide="heart-pulse" class="icon"></i> 閉環監控</div>
+  <div class="tab" onclick="showPanel('dataflow')"><i data-lucide="refresh-cw" class="icon"></i> 資料流</div>
+  <div class="tab" onclick="showPanel('scripts')"><i data-lucide="terminal" class="icon"></i> 腳本</div>
+  <div class="tab tab-new" onclick="showPanel('v44')"><i data-lucide="sparkles" class="icon"></i> 🆕 V4.4 新功能</div>
+</div>
+
+<div class="content">
+
+<!-- OVERVIEW -->
+<div id="panel-overview" class="panel active">
+  <div class="hero">
+    <h1>V4.4 智能任務 Pipeline</h1>
+    <p>Two-Stage Review + TDD + Systematic Debugging — 從 obra/superpowers 框架學習，整合 6 大品質保障機制，讓每一行程式碼都經過驗證。</p>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-card"><div class="label">主動尋找任務</div><div class="val" style="color:#F39C12">5</div><div class="arrow">Notion 掃描 + Issue 監控</div></div>
+    <div class="score-card"><div class="label">自我思考</div><div class="val" style="color:#F39C12">7</div><div class="arrow">5-10 分鐘精細拆分</div></div>
+    <div class="score-card upgraded"><div class="label">自我執行</div><div class="val v4">9</div><div class="arrow">TDD + Git Worktree 隔離 ⬆</div></div>
+    <div class="score-card upgraded"><div class="label">自我審計</div><div class="val v4">9</div><div class="arrow">Two-Stage Review ⬆</div></div>
+    <div class="score-card upgraded"><div class="label">自我除錯</div><div class="val v4">8</div><div class="arrow">4 階段 Systematic Debugging ⬆</div></div>
+    <div class="score-card"><div class="label">自我修復</div><div class="val v4">8</div><div class="arrow">自動驗證閘門 + 重試升級</div></div>
+    <div class="score-card"><div class="label">自我預防</div><div class="val v4">7</div><div class="arrow">Prompt Validator + TDD 預防</div></div>
+    <div class="score-card"><div class="label">自我學習</div><div class="val" style="color:#F39C12">5</div><div class="arrow">Review 結果回饋到路由策略</div></div>
+    <div class="score-card"><div class="label">自我演進</div><div class="val" style="color:#F39C12">3</div><div class="arrow">數據驅動迭代 — 進行中</div></div>
+  </div>
+
+  <div class="diagram-card" style="margin-top:8px">
+    <div class="diagram-header">
+      <div class="diagram-num" style="background:var(--green)">!</div>
+      <div>
+        <h3>V4.4 核心升級（學習 obra/superpowers 框架）</h3>
+        <p>V4.2 的最大問題：缺乏 code review 導致品質不穩、任務粒度太粗導致失敗率高、debug 沒有系統方法。V4.4 引入 6 大機制：<strong>兩階段 Code Review</strong> 確保品質、<strong>5-10 分鐘任務粒度</strong> 降低風險、<strong>自動驗證閘門</strong> 取代手動確認、<strong>TDD 強制流程</strong> 預防 bug、<strong>Git Worktree</strong> 隔離開發、<strong>Systematic Debugging</strong> 4 階段修復。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCH -->
+<div id="panel-arch" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>V4.4 系統架構圖</h1>
+    <p>核心流程加入 Two-Stage Review Gate，確保每個產出都經過品質驗證</p>
+  </div>
+
+  <div class="two-col">
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-num">1</div>
+        <div>
+          <h3>核心執行流程（含 Review Gate）</h3>
+          <p>任務來源 → Task Splitter（5-10 分鐘粒度）→ Model Router → TDD 執行 → Acceptance Gate → <strong>Two-Stage Review</strong> → Result Merger</p>
+        </div>
+      </div>
+      <div class="diagram-body">
+        <div class="mermaid">
+flowchart TD
+    n1["William / Notion\n任務來源"]
+    SP["Task Splitter\n5-10 分鐘粒度"]
+    FP["🚀 Fast Path\n簡單任務"]
+    MR["Model Router\n分叉升級鏈"]
+    WT["Git Worktree\n獨立分支建立"]
+    TDD["TDD 流程\nRED → GREEN → REFACTOR"]
+    AG["Acceptance Gate\n自動驗收測試"]
+    RV["🔍 Two-Stage Review\nStage1: Spec ✓\nStage2: Quality ✓"]
+    RM["Result Merger\n合併+品質檢查"]
+    DB[("board_tasks\n+ execution_log")]
+    TG["Telegram 通知"]
+    n1 --> SP
+    SP -->|"≤ 3"| FP
+    SP -->|"> 3 拆分"| MR
+    FP --> MR
+    MR --> WT
+    WT --> TDD
+    TDD --> AG
+    AG -->|"測試通過"| RV
+    AG -->|"❌ 失敗\n重試/升級"| TDD
+    RV -->|"✅ 雙階段通過"| RM
+    RV -->|"❌ Critical\n擋住進度"| TDD
+    RM --> DB
+    RM --> TG
+    style n1 fill:#4A90D9,color:#fff
+    style SP fill:#20B2AA,color:#fff
+    style FP fill:#2ECC71,color:#fff
+    style MR fill:#7B68EE,color:#fff
+    style WT fill:#3498DB,color:#fff
+    style TDD fill:#9B59B6,color:#fff
+    style AG fill:#F39C12,color:#fff
+    style RV fill:#E74C3C,color:#fff
+    style RM fill:#27AE60,color:#fff
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-num">2</div>
+        <div>
+          <h3>防護與品質閉環</h3>
+          <p>Prompt Validator → TDD 強制 → Review Gate 交叉驗證 → Systematic Debugging 閉環修復</p>
+        </div>
+      </div>
+      <div class="diagram-body">
+        <div class="mermaid">
+flowchart TD
+    PV["Prompt Validator\nspawn 前預檢"]
+    TDD2["TDD 強制\n無測試不允許 commit"]
+    RV2["Two-Stage Review\n交叉模型驗證"]
+    SD["Systematic Debugging\n4 階段修復"]
+    SDA["Session Death Analyzer\n每 30 分鐘"]
+    TEL["task_execution_log\n全量 observability"]
+    CB2["Circuit Breaker\n模型健康追蹤"]
+    MH["Meta-heartbeat\n每 15 分鐘"]
+    ALERT["Telegram 告警"]
+    PV --> TDD2
+    TDD2 -->|"測試失敗"| SD
+    SD -->|"修復後"| TDD2
+    TDD2 -->|"測試通過"| RV2
+    RV2 -->|"品質問題"| SD
+    RV2 -->|"記錄"| TEL
+    SDA -->|"分析死因"| TEL
+    TEL -->|"連續失敗"| ALERT
+    CB2 -->|"模型 unhealthy"| ALERT
+    MH -.->|"監控全部"| SDA
+    MH -.->|"監控"| CB2
+    style PV fill:#20B2AA,color:#fff
+    style TDD2 fill:#9B59B6,color:#fff
+    style RV2 fill:#E74C3C,color:#fff
+    style SD fill:#E67E22,color:#fff
+    style SDA fill:#E74C3C,color:#fff
+    style TEL fill:#F39C12,color:#fff
+    style MH fill:#7B68EE,color:#fff
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<div id="panel-agents" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>Agent 分工與模型調度</h1>
+    <p>6 個 AI 員工各有專長，V4.4 新增 Review 用不同模型交叉驗證</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">3</div>
+      <div>
+        <h3>Agent 能力矩陣</h3>
+        <p>V4.4 新增：執行用 Codex，Review 用 Sonnet，交叉驗證確保品質。</p>
+      </div>
+    </div>
+    <div class="diagram-body" style="padding:0">
+      <table>
+        <thead>
+          <tr><th>Agent</th><th>職責</th><th>主模型</th><th>備用模型</th><th>成本</th><th>典型任務</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><i data-lucide="bot" class="icon"></i> Travis</strong></td>
+            <td>決策・協調・緊急處理</td>
+            <td><span class="chip chip-purple">claude-sonnet-4-6</span></td>
+            <td><span class="chip chip-purple">opus-4-6</span></td>
+            <td><span class="cost-badge cost-high">高</span></td>
+            <td>主 session、重大決策、Review Stage 2</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="hammer" class="icon"></i> Blake</strong></td>
+            <td>程式・前端・TDD 執行</td>
+            <td><span class="chip chip-blue">gpt-5.4</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-mid">中</span></td>
+            <td>TDD 開發、Git Worktree、程式碼產出</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="microscope" class="icon"></i> Rex</strong></td>
+            <td>研究・分析・報告</td>
+            <td><span class="chip chip-orange">grok420-0309</span></td>
+            <td><span class="chip chip-teal">kimi</span></td>
+            <td><span class="cost-badge cost-mid">中</span></td>
+            <td>市場研究、Review Stage 1（Spec Check）</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="clipboard-list" class="icon"></i> Oscar</strong></td>
+            <td>行政・監控</td>
+            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-free">零費用</span></td>
+            <td>行事曆同步、heartbeat、驗證閘門執行</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="trending-up" class="icon"></i> Warren</strong></td>
+            <td>交易・風控</td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td>—</td>
+            <td><span class="cost-badge cost-mid">中</span></td>
+            <td>股票分析、交易策略</td>
+          </tr>
+          <tr>
+            <td><strong><i data-lucide="shield" class="icon"></i> Griffin</strong></td>
+            <td>安全審查</td>
+            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
+            <td><span class="chip chip-teal">minimax</span></td>
+            <td><span class="cost-badge cost-free">零費用</span></td>
+            <td>安全審計、Prompt Injection 偵測</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="diagram-card" style="margin-top:16px">
+    <div class="diagram-header">
+      <div class="diagram-num">4</div>
+      <div>
+        <h3>分叉升級鏈（含 Review 模型路由）</h3>
+        <p>V4.4 新增：Review 階段使用與執行不同的模型，避免自我驗證盲點。</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart TD
+    TASK["新任務"]
+    CLASS{"Task Splitter\n自動分類"}
+    subgraph CODE["程式碼任務"]
+        C1["Qwen3 本地"] --> C2["Codex gpt-5.4"] --> C3["Sonnet 4.6"] --> C4["Opus 4.6"]
+    end
+    subgraph REVIEW["Review 交叉驗證"]
+        RV1["執行: Codex\nReview: Sonnet"]
+        RV2["執行: Grok\nReview: Codex"]
+    end
+    subgraph RESEARCH["研究分析任務"]
+        R1["Qwen3 本地"] --> R2["Grok 4.20"] --> R3["Sonnet 4.6"]
+    end
+    TASK --> CLASS
+    CLASS -->|"code"| C1
+    CLASS -->|"research"| R1
+    C4 --> RV1
+    R3 --> RV2
+    style CLASS fill:#7B68EE,color:#fff
+    style C2 fill:#3498DB,color:#fff
+    style R2 fill:#E67E22,color:#fff
+    style RV1 fill:#E74C3C,color:#fff
+    style RV2 fill:#E74C3C,color:#fff
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASES -->
+<div id="panel-phases" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>V4.4 Phase 計畫</h1>
+    <p>Phase 1-3 已完成，Phase 4 加入 V4.4 六大新功能</p>
+  </div>
+
+  <div class="phase-grid">
+    <div class="phase-card phase-1">
+      <div class="phase-label">Phase 1 · 已完成 ✅</div>
+      <h3>模型路由 + Task Splitter</h3>
+      <div class="weeks">智能拆分與自動路由基礎</div>
+      <div class="target">DoD：3 種任務類型正確路由 ✅</div>
+      <ul class="task-list">
+        <li>model_router.py — 分叉升級鏈</li>
+        <li>task_splitter.py — 複雜度分析</li>
+        <li>create_task.sh 整合</li>
+      </ul>
+      <div class="dod">✅ 已完成</div>
+    </div>
+    <div class="phase-card phase-2">
+      <div class="phase-label">Phase 2 · 已完成 ✅</div>
+      <h3>Scheduler + Gate + Merger</h3>
+      <div class="weeks">完整 Pipeline 端到端</div>
+      <div class="target">DoD：pipeline 端到端可運行 ✅</div>
+      <ul class="task-list">
+        <li>task_scheduler.py — Event-driven 排程</li>
+        <li>acceptance_gate.py — 三層驗收</li>
+        <li>result_merger.py — 結果合併</li>
+      </ul>
+      <div class="dod">✅ 已完成</div>
+    </div>
+    <div class="phase-card phase-3">
+      <div class="phase-label">Phase 3 · 已完成 ✅</div>
+      <h3>防護層</h3>
+      <div class="weeks">6/6 失敗根因覆蓋</div>
+      <div class="target">DoD：6/6 失敗根因覆蓋 ✅</div>
+      <ul class="task-list">
+        <li>prompt_validator.py — Prompt 預檢</li>
+        <li>session_death_analyzer.py — 死因分析</li>
+        <li>Notion 入口整合</li>
+      </ul>
+      <div class="dod">✅ 已完成</div>
+    </div>
+    <div class="phase-card phase-4">
+      <div class="phase-label">Phase 4 · V4.4 新增 🆕</div>
+      <h3>品質保障 6 大機制</h3>
+      <div class="weeks">從 obra/superpowers 學習整合</div>
+      <div class="target">DoD：任務成功率 ≥ 90%，Code Review 覆蓋率 100%</div>
+      <ul class="task-list">
+        <li>Two-Stage Code Review</li>
+        <li>5-10 分鐘任務粒度</li>
+        <li>自動驗證閘門</li>
+        <li>TDD 強制流程</li>
+        <li>Git Worktree 隔離</li>
+        <li>Systematic Debugging 4 階段</li>
+      </ul>
+      <div class="dod">🎯 任務成功率 ≥ 90%</div>
+    </div>
+  </div>
+</div>
+
+<!-- LOOPS -->
+<div id="panel-loops" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>閉環監控關係圖</h1>
+    <p>V4.4 新增 Review Gate 和 TDD Gate 到監控網路</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">5</div>
+      <div>
+        <h3>Meta-heartbeat 監控網路（V4.4 擴展）</h3>
+        <p>新增 Review Gate 和 TDD Compliance 監控，確保品質機制本身也在正常運作。</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart TD
+    MH["Meta-heartbeat\n每 15 分鐘"]
+    subgraph LOOPS["受監控的閉環"]
+        PE["Pipeline Engine\n每 5 分鐘"]
+        SG["Status Guardian\n每 30 分鐘"]
+        HS["Hourly Snapshot\n每 1 小時"]
+        SDA2["Session Death Analyzer\n每 30 分鐘"]
+        CB3["Circuit Breaker\n即時"]
+        RG["🆕 Review Gate\n每次 task_complete"]
+        TG2["🆕 TDD Compliance\n每次 commit"]
+        VG["🆕 Verification Gate\n每次完成前"]
+    end
+    ALERT["Telegram 告警"]
+    MH -->|掃描| PE
+    MH -->|掃描| SG
+    MH -->|掃描| HS
+    MH -->|掃描| SDA2
+    MH -->|掃描| CB3
+    MH -->|掃描| RG
+    MH -->|掃描| TG2
+    MH -->|掃描| VG
+    MH -->|"超時未執行"| ALERT
+    style MH fill:#FF6B6B,color:#fff
+    style ALERT fill:#E74C3C,color:#fff
+    style RG fill:#2ECC71,color:#fff
+    style TG2 fill:#9B59B6,color:#fff
+    style VG fill:#F39C12,color:#fff
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DATAFLOW -->
+<div id="panel-dataflow" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>資料流圖</h1>
+    <p>V4.4 新增 Review 結果和 TDD 測試記錄的資料流向</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">6</div>
+      <div>
+        <h3>完整資料流向圖（V4.4）</h3>
+        <p>新增 Review Gate 結果回饋到路由策略，TDD 測試覆蓋率記錄。</p>
+      </div>
+    </div>
+    <div class="diagram-body">
+      <div class="mermaid">
+flowchart TD
+    subgraph INPUT["輸入來源"]
+        WI["William\nTelegram"]
+        NO["Notion\n自動掃描"]
+        GH["GitHub\nIssues/PRs"]
+    end
+    subgraph PROCESS["處理層 V4.4"]
+        T3["Travis\n決策中樞"]
+        TS["Task Splitter\n5-10 分鐘粒度"]
+        MR2["Model Router"]
+        WT2["Git Worktree\n隔離分支"]
+        TDD3["TDD 流程"]
+        AG2["Acceptance Gate\n自動驗證"]
+        RV3["Two-Stage Review"]
+    end
+    subgraph STORAGE["資料儲存"]
+        BT["board_tasks"]
+        TEL2["execution_log"]
+        RVL["review_results\n🆕"]
+        TDDR["tdd_coverage\n🆕"]
+    end
+    subgraph OUTPUT["輸出"]
+        TGO["Telegram 通知"]
+        HUB["WilliamSAGI Hub"]
+    end
+    WI --> T3
+    NO --> T3
+    GH --> T3
+    T3 --> TS
+    TS --> MR2
+    MR2 --> WT2
+    WT2 --> TDD3
+    TDD3 --> AG2
+    AG2 --> RV3
+    RV3 --> BT
+    TDD3 -->|"測試記錄"| TDDR
+    RV3 -->|"Review 結果"| RVL
+    RV3 -->|"執行記錄"| TEL2
+    RVL -->|"回饋"| MR2
+    BT --> TGO
+    BT --> HUB
+    style T3 fill:#7B68EE,color:#fff
+    style TS fill:#20B2AA,color:#fff
+    style TDD3 fill:#9B59B6,color:#fff
+    style RV3 fill:#E74C3C,color:#fff
+    style AG2 fill:#F39C12,color:#fff
+    style RVL fill:#2ECC71,color:#fff
+    style TDDR fill:#2ECC71,color:#fff
+      </div>
+    </div>
+  </div>
+
+  <div class="data-flow-grid" style="margin-top:16px">
+    <div class="data-node"><div class="icon">📊</div><h4>board_tasks</h4><p>所有任務主要資料庫</p></div>
+    <div class="data-node"><div class="icon">📈</div><h4>task_execution_log</h4><p>全量 observability</p></div>
+    <div class="data-node"><div class="icon">🔍</div><h4>review_results 🆕</h4><p>Two-Stage Review 結果，回饋路由策略</p></div>
+    <div class="data-node"><div class="icon">🧪</div><h4>tdd_coverage 🆕</h4><p>TDD 測試覆蓋率記錄</p></div>
+    <div class="data-node"><div class="icon">💔</div><h4>model_health</h4><p>Circuit Breaker 模型健康</p></div>
+    <div class="data-node"><div class="icon">📝</div><h4>failure_events</h4><p>失敗歸因分類</p></div>
+    <div class="data-node"><div class="icon">🧠</div><h4>pattern_rules</h4><p>失敗模式學習規則</p></div>
+    <div class="data-node"><div class="icon">🌿</div><h4>worktree_branches 🆕</h4><p>Git Worktree 分支追蹤</p></div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<div id="panel-scripts" class="panel">
+  <div class="hero" style="padding-bottom:16px">
+    <h1>V4.4 腳本清單</h1>
+    <p>8 個核心模組 + 6 個 V4.4 新增模組</p>
+  </div>
+
+  <div class="diagram-card">
+    <div class="diagram-header">
+      <div class="diagram-num">7</div>
+      <div><h3>所有腳本一覽</h3></div>
+    </div>
+    <div class="diagram-body" style="padding:0">
+      <table class="script-table">
+        <thead><tr><th>腳本</th><th>功能</th><th>消耗</th><th>V4.4</th></tr></thead>
+        <tbody>
+          <tr><td>smart_pipeline.sh</td><td>統一入口，串接所有模組</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr><td>model_router.py</td><td>模型路由 + 分叉升級鏈</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr><td>task_splitter.py</td><td>複雜度分析 + 5-10 分鐘拆分</td><td><span class="cost-badge cost-free">零</span></td><td>⬆ 粒度細化</td></tr>
+          <tr><td>task_scheduler.py</td><td>Event-driven 排程</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr><td>acceptance_gate.py</td><td>三層驗收 + 自動測試</td><td><span class="cost-badge cost-free">本地優先</span></td><td>⬆ 自動執行</td></tr>
+          <tr><td>result_merger.py</td><td>結果合併 + 品質檢查</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr><td>prompt_validator.py</td><td>Prompt 預檢</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr><td>session_death_analyzer.py</td><td>Session 死因分析</td><td><span class="cost-badge cost-free">零</span></td><td></td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>two_stage_review.py 🆕</td><td>Stage1 Spec + Stage2 Quality Review</td><td><span class="cost-badge cost-mid">API</span></td><td>🆕</td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>tdd_enforcer.py 🆕</td><td>TDD RED-GREEN-REFACTOR 強制</td><td><span class="cost-badge cost-free">零</span></td><td>🆕</td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>worktree_manager.py 🆕</td><td>Git Worktree 自動建立/清理</td><td><span class="cost-badge cost-free">零</span></td><td>🆕</td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>verification_gate.py 🆕</td><td>完成前自動跑驗收測試</td><td><span class="cost-badge cost-free">零</span></td><td>🆕</td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>systematic_debugger.py 🆕</td><td>4 階段 Debug 流程</td><td><span class="cost-badge cost-free">零</span></td><td>🆕</td></tr>
+          <tr style="background:rgba(46,204,113,0.05)"><td>micro_task_splitter.py 🆕</td><td>5-10 分鐘精細拆分</td><td><span class="cost-badge cost-free">零</span></td><td>🆕</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- V4.4 NEW FEATURES -->
+<div id="panel-v44" class="panel">
+  <div class="hero">
+    <h1>🆕 V4.4 六大新功能</h1>
+    <p>從 obra/superpowers 框架學習，整合品質保障最佳實踐到 WilliamSAGI Pipeline</p>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="diagram-card" style="margin-bottom:24px">
+    <div class="diagram-header">
+      <div class="diagram-num" style="background:var(--green)">VS</div>
+      <div><h3>V4.2 vs V4.4 全面比較</h3><p>六個面向的升級一覽</p></div>
+    </div>
+    <div class="diagram-body" style="padding:0">
+      <table class="compare-table">
+        <thead><tr><th>面向</th><th>V4.2</th><th>V4.4</th></tr></thead>
+        <tbody>
+          <tr><td>Code Review</td><td class="old">❌ 無</td><td class="new">✅ 兩階段自動 Review</td></tr>
+          <tr><td>任務粒度</td><td class="old">30 分鐘級別</td><td class="new">5-10 分鐘</td></tr>
+          <tr><td>完成驗證</td><td class="old">只更新狀態</td><td class="new">✅ 自動跑測試驗證</td></tr>
+          <tr><td>TDD</td><td class="old">❌ 無</td><td class="new">✅ 強制 RED-GREEN-REFACTOR</td></tr>
+          <tr><td>分支管理</td><td class="old">直接在 main</td><td class="new">✅ Git Worktree 隔離</td></tr>
+          <tr><td>Debug 流程</td><td class="old">Ad-hoc</td><td class="new">✅ 4 階段 Systematic</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <!-- Feature 1: Two-Stage Code Review -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">1</div>
+        <div><h3>兩階段 Code Review</h3><div class="feat-tag">品質保障核心</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          <strong>Stage 1：Spec Compliance Check</strong> — 需求是否正確實現<br>
+          <strong>Stage 2：Code Quality Check</strong> — 程式碼品質是否合格<br>
+          在 task_complete 之前強制執行，Critical 問題擋住進度。用不同模型交叉驗證（執行用 Codex，Review 用 Sonnet）。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    CODE["程式碼產出"]
+    S1["Stage 1\nSpec Compliance Check\n需求是否正確實現？"]
+    S1P{通過?}
+    S2["Stage 2\nCode Quality Check\n程式碼品質合格？"]
+    S2P{通過?}
+    BLOCK["❌ Critical 擋住\n回到開發修復"]
+    PASS["✅ 雙階段通過\ntask_complete"]
+    CODE --> S1
+    S1 --> S1P
+    S1P -->|"Yes"| S2
+    S1P -->|"No"| BLOCK
+    S2 --> S2P
+    S2P -->|"Yes"| PASS
+    S2P -->|"Critical"| BLOCK
+    style S1 fill:#4A90D9,color:#fff
+    style S2 fill:#7B68EE,color:#fff
+    style BLOCK fill:#E74C3C,color:#fff
+    style PASS fill:#2ECC71,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>交叉模型驗證避免自我審查盲點</li>
+        <li>Critical 問題自動擋住，不會漏到生產</li>
+        <li>Review 結果回饋路由策略持續優化</li>
+      </ul>
+    </div>
+
+    <!-- Feature 2: Task Granularity -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">2</div>
+        <div><h3>任務粒度細化</h3><div class="feat-tag">從 30 分鐘 → 5-10 分鐘</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          每個子任務包含：<strong>精確檔案路徑</strong>、<strong>預期修改內容</strong>、<strong>驗證步驟</strong>。類似 Superpowers 的 writing-plans skill，讓 Agent 每次只做一件明確的小事。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    BIG["大任務\n例：建立新功能頁面"]
+    SP2["micro_task_splitter.py\n精細拆分"]
+    T1["子任務 1\n檔案: src/page.tsx\n修改: 建立路由\n驗證: 頁面可訪問\n⏱ 5 分鐘"]
+    T2["子任務 2\n檔案: src/api.ts\n修改: API endpoint\n驗證: curl 回應 200\n⏱ 8 分鐘"]
+    T3["子任務 3\n檔案: src/test.ts\n修改: 整合測試\n驗證: jest 全綠\n⏱ 5 分鐘"]
+    BIG --> SP2
+    SP2 --> T1
+    SP2 --> T2
+    SP2 --> T3
+    style SP2 fill:#20B2AA,color:#fff
+    style T1 fill:#3498DB,color:#fff
+    style T2 fill:#3498DB,color:#fff
+    style T3 fill:#3498DB,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>小任務失敗成本低，重試快速</li>
+        <li>精確描述減少 Agent 理解偏差</li>
+        <li>每個任務都有明確驗證步驟</li>
+      </ul>
+    </div>
+
+    <!-- Feature 3: Verification Gate -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">3</div>
+        <div><h3>自動驗證閘門</h3><div class="feat-tag">Verification Before Completion</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          不再只是更新狀態，而是<strong>自動執行驗收測試</strong>。跑 acceptance_criteria 中定義的測試腳本。失敗自動重試或升級模型。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    DONE["Agent 回報完成"]
+    VG2["verification_gate.py\n自動執行驗收"]
+    RUN["執行 AC 測試腳本\ncurl / jest / lint"]
+    CHK{測試結果?}
+    RETRY["自動重試\n同模型再試一次"]
+    UP["升級模型\n用更強模型重做"]
+    OK["✅ 真正完成\n更新 board_tasks"]
+    DONE --> VG2
+    VG2 --> RUN
+    RUN --> CHK
+    CHK -->|"全部通過"| OK
+    CHK -->|"部分失敗\n第 1 次"| RETRY
+    CHK -->|"部分失敗\n第 2+ 次"| UP
+    RETRY --> RUN
+    UP --> RUN
+    style VG2 fill:#F39C12,color:#fff
+    style OK fill:#2ECC71,color:#fff
+    style RETRY fill:#E67E22,color:#fff
+    style UP fill:#E74C3C,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>消除「假完成」— 狀態更新 ≠ 真正完成</li>
+        <li>自動重試減少人工介入</li>
+        <li>升級模型機制確保最終能完成</li>
+      </ul>
+    </div>
+
+    <!-- Feature 4: TDD -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">4</div>
+        <div><h3>TDD 強制流程</h3><div class="feat-tag">RED → GREEN → REFACTOR</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          <strong>RED</strong>：先寫失敗的測試。<strong>GREEN</strong>：寫最少的 code 讓測試通過。<strong>REFACTOR</strong>：重構但保持測試通過。沒有測試的 code 不允許 commit。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    REQ["需求定義"]
+    RED["🔴 RED\n先寫失敗的測試"]
+    RUN1["執行測試\n確認失敗 ❌"]
+    GREEN["🟢 GREEN\n寫最少 code\n讓測試通過"]
+    RUN2["執行測試\n確認通過 ✅"]
+    REFACTOR["🔵 REFACTOR\n重構程式碼\n保持測試通過"]
+    RUN3["執行測試\n仍然通過 ✅"]
+    COMMIT["✅ 允許 Commit"]
+    BLOCK2["❌ 無測試\n禁止 Commit"]
+    REQ --> RED
+    RED --> RUN1
+    RUN1 --> GREEN
+    GREEN --> RUN2
+    RUN2 --> REFACTOR
+    REFACTOR --> RUN3
+    RUN3 --> COMMIT
+    style RED fill:#E74C3C,color:#fff
+    style GREEN fill:#2ECC71,color:#fff
+    style REFACTOR fill:#3498DB,color:#fff
+    style COMMIT fill:#27AE60,color:#fff
+    style BLOCK2 fill:#95A5A6,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>bug 在產生的瞬間就被測試捕捉</li>
+        <li>重構有安全網，不怕改壞</li>
+        <li>測試即文件，需求永不遺失</li>
+      </ul>
+    </div>
+
+    <!-- Feature 5: Git Worktree -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">5</div>
+        <div><h3>Git Worktree 隔離開發</h3><div class="feat-tag">平行開發不互相干擾</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          每個任務自動建立<strong>獨立 branch</strong>。用 git worktree 平行開發，不同任務在不同目錄。完成後 merge 或 PR。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    MAIN["main branch\n穩定版本"]
+    WM["worktree_manager.py\n自動建立 worktree"]
+    WT1["worktree/task-101\nfeat/add-review"]
+    WT2["worktree/task-102\nfix/debug-flow"]
+    WT3["worktree/task-103\nfeat/tdd-enforcer"]
+    MG["Merge / PR\n合併回 main"]
+    CLEAN["自動清理\n刪除已合併 worktree"]
+    MAIN --> WM
+    WM --> WT1
+    WM --> WT2
+    WM --> WT3
+    WT1 --> MG
+    WT2 --> MG
+    WT3 --> MG
+    MG --> MAIN
+    MG --> CLEAN
+    style MAIN fill:#7B68EE,color:#fff
+    style WM fill:#20B2AA,color:#fff
+    style WT1 fill:#3498DB,color:#fff
+    style WT2 fill:#3498DB,color:#fff
+    style WT3 fill:#3498DB,color:#fff
+    style MG fill:#2ECC71,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>任務之間不互相影響</li>
+        <li>可以同時平行開發多個功能</li>
+        <li>每個任務都有乾淨的工作環境</li>
+      </ul>
+    </div>
+
+    <!-- Feature 6: Systematic Debugging -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feat-num">6</div>
+        <div><h3>Systematic Debugging</h3><div class="feat-tag">4 階段結構化修復</div></div>
+      </div>
+      <div class="feature-card-body">
+        <div class="desc">
+          <strong>Phase 1 Reproduce</strong>：穩定重現問題。<strong>Phase 2 Isolate</strong>：縮小範圍找到根因。<strong>Phase 3 Fix</strong>：最小修改修復。<strong>Phase 4 Verify</strong>：確認修復且無副作用。
+        </div>
+      </div>
+      <div class="feature-card-diagram">
+        <div class="mermaid">
+flowchart TD
+    BUG["🐛 Bug 報告"]
+    P1["Phase 1: Reproduce\n穩定重現問題\n記錄重現步驟"]
+    P1C{能重現?}
+    P2["Phase 2: Isolate\n縮小範圍\n二分法定位根因"]
+    P3["Phase 3: Fix\n最小修改修復\n不改無關程式碼"]
+    P4["Phase 4: Verify\n確認修復\n回歸測試無副作用"]
+    DONE2["✅ Bug 已修復\n新增回歸測試"]
+    SKIP["📋 記錄為\n無法重現"]
+    BUG --> P1
+    P1 --> P1C
+    P1C -->|"Yes"| P2
+    P1C -->|"No 3次"| SKIP
+    P2 --> P3
+    P3 --> P4
+    P4 --> DONE2
+    style P1 fill:#E74C3C,color:#fff
+    style P2 fill:#E67E22,color:#fff
+    style P3 fill:#3498DB,color:#fff
+    style P4 fill:#2ECC71,color:#fff
+    style DONE2 fill:#27AE60,color:#fff
+        </div>
+      </div>
+      <ul class="pros">
+        <li>不再亂猜亂改，系統化縮小範圍</li>
+        <li>最小修改降低引入新 bug 風險</li>
+        <li>每次修復都新增回歸測試</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<footer>
+  V4.4 架構文件 · 2026-03-21 · 由 <a href="#">Travis + Opus 4.6</a> 設計 · Two-Stage Review + TDD + Systematic Debugging
+</footer>
+
+<script>
+mermaid.initialize({startOnLoad: false, theme: 'dark', flowchart: {curve: 'basis'}});
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    var active = document.querySelector('.panel.active');
+    if (active) {
+      var diagrams = active.querySelectorAll('.mermaid');
+      diagrams.forEach(function(el) {
+        mermaid.run({nodes: [el]});
+        el.setAttribute('data-rendered', '1');
+      });
+    }
+  }, 100);
+});
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  var panel = document.getElementById('panel-' + id);
+  panel.classList.add('active');
+  event.target.closest('.tab').classList.add('active');
+  var diagrams = panel.querySelectorAll('.mermaid');
+  if (diagrams.length > 0) {
+    diagrams.forEach(function(el) {
+      if (!el.getAttribute('data-rendered')) {
+        mermaid.run({nodes: [el]});
+        el.setAttribute('data-rendered', '1');
+      }
+    });
+  }
+}
+</script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
