@@ -17,7 +17,9 @@ export function isPublicRoute(pathname: string): boolean {
     pathname.startsWith('/api/hub/') ||
     pathname.startsWith('/api/v4/') ||
     pathname.startsWith('/_next/') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname.endsWith('.html') ||
+    pathname.startsWith('/v4-')
   )
 }
 
