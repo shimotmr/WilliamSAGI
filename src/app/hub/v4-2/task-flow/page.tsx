@@ -123,7 +123,7 @@ export default function TaskFlowPage() {
               <div className="mb-8">
                 <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 max-w-md mx-auto text-center">
                   <div className="text-slate-300 font-medium">💾 board_tasks</div>
-                  <div className="text-xs text-slate-400 mt-1">status = '待派發'</div>
+                  <div className="text-xs text-slate-400 mt-1">status = {'待派發'}</div>
                 </div>
               </div>
 
@@ -141,7 +141,7 @@ export default function TaskFlowPage() {
                   </div>
                   <div className="bg-slate-700/30 rounded p-4 text-center">
                     <div className="text-slate-400 text-sm">讀取任務</div>
-                    <div className="text-white mt-2">UPDATE '執行中'</div>
+                    <div className="text-white mt-2">UPDATE {'執行中'}</div>
                   </div>
                   <div className="bg-slate-700/30 rounded p-4 text-center">
                     <div className="text-slate-400 text-sm">派發給 Agent</div>
@@ -233,7 +233,7 @@ export default function TaskFlowPage() {
               <div>
                 <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500 rounded-lg p-6 max-w-md mx-auto text-center">
                   <div className="text-green-400 font-bold text-lg">🎉 任務完成</div>
-                  <div className="text-slate-300 text-sm mt-2">status = '已完成'</div>
+                  <div className="text-slate-300 text-sm mt-2">status = {'已完成'}</div>
                 </div>
               </div>
             </div>
