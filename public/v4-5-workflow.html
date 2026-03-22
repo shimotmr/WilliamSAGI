@@ -526,6 +526,107 @@ William 任何輸入
             </div>
         </section>
 
+        <!-- ClawTeam 整合方案 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">🦞</span> ClawTeam 整合方案
+            </h2>
+            <div class="card">
+                <div class="mb-6">
+                    <h3 class="font-bold text-orange-400 mb-2">ClawTeam 是什麼？為什麼選它？</h3>
+                    <p class="text-slate-400 text-sm">ClawTeam 是 HKUDS 開發的 Agent Swarm Intelligence 工具，讓 Leader Agent 自主 spawn Worker、透過 CLI 協調任務、通訊與監控。支援 OpenClaw、git worktree 隔離、TOML 團隊模板與 ZeroMQ 通訊。選它因為它完美補足我們 sessions_spawn 在「agent 自組織 swarm」上的不足，特別適合大型複雜專案（如全棧開發、ML 研究）。</p>
+                </div>
+
+                <!-- 核心指令速查 (card style) -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-teal-400 mb-3">核心指令速查</h3>
+                    <div class="grid md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam team spawn-team myteam</div>
+                            <div class="text-slate-500">建立團隊 (Leader)</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam spawn --team myteam --agent-name alice --task "..."</div>
+                            <div class="text-slate-500">Spawn Worker (支援 openclaw)</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam task list/update</div>
+                            <div class="text-slate-500">任務管理 + 依賴</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam inbox send/receive</div>
+                            <div class="text-slate-500">Agent 間通訊</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam board attach/serve</div>
+                            <div class="text-slate-500">tmux/Web 監控</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
+                            <div class="font-mono text-teal-400 mb-1">clawteam launch hedge-fund --goal "..."</div>
+                            <div class="text-slate-500">TOML 模板一鍵啟動</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 對比表 -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-blue-400 mb-3">ClawTeam vs sessions_spawn 對比</h3>
+                    <table class="comparison-table text-sm">
+                        <thead>
+                            <tr>
+                                <th>面向</th>
+                                <th>ClawTeam</th>
+                                <th>sessions_spawn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Spawn 機制</td>
+                                <td>Leader agent 呼叫 CLI spawn</td>
+                                <td>Travis 主動 tool call</td>
+                            </tr>
+                            <tr>
+                                <td>配置</td>
+                                <td>TOML 模板</td>
+                                <td>dispatch_prompt</td>
+                            </tr>
+                            <tr>
+                                <td>隔離</td>
+                                <td>git worktree + tmux</td>
+                                <td>Session 隔離</td>
+                            </tr>
+                            <tr>
+                                <td>通訊</td>
+                                <td>inbox + kanban</td>
+                                <td>message tool</td>
+                            </tr>
+                            <tr>
+                                <td>適用</td>
+                                <td>大型 swarm、自組織</td>
+                                <td>快速、輕量任務</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 安裝評估 -->
+                <div>
+                    <h3 class="font-bold text-purple-400 mb-2">安裝與整合評估</h3>
+                    <div class="flex gap-4 text-sm">
+                        <div class="flex-1 p-4 bg-slate-800 rounded">
+                            <span class="badge badge-green">✅ 可行性</span><br>
+                            pip install clawteam (官方支援 OpenClaw)
+                        </div>
+                        <div class="flex-1 p-4 bg-slate-800 rounded">
+                            <span class="badge badge-yellow">⚠️ 注意</span><br>
+                            需要 tmux + git 環境；建議先在測試目錄驗證
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-4">建議：在 V4.5 L3 層增加 ClawTeam 作為高階 swarm 選項，與現有 sessions_spawn 互補。</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Mermaid 流程圖 -->
         <section class="mb-12">
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
