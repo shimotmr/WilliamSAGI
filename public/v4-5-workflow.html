@@ -219,22 +219,73 @@ python3 ~/clawd/scripts/notion_idea_pipeline.py <span class="str">"--single-item
 
     <!-- S6 -->
     <div class="card2 mb-3 section-anchor" id="s6">
-        <div class="flex items-center gap-2 mb-2"><span class="badge br">S6</span><span class="font-semibold">Notion Ideas 評分管道</span><span class="badge br" style="margin-left:auto">❌ 未排程</span></div>
-        <h3>設計流程</h3>
+        <div class="flex items-center gap-2 mb-2"><span class="badge br">S6</span><span class="font-semibold">Notion Ideas 評分管道（含 Auto Research 增強）</span><span class="badge br" style="margin-left:auto">❌ 未排程</span></div>
+        <h3>現有設計流程（靜態評分）</h3>
         <pre><span class="fn">notion_idea_pipeline.py</span>
   → 讀 Notion Ideas DB（status = 💭想法）
-  → 評分（可行性 × 影響力，各 1-5，滿分 25）
-  → ≥15 分 → <span class="fn">create_task.sh</span> 自動建卡 + Notion status → ✅ 已建任務
-  → 10-14 分 → Notion status → 🔍 評估中（等人工確認）
+  → 靜態評分（可行性 × 影響力，各 1-5，滿分 25）
+  → ≥15 分 → <span class="fn">create_task.sh</span> 自動建卡 + status → ✅ 已建任務
+  → 10-14 分 → status → 🔍 評估中
   → &lt;10 分 → 跳過</pre>
-        <h3>問題</h3>
-        <div class="danger text-xs">腳本完整，邏輯正確，但從未被排程執行過。所有 Ideas 存進 Notion 後就積在那裡，沒有評分也沒有建卡。</div>
+        <h3>🆕 William 提案：Auto Research 增強評分（待實作）</h3>
+        <div class="info text-xs mb-2">
+            <strong>核心問題</strong>：Ideas 靠靜態評分永遠低分，堆在 Notion 動不了。很多想法其實可行，只是描述太簡單、資訊不足，導致評分低。<br>
+            <strong>解法</strong>：用 auto_research 技能主動搜索，補充可行性依據，再重新評分。
+        </div>
+        <pre><span class="c"># 新流程（需開發：idea_research_booster.py）</span>
+
+notion_idea_pipeline.py（每日 04:00）
+  → 掃描 status = 🔍 評估中（10-14 分的積壓 Ideas）
+  → 每次處理 3-5 個（控制 token 成本）
+  → 對每個 idea 呼叫：
+     sessions_spawn(
+       task=<span class="str">f"""
+         研究以下 idea 的可行性：{idea.title}
+         {idea.description}
+         
+         搜索：
+         1. 有沒有現成工具/API 可以實作？
+         2. 估計實作複雜度（1-5）
+         3. 預期影響力（1-5）
+         4. 類似案例或參考
+         
+         產出 JSON：
+         {{
+           "feasibility": 1-5,
+           "impact": 1-5,
+           "evidence": ["理由1", "理由2"],
+           "tools": ["現成工具"],
+           "recommendation": "建議實作 / 放棄 / 等待"
+         }}
+       """</span>,
+       model=<span class="str">"xai/grok-4.20-beta-0309-reasoning"</span>  <span class="c"># Rex 做研究</span>
+     )
+  → 根據研究結果重新計算分數
+  → 新分數 ≥15 → create_task.sh 自動建卡
+  → 新分數仍 10-14 → 保留評估中 + 更新 Notion 加研究摘要
+  → 新分數 &lt;10 → 標記為「不可行」，不再重複研究</pre>
+        <h3>實作細節與注意事項</h3>
+        <table>
+            <tr><th>面向</th><th>說明</th></tr>
+            <tr><td>每日處理量</td><td>最多 5 個 Ideas（避免 token 爆炸），優先處理最舊的</td></tr>
+            <tr><td>研究深度</td><td>每個 idea 做 2-3 輪搜索（web_search + web_fetch），不做完整 L3 研究</td></tr>
+            <tr><td>去重機制</td><td>已研究過的 idea 標記時間戳，30 天內不重複研究</td></tr>
+            <tr><td>成本估算</td><td>每個 idea 約 2,000 tokens（Rex），5 個 = 10,000 tokens/天</td></tr>
+            <tr><td>新腳本</td><td><code>~/clawd/scripts/idea_research_booster.py</code>（待建立）</td></tr>
+        </table>
         <h3>需要補齊</h3>
-        <pre><span class="c"># 加入 crontab（每天凌晨 04:00，在 daily_analysis 之後）</span>
+        <pre><span class="c"># Step 1：補排程（先讓靜態評分跑起來）</span>
 0 4 * * * /Users/travis/clawd/scripts/heartbeat_wrapper.sh \
   notion_idea_pipeline \
   /opt/homebrew/bin/python3 /Users/travis/clawd/scripts/notion_idea_pipeline.py \
-  >> /Users/travis/clawd/logs/notion_idea_pipeline.log 2>&1</pre>
+  >> /Users/travis/clawd/logs/notion_idea_pipeline.log 2>&1
+
+<span class="c"># Step 2：開發 idea_research_booster.py（接在靜態評分之後）</span>
+5 4 * * * /Users/travis/clawd/scripts/heartbeat_wrapper.sh \
+  idea_research_booster \
+  /opt/homebrew/bin/python3 /Users/travis/clawd/scripts/idea_research_booster.py \
+  >> /Users/travis/clawd/logs/idea_research_booster.log 2>&1</pre>
+        <div class="warn text-xs">先做 Step 1（補排程），Step 2 需要新開發腳本，為獨立任務。</div>
     </div>
 </div>
 
@@ -400,6 +451,12 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
                 <td>補 crontab：04:00 每日</td>
             </tr>
             <tr>
+                <td>2b</td>
+                <td>idea_research_booster.py 未建立</td>
+                <td>低分 Ideas 無法透過研究提升可行性</td>
+                <td>開發新腳本，接在 notion_idea_pipeline 後（04:05）</td>
+            </tr>
+            <tr>
                 <td>3</td>
                 <td>daily_ideation.py 沒有建卡邏輯</td>
                 <td>每日自省提案只存 .md，不被執行</td>
@@ -446,6 +503,7 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
             <tr><td><span class="badge by">P1</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
             <tr><td><span class="badge by">P1</span></td><td>安裝 ClawTeam-OpenClaw + 建 TOML 模板</td><td>L3B 路徑可用</td><td>中</td><td><span class="badge by">待執行</span></td></tr>
             <tr><td><span class="badge by">P1</span></td><td>emergency_stop.sh 整合 ClawTeam</td><td>/stop 全面有效</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>idea_research_booster.py（Auto Research 增強評分）</td><td>低分 Ideas 被研究後提升分數、自動建卡</td><td>中（新腳本 + sessions_spawn）</td><td><span class="badge br">未開始</span></td></tr>
             <tr><td><span class="badge bb">P2</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷</td><td>高（需 AI 分析）</td><td><span class="badge br">未開始</span></td></tr>
             <tr><td>—</td><td>Task #3748 修補漏洞</td><td>SQL 建卡漏洞</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>緊急停止覆蓋</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
