@@ -540,16 +540,36 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
         </tbody>
     </table>
 
-    <h3>L2 層：路由與派發</h3>
+    <h3>L2 層：路由與派發（含品質 Gate）</h3>
+    <div class="info text-xs mb-3">
+        <strong>🔍 dispatch_prompt 品質 Gate（V4 既有，V4.5 補入串接）</strong><br>
+        任務建立時（<code>create_task.sh</code>）已有品質檢查：<code>task_quality_checker.py</code> 評分，自動推薦模型。<br>
+        派發前缺少第二道 Gate：<code>audit_dispatch_prompt.py</code>（≥70 分才允許派發）未接入 auto_dispatch.sh。<br>
+        <code>dispatch_prompt_evolution.py</code> 已在 task_complete.sh 中被呼叫（任務完成後學習優化）。
+    </div>
     <table class="mb-4">
         <thead><tr><th>編號</th><th>腳本</th><th>觸發方式</th><th>→ 下游</th><th>狀態</th></tr></thead>
         <tbody>
             <tr>
+                <td><code>L2-00a</code></td>
+                <td><code>task_quality_checker.py</code></td>
+                <td>create_task.sh 建卡時自動呼叫</td>
+                <td>→ 評分（0-100）+ 複雜度分析（L1~L4）<br>→ 自動推薦 dispatch_model<br>→ 建議拆分（split）或改善（improve）</td>
+                <td><span class="badge bg">✅ 已在 create_task.sh 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L2-00b</code></td>
+                <td><code>audit_dispatch_prompt.py</code></td>
+                <td>應在派發前強制呼叫（<strong>未接入 auto_dispatch.sh</strong>）</td>
+                <td>→ 檢查結構/安全/清晰度（schema + rules）<br>→ ≥70 分 → 允許派發<br>→ &lt;70 分 → exit 1 阻止 + 通知 Travis 修正</td>
+                <td><span class="badge by">⚠️ 腳本存在，未接入 L2（待 P1-0c）</span></td>
+            </tr>
+            <tr>
                 <td><code>L2-01</code></td>
                 <td><code>auto_dispatch.sh</code></td>
                 <td>crontab */5 分鐘</td>
-                <td>→ <code>U-01</code> supabase_sql（讀 待派發）<br>→ 複雜度分析 → 模型路由<br>→ <code>L2-02</code> auto_claim_and_spawn.sh（執行 spawn）</td>
-                <td><span class="badge bg">✅ 運作中</span></td>
+                <td>→ <code>U-01</code> supabase_sql（讀 待派發）<br>→ <code>L2-00b</code> audit_dispatch_prompt.py（品質 Gate）<br>→ 複雜度分析 → 模型路由<br>→ <code>L2-02</code> auto_claim_and_spawn.sh（執行 spawn）</td>
+                <td><span class="badge bg">✅ 運作中（品質 Gate 待補）</span></td>
             </tr>
             <tr>
                 <td><code>L2-02</code></td>
@@ -604,8 +624,15 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
                 <td><code>L4-01</code></td>
                 <td><code>task_complete.sh</code></td>
                 <td>subagent 完成後必須呼叫</td>
-                <td>→ <code>U-01</code> supabase_sql（UPDATE 已完成）<br>→ <code>U-02</code> notify_telegram<br>→ 觸發下一輪 <code>L2-01</code> auto_dispatch</td>
+                <td>→ <code>U-01</code> supabase_sql（UPDATE 已完成）<br>→ <code>U-02</code> notify_telegram<br>→ <code>L4-05</code> dispatch_prompt_evolution.py（學習優化）<br>→ 觸發下一輪 <code>L2-01</code> auto_dispatch</td>
                 <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L4-05</code></td>
+                <td><code>dispatch_prompt_evolution.py</code></td>
+                <td>由 task_complete.sh 自動呼叫（--learn-from-task）</td>
+                <td>→ 分析成功/失敗任務的 dispatch_prompt<br>→ 更新 prompt 模板權重<br>→ 優化建議回饋到下次建卡<br>→ 與 <code>L2-00b</code> audit_dispatch_prompt.py 形成閉環</td>
+                <td><span class="badge bg">✅ 已在 task_complete.sh 中運作</span></td>
             </tr>
             <tr>
                 <td><code>L4-02</code></td>
@@ -813,6 +840,7 @@ flowchart LR
             <!-- P1-0 審計新增（最優先） -->
             <tr style="background:#EF444408"><td><span class="badge br">P1-0</span></td><td>supabase_sql.sh 失敗靜默處理修復（⭐ 先做）</td><td>所有改善的基礎，DB 失敗才可見</td><td>低（加 exit code 檢查 + 通知）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#EF444408"><td><span class="badge br">P1-0b</span></td><td>heartbeat_stuck_check + auto_dispatch 重複派發保護</td><td>競態條件：同任務 spawn 兩次</td><td>低（SELECT FOR UPDATE）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0c</span></td><td>audit_dispatch_prompt.py 接入 auto_dispatch.sh（品質 Gate L2-00b）</td><td>派發前強制品質檢查，&lt;70分阻止 spawn</td><td>低（在 auto_dispatch.sh 加 5 行呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
             <!-- P1 任務來源閉環 -->
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
@@ -890,7 +918,10 @@ flowchart TD
     CHK -->|是| STOP([⛔ 全面中止])
     CHK -->|否| L201[L2-01\nauto_dispatch.sh\n每5分鐘]
 
-    L201 --> L202[L2-02\nauto_claim_and_spawn.sh]
+    L201 --> QG{L2-00b\naudit_dispatch_prompt.py\n品質 Gate ≥70分}
+    QG -->|"❌ <70分"| FIX[通知 Travis 修正\n回到 board_tasks]
+    FIX --> Q
+    QG -->|"✅ ≥70分"| L202[L2-02\nauto_claim_and_spawn.sh]
     L201 -->|複雜任務| L3B_gate{Travis 判斷\nL3B?}
 
     L202 -->|openclaw sessions spawn| L3A[L3A-01\nsessions_spawn\nBlake/Rex/Oscar]
@@ -901,8 +932,10 @@ flowchart TD
     L3B --> CW2[Worker B\ngit worktree]
     CW1 & CW2 -->|clawteam inbox 彙整| MERGE[Leader 彙整] --> DONE
 
+    DONE --> L405[L4-05\ndispatch_prompt_evolution.py\n學習優化]
+    L405 --> OK[✅ 成功\nexperience_log]
+    L405 -.->|優化回饋| QG
     DONE --> L402[L4-02\nheartbeat_stuck_check.sh\n每10分鐘]
-    DONE --> OK[✅ 成功\nexperience_log]
 
     L402 --> RR{成功?}
     RR -->|"retry<3"| RETRY[智能診斷\nretry_count+1] --> Q
@@ -919,6 +952,8 @@ flowchart TD
     style S4 fill:#EF444422,stroke:#EF4444
     style SRC fill:#7B68EE08,stroke:#7B68EE33
     style OK fill:#10B98122,stroke:#10B981
+    style QG fill:#F59E0B22,stroke:#F59E0B
+    style L405 fill:#10B98122,stroke:#10B981
     </div>
 </div>
 
