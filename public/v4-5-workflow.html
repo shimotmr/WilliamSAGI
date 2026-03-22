@@ -99,9 +99,9 @@
             <tr><td>William Telegram 手動輸入</td><td><code>create_task.sh</code></td><td>即時</td><td>✅</td><td><span class="badge bg">運作中</span></td></tr>
             <tr><td>參考分享 → Notion</td><td><code>reference_analyzer.py</code></td><td>關鍵詞觸發</td><td>❌ 未串</td><td><span class="badge by">部分有效</span></td></tr>
             <tr><td>自我搜索 → 任務</td><td><code>daily_research_to_tasks.py</code></td><td>09:00 每日</td><td>✅ 有建卡邏輯</td><td><span class="badge by">狀態不明</span></td></tr>
-            <tr><td>daily_ideation 自省</td><td><code>daily_ideation.py</code></td><td>03:30 每日</td><td>❌ 只存 .md</td><td><span class="badge br">管道斷</span></td></tr>
-            <tr><td>每日審計 → 任務</td><td><code>daily_system_analysis.sh</code></td><td>❌ 未排程</td><td>⚠️ 剛接（Task #3750）</td><td><span class="badge br">未啟動</span></td></tr>
-            <tr><td>Notion Ideas 評分管道</td><td><code>notion_idea_pipeline.py</code></td><td>❌ 未排程</td><td>✅ 有建卡邏輯</td><td><span class="badge br">未啟動</span></td></tr>
+            <tr><td>daily_ideation 自省</td><td><code>daily_ideation.py</code></td><td>03:40 每日（已調整）</td><td>❌ 只存 .md</td><td><span class="badge br">管道斷（待 P1-A）</span></td></tr>
+            <tr><td>每日審計 → 任務</td><td><code>daily_system_analysis.sh</code></td><td>✅ 03:30 每日</td><td>✅ audit_to_task.sh</td><td><span class="badge bg">排程已補</span></td></tr>
+            <tr><td>Notion Ideas 評分管道</td><td><code>notion_idea_pipeline.py</code></td><td>✅ 03:50 每日</td><td>✅ 有建卡邏輯</td><td><span class="badge bg">排程已補</span></td></tr>
         </tbody>
     </table>
 </div>
@@ -685,6 +685,63 @@ flowchart LR
     </div>
 </div>
 
+<!-- 審計報告 -->
+<div class="card section-anchor" id="audit">
+    <h2>🔍 Opus + GPT-5.4 審計報告（2026-03-22）</h2>
+    <p style="color:var(--muted)" class="text-xs mb-4">由 claude-opus-4-5 與 openai-codex/gpt-5.4 各自獨立審計後彙整。兩份完整報告存於 <code>~/clawd/memory/daily/v45-audit-*.md</code>。</p>
+
+    <h3>共同發現（兩個模型一致）</h3>
+    <div class="danger text-xs mb-3">
+        <strong>🔴 S-06a 設計根本問題（已修正）</strong><br>
+        原設計：spawn 5 個 Rex 並行 → 違反 AGENTS.md §16（≤2 同時子代理），且 token 成本被低估 4-7 倍（實際 ~70,000 tokens/天）<br>
+        <strong>修正方案：1 個 Rex session 串行處理，或 minimax 快篩 → Rex 研究 top 2</strong>（成本降 60%）
+    </div>
+    <div class="warn text-xs mb-3">
+        <strong>⚠️ 凌晨排程 Race Condition（已修正）</strong><br>
+        原設計：03:30 兩個腳本同時打 Supabase → 可能 rate limit 或重複操作<br>
+        <strong>已調整為：03:30 / 03:40 / 03:50 / 04:10（錯開 10 分鐘）</strong>
+    </div>
+    <div class="warn text-xs mb-3">
+        <strong>⚠️ ClawTeam worktree 在 monorepo 有風險</strong><br>
+        • Worker 崩潰後 heartbeat_stuck_check 偵測不到（只查 OpenClaw sessions，不查 tmux）<br>
+        • ~/clawd monorepo worktree 下 scripts/ 路徑可能失效<br>
+        <strong>需新增：clawteam_health_check.sh（加入 P1 待辦）</strong>
+    </div>
+
+    <h3>GPT-5.4 獨有發現</h3>
+    <table class="mb-3">
+        <thead><tr><th>問題</th><th>影響</th><th>修法</th></tr></thead>
+        <tbody>
+            <tr><td>supabase_sql.sh 失敗被所有呼叫方靜默吞掉</td><td>DB 操作失敗完全不可見</td><td>P1-C 優先：加 exit code 檢查 + 通知</td></tr>
+            <tr><td>audit_to_task.sh 去重查詢失敗 → 重複建卡</td><td>同問題被建多次任務</td><td>修復去重查詢的錯誤處理</td></tr>
+            <tr><td>notion_idea_pipeline.py 有死碼</td><td><code>ask_clarification()</code> 因 monkey-patch 順序問題永遠不執行</td><td>修復函數呼叫順序</td></tr>
+            <tr><td>P1-C（靜默失敗修復）應排第一</td><td>複雜度最低，是所有改善的基礎</td><td>已調整 P1 順序</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Opus 獨有發現</h3>
+    <table class="mb-3">
+        <thead><tr><th>問題</th><th>影響</th><th>修法</th></tr></thead>
+        <tbody>
+            <tr><td>heartbeat_stuck_check 與 auto_dispatch 並行可能重複派發</td><td>同一任務被 spawn 兩次</td><td>加 PostgreSQL <code>SELECT ... FOR UPDATE</code></td></tr>
+            <tr><td>Notion API 無 rate limit 處理</td><td>批量評分時可能 429</td><td>加 exponential backoff</td></tr>
+            <tr><td>Supabase 連接池限制（免費版 ~50-60）</td><td>凌晨多腳本並發可能耗盡</td><td>排程錯開（已修正）+ 加連接池監控</td></tr>
+            <tr><td>Notion OAuth token 無過期監控</td><td>約 1 年後失效，靜默失敗</td><td>加 token 到期前 30 天告警</td></tr>
+            <tr><td>Ideas 堆積 > 30 天無自動清理</td><td>Notion DB 持續膨脹</td><td>S-06a 加「30 天不重研→標過期」邏輯（已規劃）</td></tr>
+        </tbody>
+    </table>
+
+    <h3>修正後的排程順序</h3>
+    <pre><span class="ok">✅ 已修正（crontab 已更新）</span>
+02:00  memory_distiller.py          memory 蒸餾
+02:10  memory_extractor_v2.py       L0/L1 標記
+02:20  memory_dedup.py              去重清理
+03:30  daily_system_analysis.sh     每日審計 → audit_to_task.sh
+03:40  daily_ideation.py            自省提案（<span class="err">待補建卡邏輯 P1-A</span>）
+03:50  notion_idea_pipeline.py      Notion 評分管道
+04:10  idea_research_booster.py     Auto Research（<span class="err">待開發 P1-D</span>）</pre>
+</div>
+
 <!-- §7 斷點清單 -->
 <div class="card section-anchor" id="gaps">
     <h2>§7 斷點清單（需補齊的「最後一公里」）</h2>
@@ -750,35 +807,42 @@ flowchart LR
         <thead><tr><th>優先</th><th>任務</th><th>影響</th><th>複雜度</th><th>狀態</th></tr></thead>
         <tbody>
             <!-- P0 已完成 -->
-            <tr><td><span class="badge br">P0</span></td><td>補 crontab：daily_system_analysis（每日 03:30）</td><td>審計才會真的跑</td><td>低</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
-            <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（每日 04:00）</td><td>Ideas 才會變任務</td><td>低</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：daily_system_analysis（03:30）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（03:50）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <tr><td><span class="badge br">P0</span></td><td>排程錯開（Race Condition 修正）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <!-- P1-0 審計新增（最優先） -->
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0</span></td><td>supabase_sql.sh 失敗靜默處理修復（⭐ 先做）</td><td>所有改善的基礎，DB 失敗才可見</td><td>低（加 exit code 檢查 + 通知）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0b</span></td><td>heartbeat_stuck_check + auto_dispatch 重複派發保護</td><td>競態條件：同任務 spawn 兩次</td><td>低（SELECT FOR UPDATE）</td><td><span class="badge by">待啟動</span></td></tr>
             <!-- P1 任務來源閉環 -->
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-C</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低（加 except + crontab 修正）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-Cb</span></td><td>notion_idea_pipeline.py 死碼修復</td><td>ask_clarification() monkey-patch 順序問題</td><td>低（修函數呼叫順序）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08">
                 <td><span class="badge by">P1-D</span></td>
-                <td><code>idea_research_booster.py</code>（新腳本）<br><span style="color:var(--muted);font-size:.75rem">腳本編號：S-06a</span></td>
-                <td>低分 Ideas（10-14分）被 Rex 研究後升分，達標自動建卡</td>
+                <td><code>idea_research_booster.py</code>（新腳本 S-06a）</td>
+                <td>低分 Ideas 研究升分後建卡</td>
                 <td>
                     中（新腳本）<br>
-                    <strong>實作清單：</strong><br>
-                    ① 讀 Notion status=🔍評估中，取最舊 5 條<br>
-                    ② 每條 spawn Rex session 做 2-3 輪搜索<br>
-                    ③ Rex 產出 JSON（feasibility/impact/evidence/tools）<br>
-                    ④ 重算分數 → 建卡 / 更新摘要 / 標不可行<br>
-                    ⑤ 補 crontab 04:05 每日<br>
-                    ⑥ 更新 S-06 頁面 Notion status 標記
+                    <strong>審計修正後：</strong><br>
+                    ① Notion 讀 🔍評估中，取最舊 5 條<br>
+                    ② <strong>minimax 快篩</strong> → 取 top 2 有潛力<br>
+                    ③ <strong>1 個 Rex session 串行</strong>深度研究 top 2（非 5 個並行，違反 §16）<br>
+                    ④ 重算分數 → 建卡 / 更新摘要 / &lt;10 標不可行+30天不重研<br>
+                    ⑤ 補 crontab 04:10 每日
                 </td>
                 <td><span class="badge by">待啟動</span></td>
             </tr>
             <!-- P1 ClawTeam -->
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-E</span></td><td>安裝 ClawTeam-OpenClaw（win4r fork）</td><td>L3B 路徑啟用</td><td>低（git clone + pip install）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-F</span></td><td>建立 TOML 模板（travis-team.toml）</td><td>Workers 遵守系統規則</td><td>低（建文件）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-G</span></td><td>emergency_stop.sh 整合 ClawTeam</td><td>/stop 可停止所有 ClawTeam</td><td>低（加 5 行 tmux kill）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-G</span></td><td>emergency_stop.sh 整合 ClawTeam tmux kill</td><td>/stop 可停止所有 ClawTeam</td><td>低（加 5 行）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>clawteam_health_check.sh（新增）</td><td>Worker 崩潰後 heartbeat 可偵測（查 tmux）</td><td>低</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-I</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge by">待啟動</span></td></tr>
             <!-- P2 -->
-            <tr><td><span class="badge bb">P2</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷路由</td><td>高（需 AI 分析 dispatch_prompt）</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td><span class="badge bb">P2-A</span></td><td>Notion API exponential backoff</td><td>批量評分時 rate limit 處理</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td><span class="badge bb">P2-B</span></td><td>Notion OAuth token 到期監控（到期前 30 天告警）</td><td>靜默失效預防</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td><span class="badge bb">P2-C</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷路由</td><td>高（需 AI 分析）</td><td><span class="badge br">未開始</span></td></tr>
             <!-- 已完成 -->
             <tr><td>—</td><td>Task #3748 修補 SQL 建卡漏洞</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
