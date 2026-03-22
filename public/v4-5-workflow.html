@@ -716,7 +716,8 @@ flowchart LR
 <!-- 審計報告 -->
 <div class="card section-anchor" id="audit">
     <h2>🔍 Opus + GPT-5.4 審計報告（2026-03-22）</h2>
-    <p style="color:var(--muted)" class="text-xs mb-4">由 claude-opus-4-5 與 openai-codex/gpt-5.4 各自獨立審計後彙整。兩份完整報告存於 <code>~/clawd/memory/daily/v45-audit-*.md</code>。</p>
+    <p style="color:var(--muted)" class="text-xs mb-4">由 claude-opus-4-5 與 openai-codex/gpt-5.4 各自獨立審計後彙整。兩份完整報告存於 <code>~/clawd/memory/daily/v45-audit-*.md</code>。<br>
+    <strong style="color:var(--green)">✅ P1 完成後最終審計（2026-03-22）：9/9 修改全部落地。</strong> 發現 idea_research_booster.py minimax_score() 仍用 urllib，已當場修正為 curl。</p>
 
     <h3>共同發現（兩個模型一致）</h3>
     <div class="danger text-xs mb-3">
