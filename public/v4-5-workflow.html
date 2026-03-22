@@ -286,7 +286,8 @@ flowchart TD
     C --> D{路由判斷}
     D -->|子任務≤2\n輕量任務| E[L3A\nsessions_spawn]
     D -->|子任務≥3\n需並行/隔離| F[L3B\nClawTeam Swarm]
-    D -->|需人工確認| G[🔔 通知 William]
+    D -->|需人工確認| G[🔔 通知 William\n等待確認]
+    G -->|William 確認| B
     
     E --> H[Blake/Rex/Oscar\n單 agent 執行]
     H --> I[task_complete.sh]
