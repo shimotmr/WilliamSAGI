@@ -82,9 +82,10 @@
         <a href="#l3a">§3 L3A 輕量執行（sessions_spawn）</a>
         <a href="#l3b">§4 L3B ClawTeam Swarm</a>
         <a href="#l4">§5 L4 反饋優化閉環</a>
-        <a href="#gaps">§6 斷點清單（需補齊）</a>
-        <a href="#todo">§7 實作待辦（依優先序）</a>
-        <a href="#flow">§8 完整流程圖</a>
+        <a href="#scripts">§6 腳本清單（編號 + 層級 + 相依）</a>
+        <a href="#gaps">§7 斷點清單（需補齊）</a>
+        <a href="#todo">§8 實作待辦（依優先序）</a>
+        <a href="#flow">§9 完整流程圖</a>
     </div>
     </div>
 </div>
@@ -432,9 +433,240 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
     </div>
 </div>
 
-<!-- §6 斷點清單 -->
+<!-- §6 腳本清單 -->
+<div class="card section-anchor" id="scripts">
+    <h2>§6 腳本清單（編號 · 層級 · 相依關係）</h2>
+    <p style="color:var(--muted)" class="mb-4 text-xs">每個腳本標注：層級（S=來源層/L=執行層/U=工具層）、呼叫的下游腳本、被哪些上游腳本呼叫、實作狀態。</p>
+
+    <h3>U 層：基礎工具（被所有層呼叫）</h3>
+    <table class="mb-4">
+        <thead><tr><th>編號</th><th>腳本</th><th>功能</th><th>被誰呼叫</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr><td><code>U-01</code></td><td><code>supabase_sql.sh</code></td><td>所有 DB 操作的統一入口</td><td>幾乎所有腳本</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td><code>U-02</code></td><td><code>notify_telegram.sh</code></td><td>發 Telegram 通知</td><td>幾乎所有腳本</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td><code>U-03</code></td><td><code>heartbeat_wrapper.sh</code></td><td>所有 cron 腳本的包裝器（EMERGENCY_STOP / 心跳更新）</td><td>crontab 所有排程</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td><code>U-04</code></td><td><code>emergency_stop.sh</code></td><td>硬停所有 agent + 寫 EMERGENCY_STOP 旗標</td><td>/stop 觸發</td><td><span class="badge by">⚠️ 待整合 ClawTeam</span></td></tr>
+        </tbody>
+    </table>
+
+    <h3>S 層：任務來源（產生 board_tasks 記錄）</h3>
+    <table class="mb-4">
+        <thead><tr><th>編號</th><th>腳本</th><th>觸發方式</th><th>→ 下游（呼叫）</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>S-01</code></td>
+                <td><code>create_task.sh</code></td>
+                <td>手動（Travis / subagent）</td>
+                <td>→ <code>U-01</code> supabase_sql（INSERT board_tasks）<br>→ <code>U-02</code> notify_telegram</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>S-02</code></td>
+                <td><code>reference_analyzer.py</code></td>
+                <td>William 說「參考」關鍵詞</td>
+                <td>→ Notion API（存 Ideas DB）<br>→ <span class="err">❌ 未串 S-06 評分</span></td>
+                <td><span class="badge by">⚠️ 管道斷</span></td>
+            </tr>
+            <tr>
+                <td><code>S-03</code></td>
+                <td><code>daily_research_to_tasks.py</code></td>
+                <td>crontab 09:00 每日</td>
+                <td>→ Brave Search API<br>→ MiniMax API（評估）<br>→ <code>S-01</code> create_task.sh<br>→ <code>U-02</code> notify_telegram</td>
+                <td><span class="badge by">⚠️ 靜默失敗（需修）</span></td>
+            </tr>
+            <tr>
+                <td><code>S-04</code></td>
+                <td><code>daily_ideation.py</code></td>
+                <td>crontab 03:30 每日</td>
+                <td>→ <code>U-01</code> supabase_sql（讀失敗記錄）<br>→ 存 .md 檔<br>→ <span class="err">❌ 未串 S-01 建卡（P1/P2 提案）</span></td>
+                <td><span class="badge br">❌ 管道斷</span></td>
+            </tr>
+            <tr>
+                <td><code>S-05</code></td>
+                <td><code>daily_system_analysis.sh</code></td>
+                <td>crontab 03:30 每日（✅ 今日補上）</td>
+                <td>→ <code>U-01</code> supabase_sql（讀 failure_events）<br>→ 存 analysis-*.md<br>→ <code>S-05a</code> audit_to_task.sh（L2/L3 問題）<br>→ <code>U-02</code> notify_telegram（嚴重問題）</td>
+                <td><span class="badge bg">✅ 排程已補</span></td>
+            </tr>
+            <tr>
+                <td><code>S-05a</code></td>
+                <td><code>audit_to_task.sh</code></td>
+                <td>被 S-05 呼叫</td>
+                <td>→ <code>U-01</code> supabase_sql（查重複）<br>→ <code>S-01</code> create_task.sh（建卡）</td>
+                <td><span class="badge bg">✅ Task #3750 完成</span></td>
+            </tr>
+            <tr>
+                <td><code>S-06</code></td>
+                <td><code>notion_idea_pipeline.py</code></td>
+                <td>crontab 04:00 每日（✅ 今日補上）</td>
+                <td>→ Notion API（讀 Ideas DB）<br>→ <code>U-01</code> supabase_sql（查重複）<br>→ <code>S-01</code> create_task.sh（≥15 分建卡）<br>→ <code>U-02</code> notify_telegram</td>
+                <td><span class="badge bg">✅ 排程已補</span></td>
+            </tr>
+            <tr>
+                <td><code>S-06a</code></td>
+                <td><code>idea_research_booster.py</code></td>
+                <td>crontab 04:05 每日（待開發）</td>
+                <td>→ Notion API（讀 10-14 分 Ideas）<br>→ sessions_spawn Rex（做研究）<br>→ <code>S-06</code> notion_idea_pipeline.py（重新評分）</td>
+                <td><span class="badge br">❌ 未開發（P1-D）</span></td>
+            </tr>
+            <tr>
+                <td><code>S-07</code></td>
+                <td><code>save_idea_to_notion.py</code></td>
+                <td>Travis 手動（「想法」關鍵詞）</td>
+                <td>→ Notion API（存 Ideas DB）<br>→ 等 S-06 評分</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>L2 層：路由與派發</h3>
+    <table class="mb-4">
+        <thead><tr><th>編號</th><th>腳本</th><th>觸發方式</th><th>→ 下游</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>L2-01</code></td>
+                <td><code>auto_dispatch.sh</code></td>
+                <td>crontab */5 分鐘</td>
+                <td>→ <code>U-01</code> supabase_sql（讀 待派發）<br>→ 複雜度分析 → 模型路由<br>→ <code>L2-02</code> auto_claim_and_spawn.sh（執行 spawn）</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L2-02</code></td>
+                <td><code>auto_claim_and_spawn.sh</code></td>
+                <td>crontab 每小時 :15（blake）:45（rex）</td>
+                <td>→ <code>U-01</code> supabase_sql（UPDATE 執行中）<br>→ <code>openclaw sessions spawn</code>（真正 spawn subagent）<br>→ 失敗時回滾 → <code>U-02</code> notify_telegram</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L2-03</code></td>
+                <td><code>unified_dispatcher.sh</code></td>
+                <td>crontab */5 分鐘</td>
+                <td>→ 協調 auto_dispatch / heartbeat 邏輯</td>
+                <td><span class="badge bg">✅ 已加 EMERGENCY_STOP（Task #3749）</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>L3 層：執行</h3>
+    <table class="mb-4">
+        <thead><tr><th>編號</th><th>腳本/工具</th><th>觸發方式</th><th>→ 下游</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>L3A-01</code></td>
+                <td><code>openclaw sessions spawn</code></td>
+                <td>由 L2-02 呼叫</td>
+                <td>→ subagent（Blake/Rex/Oscar）執行<br>→ subagent 完成呼叫 <code>L4-01</code> task_complete.sh</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L3B-01</code></td>
+                <td><code>clawteam spawn tmux openclaw</code></td>
+                <td>Travis 手動觸發</td>
+                <td>→ 獨立 openclaw CLI 進程（tmux window）<br>→ git worktree 隔離<br>→ 完成後呼叫 <code>L4-01</code></td>
+                <td><span class="badge br">❌ 未安裝（P1-E）</span></td>
+            </tr>
+            <tr>
+                <td><code>L3B-02</code></td>
+                <td><code>~/clawd/clawteam-templates/travis-team.toml</code></td>
+                <td>ClawTeam spawn 時讀取</td>
+                <td>→ 注入 system_prompt 給所有 workers</td>
+                <td><span class="badge br">❌ 未建立（P1-F）</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>L4 層：反饋與閉環</h3>
+    <table class="mb-4">
+        <thead><tr><th>編號</th><th>腳本</th><th>觸發方式</th><th>→ 下游</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>L4-01</code></td>
+                <td><code>task_complete.sh</code></td>
+                <td>subagent 完成後必須呼叫</td>
+                <td>→ <code>U-01</code> supabase_sql（UPDATE 已完成）<br>→ <code>U-02</code> notify_telegram<br>→ 觸發下一輪 <code>L2-01</code> auto_dispatch</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L4-02</code></td>
+                <td><code>heartbeat_stuck_check.sh</code></td>
+                <td>crontab */10 分鐘</td>
+                <td>→ 偵測卡住任務<br>→ retry_count &lt;3：重置 → 回 L2<br>→ retry_count =3：UPDATE 已失敗 → <code>U-02</code> notify_telegram → 回 S（回填 L1）</td>
+                <td><span class="badge bg">✅ 運作中</span></td>
+            </tr>
+            <tr>
+                <td><code>L4-03</code></td>
+                <td><code>auto_retry.sh</code></td>
+                <td>crontab */30 分鐘</td>
+                <td>→ 掃「已失敗」任務 → 重置可重試的<br>→ <code>U-01</code> supabase_sql</td>
+                <td><span class="badge bg">✅ 已加 EMERGENCY_STOP（Task #3749）</span></td>
+            </tr>
+            <tr>
+                <td><code>L4-04</code></td>
+                <td><code>unified_monitor.sh</code></td>
+                <td>crontab */5 分鐘</td>
+                <td>→ 監控整體系統健康<br>→ 異常 → <code>U-02</code> notify_telegram</td>
+                <td><span class="badge bg">✅ 已加 EMERGENCY_STOP（Task #3749）</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>腳本相依圖（簡化版）</h3>
+    <div class="mermaid">
+flowchart LR
+    subgraph U["U 工具層"]
+        U01[U-01\nsupabase_sql.sh]
+        U02[U-02\nnotify_telegram.sh]
+        U03[U-03\nheartbeat_wrapper.sh]
+        U04[U-04\nemergency_stop.sh]
+    end
+    subgraph S["S 來源層"]
+        S01[S-01\ncreate_task.sh]
+        S02[S-02\nreference_analyzer.py]
+        S03[S-03\ndaily_research_to_tasks.py]
+        S04[S-04\ndaily_ideation.py]
+        S05[S-05\ndaily_system_analysis.sh]
+        S05a[S-05a\naudit_to_task.sh]
+        S06[S-06\nnotion_idea_pipeline.py]
+        S06a[S-06a\nidea_research_booster.py]
+    end
+    subgraph L2["L2 路由層"]
+        L201[L2-01\nauto_dispatch.sh]
+        L202[L2-02\nauto_claim_and_spawn.sh]
+    end
+    subgraph L3["L3 執行層"]
+        L3A[L3A-01\nsessions_spawn]
+        L3B[L3B-01\nclawteam spawn]
+    end
+    subgraph L4["L4 反饋層"]
+        L401[L4-01\ntask_complete.sh]
+        L402[L4-02\nheartbeat_stuck_check]
+    end
+
+    S01 --> U01
+    S02 -.->|待串| S06
+    S03 --> S01
+    S04 -.->|待串| S01
+    S05 --> S05a --> S01
+    S06 --> S01
+    S06a -.->|待開發| S06
+
+    S01 --> L201
+    L201 --> L202 --> L3A
+    L3A --> L401 --> U01
+    L3B -.->|待啟用| L401
+    L402 -->|retry<3| L201
+    L402 -->|retry=3| S01
+
+    style S06a fill:#EF444422,stroke:#EF4444
+    style L3B fill:#EF444422,stroke:#EF4444
+    style S02 fill:#F59E0B22,stroke:#F59E0B
+    style S04 fill:#EF444422,stroke:#EF4444
+    </div>
+</div>
+
+<!-- §7 斷點清單 -->
 <div class="card section-anchor" id="gaps">
-    <h2>§6 斷點清單（需補齊的「最後一公里」）</h2>
+    <h2>§7 斷點清單（需補齊的「最後一公里」）</h2>
     <table>
         <thead><tr><th>#</th><th>斷點</th><th>影響</th><th>修法</th></tr></thead>
         <tbody>
@@ -490,9 +722,9 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
     </table>
 </div>
 
-<!-- §7 待辦 -->
+<!-- §8 待辦 -->
 <div class="card section-anchor" id="todo">
-    <h2>§7 實作待辦（依優先序）</h2>
+    <h2>§8 實作待辦（依優先序）</h2>
     <table>
         <thead><tr><th>優先</th><th>任務</th><th>影響</th><th>複雜度</th><th>狀態</th></tr></thead>
         <tbody>
@@ -520,9 +752,9 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
     </table>
 </div>
 
-<!-- §8 流程圖 -->
+<!-- §9 流程圖 -->
 <div class="card section-anchor" id="flow">
-    <h2>§8 完整流程圖</h2>
+    <h2>§9 完整流程圖</h2>
     <div class="mermaid">
 flowchart TD
     subgraph S["任務來源層（六條路徑）"]
