@@ -1118,14 +1118,14 @@ flowchart TD
     FIX --> Q
     QG -->|"✅ ≥70分"| SPAWN_GATE{route?}
     SPAWN_GATE -->|"L3A（預設）"| L3A
-    SPAWN_GATE -->|"L3B（_use_clawteam）"| L3B_gate
+    SPAWN_GATE -->|"L3B（_use_clawteam）"| L3B_node
 
     L3A[L3A\nopenclaw cron add\n--session isolated\nGateway 直接執行]
-    L3B_gate[L3B\nclawteam spawn\n高複雜度任務]
+    L3B_node[L3B\nclawteam spawn\n高複雜度任務]
 
     L3A --> DONE[L4-01\ntask_complete.sh]
-    L3B --> CW1[Worker A\ngit worktree]
-    L3B --> CW2[Worker B\ngit worktree]
+    L3B_node --> CW1[Worker A\ngit worktree]
+    L3B_node --> CW2[Worker B\ngit worktree]
     CW1 & CW2 -->|clawteam inbox 彙整| MERGE[Leader 彙整] --> DONE
 
     DONE --> L405[L4-05\ndispatch_prompt_evolution.py\n學習優化]
@@ -1141,7 +1141,7 @@ flowchart TD
     style L201 fill:#20B2AA22,stroke:#20B2AA
     style L202 fill:#20B2AA22,stroke:#20B2AA
     style L3A fill:#3B82F622,stroke:#3B82F6
-    style L3B fill:#EF444422,stroke:#EF4444
+    style L3B_node fill:#F59E0B22,stroke:#F59E0B
     style S06a fill:#EF444422,stroke:#EF4444
     style STOP fill:#EF444433,stroke:#EF4444
     style FAIL fill:#EF444422,stroke:#EF4444
