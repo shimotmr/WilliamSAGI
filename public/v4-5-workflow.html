@@ -790,51 +790,71 @@ flowchart LR
 
 <!-- §9 流程圖 -->
 <div class="card section-anchor" id="flow">
-    <h2>§9 完整流程圖</h2>
+    <h2>§9 完整流程圖（含腳本編號 + Auto Research）</h2>
     <div class="mermaid">
 flowchart TD
-    subgraph S["任務來源層（六條路徑）"]
-        S1([William\nTelegram]) -->|手動 create_task.sh| Q
-        S2([William 說參考]) -->|reference_analyzer.py\n→ Notion| N6[Notion Ideas]
-        S3([每日搜索\n09:00]) -->|daily_research_to_tasks.py\n⚠️ 狀態不明| Q
-        S4([daily_ideation\n03:30]) -->|"❌ 只存 .md\n待補：→ create_task.sh"| Q
-        S5([每日審計\n03:30]) -->|"❌ 未排程\n待補：crontab"| S5b[audit_to_task.sh]
-        S5b --> Q
-        N6 -->|"❌ 未排程\n待補：notion_idea_pipeline.py"| N6b{評分\n≥15→建卡}
-        N6b -->|≥15分| Q
-        N6b -->|10-14分| W([🔔 William\n人工確認])
-        W -->|確認| Q
+    subgraph SRC["S 來源層"]
+        S1([S-01\nWilliam Telegram\ncreate_task.sh])
+        S2([S-02\nWilliam 說參考\nreference_analyzer.py])
+        S3([S-03\n每日搜索 09:00\ndaily_research_to_tasks.py])
+        S4([S-04\ndaily_ideation 03:30])
+        S5([S-05\n每日審計 03:30\ndaily_system_analysis.sh])
+        S05a[S-05a\naudit_to_task.sh]
+        N6[(Notion Ideas DB)]
+        S06[S-06\nnotion_idea_pipeline.py\n04:00 每日]
+        S06a[S-06a\nidea_research_booster.py\n04:05 每日 ❌待開發]
+        R6{評分結果}
     end
+
+    S1 --> Q
+    S2 -->|存入| N6
+    N6 -.->|"待串 P1-B"| S06
+    S3 -->|建卡| Q
+    S4 -.->|"❌待串 P1-A"| Q
+    S5 --> S05a --> Q
+    S06 --> R6
+    R6 -->|"≥15分"| Q
+    R6 -->|"10-14分"| S06a
+    S06a -->|"Rex 研究後升分"| R6b{重新評分}
+    R6b -->|"新≥15分"| Q
+    R6b -->|"仍低分"| N6
+    R6b -->|"<10分"| DEAD[標記不可行\n30天不重研]
 
     Q[(board_tasks\n待派發)]
 
-    Q --> CHK{EMERGENCY_STOP?}
-    CHK -->|是| STOP([⛔ 中止])
-    CHK -->|否| L2[L2 路由決策\nTravis 判斷]
+    Q --> CHK{U-04\nEMERGENCY_STOP?}
+    CHK -->|是| STOP([⛔ 全面中止])
+    CHK -->|否| L201[L2-01\nauto_dispatch.sh\n每5分鐘]
 
-    L2 -->|子任務≤2\n輕量| L3A[L3A sessions_spawn\nBlake/Rex/Oscar]
-    L2 -->|子任務≥3\n需並行+git隔離| L3B[L3B ClawTeam\nLeader+Workers]
-    L2 -->|生產/架構決策| W2([🔔 William]) -->|確認| Q
+    L201 --> L202[L2-02\nauto_claim_and_spawn.sh]
+    L201 -->|複雜任務| L3B_gate{Travis 判斷\nL3B?}
 
-    L3A --> DONE[task_complete.sh]
+    L202 -->|openclaw sessions spawn| L3A[L3A-01\nsessions_spawn\nBlake/Rex/Oscar]
+    L3B_gate -->|子任務≥3\n需並行+隔離| L3B[L3B-01\nclawteam spawn\n❌待安裝]
+
+    L3A --> DONE[L4-01\ntask_complete.sh]
     L3B --> CW1[Worker A\ngit worktree]
     L3B --> CW2[Worker B\ngit worktree]
-    CW1 & CW2 -->|inbox 彙整| MERGE[merge → main] --> DONE
+    CW1 & CW2 -->|clawteam inbox 彙整| MERGE[Leader 彙整] --> DONE
 
-    DONE --> L4[L4 反饋優化]
-    L4 --> R{成功?}
-    R -->|✅| EXP[experience_log\ndispatch_prompt 優化]
-    R -->|❌ retry<3| RETRY[智能診斷\nretry_count+1] --> Q
-    R -->|🔴 retry=3| FAIL[已失敗\n通知 William] --> Q
+    DONE --> L402[L4-02\nheartbeat_stuck_check.sh\n每10分鐘]
+    DONE --> OK[✅ 成功\nexperience_log]
+
+    L402 --> RR{成功?}
+    RR -->|"retry<3"| RETRY[智能診斷\nretry_count+1] --> Q
+    RR -->|"retry=3"| FAIL[L4-01 已失敗\n通知 William] --> Q
 
     style Q fill:#7B68EE22,stroke:#7B68EE
-    style L2 fill:#20B2AA22,stroke:#20B2AA
+    style L201 fill:#20B2AA22,stroke:#20B2AA
+    style L202 fill:#20B2AA22,stroke:#20B2AA
     style L3A fill:#3B82F622,stroke:#3B82F6
-    style L3B fill:#FF6B3522,stroke:#FF6B35
-    style L4 fill:#10B98122,stroke:#10B981
+    style L3B fill:#EF444422,stroke:#EF4444
+    style S06a fill:#EF444422,stroke:#EF4444
     style STOP fill:#EF444433,stroke:#EF4444
     style FAIL fill:#EF444422,stroke:#EF4444
-    style S fill:#7B68EE08,stroke:#7B68EE33
+    style S4 fill:#EF444422,stroke:#EF4444
+    style SRC fill:#7B68EE08,stroke:#7B68EE33
+    style OK fill:#10B98122,stroke:#10B981
     </div>
 </div>
 
