@@ -1,758 +1,298 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V5 Smart Task Pipeline · WilliamSAGI</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<style>
-  :root {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #263347;
-    --border: #334155;
-    --purple: #7B68EE;
-    --teal: #20B2AA;
-    --blue: #4A90D9;
-    --green: #2ECC71;
-    --orange: #F39C12;
-    --red: #E74C3C;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --dim: #475569;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-  /* NAV */
-  nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
-  nav .brand { color: var(--purple); font-weight: 700; font-size: 1.1em; }
-  nav .badge { background: var(--purple); color: #fff; font-size: 0.7em; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
-  nav .score { margin-left: auto; color: var(--muted); font-size: 0.85em; display: flex; align-items: center; gap: 8px; }
-  nav .score span { color: var(--orange); font-weight: 700; font-size: 1.1em; }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; padding: 20px 24px 0; overflow-x: auto; background: var(--bg); }
-  .tab { padding: 10px 18px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.85em; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-bottom: none; transition: all 0.2s; white-space: nowrap; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--purple); background: var(--surface2); border-color: var(--purple); }
-
-  /* CONTENT */
-  .content { padding: 0 24px 40px; }
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  /* HERO */
-  .hero { padding: 32px 0 24px; text-align: center; }
-  .hero h1 { font-size: 1.8em; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-  .hero p { color: var(--muted); font-size: 0.95em; max-width: 600px; margin: 0 auto; }
-
-  /* SCORE CARDS */
-  .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 24px 0; }
-  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
-  .score-card .label { color: var(--muted); font-size: 0.75em; margin-bottom: 6px; }
-  .score-card .val { font-size: 1.6em; font-weight: 800; }
-  .score-card .arrow { font-size: 0.75em; color: var(--green); margin-top: 2px; }
-  .v3 { color: var(--red); }
-  .v4 { color: var(--green); }
-
-  /* DIAGRAM CARD */
-  .diagram-section { margin: 24px 0; }
-  .diagram-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-  .diagram-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
-  .diagram-num { background: var(--purple); color: #fff; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; margin-top: 2px; }
-  .diagram-header h3 { font-size: 1em; font-weight: 600; margin-bottom: 4px; }
-  .diagram-header p { color: var(--muted); font-size: 0.82em; line-height: 1.5; }
-  .diagram-body { padding: 20px; overflow-x: auto; background: var(--surface2); }
-  .mermaid { display: flex; justify-content: center; }
-
-  /* TWO-COL DIAGRAMS */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-  /* AGENT TABLE */
-  table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-  th { background: var(--surface); color: var(--muted); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
-  tr:hover td { background: rgba(123,104,238,0.05); }
-  .chip { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75em; font-weight: 600; }
-  .chip-purple { background: rgba(123,104,238,0.2); color: var(--purple); }
-  .chip-blue { background: rgba(74,144,217,0.2); color: var(--blue); }
-  .chip-orange { background: rgba(243,156,18,0.2); color: var(--orange); }
-  .chip-green { background: rgba(46,204,113,0.2); color: var(--green); }
-  .chip-red { background: rgba(231,76,60,0.2); color: var(--red); }
-  .chip-teal { background: rgba(32,178,170,0.2); color: var(--teal); }
-  .cost-badge { font-size: 0.75em; padding: 2px 6px; border-radius: 4px; }
-  .cost-free { background: rgba(46,204,113,0.15); color: var(--green); }
-  .cost-mid { background: rgba(243,156,18,0.15); color: var(--orange); }
-  .cost-high { background: rgba(231,76,60,0.15); color: var(--red); }
-
-  /* PHASE CARDS */
-  .phase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
-  .phase-card { border-radius: 12px; padding: 20px; border: 1px solid; }
-  .phase-1 { background: rgba(32,178,170,0.07); border-color: rgba(32,178,170,0.3); }
-  .phase-2 { background: rgba(123,104,238,0.07); border-color: rgba(123,104,238,0.3); }
-  .phase-3 { background: rgba(74,144,217,0.07); border-color: rgba(74,144,217,0.3); }
-  .phase-4 { background: rgba(231,76,60,0.07); border-color: rgba(231,76,60,0.3); }
-  .phase-label { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
-  .phase-1 .phase-label { color: var(--teal); }
-  .phase-2 .phase-label { color: var(--purple); }
-  .phase-3 .phase-label { color: var(--blue); }
-  .phase-4 .phase-label { color: var(--red); }
-  .phase-card h3 { font-size: 1.1em; margin-bottom: 4px; }
-  .phase-card .weeks { color: var(--muted); font-size: 0.78em; margin-bottom: 12px; }
-  .phase-card .target { font-size: 0.85em; font-weight: 600; margin-bottom: 10px; }
-  .phase-1 .target { color: var(--teal); }
-  .phase-2 .target { color: var(--purple); }
-  .phase-3 .target { color: var(--blue); }
-  .phase-4 .target { color: var(--red); }
-  .task-list { list-style: none; }
-  .task-list li { font-size: 0.8em; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
-  .task-list li::before { content: '▸'; color: var(--dim); }
-  .dod { margin-top: 12px; padding: 8px 12px; border-radius: 6px; font-size: 0.78em; font-weight: 600; }
-  .phase-1 .dod { background: rgba(32,178,170,0.1); color: var(--teal); }
-  .phase-2 .dod { background: rgba(123,104,238,0.1); color: var(--purple); }
-  .phase-3 .dod { background: rgba(74,144,217,0.1); color: var(--blue); }
-  .phase-4 .dod { background: rgba(231,76,60,0.1); color: var(--red); }
-
-  /* DATA FLOW */
-  .data-flow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
-  .data-node { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
-  .data-node .icon { font-size: 1.5em; margin-bottom: 6px; }
-  .data-node h4 { font-size: 0.85em; font-weight: 600; margin-bottom: 4px; }
-  .data-node p { font-size: 0.75em; color: var(--muted); line-height: 1.5; }
-  .data-arrow { text-align: center; color: var(--dim); font-size: 1.2em; display: flex; align-items: center; justify-content: center; }
-
-  /* SCRIPT TABLE */
-  .script-table { width: 100%; }
-  .script-table td:first-child { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--teal); }
-
-  /* FOOTER */
-  footer { text-align: center; color: var(--dim); font-size: 0.75em; padding: 24px; border-top: 1px solid var(--border); }
-  footer a { color: var(--purple); text-decoration: none; }
-
-  @media(max-width:900px){
-    .two-col { grid-template-columns: 1fr; }
-    .phase-grid { grid-template-columns: 1fr; }
-  }
-
-  /* LUCIDE ICONS */
-  .icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; stroke: currentColor; }
-  .icon-lg { width: 20px; height: 20px; }
-  .icon-xl { width: 28px; height: 28px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WilliamSAGI - V4.5 工作流進化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --surface: #0f172a;
+            --border: #334155;
+            --purple: #7B68EE;
+            --teal: #20B2AA;
+            --orange: #FF6B35;
+            --blue: #3B82F6;
+            --green: #10B981;
+            --muted: #94a3b8;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--surface);
+            color: #e2e8f0;
+        }
+        nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+        nav .brand { color: var(--purple); font-weight: 700; font-size: 1.1em; }
+        nav .badge { background: var(--purple); color: #fff; font-size: 0.7em; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+        nav .score { margin-left: auto; color: var(--muted); font-size: 0.85em; display: flex; align-items: center; gap: 8px; }
+        nav .score span { color: var(--orange); font-weight: 700; font-size: 1.1em; }
+        
+        .tabs { display: flex; gap: 4px; padding: 8px 24px; background: #0f172a; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .tab { padding: 8px 16px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 0.85em; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: all 0.2s; }
+        .tab:hover { background: #1e293b; color: #fff; }
+        .tab.active { background: var(--purple); color: #fff; }
+        
+        .content { padding: 24px; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .hero { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #7B68EE22, #20B2AA11); border-radius: 16px; margin-bottom: 24px; }
+        .hero h1 { font-size: 2em; font-weight: 700; margin-bottom: 12px; }
+        .hero p { color: var(--muted); max-w-xl mx-auto; }
+        
+        .layer { padding: 20px; border-radius: 12px; margin-bottom: 16px; position: relative; }
+        .layer-1 { background: linear-gradient(135deg, #7B68EE22, #7B68EE11); border-left: 4px solid var(--purple); }
+        .layer-2 { background: linear-gradient(135deg, #20B2AA22, #20B2AA11); border-left: 4px solid var(--teal); }
+        .layer-3 { background: linear-gradient(135deg, #3B82F622, #3B82F611); border-left: 4px solid var(--blue); }
+        .layer-4 { background: linear-gradient(135deg, #10B98122, #10B98111); border-left: 4px solid var(--green); }
+        
+        .layer-badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.75em; font-weight: 500; }
+        .badge-purple { background: #7B68EE33; color: var(--purple); }
+        .badge-teal { background: #20B2AA33; color: var(--teal); }
+        .badge-blue { background: #3B82F633; color: var(--blue); }
+        .badge-green { background: #10B98133; color: var(--green); }
+        
+        .item-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .item-card { background: #0f172a; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; }
+        .item-card .icon { font-size: 1.5em; }
+        .item-card .label { font-weight: 500; font-size: 0.9em; }
+        .item-card .desc { font-size: 0.75em; color: var(--muted); }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85em; }
+        th { background: #1e293b; color: var(--muted); font-weight: 500; }
+        
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 768px) { .comparison-grid { grid-template-columns: 1fr; } }
+        
+        .old-flow, .new-flow { background: #0f172a; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.75em; white-space: pre; overflow-x: auto; }
+        .new-flow { border: 1px solid var(--teal); }
+        
+        .highlight-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .highlight-card { background: #1e293b; padding: 16px; border-radius: 8px; }
+        .highlight-card h4 { color: var(--purple); font-weight: 600; margin-bottom: 8px; }
+        .highlight-card p { font-size: 0.85em; color: var(--muted); }
+        
+        .arrow-down { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid #475569; margin: 8px auto; }
+    </style>
 </head>
 <body>
 
 <nav>
   <span class="brand"><i data-lucide="bot" class="icon-lg"></i> WilliamSAGI</span>
-  <span class="badge">Architecture</span>
+  <span class="badge">V4.5</span>
   <div class="score">
-    V4 評分 <span class="v3">3.2</span> → V5 目標 <span class="v4">8.0</span> / 10
+    工作流進化 <span>New</span>
   </div>
 </nav>
 
 <div class="tabs">
-  <div class="tab active" onclick="showPanel('overview')"><i data-lucide="bar-chart-2" class="icon"></i> 系統總覽</div>
-  <div class="tab" onclick="showPanel('arch')"><i data-lucide="building" class="icon"></i> 架構圖</div>
-  <div class="tab" onclick="showPanel('agents')"><i data-lucide="bot" class="icon"></i> Agent 分工</div>
-  <div class="tab" onclick="showPanel('phases')"><i data-lucide="rocket" class="icon"></i> Phase 計畫</div>
-  <div class="tab" onclick="showPanel('loops')"><i data-lucide="heart-pulse" class="icon"></i> 閉環監控</div>
-  <div class="tab" onclick="showPanel('dataflow')"><i data-lucide="refresh-cw" class="icon"></i> 資料流</div>
-  <div class="tab" onclick="showPanel('scripts')"><i data-lucide="terminal" class="icon"></i> 腳本</div>
+  <div class="tab" onclick="showPanel('overview')"><i data-lucide="bar-chart-2" class="icon"></i> 總覽</div>
+  <div class="tab" onclick="showPanel('layers')"><i data-lucide="layers" class="icon"></i> 四層架構</div>
+  <div class="tab active" onclick="showPanel('compare')"><i data-lucide="git-compare"></i> V4 vs V4.5</div>
+  <div class="tab" onclick="showPanel('scripts')"><i data-lucide="terminal" class="icon"></i> 腳本映射</div>
+  <div class="tab" onclick="showPanel('flow')"><i data-lucide="workflow" class="icon"></i> 完整流程</div>
 </div>
 
-<!-- OVERVIEW -->
 <div class="content">
-<div id="panel-overview" class="panel active">
+<!-- OVERVIEW PANEL -->
+<div id="panel-overview" class="panel">
   <div class="hero">
-    <h1>V5 智能任務 Pipeline</h1>
-    <p>從固定派發進化為智能拆分、自動路由、多層驗收。今晚建成的 8 個模組讓任務成功率大幅提升。</p>
+    <h1>V4.5 工作流進化</h1>
+    <p>三層分離 + 連續推進：討論一件事不需要當下就執行，但討論的過程會被自動記住、分解，最後才執行。<br><span class="text-teal-400">這是「智能任務分解器」的核心概念。</span></p>
   </div>
-
-  <div class="score-grid">
-    <div class="score-card"><div class="label">主動尋找任務</div><div class="val" style="color:#F39C12">4</div><div class="arrow">有 Notion 自動掃描入口</div></div>
-    <div class="score-card"><div class="label">自我思考</div><div class="val" style="color:#F39C12">6</div><div class="arrow">Task Splitter 分析複雜度</div></div>
-    <div class="score-card"><div class="label">自我執行</div><div class="val v4">8</div><div class="arrow">Event-driven Scheduler + 模型路由</div></div>
-    <div class="score-card"><div class="label">自我審計</div><div class="val v4">7</div><div class="arrow">Acceptance Gate 三層驗收</div></div>
-    <div class="score-card"><div class="label">自我除錯</div><div class="val" style="color:#F39C12">6</div><div class="arrow">Session Death Analyzer</div></div>
-    <div class="score-card"><div class="label">自我修復</div><div class="val v4">7</div><div class="arrow">Circuit Breaker + 升級鏈 fallback</div></div>
-    <div class="score-card"><div class="label">自我預防</div><div class="val" style="color:#F39C12">6</div><div class="arrow">Prompt Validator + 成本預算</div></div>
-    <div class="score-card"><div class="label">自我學習</div><div class="val" style="color:#F39C12">4</div><div class="arrow">Observability task_execution_log</div></div>
-    <div class="score-card"><div class="label">自我演進</div><div class="val v3">2</div><div class="arrow">基於數據迭代路由策略，Phase 4 之後</div></div>
-  </div>
-
-  <div class="diagram-card" style="margin-top:8px">
-    <div class="diagram-header">
-      <div class="diagram-num">!</div>
-      <div>
-        <h3>V5 核心升級（Travis + Opus 4.6 設計）</h3>
-        <p>V4 的最大問題：94.5% 的 session 失敗來自 Codex rate limit。V5 用 8 個模組從根本解決：智能拆分避免任務過大、模型路由避免模型不合適、分叉升級鏈在 rate limit 時自動繞開、Circuit Breaker 偵測模型故障、三層驗收避免假完成。</p>
-      </div>
+  
+  <div class="highlight-box">
+    <div class="highlight-card">
+      <h4>🔗 統一入口</h4>
+      <p>不管從哪裡輸入，最後都會進入統一任務堆疊，不會忘記。</p>
+    </div>
+    <div class="highlight-card">
+      <h4>🤖 智能分解</h4>
+      <p>複雜任務自動拆解，選擇最適合的模型與工具組合執行。</p>
+    </div>
+    <div class="highlight-card">
+      <h4>⚡ 並行處理</h4>
+      <p>多個獨立子任務同時執行，最後自動彙整結果（gstack 概念）。</p>
+    </div>
+    <div class="highlight-card">
+      <h4>🧠 自我進化</h4>
+      <p>失敗經驗自動記住，dispatch_prompt 持續優化。</p>
     </div>
   </div>
 </div>
 
-<!-- ARCH -->
-<div id="panel-arch" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>系統架構圖</h1>
-    <p>核心執行流程與防護閉環分開呈現，方便理解各層責任</p>
-  </div>
-
-  <div class="two-col">
-    <div class="diagram-card">
-      <div class="diagram-header">
-        <div class="diagram-num">1</div>
-        <div>
-          <h3>核心執行流程</h3>
-          <p>William/Notion 提出任務 → Task Splitter 分析複雜度 → 簡單走 Fast Path / 複雜拆分子任務 → Model Router 選最適模型 → Event-driven Scheduler 排程 → 各 Agent 執行 → Acceptance Gate 三層驗收 → Result Merger 合併通知</p>
-        </div>
-      </div>
-      <div class="diagram-body">
-        <div class="mermaid">
-flowchart TD
-    n1["William / Notion\n任務來源"]
-    SP["Task Splitter\n複雜度分析"]
-    FP["🚀 Fast Path\n簡單任務直接執行"]
-    MR["Model Router\n分叉升級鏈選模型"]
-    ES["Event-driven Scheduler\n依賴+rate limit 排程"]
-    CB["Circuit Breaker\n模型故障自動繞開"]
-    B["Blake\nCodex gpt-5.4"]
-    R["Rex\nGrok 4.20"]
-    O["Oscar\nQwen3 本地"]
-    AG["Acceptance Gate\n三層驗收"]
-    RM["Result Merger\n合併+品質檢查"]
-    DB[("board_tasks\n+ task_execution_log")]
-    TG["Telegram 通知"]
-    n1 --> SP
-    SP -->|"complexity ≤ 3"| FP
-    SP -->|"complexity > 3\n拆分子任務"| MR
-    FP --> MR
-    MR --> ES
-    ES --> CB
-    CB --> B
-    CB --> R
-    CB --> O
-    B --> AG
-    R --> AG
-    O --> AG
-    AG -->|"✅ 通過"| RM
-    AG -->|"❌ 失敗\n升級模型重試"| CB
-    RM --> DB
-    RM --> TG
-    style n1 fill:#4A90D9,color:#fff
-    style SP fill:#20B2AA,color:#fff
-    style FP fill:#2ECC71,color:#fff
-    style MR fill:#7B68EE,color:#fff
-    style ES fill:#3498DB,color:#fff
-    style CB fill:#E74C3C,color:#fff
-    style AG fill:#F39C12,color:#fff
-    style RM fill:#27AE60,color:#fff
-    style DB fill:#F39C12,color:#fff
-        </div>
-      </div>
+<!-- LAYERS PANEL -->
+<div id="panel-layers" class="panel">
+  <!-- L1 -->
+  <div class="layer layer-1">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-purple-400">L1 討論層 (Think)</h3>
+      <span class="layer-badge badge-purple">輸入統一</span>
     </div>
-
-    <div class="diagram-card">
-      <div class="diagram-header">
-        <div class="diagram-num">2</div>
-        <div>
-          <h3>防護與感知閉環</h3>
-          <p>Prompt Validator 攔截爛 prompt → Pipeline Engine 執行 → task_execution_log 全量記錄 → Session Death Analyzer 分析死因 → Circuit Breaker 追蹤模型健康 → Meta-heartbeat 監控一切</p>
-        </div>
-      </div>
-      <div class="diagram-body">
-        <div class="mermaid">
-flowchart TD
-    PV["Prompt Validator\nspawn 前預檢"]
-    SDA["Session Death Analyzer\n每 30 分鐘掃描"]
-    TEL["task_execution_log\n全量 observability"]
-    CB2["Circuit Breaker\n模型健康追蹤"]
-    MH["Meta-heartbeat\n每 15 分鐘"]
-    PE["Pipeline Engine"]
-    ALERT["Telegram 告警"]
-    PV -->|"攔截爛 prompt"| PE
-    PE -->|"執行記錄"| TEL
-    SDA -->|"分析死因"| TEL
-    TEL -->|"連續失敗"| ALERT
-    CB2 -->|"模型 unhealthy"| PE
-    MH -.->|"監控"| PE
-    MH -.->|"監控"| SDA
-    MH -.->|"監控"| CB2
-    style PV fill:#20B2AA,color:#fff
-    style SDA fill:#E74C3C,color:#fff
-    style TEL fill:#F39C12,color:#fff
-    style CB2 fill:#FF6B6B,color:#fff
-    style MH fill:#7B68EE,color:#fff
-        </div>
-      </div>
+    <p class="text-slate-400 text-sm mb-4">William 任何討論、點子、指令 → 自動存入任務堆疊</p>
+    <div class="item-grid">
+      <div class="item-card"><span class="icon">💬</span><div><div class="label">對話輸入</div><div class="desc">隨時對話</div></div></div>
+      <div class="item-card"><span class="icon">⏰</span><div><div class="label">Cron 排程</div><div class="desc">每日定時</div></div></div>
+      <div class="item-card"><span class="icon">💡</span><div><div class="label">Ideas/參考</div><div class="desc">Notion 萃取</div></div></div>
+    </div>
+  </div>
+  <div class="arrow-down"></div>
+  
+  <!-- L2 -->
+  <div class="layer layer-2">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-teal-400">L2 任務形成層 (Form)</h3>
+      <span class="layer-badge badge-teal">智能分解</span>
+    </div>
+    <p class="text-slate-400 text-sm mb-4">自動分析複雜度 → 拆成子任務 → 選擇最佳模型與工具</p>
+    <div class="item-grid">
+      <div class="item-card"><span class="icon">📋</span><div><div class="label">複雜度分析</div><div class="desc">判斷拆不拆</div></div></div>
+      <div class="item-card"><span class="icon">🤖</span><div><div class="label">模型選擇</div><div class="desc">Claude/GLM/本地</div></div></div>
+      <div class="item-card"><span class="icon">⚡</span><div><div class="label">工具調度</div><div class="desc">CLI/網路/本地</div></div></div>
+    </div>
+  </div>
+  <div class="arrow-down"></div>
+  
+  <!-- L3 -->
+  <div class="layer layer-3">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-blue-400">L3 執行調度層 (Execute)</h3>
+      <span class="layer-badge badge-blue">統一派發</span>
+    </div>
+    <p class="text-slate-400 text-sm mb-4">自動派給最適 Agent → 並行/串行 → 結果彙整</p>
+    <div class="item-grid">
+      <div class="item-card"><span class="icon">🎯</span><div><div class="label">派發策略</div><div class="desc">Blake/Rex/Oscar</div></div></div>
+      <div class="item-card"><span class="icon">🔀</span><div><div class="label">並行執行</div><div class="desc">多工處理</div></div></div>
+      <div class="item-card"><span class="icon">📦</span><div><div class="label">結果彙整</div><div class="desc">統一輸出</div></div></div>
+    </div>
+  </div>
+  <div class="arrow-down"></div>
+  
+  <!-- L4 -->
+  <div class="layer layer-4">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-green-400">L4 反饋優化層 (Feedback)</h3>
+      <span class="layer-badge badge-green">自我進化</span>
+    </div>
+    <p class="text-slate-400 text-sm mb-4">失敗重試 → 經驗記憶 → dispatch_prompt 優化</p>
+    <div class="item-grid">
+      <div class="item-card"><span class="icon">🔄</span><div><div class="label">失敗重試</div><div class="desc">自動分析重跑</div></div></div>
+      <div class="item-card"><span class="icon">🧠</span><div><div class="label">經驗記憶</div><div class="desc">failure-memory</div></div></div></div>
+      <div class="item-card"><span class="icon">📈</span><div><div class="label">Prompt 優化</div><div class="desc">自動化</div></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- AGENTS -->
-<div id="panel-agents" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>Agent 分工與模型調度</h1>
-    <p>6 個 AI 員工各有專長，成本策略讓系統能長期持續運行</p>
-  </div>
-
-  <div class="diagram-card">
-    <div class="diagram-header">
-      <div class="diagram-num">3</div>
-      <div>
-        <h3>Agent 能力矩陣</h3>
-        <p>本地模型（qwen3:8b）用於行政/安全任務，零 API 費用。雲端模型用於需要深度推理的程式/研究任務。</p>
-      </div>
+<!-- COMPARE PANEL -->
+<div id="panel-compare" class="panel">
+  <h3 class="font-bold mb-4">V4 vs V4.5 流程對比</h3>
+  <div class="comparison-grid">
+    <div>
+      <h4 class="text-slate-400 mb-2">V4 現有流程</h4>
+      <pre class="old-flow">William 討論
+    │
+    ├─→ 直接執行（小任務）
+    │
+    └─→ 討論筆記
+              │
+              └─→ 手動 create_task.sh
+                         │
+                         └─→ 派發選擇（難）
+                                    │
+                                    ├─→ auto_dispatch
+                                    ├─→ sessions_spawn
+                                    └─→ 忘記→擱置</pre>
     </div>
-    <div class="diagram-body" style="padding:0">
-      <table>
-        <thead>
-          <tr>
-            <th>Agent</th>
-            <th>職責</th>
-            <th>主模型</th>
-            <th>備用模型</th>
-            <th>成本</th>
-            <th>典型任務</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong><i data-lucide="bot" class="icon"></i> Travis</strong></td>
-            <td>決策・協調・緊急處理</td>
-            <td><span class="chip chip-purple">claude-sonnet-4-6</span></td>
-            <td><span class="chip chip-purple">opus-4-6</span></td>
-            <td><span class="cost-badge cost-high"><i data-lucide="circle" class="icon" style="color:var(--red)"></i> 高</span></td>
-            <td>主 session、重大決策、緊急修復</td>
-          </tr>
-          <tr>
-            <td><strong><i data-lucide="hammer" class="icon"></i> Blake</strong></td>
-            <td>程式・前端・腳本</td>
-            <td><span class="chip chip-blue">gpt-5.4</span></td>
-            <td><span class="chip chip-teal">minimax</span></td>
-            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
-            <td>建立腳本、前端開發、系統整合</td>
-          </tr>
-          <tr>
-            <td><strong><i data-lucide="microscope" class="icon"></i> Rex</strong></td>
-            <td>研究・分析・報告</td>
-            <td><span class="chip chip-orange">grok420-0309</span></td>
-            <td><span class="chip chip-teal">kimi</span></td>
-            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
-            <td>市場研究、系統分析、策略報告</td>
-          </tr>
-          <tr>
-            <td><strong><i data-lucide="clipboard-list" class="icon"></i> Oscar</strong></td>
-            <td>行政・監控・週期任務</td>
-            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
-            <td><span class="chip chip-teal">minimax</span></td>
-            <td><span class="cost-badge cost-free"><i data-lucide="circle" class="icon" style="color:var(--green)"></i> 零費用</span></td>
-            <td>行事曆同步、heartbeat 檢查、清理任務</td>
-          </tr>
-          <tr>
-            <td><strong><i data-lucide="trending-up" class="icon"></i> Warren</strong></td>
-            <td>交易・風控・金融分析</td>
-            <td><span class="chip chip-teal">minimax</span></td>
-            <td>—</td>
-            <td><span class="cost-badge cost-mid"><i data-lucide="circle" class="icon" style="color:var(--orange)"></i> 中</span></td>
-            <td>股票分析、交易策略、風險評估</td>
-          </tr>
-          <tr>
-            <td><strong><i data-lucide="shield" class="icon"></i> Griffin</strong></td>
-            <td>安全審查・隱私保護</td>
-            <td><span class="chip chip-green">qwen3:8b 本地</span></td>
-            <td><span class="chip chip-teal">minimax</span></td>
-            <td><span class="cost-badge cost-free"><i data-lucide="circle" class="icon" style="color:var(--green)"></i> 零費用</span></td>
-            <td>Prompt Injection 偵測、安全審計、隱私合規</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="diagram-card" style="margin-top:16px">
-    <div class="diagram-header">
-      <div class="diagram-num">4</div>
-      <div>
-        <h3>分叉升級鏈（Model Router）</h3>
-        <p>Task Splitter 自動分類任務類型，每類有獨立的升級鏈。從本地模型開始嘗試，失敗或 rate limit 時自動升級到下一個模型。</p>
-      </div>
-    </div>
-    <div class="diagram-body">
-      <div class="mermaid">
-flowchart TD
-    TASK["新任務"]
-    CLASS{"Task Splitter\n自動分類"}
-    subgraph CODE["程式碼任務"]
-        C1["Qwen3 本地"] --> C2["Codex gpt-5.4"] --> C3["Sonnet 4.6"] --> C4["Opus 4.6"]
-    end
-    subgraph RESEARCH["研究分析任務"]
-        R1["Qwen3 本地"] --> R2["Grok 4.20"] --> R3["Sonnet 4.6"] --> R4["Opus 4.6"]
-    end
-    subgraph ADMIN["行政監控任務"]
-        A1["Qwen3 本地"] --> A2["MiniMax M2.5"] --> A3["Sonnet 4.6"]
-    end
-    subgraph REASON["複雜推理任務"]
-        L1["Qwen3 本地"] --> L2["Grok 4.20"] --> L3["Opus 4.6"]
-    end
-    TASK --> CLASS
-    CLASS -->|"code"| C1
-    CLASS -->|"research"| R1
-    CLASS -->|"admin"| A1
-    CLASS -->|"reasoning"| L1
-    style CLASS fill:#7B68EE,color:#fff
-    style C2 fill:#3498DB,color:#fff
-    style R2 fill:#E67E22,color:#fff
-    style A1 fill:#27AE60,color:#fff
-    style L3 fill:#9B59B6,color:#fff
-      </div>
+    <div>
+      <h4 class="text-teal-400 mb-2">V4.5 進化流程</h4>
+      <pre class="new-flow">William 任何輸入
+    │
+    └─→ 統一入口 → 任務堆疊
+              │
+              ↓ 自動萃取
+    任務形成層（智能分解）
+              │
+              ↓ William確認
+    執行調度層（派誰+模型）
+              │
+              ↓ 完成
+    反饋優化層（經驗記憶）</pre>
     </div>
   </div>
 </div>
 
-<!-- PHASES -->
-<div id="panel-phases" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>V5 Phase 計畫</h1>
-    <p>4 個 Phase，Phase 1-3 已完成，Phase 4 數據驅動優化進行中</p>
-  </div>
-
-  <div class="phase-grid">
-    <div class="phase-card phase-1">
-      <div class="phase-label">Phase 1 · 已完成 ✅</div>
-      <h3><i data-lucide="git-branch" class="icon"></i> 模型路由 + Task Splitter</h3>
-      <div class="weeks">智能拆分與自動路由的基礎</div>
-      <div class="target">DoD：3 種任務類型正確路由 ✅</div>
-      <ul class="task-list">
-        <li>model_router.py — 分叉升級鏈選模型</li>
-        <li>task_splitter.py — 複雜度分析與拆分</li>
-        <li>create_task.sh 整合 — 自動帶入路由資訊</li>
-      </ul>
-      <div class="dod"><i data-lucide="check-circle" class="icon"></i> 3 種任務類型正確路由 ✅</div>
-    </div>
-
-    <div class="phase-card phase-2">
-      <div class="phase-label">Phase 2 · 已完成 ✅</div>
-      <h3><i data-lucide="workflow" class="icon"></i> Scheduler + Gate + Merger</h3>
-      <div class="weeks">完整 Pipeline 端到端可運行</div>
-      <div class="target">DoD：完整 pipeline 端到端可運行 ✅</div>
-      <ul class="task-list">
-        <li>task_scheduler.py — Event-driven 排程</li>
-        <li>acceptance_gate.py — 三層驗收</li>
-        <li>result_merger.py — 結果合併+品質檢查</li>
-        <li>smart_pipeline.sh — 統一入口</li>
-        <li>task_execution_log — 全量 observability</li>
-      </ul>
-      <div class="dod"><i data-lucide="check-circle" class="icon"></i> 完整 pipeline 端到端可運行 ✅</div>
-    </div>
-
-    <div class="phase-card phase-3">
-      <div class="phase-label">Phase 3 · 已完成 ✅</div>
-      <h3><i data-lucide="shield" class="icon"></i> 防護層</h3>
-      <div class="weeks">6/6 失敗根因覆蓋</div>
-      <div class="target">DoD：6/6 失敗根因覆蓋 ✅</div>
-      <ul class="task-list">
-        <li>prompt_validator.py — Prompt 預檢</li>
-        <li>session_death_analyzer.py — Session 死因分析</li>
-        <li>Notion 入口整合 — 任務自動掃描</li>
-      </ul>
-      <div class="dod"><i data-lucide="check-circle" class="icon"></i> 6/6 失敗根因覆蓋 ✅</div>
-    </div>
-
-    <div class="phase-card phase-4">
-      <div class="phase-label">Phase 4 · 未開始</div>
-      <h3><i data-lucide="trending-up" class="icon"></i> 數據驅動優化</h3>
-      <div class="weeks">基於實際數據迭代路由策略</div>
-      <div class="target">DoD：任務成功率 ≥ 85%</div>
-      <ul class="task-list">
-        <li>收集 200 個任務數據</li>
-        <li>分析路由策略效果</li>
-        <li>基於數據調整權重</li>
-      </ul>
-      <div class="dod"><i data-lucide="target" class="icon"></i> 任務成功率 ≥ 85%</div>
-    </div>
-  </div>
-</div>
-
-<!-- LOOPS -->
-<div id="panel-loops" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>閉環監控關係圖</h1>
-    <p>「監控系統本身也被監控」是核心設計原則</p>
-  </div>
-
-  <div class="diagram-card">
-    <div class="diagram-header">
-      <div class="diagram-num">5</div>
-      <div>
-        <h3>Meta-heartbeat 監控網路</h3>
-        <p>Meta-heartbeat 每 15 分鐘掃描所有閉環。任何閉環超過 2 個預期週期未執行，立即 Telegram 告警，Travis 介入。</p>
-      </div>
-    </div>
-    <div class="diagram-body">
-      <div class="mermaid">
-graph TD
-    MH["Meta-heartbeat\n每 15 分鐘\n這是監控的監控"]
-    subgraph LOOPS["受監控的閉環"]
-        PE["Pipeline Engine\n每 5 分鐘\n自動派發任務"]
-        SG["Status Guardian\n每 30 分鐘\n自動修正非法狀態"]
-        HS["Hourly Snapshot\n每 1 小時\n系統狀態快照"]
-        IE2["Intention Engine\n每 1 小時\n感知問題自動建任務"]
-        AU["Audit Database\n每 6 小時\n DB 健康檢查"]
-        AL["Auto Learning\n每日 04:30\n失敗模式學習"]
-        DA["Daily Analysis\n每日 03:30\n分層問題分析"]
-        SDA2["Session Death Analyzer\n每 30 分鐘\n分析 session 死因"]
-        PV2["Prompt Validator\n每次 spawn 前\n預檢 prompt 品質"]
-        CB3["Circuit Breaker\n即時\n模型故障偵測"]
-    end
-    ALERT["Telegram 告警\n+ Travis 介入"]
-    MH -->|掃描| PE
-    MH -->|掃描| SG
-    MH -->|掃描| HS
-    MH -->|掃描| IE2
-    MH -->|掃描| AU
-    MH -->|掃描| AL
-    MH -->|掃描| DA
-    MH -->|掃描| SDA2
-    MH -->|掃描| PV2
-    MH -->|掃描| CB3
-    MH -->|超過 2 個週期未執行| ALERT
-    ALERT -->|通知修復| T2["Travis"]
-    style MH fill:#FF6B6B,color:#fff
-    style ALERT fill:#E74C3C,color:#fff
-    style T2 fill:#7B68EE,color:#fff
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- DATAFLOW -->
-<div id="panel-dataflow" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>資料流圖</h1>
-    <p>資料從哪裡來、存到哪裡去、誰在讀它</p>
-  </div>
-
-  <div class="diagram-card">
-    <div class="diagram-header">
-      <div class="diagram-num">6</div>
-      <div>
-        <h3>完整資料流向圖</h3>
-        <p>從任務輸入，經過智能拆分、模型路由、排程執行、三層驗收，到結果合併與通知。</p>
-      </div>
-    </div>
-    <div class="diagram-body">
-      <div class="mermaid">
-flowchart LR
-    subgraph INPUT["輸入來源"]
-        WI["William\nTelegram 指令"]
-        NO["Notion\n任務自動掃描"]
-        LOG["系統 Logs\n/clawd/logs/"]
-        EXT["外部信號\nGitHub・郵件"]
-    end
-    subgraph PROCESS["處理層"]
-        T3["Travis\n決策中樞"]
-        TS["Task Splitter\n分析複雜度"]
-        MR2["Model Router\n選模型"]
-        PE3["Pipeline Engine\n任務調度派發"]
-        AG2["Acceptance Gate\n驗收"]
-        PV3["Prompt Validator\n預檢"]
-    end
-    subgraph STORAGE["資料儲存"]
-        BT["board_tasks\nSupabase"]
-        TEL2["task_execution_log\nobservability"]
-        TG2["task_groups/\n任務群狀態"]
-        MEM["記憶系統\nqmd + markdown"]
-        REP["reports 表\nSupabase"]
-    end
-    subgraph OUTPUT["輸出管道"]
-        TGO["Telegram\n通知・告警・報告"]
-        HUB["WilliamSAGI\narchitecture 頁面"]
-        FILE["本地檔案\n~/clawd/logs/"]
-    end
-    WI --> T3
-    NO --> T3
-    LOG --> T3
-    EXT --> T3
-    T3 --> PV3
-    PV3 --> TS
-    TS --> MR2
-    MR2 --> PE3
-    PE3 --> AG2
-    AG2 -->|結果| BT
-    PE3 -->|執行記錄| TEL2
-    PE3 -->|任務群| TG2
-    T3 -->|摘要| MEM
-    PE3 -->|報告| REP
-    REP --> HUB
-    T3 --> TGO
-    PE3 --> FILE
-    style T3 fill:#7B68EE,color:#fff
-    style TS fill:#20B2AA,color:#fff
-    style MR2 fill:#7B68EE,color:#fff
-    style AG2 fill:#F39C12,color:#fff
-    style BT fill:#F39C12,color:#fff
-    style TGO fill:#4A90D9,color:#fff
-    style HUB fill:#2ECC71,color:#fff
-      </div>
-    </div>
-  </div>
-
-  <div class="data-flow-grid" style="margin-top:16px">
-    <div class="data-node">
-      <div class="icon"><i data-lucide="database" class="icon-xl"></i></div>
-      <h4>board_tasks</h4>
-      <p>所有任務的主要資料庫。記錄狀態、AC、dispatch_prompt、結果。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="activity" class="icon-xl"></i></div>
-      <h4>task_execution_log</h4>
-      <p>每個子任務的模型/token/耗時/重試/驗收結果。V5 全量 observability 核心。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="heart-pulse" class="icon-xl"></i></div>
-      <h4>model_health</h4>
-      <p>Circuit Breaker 追蹤的模型健康狀態。連續失敗/rate limit 時自動標記 unhealthy。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="bar-chart-2" class="icon-xl"></i></div>
-      <h4>failure_events</h4>
-      <p>記錄所有失敗任務的錯誤訊息和歸因分類（timeout/prompt_vague/env_missing）</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="clipboard-list" class="icon-xl"></i></div>
-      <h4>pattern_rules</h4>
-      <p>從失敗模式學習出的規則。自動注入到 dispatch_prompt 預防同類錯誤再發生。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="folder" class="icon-xl"></i></div>
-      <h4>task_groups/</h4>
-      <p>任務群狀態。Task Splitter 拆分的子任務群，追蹤整體完成進度。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="brain" class="icon-xl"></i></div>
-      <h4>agent-fingerprints</h4>
-      <p>每個 Agent 的能力畫像：擅長類別/平均耗時/失敗率。動態派發策略的基礎。</p>
-    </div>
-    <div class="data-node">
-      <div class="icon"><i data-lucide="file-text" class="icon-xl"></i></div>
-      <h4>reports</h4>
-      <p>所有產出報告的 Supabase 表。William Hub 直接查看。</p>
-    </div>
-  </div>
-</div>
-
-<!-- SCRIPTS -->
+<!-- SCRIPTS PANEL -->
 <div id="panel-scripts" class="panel">
-  <div class="hero" style="padding-bottom:16px">
-    <h1>V5 腳本清單</h1>
-    <p>8 個核心模組，大部分零 API 消耗（rule-based），讓 pipeline 既智能又省錢</p>
-  </div>
-
-  <div class="diagram-card">
-    <div class="diagram-header">
-      <div class="diagram-num">7</div>
-      <div>
-        <h3>所有 V5 腳本</h3>
-        <p>從統一入口到各個處理模組，每個腳本的功能與資源消耗一覽</p>
-      </div>
-    </div>
-    <div class="diagram-body" style="padding:0">
-      <table class="script-table">
-        <thead>
-          <tr>
-            <th>腳本</th>
-            <th>功能</th>
-            <th>消耗</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>smart_pipeline.sh</td>
-            <td>統一入口，串接所有模組</td>
-            <td><span class="cost-badge cost-free">零</span></td>
-          </tr>
-          <tr>
-            <td>model_router.py</td>
-            <td>模型路由 + 分叉升級鏈</td>
-            <td><span class="cost-badge cost-free">零 (rule-based)</span></td>
-          </tr>
-          <tr>
-            <td>task_splitter.py</td>
-            <td>複雜度分析 + 拆分子任務</td>
-            <td><span class="cost-badge cost-free">零 (rule-based)</span></td>
-          </tr>
-          <tr>
-            <td>task_scheduler.py</td>
-            <td>Event-driven 排程（依賴 + rate limit）</td>
-            <td><span class="cost-badge cost-free">零</span></td>
-          </tr>
-          <tr>
-            <td>acceptance_gate.py</td>
-            <td>三層驗收（語法/功能/品質）</td>
-            <td><span class="cost-badge cost-free">本地模型優先</span></td>
-          </tr>
-          <tr>
-            <td>result_merger.py</td>
-            <td>結果合併 + 品質檢查</td>
-            <td><span class="cost-badge cost-free">零</span></td>
-          </tr>
-          <tr>
-            <td>prompt_validator.py</td>
-            <td>Prompt 預檢（攔截爛 prompt）</td>
-            <td><span class="cost-badge cost-free">零 (rule-based)</span></td>
-          </tr>
-          <tr>
-            <td>session_death_analyzer.py</td>
-            <td>Session 死因分析（每 30 分鐘）</td>
-            <td><span class="cost-badge cost-free">零</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <h3 class="font-bold mb-4">現有腳本 → 新流程映射</h3>
+  <table>
+    <thead>
+      <tr><th>現有腳本</th><th>歸屬</th><th>功能</th><th>狀態</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>save_idea_to_notion.py</td><td><span class="layer-badge badge-purple">L1</span></td><td>討論存入 Notion</td><td class="text-green-400">✅ 現有</td></tr>
+      <tr><td>create_task.sh</td><td><span class="layer-badge badge-teal">L2</span></td><td>建立任務卡</td><td class="text-green-400">✅ 現有</td></tr>
+      <tr><td>auto_dispatch.sh</td><td><span class="layer-badge badge-blue">L3</span></td><td>智能派發</td><td class="text-yellow-400">⚡ 需整合</td></tr>
+      <tr><td>heartbeat_*.sh</td><td><span class="layer-badge badge-green">L4</span></td><td>監控與修復</td><td class="text-green-400">✅ 現有</td></tr>
+      <tr><td>dispatch_prompt_evolution.py</td><td><span class="layer-badge badge-green">L4</span></td><td>Prompt 優化</td><td class="text-yellow-400">⚡ 需自動化</td></tr>
+      <tr style="background: #7B68EE22;"><td class="font-bold">task_stack_manager.py</td><td><span class="layer-badge badge-purple">NEW</span></td><td>堆疊統一管理</td><td class="text-orange-400">⏳ 待開發</td></tr>
+      <tr style="background: #20B2AA22;"><td class="font-bold">task_decomposer.py</td><td><span class="layer-badge badge-teal">NEW</span></td><td>智能任務分解</td><td class="text-orange-400">⏳ 待開發</td></tr>
+    </tbody>
+  </table>
 </div>
 
-</div><!-- end content -->
-
-<footer>
-  V5 架構文件 · 2026-03-16 · 由 <a href="#">Travis + Opus 4.6</a> 設計 · Smart Task Pipeline
-</footer>
+<!-- FLOW PANEL -->
+<div id="panel-flow" class="panel">
+  <h3 class="font-bold mb-4">完整決策流程圖</h3>
+  <div class="mermaid">
+flowchart TD
+    A[William 任何輸入] --> B{來源判斷}
+    B -->|對話| C[統一入口]
+    B -->|Cron| C
+    B -->|Ideas| C
+    C --> D[任務堆疊]
+    D --> E[L2: 任務形成]
+    E --> F{複雜度分析}
+    F -->|簡單| G[直接派發]
+    F -->|複雜| H[智能分解]
+    H --> I[拆分子任務]
+    I --> J[模型選擇]
+    J --> K[工具調度]
+    K --> L[L3: 執行調度]
+    L --> M{執行模式}
+    M -->|串行| N[依序執行]
+    M -->|並行| O[同時執行]
+    N --> P[結果彙整]
+    O --> P
+    P --> Q[L4: 反饋優化]
+    Q --> R{成功?}
+    R -->|是| S[存入經驗]
+    R -->|否| T[分析原因]
+    T --> U{可重試?}
+    U -->|是| G
+    U -->|否| V[標記失敗]
+    style A fill:#7B68EE22,stroke:#7B68EE
+    style C fill:#7B68EE22,stroke:#7B68EE
+    style E fill:#20B2AA22,stroke:#20B2AA
+    style L fill:#3B82F622,stroke:#3B82F6
+    style Q fill:#10B98122,stroke:#10B981
+  </div>
+</div>
+</div>
 
 <script>
-mermaid.initialize({startOnLoad: false, theme: 'dark', flowchart: {curve: 'basis'}});
-window.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    var active = document.querySelector('.panel.active');
-    if (active) {
-      var diagrams = active.querySelectorAll('.mermaid');
-      diagrams.forEach(function(el) {
-        mermaid.run({nodes: [el]});
-        el.setAttribute('data-rendered', '1');
-      });
-    }
-  }, 100);
-});
-
-function showPanel(id) {
+function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  var panel = document.getElementById('panel-' + id);
-  panel.classList.add('active');
-  event.target.closest('.tab').classList.add('active');
-  var diagrams = panel.querySelectorAll('.mermaid');
-  if (diagrams.length > 0) {
-    diagrams.forEach(function(el) {
-      if (!el.getAttribute('data-rendered')) {
-        mermaid.run({nodes: [el]});
-        el.setAttribute('data-rendered', '1');
-      }
-    });
-  }
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.closest('.tab')?.classList.add('active');
 }
+lucide.createIcons();
+mermaid.initialize({ startOnLoad: true, theme: 'dark' });
 </script>
-<script>lucide.createIcons();</script>
+
 </body>
 </html>
