@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travis V4.5 工作流進化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --purple: #7B68EE;
+            --teal: #20B2AA;
+            --orange: #FF6B35;
+            --blue: #3B82F6;
+            --green: #10B981;
+            --red: #EF4444;
+            --yellow: #F59E0B;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg-dark);
+            color: #e2e8f0;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--purple), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+        }
+        .layer {
+            position: relative;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+        .layer-1 { background: linear-gradient(135deg, #7B68EE22, #7B68EE11); border-left: 4px solid var(--purple); }
+        .layer-2 { background: linear-gradient(135deg, #20B2AA22, #20B2AA11); border-left: 4px solid var(--teal); }
+        .layer-3 { background: linear-gradient(135deg, #3B82F622, #3B82F611); border-left: 4px solid var(--blue); }
+        .layer-4 { background: linear-gradient(135deg, #10B98122, #10B98111); border-left: 4px solid var(--green); }
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 16px solid #475569;
+            margin: 0.5rem auto;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        .comparison-table th {
+            background: #1e293b;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .badge-purple { background: #7B68EE33; color: var(--purple); }
+        .badge-teal { background: #20B2AA33; color: var(--teal); }
+        .badge-blue { background: #3B82F633; color: var(--blue); }
+        .badge-green { background: #10B98133; color: var(--green); }
+        .badge-orange { background: #FF6B3533; color: var(--orange); }
+        .source-item, .script-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .flow-line {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-sm border-b border-slate-700">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold">Travis <span class="text-purple-400">V4.5</span> 工作流進化</h1>
+                <p class="text-slate-400 text-sm">任務來源 → 任務建立 → 派發執行 三大環節整合</p>
+            </div>
+            <div class="text-right">
+                <span class="badge badge-purple">2026-03-22</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- 核心理念 -->
+        <section class="mb-12">
+            <div class="card text-center py-8">
+                <h2 class="text-3xl font-bold mb-4">三層分離 + 連續推進</h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    討論一件事不需要當下就執行，但討論的過程會被自動記住、分解、最後才執行。<br>
+                    <span class="text-teal-400">這是「智能任務分解器」的核心概念。</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- V4 vs V4.5 對比 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">🔄</span> V4 vs V4.5 流程對比
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- V4 流程 -->
+                <div class="card">
+                    <h3 class="font-bold text-lg mb-4 text-slate-400">V4 現有流程</h3>
+                    <pre class="text-xs text-slate-400 whitespace-pre-wrap">
+William 討論
+    │
+    ├─→ 直接執行（小任務）
+    │
+    └─→ 討論筆記
+              │
+              └─→ 手動 create_task.sh
+                         │
+                         └─→ 派發選擇（難）
+                                    │
+                                    ├─→ auto_dispatch
+                                    ├─→ sessions_spawn
+                                    └─→ 忘記→擱置
+                    </pre>
+                </div>
+                <!-- V4.5 流程 -->
+                <div class="card border-teal-500/30">
+                    <h3 class="font-bold text-lg mb-4 text-teal-400">V4.5 進化流程</h3>
+                    <pre class="text-xs text-slate-300 whitespace-pre-wrap">
+William 任何輸入
+    │
+    └─→ 統一入口 → 任務堆疊
+                      │
+                      ↓ 自動萃取
+              任務形成層（智能分解）
+                      │
+                      ↓ William確認
+              執行調度層（派誰+模型）
+                      │
+                      ↓ 完成
+              反饋優化層（經驗記憶）
+                    </pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 四大環節 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">🔗</span> 任務流動的四層架構
+            </h2>
+            
+            <!-- L1 討論層 -->
+            <div class="layer layer-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg text-purple-400">L1 討論層 (Think)</h3>
+                    <span class="badge badge-purple">輸入統一</span>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">William 任何討論、點子、指令 → 自動存入任務堆疊</p>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="source-item">
+                        <span class="text-xl">💬</span>
+                        <div>
+                            <div class="font-medium">對話輸入</div>
+                            <div class="text-slate-500 text-xs">隨時對話</div>
+                        </div>
+                    </div>
+                    <div class="source-item">
+                        <span class="text-xl">⏰</span>
+                        <div>
+                            <div class="font-medium">Cron 排程</div>
+                            <div class="text-slate-500 text-xs">每日定時</div>
+                        </div>
+                    </div>
+                    <div class="source-item">
+                        <span class="text-xl">💡</span>
+                        <div>
+                            <div class="font-medium">Ideas/參考</div>
+                            <div class="text-slate-500 text-xs">Notion 萃取</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"></div>
+
+            <!-- L2 任務形成層 -->
+            <div class="layer layer-2">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg text-teal-400">L2 任務形成層 (Form)</h3>
+                    <span class="badge badge-teal">智能分解</span>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">自動分析複雜度 → 拆成子任務 → 選擇最佳模型與工具</p>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="script-item">
+                        <span class="text-xl">📋</span>
+                        <div>
+                            <div class="font-medium">複雜度分析</div>
+                            <div class="text-slate-500 text-xs">判斷拆不拆</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">🤖</span>
+                        <div>
+                            <div class="font-medium">模型選擇</div>
+                            <div class="text-slate-500 text-xs">Claude/GLM/本地</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">⚡</span>
+                        <div>
+                            <div class="font-medium">工具調度</div>
+                            <div class="text-slate-500 text-xs">CLI/網路/本地</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"></div>
+
+            <!-- L3 執行調度層 -->
+            <div class="layer layer-3">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg text-blue-400">L3 執行調度層 (Execute)</h3>
+                    <span class="badge badge-blue">統一派發</span>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">自動派給最適 Agent → 並行/串行 → 結果彙整</p>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="script-item">
+                        <span class="text-xl">🎯</span>
+                        <div>
+                            <div class="font-medium">派發策略</div>
+                            <div class="text-slate-500 text-xs">Blake/Rex/Oscar</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">🔀</span>
+                        <div>
+                            <div class="font-medium">並行執行</div>
+                            <div class="text-slate-500 text-xs">多工處理</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">📦</span>
+                        <div>
+                            <div class="font-medium">結果彙整</div>
+                            <div class="text-slate-500 text-xs">統一輸出</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"></div>
+
+            <!-- L4 反饋優化層 -->
+            <div class="layer layer-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg text-green-400">L4 反饋優化層 (Feedback)</h3>
+                    <span class="badge badge-green">自我進化</span>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">失敗重試 → 經驗記憶 → dispatch_prompt 優化</p>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="script-item">
+                        <span class="text-xl">🔄</span>
+                        <div>
+                            <div class="font-medium">失敗重試</div>
+                            <div class="text-slate-500 text-xs">自動分析重跑</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">🧠</span>
+                        <div>
+                            <div class="font-medium">經驗記憶</div>
+                            <div class="text-slate-500 text-xs">failure-memory</div>
+                        </div>
+                    </div>
+                    <div class="script-item">
+                        <span class="text-xl">📈</span>
+                        <div>
+                            <div class="font-medium">Prompt 優化</div>
+                            <div class="text-slate-500 text-xs">自動化</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 現有腳本對照 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">📜</span> 現有腳本 → 新流程映射
+            </h2>
+            <div class="card overflow-x-auto">
+                <table class="comparison-table text-sm">
+                    <thead>
+                        <tr>
+                            <th>現有腳本</th>
+                            <th>歸屬</th>
+                            <th>功能</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>save_idea_to_notion.py</td>
+                            <td><span class="badge badge-purple">L1</span></td>
+                            <td>討論存入 Notion</td>
+                            <td class="text-green-400">✅ 現有</td>
+                        </tr>
+                        <tr>
+                            <td>create_task.sh</td>
+                            <td><span class="badge badge-teal">L2</span></td>
+                            <td>建立任務卡</td>
+                            <td class="text-green-400">✅ 現有</td>
+                        </tr>
+                        <tr>
+                            <td>auto_dispatch.sh</td>
+                            <td><span class="badge badge-blue">L3</span></td>
+                            <td>智能派發</td>
+                            <td class="text-yellow-400">⚡ 需整合</td>
+                        </tr>
+                        <tr>
+                            <td>heartbeat_*.sh</td>
+                            <td><span class="badge badge-green">L4</span></td>
+                            <td>監控與修復</td>
+                            <td class="text-green-400">✅ 現有</td>
+                        </tr>
+                        <tr>
+                            <td>dispatch_prompt_evolution.py</td>
+                            <td><span class="badge badge-green">L4</span></td>
+                            <td>Prompt 優化</td>
+                            <td class="text-yellow-400">⚡ 需自動化</td>
+                        </tr>
+                        <tr class="bg-purple-500/10">
+                            <td class="font-bold">task_stack_manager.py</td>
+                            <td><span class="badge badge-purple">NEW</span></td>
+                            <td>堆疊統一管理</td>
+                            <td class="text-orange-400">⏳ 待開發</td>
+                        </tr>
+                        <tr class="bg-teal-500/10">
+                            <td class="font-bold">task_decomposer.py</td>
+                            <td><span class="badge badge-teal">NEW</span></td>
+                            <td>智能任務分解</td>
+                            <td class="text-orange-400">⏳ 待開發</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 改善亮點 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">✨</span> V4.5 核心改善
+            </h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="card">
+                    <h3 class="font-bold text-teal-400 mb-2">統一入口</h3>
+                    <p class="text-slate-400 text-sm">不管 William 從哪裡輸入，最後都會進入統一的「任務堆疊」，不會忘記。</p>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-purple-400 mb-2">智能分解</h3>
+                    <p class="text-slate-400 text-sm">複雜任務自動拆解，選擇最適合的模型與工具組合執行。</p>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-blue-400 mb-2">並行處理</h3>
+                    <p class="text-slate-400 text-sm">多個獨立子任務同時執行，最後自動彙整結果（gstack 概念）。</p>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-green-400 mb-2">自我進化</h3>
+                    <p class="text-slate-400 text-sm">失敗經驗自動記住，dispatch_prompt 持續優化。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mermaid 流程圖 -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">📊</span> 完整流程圖
+            </h2>
+            <div class="card">
+                <div class="mermaid">
+flowchart TD
+                    A[William 任何輸入] --> B{來源判斷}
+                    B -->|對話| C[統一入口]
+                    B -->|Cron| C
+                    B -->|Ideas| C
+                    C --> D[任務堆疊]
+                    D --> E[L2: 任務形成]
+                    E --> F{複雜度分析}
+                    F -->|簡單| G[直接派發]
+                    F -->|複雜| H[智能分解]
+                    H --> I[拆分子任務]
+                    I --> J[模型選擇]
+                    J --> K[工具調度]
+                    K --> L[L3: 執行調度]
+                    L --> M{執行模式}
+                    M -->|串行| N[依序執行]
+                    M -->|並行| O[同時執行]
+                    N --> P[結果彙整]
+                    O --> P
+                    P --> Q[L4: 反饋優化]
+                    Q --> R{成功?}
+                    R -->|是| S[存入經驗]
+                    R -->|否| T[分析原因]
+                    T --> U{可重試?}
+                    U -->|是| G
+                    U -->|否| V[標記失敗]
+                    
+                    style A fill:#7B68EE22,stroke:#7B68EE
+                    style C fill:#7B68EE22,stroke:#7B68EE
+                    style E fill:#20B2AA22,stroke:#20B2AA
+                    style L fill:#3B82F622,stroke:#3B82F6
+                    style Q fill:#10B98122,stroke:#10B981
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-700 py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>由 Travis + Blake + Rex 共同設計 | V4.5 進化版</p>
+            <p class="mt-2">Last Updated: 2026-03-22</p>
+        </div>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

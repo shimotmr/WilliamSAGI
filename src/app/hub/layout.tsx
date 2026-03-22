@@ -62,7 +62,9 @@ const navGroups = [
       { href: '/hub/scripts-audit', icon: Shield, label: '腳本審計' },
       { href: '/hub/system-architecture', icon: GitFork, label: 'V4.1 架構圖' },
       { href: '/hub/v4-2', icon: GitFork, label: 'V4.2 Pipeline' },
+
       { href: '/hub/v4-4', icon: GitFork, label: 'V4.4 Pipeline' },
+      { href: '/hub/v4-5', icon: GitFork, label: 'V4.5 工作流' },
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
       { href: '/hub/chat', icon: MessageSquare, label: '本地 Chat' },
