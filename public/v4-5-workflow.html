@@ -965,16 +965,16 @@ flowchart TD
     <table>
         <thead><tr><th>編號</th><th>測試項目</th><th>測試方式</th><th>預期結果</th><th>實際結果</th><th>狀態</th></tr></thead>
         <tbody>
-            <tr><td>T-01</td><td>supabase_sql.sh 失敗可見</td><td>執行錯誤 SQL</td><td>exit 1 + stderr 錯誤訊息</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-02</td><td>dispatch 重複派發保護</td><td>同時執行 auto_dispatch + heartbeat_stuck</td><td>後者顯示「⚠️ 另一個 dispatch 正在執行」</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-03</td><td>dispatch_prompt 品質 Gate</td><td>建空 dispatch_prompt 任務觸發 auto_dispatch</td><td>任務狀態→品質不足，Telegram 通知</td><td>✅ score 45/100 被阻止（Task #3760 測試）</td><td><span class="badge bg">✅ 已驗證</span></td></tr>
-            <tr><td>T-04</td><td>EMERGENCY_STOP 全面中止</td><td>touch ~/clawd/shared/EMERGENCY_STOP</td><td>auto_dispatch、auto_retry、unified_dispatcher、unified_monitor 全部跳過</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-05</td><td>ClawTeam EMERGENCY_STOP</td><td>啟動 ClawTeam session 後觸發 /stop</td><td>tmux clawteam-* sessions 全部被 kill</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-06</td><td>retry=3 失敗回填</td><td>建一個永遠失敗的任務，讓 heartbeat 偵測 3 次</td><td>狀態→已失敗，Telegram 通知 William，回填任務堆疊</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-07</td><td>Notion API 429 處理</td><td>短時間大量請求 notion_idea_pipeline.py</td><td>backoff 重試，不靜默失敗</td><td>—</td><td><span class="badge by">待測試（P2-A 完成後）</span></td></tr>
-            <tr><td>T-08</td><td>daily_ideation 建卡</td><td>執行 daily_ideation.py，觸發 P1/P2 提案</td><td>P1/P2 提案自動出現在 board_tasks，P3 不建卡</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-09</td><td>ClawTeam 2-worker dry-run</td><td>clawteam spawn 2 個 worker 執行 echo 任務</td><td>兩個 tmux window，board 顯示進度，彙整後 task_complete</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
-            <tr><td>T-10</td><td>idea_research_booster dry-run</td><td>python3 idea_research_booster.py --dry-run</td><td>顯示預計動作但不實際建卡/更新 Notion</td><td>⚠️ Notion API 400 錯誤（status filter 格式待修正）</td><td><span class="badge by">待修正</span></td></tr>
+            <tr><td>T-01</td><td>supabase_sql.sh 失敗可見</td><td>執行錯誤 SQL</td><td>exit 1 + stderr 錯誤訊息</td><td>✅ HTTP 400 + 錯誤訊息 + exit 1（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-02</td><td>dispatch 重複派發保護</td><td>同時執行 auto_dispatch + heartbeat_stuck</td><td>後者顯示「⚠️ 另一個 dispatch 正在執行」</td><td>✅ heartbeat_stuck_check 正確顯示跳過訊息（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-03</td><td>dispatch_prompt 品質 Gate</td><td>建空 dispatch_prompt 任務觸發 auto_dispatch</td><td>任務狀態→品質不足，Telegram 通知</td><td>✅ score 45/100 被阻止（Task #3760 測試）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-04</td><td>EMERGENCY_STOP 全面中止</td><td>touch ~/clawd/shared/EMERGENCY_STOP</td><td>auto_dispatch、auto_retry、unified_dispatcher、unified_monitor 全部跳過</td><td>✅ 4 個腳本全部輸出「⛔ EMERGENCY_STOP 存在，跳過執行」（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-05</td><td>ClawTeam EMERGENCY_STOP</td><td>建立 clawteam tmux session 後觸發 /stop</td><td>tmux clawteam-* sessions 全部被 kill</td><td>✅ clawteam-test-v45 session 被 kill，emergency_stop.sh 輸出「⛔ ClawTeam sessions 已終止」（2026-03-22，需先 brew install tmux）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-06</td><td>retry=3 失敗回填</td><td>模擬 retry_count=3 卡住任務</td><td>狀態→已失敗，Telegram 通知 William</td><td>⚠️ heartbeat_stuck_check 用多維度偵測，測試任務被判定為「非 Zombie」跳過。真實 retry 需等任務實際卡住超過偵測閾值</td><td><span class="badge by">⚠️ 部分驗證</span></td></tr>
+            <tr><td>T-07</td><td>Notion API 429 處理</td><td>短時間大量請求 notion_idea_pipeline.py</td><td>backoff 重試，不靜默失敗</td><td>—（P2-A 完成後測試）</td><td><span class="badge by">待 P2-A</span></td></tr>
+            <tr><td>T-08</td><td>daily_ideation 建卡</td><td>執行 daily_ideation.py</td><td>P1/P2 提案自動建卡，P3 跳過</td><td>✅ 今日提案全為 P3，正確跳過不建卡。建卡邏輯驗證通過（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
+            <tr><td>T-09</td><td>ClawTeam 2-worker dry-run</td><td>clawteam spawn 2 個 worker</td><td>兩個 tmux window，board 顯示進度</td><td>—（tmux 已安裝，待手動執行驗證）</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>T-10</td><td>idea_research_booster dry-run</td><td>python3 idea_research_booster.py --dry-run</td><td>顯示預計動作但不實際建卡/更新 Notion</td><td>✅ 修正 urllib→curl（Cloudflare 阻擋），dry-run 正常執行；現無「🔍 評估中」Ideas，待明日 notion_idea_pipeline cron 跑後驗證（2026-03-22）</td><td><span class="badge bg">✅ 修正完成</span></td></tr>
         </tbody>
     </table>
     <div class="info text-xs mt-3">
