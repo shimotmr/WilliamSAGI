@@ -610,16 +610,16 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
             <tr>
                 <td><code>L3B-01</code></td>
                 <td><code>clawteam spawn tmux openclaw</code></td>
-                <td>Travis 手動觸發</td>
-                <td>→ 獨立 openclaw CLI 進程（tmux window）<br>→ git worktree 隔離<br>→ 完成後呼叫 <code>L4-01</code></td>
-                <td><span class="badge br">❌ 未安裝（P1-E）</span></td>
+                <td>auto_dispatch.sh 判斷 route=L3B 時寫入 queue，Travis [2b] 呼叫</td>
+                <td>→ 獨立 openclaw CLI 進程（tmux window clawteam-task-{id}）<br>→ git worktree 隔離（~/clawd repo）<br>→ 完成後呼叫 <code>L4-01</code></td>
+                <td><span class="badge bg">✅ 已啟用（2026-03-23）</span></td>
             </tr>
             <tr>
                 <td><code>L3B-02</code></td>
                 <td><code>~/clawd/clawteam-templates/travis-team.toml</code></td>
                 <td>ClawTeam spawn 時讀取</td>
-                <td>→ 注入 system_prompt 給所有 workers</td>
-                <td><span class="badge br">❌ 未建立（P1-F）</span></td>
+                <td>→ 注入 system_prompt（禁直接 SQL/必須 task_complete.sh/禁 rm -rf）</td>
+                <td><span class="badge bg">✅ 已建立</span></td>
             </tr>
         </tbody>
     </table>
@@ -714,9 +714,8 @@ flowchart LR
     L402 -->|retry=3| S01
 
     style S06a fill:#EF444422,stroke:#EF4444
-    style L3B fill:#EF444422,stroke:#EF4444
     style S02 fill:#F59E0B22,stroke:#F59E0B
-    style S04 fill:#EF444422,stroke:#EF4444
+    style S04 fill:#F59E0B22,stroke:#F59E0B
     </div>
 </div>
 
