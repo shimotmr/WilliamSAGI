@@ -498,15 +498,36 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
             <tr>
                 <td><code>S-06</code></td>
                 <td><code>notion_idea_pipeline.py</code></td>
-                <td>crontab 04:00 每日（✅ 今日補上）</td>
-                <td>→ Notion API（讀 Ideas DB）<br>→ <code>U-01</code> supabase_sql（查重複）<br>→ <code>S-01</code> create_task.sh（≥15 分建卡）<br>→ <code>U-02</code> notify_telegram</td>
+                <td>crontab 04:00 每日（✅ 今日補上）<br>也被 <code>S-02</code> 觸發（待串）</td>
+                <td>
+                    <strong>靜態評分流程：</strong><br>
+                    1️⃣ Notion API → 讀 status=💭想法 的 Ideas<br>
+                    2️⃣ 靜態評分（可行性 × 影響力，各 1-5，滿分 25）<br>
+                    3️⃣ ≥15 分 → <code>U-01</code> supabase_sql 查重複 → <code>S-01</code> create_task.sh 建卡<br>
+                    &nbsp;&nbsp;&nbsp;10-14 分 → Notion status → 🔍評估中（交給 <code>S-06a</code> 研究）<br>
+                    &nbsp;&nbsp;&nbsp;&lt;10 分 → 跳過<br>
+                    4️⃣ <code>U-02</code> notify_telegram 通知結果<br>
+                    <br>
+                    <span style="color:#F59E0B">⚠️ 待串：<code>S-02</code> 存完 Notion 後應立刻呼叫本腳本評分新增的條目</span>
+                </td>
                 <td><span class="badge bg">✅ 排程已補</span></td>
             </tr>
             <tr>
                 <td><code>S-06a</code></td>
-                <td><code>idea_research_booster.py</code></td>
-                <td>crontab 04:05 每日（待開發）</td>
-                <td>→ Notion API（讀 10-14 分 Ideas）<br>→ sessions_spawn Rex（做研究）<br>→ <code>S-06</code> notion_idea_pipeline.py（重新評分）</td>
+                <td><code>idea_research_booster.py</code>（待開發）</td>
+                <td>crontab 04:05 每日（待補）</td>
+                <td>
+                    <strong>完整串接流程：</strong><br>
+                    1️⃣ Notion API → 讀 status=🔍評估中（10-14分）的 Ideas，每次取最舊 5 條<br>
+                    2️⃣ 對每個 Idea → <code>openclaw sessions spawn</code>（Rex，grok-4.20）<br>
+                    &nbsp;&nbsp;&nbsp;Rex 執行：web_search × 2-3 輪 + web_fetch → 產出 JSON<br>
+                    &nbsp;&nbsp;&nbsp;<code>{"feasibility":1-5, "impact":1-5, "evidence":[], "tools":[], "recommendation":""}</code><br>
+                    3️⃣ 讀取 Rex 產出 → 重新計算分數（feasibility × impact）<br>
+                    &nbsp;&nbsp;&nbsp;新分數 ≥15 → <code>S-01</code> create_task.sh 自動建卡<br>
+                    &nbsp;&nbsp;&nbsp;新分數 10-14 → 更新 Notion 頁面加研究摘要，保留評估中<br>
+                    &nbsp;&nbsp;&nbsp;新分數 &lt;10 → Notion status → ❌ 不可行，標記時間戳（30天不重研）<br>
+                    4️⃣ <code>U-02</code> notify_telegram → 告知 William 本日研究結果摘要
+                </td>
                 <td><span class="badge br">❌ 未開發（P1-D）</span></td>
             </tr>
             <tr>
@@ -735,7 +756,22 @@ flowchart LR
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#F59E0B08"><td><span class="badge by">P1-C</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低（加 except + crontab 修正）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#F59E0B08"><td><span class="badge by">P1-D</span></td><td>idea_research_booster.py（新腳本）</td><td>低分 Ideas 被研究升分後建卡</td><td>中（新腳本 + sessions_spawn Rex）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08">
+                <td><span class="badge by">P1-D</span></td>
+                <td><code>idea_research_booster.py</code>（新腳本）<br><span style="color:var(--muted);font-size:.75rem">腳本編號：S-06a</span></td>
+                <td>低分 Ideas（10-14分）被 Rex 研究後升分，達標自動建卡</td>
+                <td>
+                    中（新腳本）<br>
+                    <strong>實作清單：</strong><br>
+                    ① 讀 Notion status=🔍評估中，取最舊 5 條<br>
+                    ② 每條 spawn Rex session 做 2-3 輪搜索<br>
+                    ③ Rex 產出 JSON（feasibility/impact/evidence/tools）<br>
+                    ④ 重算分數 → 建卡 / 更新摘要 / 標不可行<br>
+                    ⑤ 補 crontab 04:05 每日<br>
+                    ⑥ 更新 S-06 頁面 Notion status 標記
+                </td>
+                <td><span class="badge by">待啟動</span></td>
+            </tr>
             <!-- P1 ClawTeam -->
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-E</span></td><td>安裝 ClawTeam-OpenClaw（win4r fork）</td><td>L3B 路徑啟用</td><td>低（git clone + pip install）</td><td><span class="badge by">待啟動</span></td></tr>
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-F</span></td><td>建立 TOML 模板（travis-team.toml）</td><td>Workers 遵守系統規則</td><td>低（建文件）</td><td><span class="badge by">待啟動</span></td></tr>
