@@ -56,11 +56,11 @@
 <body>
 <nav>
     <div class="font-bold" style="color:var(--purple)">Travis V4.5</div>
-    <span class="badge bp">實作規劃書 v3</span>
+    <span class="badge bp">實作規劃書 v4</span>
     <span class="badge bo">任務來源完整版</span>
-    <span class="badge bg">本地模型已整合</span>
-    <span class="badge br">E1-E5 設計錯誤修正</span>
-    <span style="color:var(--muted);margin-left:auto;font-size:.75rem">V4.5 完整版 · 2026-03-23 · [2b] Spawn 步驟 + 設計錯誤紀錄</span>
+    <span class="badge bg">全自動 Spawn 打通</span>
+    <span class="badge br">E1-E6 + F1 決策錯誤修正</span>
+    <span style="color:var(--muted);margin-left:auto;font-size:.75rem">V4.5 最終版 · 2026-03-23 · openclaw cron isolated 全自動</span>
 </nav>
 
 <main class="max-w-4xl mx-auto px-5 py-7 space-y-5">
@@ -86,7 +86,8 @@
         <a href="#l4">§5 L4 反饋優化閉環</a>
         <a href="#scripts">§6 腳本清單（編號 + 層級 + 相依）</a>
         <a href="#design-bugs">⚠️ V4.5 設計錯誤紀錄（E1-E5）</a>
-        <a href="#heartbeat-v45">🔄 Heartbeat V4.5 流程（含 [2b]）</a>
+        <a href="#heartbeat-v45">🔄 Heartbeat V4.5 流程（全自動）</a>
+        <a href="#decision-errors">🧠 決策錯誤紀錄（F1）</a>
         <a href="#gaps">§7 斷點清單（需補齊）</a>
         <a href="#todo">§8 實作待辦（依優先序）</a>
         <a href="#flow">§9 完整流程圖</a>
@@ -763,12 +764,78 @@ flowchart LR
             </tr>
         </tbody>
     </table>
-    <div class="info text-xs mt-3">
-        <strong>根本原因（L3 層設計）：</strong><br>
-        <code>sessions_spawn</code> 是 OpenClaw tool，<strong>無法在 shell script 內呼叫</strong>。<br>
-        原始設計把 spawn 邏輯放進 <code>auto_dispatch.sh</code>（shell），這是根本性的錯誤假設。<br>
-        正確架構：shell 只負責「決定派什麼」（寫 queue），<strong>Travis main session</strong> 在 heartbeat 回應中讀 queue 並呼叫 sessions_spawn tool。
+    <div class="ok-box text-xs mt-3">
+        <strong>✅ E3 最終修正（2026-03-23 深夜）：</strong><br>
+        <strong>原本的「根本原因說明」本身也是錯的</strong>。<br>
+        真正的正確架構是：<code>openclaw cron add --session isolated --message &lt;prompt&gt;</code>，<br>
+        讓 <strong>Gateway 直接 spawn isolated agentTurn</strong>，完全不需要 Travis main session 介入。<br>
+        <br>
+        E3 的第一次「修正」（加 [2b] Travis 手動讀 queue）是二次錯誤——以為 shell 不能 spawn，但其實 OpenClaw cron 本身支援 isolated session。詳見 <a href="#decision-errors" style="color:var(--teal)">決策錯誤紀錄 F1</a>。
     </div>
+</div>
+
+<!-- 決策錯誤紀錄 F1 -->
+<div class="card section-anchor" id="decision-errors">
+    <h2>🧠 決策錯誤紀錄（F1）：誤判 spawn 架構限制</h2>
+    <p style="color:var(--muted)" class="text-xs mb-3">這不是 bug，是 <strong style="color:var(--yellow)">錯誤的技術假設</strong> 導致的連鎖錯誤決策。記錄下來，避免未來重蹈。</p>
+
+    <div class="danger text-xs mb-4">
+        <strong>🔴 F1 核心錯誤假設（2026-03-23 深夜）</strong><br>
+        Travis 持續聲稱：「<code>sessions_spawn</code> 是 OpenClaw tool，shell script 無法呼叫，dispatch 必須依賴 Travis main session 手動執行。」<br>
+        <br>
+        <strong>這是錯的。</strong> OpenClaw 官方有 <code>openclaw cron add --session isolated --message &lt;prompt&gt;</code>，讓 Gateway 直接 spawn isolated agentTurn，完全不需要任何 main session 介入。這個機制早就存在於官方文件中，Travis 沒有去查。
+    </div>
+
+    <table>
+        <thead><tr><th>時間</th><th>錯誤決策</th><th>導致後果</th><th>觸發原因</th></tr></thead>
+        <tbody>
+            <tr style="background:#EF444408">
+                <td>E3 初始修正</td>
+                <td>認為「E3 根本原因 = sessions_spawn 是 tool，shell 不能呼叫」→ 加入 [2b] Travis 手動讀 queue 步驟</td>
+                <td>系統仍然不能自動 spawn；只是把手動步驟從「沒人做」改成「等 Travis 做」</td>
+                <td>沒有查官方 cron 文件</td>
+            </tr>
+            <tr style="background:#EF444408">
+                <td>spawn_consumer 設計</td>
+                <td>設計 <code>spawn_queue_consumer.sh</code>：shell cron → 讀 queue → <code>openclaw system event</code> → Travis 收到 → Travis spawn</td>
+                <td>多了 3 個不必要環節；測試通過但邏輯冗餘；加入了 2 個不必要的 crontab 條目</td>
+                <td>仍然相信「shell 不能直接 spawn」</td>
+            </tr>
+            <tr style="background:#F59E0B08">
+                <td>L3B 啟用</td>
+                <td>同樣邏輯下，誤以為 L3B clawteam 路徑需要 Travis 手動判斷才能 spawn</td>
+                <td>L3B 路由設計複雜化，加入不必要的 clawteam_health_check crontab</td>
+                <td>同上</td>
+            </tr>
+            <tr style="background:#10B98108">
+                <td>F1 修正（最終）</td>
+                <td>William 發現別人的 skill 可以自動 spawn → 追查發現 openclaw cron isolated 機制 → 移除所有中間環節</td>
+                <td>✅ 真正全自動：auto_dispatch.sh 直接呼叫 openclaw cron isolated，無中間人</td>
+                <td>對比他人實作，主動追查根本原因</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>為什麼會發生這個錯誤？</h3>
+    <div class="warn text-xs">
+        1. <strong>過度相信假設，不查文件</strong>：「shell 不能 spawn」這個假設從未被驗證，持續被當作事實重複。<br>
+        2. <strong>解決症狀而非根因</strong>：每次 spawn 失敗，都在外面加一層包裝，而不是去查為什麼失敗。<br>
+        3. <strong>缺少對比驗證</strong>：直到 William 指出別人的 skill 在我們身上不能用，才觸發追查。<br>
+        <br>
+        <strong>教訓</strong>：遇到「系統限制」時，<strong>先查官方文件，再接受限制</strong>。不要讓未驗證假設變成架構決策。
+    </div>
+
+    <h3>廢棄物清單</h3>
+    <table>
+        <thead><tr><th>廢棄物</th><th>位置</th><th>原因</th></tr></thead>
+        <tbody>
+            <tr><td><code>spawn_queue_consumer.sh</code></td><td><code>scripts/_inactive/</code></td><td>F1 產物，完全不必要</td></tr>
+            <tr><td>[2b] Travis 讀 Queue → Spawn</td><td>HEARTBEAT.md（已刪除）</td><td>F1 產物，錯誤假設下設計</td></tr>
+            <tr><td>crontab clawteam_health_check</td><td>crontab（已移除）</td><td>F1 連鎖錯誤，不必要</td></tr>
+            <tr><td>crontab spawn_queue_consumer</td><td>crontab（已移除）</td><td>F1 產物，不必要</td></tr>
+            <tr><td><code>/tmp/dispatch_queue.json</code> 機制</td><td>auto_dispatch.sh（已移除）</td><td>queue 模式被 cron isolated 直接取代</td></tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- 審計報告 -->
@@ -831,46 +898,49 @@ flowchart LR
 
 <!-- Heartbeat V4.5 -->
 <div class="card section-anchor" id="heartbeat-v45">
-    <h2>🔄 Heartbeat V4.5 完整流程（2026-03-23）</h2>
-    <p style="color:var(--muted)" class="text-xs mb-3">新增 <strong style="color:var(--green)">[2b] Travis 讀 Queue → Spawn</strong> 步驟，修正 E1-E5 設計錯誤後的完整流程。</p>
+    <h2>🔄 Heartbeat V4.5 最終流程（全自動，2026-03-23）</h2>
+    <p style="color:var(--muted)" class="text-xs mb-3"><strong style="color:var(--green)">✅ 全自動</strong>：<code>auto_dispatch.sh</code> 直接呼叫 <code>openclaw cron add --session isolated</code>，Gateway 直接 spawn isolated agentTurn，<strong>完全不需要 Travis main session 介入</strong>。</p>
 
     <div class="mermaid">
 flowchart TD
-    H0["[0] EMERGENCY_STOP 檢查<br/>~/clawd/shared/EMERGENCY_STOP?"]
-    H1["[1] heartbeat_snapshot.sh<br/>→ /tmp/heartbeat_snapshot.json<br/>✅ E1修正: status='待執行'"]
-    H2["[2] auto_dispatch.sh<br/>green/yellow → 正常 | orange → P0 | red → 停<br/>✅ E2: COALESCE fallback<br/>✅ E4: 排除 assignee=travis<br/>✅ E5: L3B 停用"]
-    H2b["[2b] Travis 讀 Queue → Spawn ⭐<br/>讀 /tmp/dispatch_queue.json<br/>→ UPDATE status='執行中'<br/>→ sessions_spawn(task, model)<br/>✅ E3修正: 新增此步驟"]
-    H3["[3] heartbeat_stuck_check.sh<br/>執行中 >30min 且無 session → 重置"]
-    H4["[4] apply_code_outputs.py<br/>Blake code_outputs → git push"]
-    H5["[5] heartbeat_agent_memory.py<br/>→ /tmp/heartbeat_agent_memory.json"]
-    H6["[6] memory_extractor_v2.py<br/>距上次 >30min 且有新對話才跑"]
-    H7{"[7] AI 異常處理<br/>有 alerts?"}
+    H0["[0] EMERGENCY_STOP 檢查"]
+    H1["[1] heartbeat_snapshot.sh<br/>token_status / pending_tasks<br/>✅ E1: status='待執行'"]
+    H2["[2] auto_dispatch.sh<br/>✅ 決策 + 直接 Spawn<br/>openclaw cron add --session isolated<br/>Gateway 自動執行，無需 Travis"]
+    H2L3A["L3A: openclaw cron isolated<br/>→ Blake/Rex/Griffin 執行<br/>→ task_complete.sh → 已完成"]
+    H2L3B["L3B: clawteam spawn<br/>（高複雜度，需 Travis 確認）"]
+    H3["[3] heartbeat_stuck_check.sh<br/>執行中 >30min 且無活躍 → 重置"]
+    H4["[4] apply_code_outputs.py"]
+    H5["[5] heartbeat_agent_memory.py"]
+    H6["[6] memory_extractor_v2.py"]
+    H7{"[7] AI 異常處理"}
     HK["HEARTBEAT_OK"]
-    HA["Travis 介入分析<br/>~500 tokens"]
+    HA["Travis 介入分析"]
 
     H0 -->|"STOP 不存在"| H1
     H0 -->|"⛔ STOP 存在"| HK
     H1 --> H2
-    H2 -->|"/tmp/dispatch_queue.json 非空"| H2b
-    H2 -->|"空 queue"| H3
-    H2b --> H3
+    H2 -->|"route=L3A（預設）"| H2L3A
+    H2 -->|"route=L3B（_use_clawteam）"| H2L3B
+    H2L3A --> H3
+    H2L3B --> H3
     H3 --> H4 --> H5 --> H6 --> H7
     H7 -->|"無 alerts"| HK
     H7 -->|"有 alerts"| HA
 
-    style H2b fill:#10B98133,stroke:#10B981
+    style H2 fill:#10B98133,stroke:#10B981
+    style H2L3A fill:#10B98133,stroke:#10B981
     style H0 fill:#EF444433,stroke:#EF4444
+    style H2L3B fill:#F59E0B33,stroke:#F59E0B
     </div>
 
-    <h3>步驟對照表</h3>
+    <h3>步驟對照表（最終版）</h3>
     <table>
-        <thead><tr><th>步驟</th><th>功能</th><th>腳本/工具</th><th>V4.5 變更</th></tr></thead>
+        <thead><tr><th>步驟</th><th>功能</th><th>腳本/工具</th><th>說明</th></tr></thead>
         <tbody>
             <tr><td>[0]</td><td>EMERGENCY_STOP 檢查</td><td>內嵌</td><td>—</td></tr>
             <tr><td>[1]</td><td>系統狀態快照</td><td><code>heartbeat_snapshot.sh</code></td><td><span class="badge br">E1</span> 查詢條件改為 <code>待執行</code></td></tr>
-            <tr><td>[2]</td><td>智能派發（寫 Queue）</td><td><code>auto_dispatch.sh</code></td><td><span class="badge br">E2/E4/E5</span> fallback + travis 排除 + L3B 停用</td></tr>
-            <tr style="background:#10B98108"><td><strong>[2b] ⭐</strong></td><td><strong>Travis 讀 Queue → Spawn</strong></td><td><strong>Travis tool call</strong></td><td><span class="badge br">E3</span> <strong>V4.5 新增</strong>：shell 無法 spawn，由 Travis main session 讀 queue 執行</td></tr>
-            <tr><td>[3]</td><td>停擺修復</td><td><code>heartbeat_stuck_check.sh</code></td><td>—（僅查 OpenClaw sessions，不查 ClawTeam tmux）</td></tr>
+            <tr style="background:#10B98108"><td><strong>[2] ⭐</strong></td><td><strong>智能派發 + 直接 Spawn</strong></td><td><strong>auto_dispatch.sh</strong></td><td><strong>全自動</strong>：<code>openclaw cron add --session isolated --at 1m</code>，Gateway 直接執行</td></tr>
+            <tr><td>[3]</td><td>停擺修復</td><td><code>heartbeat_stuck_check.sh</code></td><td>—</td></tr>
             <tr><td>[4]</td><td>程式碼接力</td><td><code>apply_code_outputs.py</code></td><td>—</td></tr>
             <tr><td>[5]</td><td>Agent Memory</td><td><code>heartbeat_agent_memory.py</code></td><td>—</td></tr>
             <tr><td>[6]</td><td>記憶萃取</td><td><code>memory_extractor_v2.py</code></td><td>—</td></tr>
@@ -878,13 +948,17 @@ flowchart TD
         </tbody>
     </table>
 
-    <div class="warn text-xs mt-3">
-        <strong>[2b] 派發限制（AGENTS.md §16）：</strong><br>
-        同時最多 2 個 subagent session。每次 heartbeat [2b] 執行時：<br>
-        1. 計算目前 active sessions 數量<br>
-        2. 剩餘 slot = 2 - active<br>
-        3. 只 spawn 前 N 個任務（N ≤ slot）<br>
-        4. spawn 失敗 → 回滾 status='待執行' + Telegram 通知
+    <div class="ok-box text-xs mt-3">
+        <strong>E2E 測試驗證（2026-03-23 02:53）：</strong><br>
+        任務 #3781 <code>[TEST-v2] V4.5 全自動 Spawn 測試</code> — blake 執行，result = <code>V4.5-AUTO-SPAWN-PASS</code><br>
+        整條路徑：<code>create_task → heartbeat_snapshot → auto_dispatch → openclaw cron isolated → Blake 執行 → task_complete.sh → 已完成</code> ✅
+    </div>
+    <div class="warn text-xs mt-2">
+        <strong>已廢棄（F1 決策錯誤產物）：</strong><br>
+        ❌ <code>spawn_queue_consumer.sh</code>（移至 _inactive）<br>
+        ❌ [2b] Travis 讀 Queue → sessions_spawn（手動路徑，不應存在）<br>
+        ❌ system event 通知 Travis 再 spawn（多此一舉）<br>
+        ❌ crontab 中的 clawteam_health_check 和 spawn_queue_consumer（已移除）
     </div>
 </div>
 
