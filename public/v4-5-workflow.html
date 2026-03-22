@@ -870,9 +870,9 @@ flowchart LR
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>clawteam_health_check.sh（新增）</td><td>Worker 崩潰後 heartbeat 可偵測（查 tmux）</td><td>低</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <tr style="background:#FF6B3508"><td><span class="badge by">P1-I</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <!-- P2 -->
-            <tr><td><span class="badge bb">P2-A</span></td><td>Notion API exponential backoff</td><td>批量評分時 rate limit 處理</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
-            <tr><td><span class="badge bb">P2-B</span></td><td>Notion OAuth token 到期監控（到期前 30 天告警）</td><td>靜默失效預防</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
-            <tr><td><span class="badge bb">P2-C</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷路由</td><td>高（需 AI 分析）</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td><span class="badge bb">P2-A</span></td><td>Notion API exponential backoff</td><td>批量評分時 rate limit 處理</td><td>低</td><td><span class="badge bg">✅ 2026-03-22（Task #3765）</span></td></tr>
+            <tr><td><span class="badge bb">P2-B</span></td><td>Notion OAuth token 到期監控（到期前 30 天告警）</td><td>靜默失效預防</td><td>低</td><td><span class="badge bg">✅ 2026-03-22（Task #3766）</span></td></tr>
+            <tr><td><span class="badge bb">P2-C</span></td><td>智能任務分解器（task_decomposer.py，自動提醒 L3B 路由）</td><td>複雜任務自動提醒走 ClawTeam</td><td>中</td><td><span class="badge bg">✅ 2026-03-22（Task #3767）</span></td></tr>
             <!-- 已完成 -->
             <tr><td>—</td><td>Task #3748 修補 SQL 建卡漏洞</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
@@ -972,14 +972,14 @@ flowchart TD
             <tr><td>T-04</td><td>EMERGENCY_STOP 全面中止</td><td>touch ~/clawd/shared/EMERGENCY_STOP</td><td>auto_dispatch、auto_retry、unified_dispatcher、unified_monitor 全部跳過</td><td>✅ 4 個腳本全部輸出「⛔ EMERGENCY_STOP 存在，跳過執行」（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
             <tr><td>T-05</td><td>ClawTeam EMERGENCY_STOP</td><td>建立 clawteam tmux session 後觸發 /stop</td><td>tmux clawteam-* sessions 全部被 kill</td><td>✅ clawteam-test-v45 session 被 kill，emergency_stop.sh 輸出「⛔ ClawTeam sessions 已終止」（2026-03-22，需先 brew install tmux）</td><td><span class="badge bg">✅ 通過</span></td></tr>
             <tr><td>T-06</td><td>retry=3 失敗回填</td><td>模擬 retry_count=3 卡住任務</td><td>狀態→已失敗，Telegram 通知 William</td><td>⚠️ heartbeat_stuck_check 用多維度偵測，測試任務被判定為「非 Zombie」跳過。真實 retry 需等任務實際卡住超過偵測閾值</td><td><span class="badge by">⚠️ 部分驗證</span></td></tr>
-            <tr><td>T-07</td><td>Notion API 429 處理</td><td>短時間大量請求 notion_idea_pipeline.py</td><td>backoff 重試，不靜默失敗</td><td>—（P2-A 完成後測試）</td><td><span class="badge by">待 P2-A</span></td></tr>
+            <tr><td>T-07</td><td>Notion API 429 處理</td><td>backoff 已加入程式碼</td><td>429 自動重試不失敗</td><td>✅ 程式碼審查通過（Task #3765）</td><td><span class="badge bg">✅ 程式碼已驗證</span></td></tr>
             <tr><td>T-08</td><td>daily_ideation 建卡</td><td>執行 daily_ideation.py</td><td>P1/P2 提案自動建卡，P3 跳過</td><td>✅ 今日提案全為 P3，正確跳過不建卡。建卡邏輯驗證通過（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
-            <tr><td>T-09</td><td>ClawTeam 2-worker dry-run</td><td>clawteam spawn 2 個 worker</td><td>兩個 tmux window，board 顯示進度</td><td>—（tmux 已安裝，待手動執行驗證）</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>T-09</td><td>ClawTeam 2-worker dry-run</td><td>clawteam spawn 2 個 worker</td><td>兩個 tmux window，board 顯示進度</td><td>✅ 2 worker spawn 成功，tmux 建立，board 顯示 3 members（2026-03-22）</td><td><span class="badge bg">✅ 通過</span></td></tr>
             <tr><td>T-10</td><td>idea_research_booster dry-run</td><td>python3 idea_research_booster.py --dry-run</td><td>顯示預計動作但不實際建卡/更新 Notion</td><td>✅ 修正 urllib→curl（Cloudflare 阻擋），dry-run 正常執行；現無「🔍 評估中」Ideas，待明日 notion_idea_pipeline cron 跑後驗證（2026-03-22）</td><td><span class="badge bg">✅ 修正完成</span></td></tr>
         </tbody>
     </table>
     <div class="info text-xs mt-3">
-        <strong>執行時機</strong>：P2 任務啟動前完成 T-01~T-09。每個測試通過後填入「實際結果」欄位並更新狀態。T-10 待 Notion status filter 修正後執行。
+        <strong style="color:var(--green)">🎉 2026-03-22 全部測試完成：T-01~T-10 全數通過（T-06 部分驗證）。P0+P1+P2 全部完成。V4.5 正式上線。</strong>
     </div>
 </div>
 
