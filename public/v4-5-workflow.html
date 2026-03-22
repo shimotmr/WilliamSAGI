@@ -458,6 +458,74 @@ William 任何輸入
             </div>
         </section>
 
+        <!-- 並行 Sprint -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="text-2xl">⚡</span> 並行 Sprint（借鑑 gstack）
+            </h2>
+            <div class="card">
+                <p class="text-slate-400 text-sm mb-6">gstack 的關鍵創新：多個功能同時跑完整的 L1→L4 生命週期，不是單一任務內的並行，而是多條任務線同時進行。</p>
+                <div class="overflow-x-auto">
+                    <table class="comparison-table text-sm">
+                        <thead>
+                            <tr>
+                                <th>Sprint 線</th>
+                                <th>L1 討論</th>
+                                <th>L2 形成</th>
+                                <th>L3 執行</th>
+                                <th>L4 反饋</th>
+                                <th>負責人</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-purple">Sprint A</span></td>
+                                <td class="text-green-400">✅ 已完成</td>
+                                <td class="text-green-400">✅ 已完成</td>
+                                <td class="text-yellow-400">⏳ 執行中</td>
+                                <td class="text-slate-500">—</td>
+                                <td>Blake</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-teal">Sprint B</span></td>
+                                <td class="text-green-400">✅ 已完成</td>
+                                <td class="text-yellow-400">⏳ 進行中</td>
+                                <td class="text-slate-500">—</td>
+                                <td class="text-slate-500">—</td>
+                                <td>Rex</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-blue">Sprint C</span></td>
+                                <td class="text-yellow-400">⏳ 討論中</td>
+                                <td class="text-slate-500">—</td>
+                                <td class="text-slate-500">—</td>
+                                <td class="text-slate-500">—</td>
+                                <td>待決定</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-3 bg-slate-800 rounded">
+                        <div class="text-teal-400 font-medium mb-2">✅ gstack 概念（已借鑑）</div>
+                        <ul class="space-y-1 text-slate-400">
+                            <li>▸ 多 subagent 同時執行不同任務</li>
+                            <li>▸ 每個 Sprint 有獨立 session</li>
+                            <li>▸ 上限 2 個同時子代理（Token 節流）</li>
+                        </ul>
+                    </div>
+                    <div class="p-3 bg-slate-800 rounded">
+                        <div class="text-orange-400 font-medium mb-2">⏳ 待實作（來自 gstack）</div>
+                        <ul class="space-y-1 text-slate-400">
+                            <li>▸ Skill 串接流：產出自動流入下游 Agent</li>
+                            <li>▸ CEO/QA/Designer 獨立角色分層審查</li>
+                            <li>▸ Sprint 狀態即時看板（類 Kanban）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Mermaid 流程圖 -->
         <section class="mb-12">
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
