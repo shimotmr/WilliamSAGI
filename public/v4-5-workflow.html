@@ -9,483 +9,511 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #080e1d; --card: #0f1829; --card2: #141f33;
-            --border: #1a2845; --border2: #1e3050;
-            --purple: #7B68EE; --teal: #20B2AA; --orange: #FF6B35;
-            --blue: #3B82F6; --green: #10B981; --red: #EF4444; --yellow: #F59E0B;
-            --text: #cbd5e1; --muted: #475569;
+            --bg:#080e1d;--card:#0f1829;--card2:#141f33;
+            --border:#1a2845;--border2:#1e3050;
+            --purple:#7B68EE;--teal:#20B2AA;--orange:#FF6B35;
+            --blue:#3B82F6;--green:#10B981;--red:#EF4444;--yellow:#F59E0B;
+            --text:#cbd5e1;--muted:#475569;
         }
-        * { box-sizing: border-box; }
-        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 0.875rem; line-height: 1.6; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
-        .card2 { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 0.875rem; }
-        .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
-        .bp { background: #7B68EE22; color: var(--purple); border: 1px solid #7B68EE44; }
-        .bt { background: #20B2AA22; color: var(--teal); border: 1px solid #20B2AA44; }
-        .bb { background: #3B82F622; color: var(--blue); border: 1px solid #3B82F644; }
-        .bg { background: #10B98122; color: var(--green); border: 1px solid #10B98144; }
-        .bo { background: #FF6B3522; color: var(--orange); border: 1px solid #FF6B3544; }
-        .br { background: #EF444422; color: var(--red); border: 1px solid #EF444444; }
-        .by { background: #F59E0B22; color: var(--yellow); border: 1px solid #F59E0B44; }
-        code, pre { font-family: 'JetBrains Mono', monospace; }
-        code { background: #060c18; padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.8em; color: #94a3b8; }
-        pre { background: #060c18; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.78rem; color: #94a3b8; white-space: pre; }
-        pre .c { color: #475569; }
-        pre .kw { color: #7B68EE; }
-        pre .str { color: #20B2AA; }
-        pre .fn { color: #3B82F6; }
-        h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.875rem; }
-        h3 { font-size: 0.875rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.5rem; }
-        .warn { background: #F59E0B0d; border: 1px solid #F59E0B33; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
-        .info { background: #3B82F60d; border: 1px solid #3B82F633; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
-        .good { background: #10B9810d; border: 1px solid #10B98133; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
-        .danger { background: #EF44440d; border: 1px solid #EF444433; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { background: #060c18; color: var(--muted); font-weight: 500; padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #0a1220; vertical-align: top; }
-        tr:last-child td { border-bottom: none; }
-        .step-num { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
-        .divider { border-top: 1px solid var(--border); margin: 1.5rem 0; }
-        nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0.875rem 1.5rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 50; }
-        .toc { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
-        .toc a { display: block; color: var(--muted); text-decoration: none; padding: 0.2rem 0; font-size: 0.8rem; }
-        .toc a:hover { color: var(--text); }
+        *{box-sizing:border-box}
+        body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:0.855rem;line-height:1.6}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
+        .card2{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:0.875rem}
+        .badge{display:inline-block;padding:.15rem .6rem;border-radius:9999px;font-size:.7rem;font-weight:600}
+        .bp{background:#7B68EE22;color:var(--purple);border:1px solid #7B68EE44}
+        .bt{background:#20B2AA22;color:var(--teal);border:1px solid #20B2AA44}
+        .bb{background:#3B82F622;color:var(--blue);border:1px solid #3B82F644}
+        .bg{background:#10B98122;color:var(--green);border:1px solid #10B98144}
+        .bo{background:#FF6B3522;color:var(--orange);border:1px solid #FF6B3544}
+        .br{background:#EF444422;color:var(--red);border:1px solid #EF444444}
+        .by{background:#F59E0B22;color:var(--yellow);border:1px solid #F59E0B44}
+        code,pre{font-family:'JetBrains Mono',monospace}
+        code{background:#060c18;padding:.1em .4em;border-radius:4px;font-size:.8em;color:#94a3b8}
+        pre{background:#060c18;border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.76rem;color:#94a3b8;white-space:pre}
+        .c{color:#475569}.kw{color:#7B68EE}.str{color:#20B2AA}.fn{color:#3B82F6}.ok{color:#10B981}.err{color:#EF4444}
+        h2{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.4rem;margin-bottom:.875rem}
+        h3{font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.5rem;margin-top:.875rem}
+        .warn{background:#F59E0B0d;border:1px solid #F59E0B33;border-radius:8px;padding:.75rem;margin:.5rem 0}
+        .info{background:#3B82F60d;border:1px solid #3B82F633;border-radius:8px;padding:.75rem;margin:.5rem 0}
+        .ok-box{background:#10B9810d;border:1px solid #10B98133;border-radius:8px;padding:.75rem;margin:.5rem 0}
+        .danger{background:#EF44440d;border:1px solid #EF444433;border-radius:8px;padding:.75rem;margin:.5rem 0}
+        table{width:100%;border-collapse:collapse;font-size:.8rem}
+        th{background:#060c18;color:var(--muted);font-weight:500;padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--border)}
+        td{padding:.5rem .75rem;border-bottom:1px solid #0a1220;vertical-align:top}
+        tr:last-child td{border-bottom:none}
+        nav{background:var(--card);border-bottom:1px solid var(--border);padding:.875rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:50}
+        .toc a{display:block;color:var(--muted);text-decoration:none;padding:.2rem 0;font-size:.8rem}
+        .toc a:hover{color:var(--text)}
+        .pipe-row{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;align-items:center;gap:0;margin-bottom:.5rem}
+        .pipe-cell{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:.5rem .75rem;font-size:.76rem}
+        .pipe-arrow{text-align:center;color:var(--muted);font-size:1rem}
+        .status-ok::before{content:"✅ ";color:var(--green)}
+        .status-warn::before{content:"⚠️ ";color:var(--yellow)}
+        .status-no::before{content:"❌ ";color:var(--red)}
+        .section-anchor{scroll-margin-top:60px}
     </style>
 </head>
 <body>
 <nav>
     <div class="font-bold" style="color:var(--purple)">Travis V4.5</div>
-    <span class="badge bp">實作規劃書</span>
-    <span class="badge bo">ClawTeam 整合</span>
-    <span class="text-xs" style="color:var(--muted); margin-left:auto">基於程式碼審查 · 2026-03-22</span>
+    <span class="badge bp">實作規劃書 v2</span>
+    <span class="badge bo">任務來源完整版</span>
+    <span style="color:var(--muted);margin-left:auto;font-size:.75rem">程式碼審查 · 2026-03-22</span>
 </nav>
 
 <main class="max-w-4xl mx-auto px-5 py-7 space-y-5">
 
-<!-- 摘要 -->
-<div class="card">
-    <h2>📋 規劃書摘要</h2>
-    <p style="color:var(--muted)" class="mb-3">本文件為 Travis V4.5 系統的完整實作規劃書，基於對 ClawTeam 原始碼的直接審查（<code>spawn/tmux_backend.py</code>、<code>workspace/git.py</code>、<code>spawn/prompt.py</code>）。每個環節都包含具體指令、程式碼細節、已知限制與注意事項。這份文件的目的是作為實作依據，而非概念說明。</p>
-    <div class="grid grid-cols-3 gap-3 text-xs">
-        <div class="card2"><div class="text-purple-400 font-semibold mb-1">已確認可行</div><div style="color:var(--muted)">~/clawd 是 git repo ✅<br>tmux 已安裝 ✅<br>openclaw CLI 可用 ✅</div></div>
-        <div class="card2"><div class="text-yellow-400 font-semibold mb-1">需要安裝</div><div style="color:var(--muted)">ClawTeam-OpenClaw fork<br>（非 pip install clawteam）</div></div>
-        <div class="card2"><div class="text-red-400 font-semibold mb-1">需要解決</div><div style="color:var(--muted)">Workers 不繼承 AGENTS.md<br>需自訂 TOML 注入配置</div></div>
+<!-- TOC -->
+<div class="card toc">
+    <div class="font-semibold text-xs mb-2" style="color:var(--muted)">目錄</div>
+    <div class="grid grid-cols-2 gap-x-4">
+    <div>
+        <a href="#overview">§0 系統現況總覽</a>
+        <a href="#sources">§1 任務來源層（完整清單）</a>
+        <a href="#s1">　　S1 William Telegram 輸入</a>
+        <a href="#s2">　　S2 參考分享 → Notion</a>
+        <a href="#s3">　　S3 自我搜索 → 任務</a>
+        <a href="#s4">　　S4 daily_ideation 自省</a>
+        <a href="#s5">　　S5 每日審計 → 任務</a>
+        <a href="#s6">　　S6 Notion Ideas 評分管道</a>
+    </div>
+    <div>
+        <a href="#l2">§2 L2 任務形成 + 路由決策</a>
+        <a href="#l3a">§3 L3A 輕量執行（sessions_spawn）</a>
+        <a href="#l3b">§4 L3B ClawTeam Swarm</a>
+        <a href="#l4">§5 L4 反饋優化閉環</a>
+        <a href="#gaps">§6 斷點清單（需補齊）</a>
+        <a href="#todo">§7 實作待辦（依優先序）</a>
+        <a href="#flow">§8 完整流程圖</a>
+    </div>
     </div>
 </div>
 
-<!-- 目錄 -->
-<div class="toc">
-    <div class="text-xs font-semibold mb-2" style="color:var(--muted)">目錄</div>
-    <a href="#arch">§1 整體架構設計</a>
-    <a href="#l1">§2 L1 統一入口層（現有 + 補充）</a>
-    <a href="#l2">§3 L2 任務形成層（路由決策）</a>
-    <a href="#l3a">§4 L3A 輕量執行（sessions_spawn）</a>
-    <a href="#l3b">§5 L3B ClawTeam Swarm 執行</a>
-    <a href="#l4">§6 L4 反饋優化層（閉環）</a>
-    <a href="#install">§7 ClawTeam 安裝與設定</a>
-    <a href="#limits">§8 已知限制與風險</a>
-    <a href="#flow">§9 完整流程圖</a>
+<!-- §0 總覽 -->
+<div class="card section-anchor" id="overview">
+    <h2>§0 系統現況總覽</h2>
+    <table>
+        <thead><tr><th>路徑</th><th>腳本</th><th>排程</th><th>接到建卡</th><th>真實狀態</th></tr></thead>
+        <tbody>
+            <tr><td>William Telegram 手動輸入</td><td><code>create_task.sh</code></td><td>即時</td><td>✅</td><td><span class="badge bg">運作中</span></td></tr>
+            <tr><td>參考分享 → Notion</td><td><code>reference_analyzer.py</code></td><td>關鍵詞觸發</td><td>❌ 未串</td><td><span class="badge by">部分有效</span></td></tr>
+            <tr><td>自我搜索 → 任務</td><td><code>daily_research_to_tasks.py</code></td><td>09:00 每日</td><td>✅ 有建卡邏輯</td><td><span class="badge by">狀態不明</span></td></tr>
+            <tr><td>daily_ideation 自省</td><td><code>daily_ideation.py</code></td><td>03:30 每日</td><td>❌ 只存 .md</td><td><span class="badge br">管道斷</span></td></tr>
+            <tr><td>每日審計 → 任務</td><td><code>daily_system_analysis.sh</code></td><td>❌ 未排程</td><td>⚠️ 剛接（Task #3750）</td><td><span class="badge br">未啟動</span></td></tr>
+            <tr><td>Notion Ideas 評分管道</td><td><code>notion_idea_pipeline.py</code></td><td>❌ 未排程</td><td>✅ 有建卡邏輯</td><td><span class="badge br">未啟動</span></td></tr>
+        </tbody>
+    </table>
 </div>
 
-<!-- §1 整體架構 -->
-<div class="card" id="arch">
-    <h2>§1 整體架構設計</h2>
-    <div class="mermaid mb-4">
-flowchart LR
-    L1[L1\n統一入口] --> L2[L2\n任務形成\n路由決策]
-    L2 -->|子任務≤2| L3A[L3A\nsessions_spawn]
-    L2 -->|子任務≥3\n需並行/git隔離| L3B[L3B\nClawTeam Swarm]
-    L2 -->|需人工| W[🔔 William]
-    W -->|確認後| L1
-    L3A --> L4[L4\n反饋優化\n閉環]
-    L3B --> L4
-    L4 -->|失敗回填| L1
-    style L1 fill:#7B68EE22,stroke:#7B68EE
+<!-- §1 任務來源層 -->
+<div class="card section-anchor" id="sources">
+    <h2>§1 任務來源層（六條路徑完整說明）</h2>
+
+    <!-- S1 -->
+    <div class="card2 mb-3 section-anchor" id="s1">
+        <div class="flex items-center gap-2 mb-2"><span class="badge bg">S1</span><span class="font-semibold">William Telegram 手動輸入</span><span class="badge bg" style="margin-left:auto">✅ 運作中</span></div>
+        <h3>流程</h3>
+        <pre>William 說話（Telegram）
+  → Travis 分析意圖
+  → 手動呼叫 create_task.sh
+  → board_tasks（status=待派發）
+  → auto_dispatch.sh 每 5 分鐘掃描派發</pre>
+        <h3>串接腳本</h3>
+        <table>
+            <tr><th>步驟</th><th>腳本</th><th>說明</th></tr>
+            <tr><td>建卡</td><td><code>~/clawd/scripts/create_task.sh</code></td><td>必填：title, assignee, dispatch_prompt, acceptance_criteria</td></tr>
+            <tr><td>派發</td><td><code>~/clawd/scripts/auto_dispatch.sh</code></td><td>每 5 分鐘掃 board_tasks WHERE status='待派發'，spawn subagent</td></tr>
+            <tr><td>完成</td><td><code>~/clawd/scripts/task_complete.sh &lt;ID&gt; "摘要"</code></td><td>subagent 必須在最後呼叫</td></tr>
+        </table>
+        <div class="info text-xs mt-2">⚠️ <strong>已知漏洞</strong>（Task #3748 修補）：subagent 若直接用 SQL INSERT 建卡會跳過驗證。現有 Supabase trigger 可偵測，模板末尾已加禁止聲明。</div>
+    </div>
+
+    <!-- S2 -->
+    <div class="card2 mb-3 section-anchor" id="s2">
+        <div class="flex items-center gap-2 mb-2"><span class="badge by">S2</span><span class="font-semibold">William 分享參考 → Notion</span><span class="badge by" style="margin-left:auto">⚠️ 部分有效</span></div>
+        <h3>現有流程</h3>
+        <pre>William 說「參考」（SOUL.md 觸發詞）
+  → <span class="fn">reference_analyzer.py</span> 提取 URL、標題、摘要
+  → 存入 Notion Ideas DB（31564454-fece-81c9-8a39-d415543fd0c5）
+  → <span class="err">❌ 結束（沒有自動評分或建卡）</span></pre>
+        <h3>問題</h3>
+        <div class="danger text-xs">參考存進 Notion 後就沒有後續了。需要 <code>notion_idea_pipeline.py</code> 掃描並評分，但該腳本沒有排程。</div>
+        <h3>需要補齊</h3>
+        <pre><span class="c"># 補充：reference_analyzer.py 存完後，立刻觸發評分</span>
+python3 ~/clawd/scripts/reference_analyzer.py <span class="str">"訊息內容"</span>
+<span class="c"># 加入這一行（需修改 reference_analyzer.py）</span>
+python3 ~/clawd/scripts/notion_idea_pipeline.py <span class="str">"--single-item"</span> <span class="str">"&lt;notion_page_id&gt;"</span></pre>
+        <div class="warn text-xs">待辦：修改 reference_analyzer.py 結尾，存完 Notion 後立刻呼叫 notion_idea_pipeline.py 評分此條目。</div>
+    </div>
+
+    <!-- S3 -->
+    <div class="card2 mb-3 section-anchor" id="s3">
+        <div class="flex items-center gap-2 mb-2"><span class="badge by">S3</span><span class="font-semibold">自我搜索 → 任務（每日科技新聞）</span><span class="badge by" style="margin-left:auto">⚠️ 狀態不明</span></div>
+        <h3>設計流程</h3>
+        <pre><span class="fn">daily_research_to_tasks.py</span>（09:00 每日，crontab ✅）
+  → Brave Search 抓最新 AI/自動化文章
+  → MiniMax 分析：「是否值得實作？」
+  → 值得做 → INSERT board_tasks（status=待派發）
+  → Telegram 通知摘要</pre>
+        <h3>已知問題</h3>
+        <div class="danger text-xs">最近無 log（/tmp/daily_research.log 無輸出），可能是 MiniMax API 超時或 Brave API 失敗。需要加錯誤通知機制。</div>
+        <h3>需要補齊</h3>
+        <pre><span class="c"># daily_research_to_tasks.py 結尾加入失敗通知</span>
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    subprocess.run([NOTIFY, <span class="str">"1029808355"</span>, <span class="str">f"❌ daily_research 失敗: {e}"</span>])
+
+<span class="c"># crontab 加 stderr 輸出</span>
+0 9 * * * ... daily_research_to_tasks.py >> /tmp/daily_research.log 2>&1
+<span class="c"># 目前缺 2>&1，錯誤靜默消失</span></pre>
+    </div>
+
+    <!-- S4 -->
+    <div class="card2 mb-3 section-anchor" id="s4">
+        <div class="flex items-center gap-2 mb-2"><span class="badge br">S4</span><span class="font-semibold">daily_ideation 自省 → 任務</span><span class="badge br" style="margin-left:auto">❌ 管道斷</span></div>
+        <h3>現有流程（只做到一半）</h3>
+        <pre><span class="fn">daily_ideation.py</span>（03:30 每日，crontab ✅）
+  → 分析 board_tasks 失敗記錄 + 系統狀態
+  → 產生 3-5 個改善提案（P1/P2/P3）
+  → 存到 ~/clawd/memory/daily/ideation-YYYY-MM-DD.md
+  → <span class="err">❌ 結束（提案沒有建成任務卡）</span></pre>
+        <h3>需要補齊</h3>
+        <pre><span class="c"># daily_ideation.py 末尾加入（P1/P2 提案自動建卡）</span>
+<span class="kw">for</span> proposal <span class="kw">in</span> proposals:
+    <span class="kw">if</span> proposal[<span class="str">'priority'</span>] <span class="kw">in</span> [<span class="str">'P1'</span>, <span class="str">'P2'</span>]:
+        subprocess.run([
+            <span class="str">"bash"</span>, <span class="str">"~/clawd/scripts/create_task.sh"</span>,
+            <span class="str">"--title"</span>, proposal[<span class="str">'title'</span>],
+            <span class="str">"--assignee"</span>, <span class="str">"blake"</span>,
+            <span class="str">"--priority"</span>, proposal[<span class="str">'priority'</span>],
+            <span class="str">"--description"</span>, proposal[<span class="str">'problem'</span>],
+            <span class="str">"--dispatch_prompt"</span>, proposal[<span class="str">'suggestion'</span>],
+            <span class="str">"--acceptance_criteria"</span>, <span class="str">"問題不再出現於下次 daily_ideation 報告"</span>
+        ])
+<span class="c"># P3 只存 .md，不建卡（避免噪音）</span></pre>
+        <div class="warn text-xs">注意：proposal['suggestion'] 通常不夠具體作為 dispatch_prompt，可能需要 Travis 二次加工再建卡，或設門檻（suggestion 字數 >100 才建卡）。</div>
+    </div>
+
+    <!-- S5 -->
+    <div class="card2 mb-3 section-anchor" id="s5">
+        <div class="flex items-center gap-2 mb-2"><span class="badge br">S5</span><span class="font-semibold">每日審計 → 任務</span><span class="badge br" style="margin-left:auto">❌ 未啟動</span></div>
+        <h3>設計流程</h3>
+        <pre><span class="fn">daily_system_analysis.sh</span>
+  → 收集過去 24h failure_events、殭屍任務、缺失 dispatch_prompt
+  → 產生 analysis-YYYY-MM-DD.md（L1/L2/L3/L4 問題分層）
+  → §3.5：呼叫 <span class="fn">audit_to_task.sh</span> 為 L2/L3 問題自動建卡
+  → L4 通知 William</pre>
+        <h3>兩個問題</h3>
+        <div class="danger text-xs mb-2">
+            <strong>問題 1：沒有 crontab 排程。</strong> daily_system_analysis.sh 從未自動跑過。
+        </div>
+        <div class="warn text-xs">
+            <strong>問題 2：audit_to_task.sh 今天（Task #3750）才建立</strong>，但 daily_system_analysis.sh 的 §3.5 已有整合邏輯，等排程補上即可生效。
+        </div>
+        <h3>需要補齊</h3>
+        <pre><span class="c"># 加入 crontab（建議 03:30，daily_ideation 之後）</span>
+30 3 * * * /Users/travis/clawd/scripts/heartbeat_wrapper.sh \
+  daily_system_analysis \
+  /bin/bash /Users/travis/clawd/scripts/daily_system_analysis.sh \
+  >> /Users/travis/clawd/logs/daily_system_analysis.log 2>&1</pre>
+    </div>
+
+    <!-- S6 -->
+    <div class="card2 mb-3 section-anchor" id="s6">
+        <div class="flex items-center gap-2 mb-2"><span class="badge br">S6</span><span class="font-semibold">Notion Ideas 評分管道</span><span class="badge br" style="margin-left:auto">❌ 未排程</span></div>
+        <h3>設計流程</h3>
+        <pre><span class="fn">notion_idea_pipeline.py</span>
+  → 讀 Notion Ideas DB（status = 💭想法）
+  → 評分（可行性 × 影響力，各 1-5，滿分 25）
+  → ≥15 分 → <span class="fn">create_task.sh</span> 自動建卡 + Notion status → ✅ 已建任務
+  → 10-14 分 → Notion status → 🔍 評估中（等人工確認）
+  → &lt;10 分 → 跳過</pre>
+        <h3>問題</h3>
+        <div class="danger text-xs">腳本完整，邏輯正確，但從未被排程執行過。所有 Ideas 存進 Notion 後就積在那裡，沒有評分也沒有建卡。</div>
+        <h3>需要補齊</h3>
+        <pre><span class="c"># 加入 crontab（每天凌晨 04:00，在 daily_analysis 之後）</span>
+0 4 * * * /Users/travis/clawd/scripts/heartbeat_wrapper.sh \
+  notion_idea_pipeline \
+  /opt/homebrew/bin/python3 /Users/travis/clawd/scripts/notion_idea_pipeline.py \
+  >> /Users/travis/clawd/logs/notion_idea_pipeline.log 2>&1</pre>
+    </div>
+</div>
+
+<!-- §2 L2 -->
+<div class="card section-anchor" id="l2">
+    <h2>§2 L2 任務形成層（路由決策）</h2>
+    <p style="color:var(--muted)" class="mb-3">任務進入 board_tasks 後，Travis 或 auto_dispatch.sh 判斷路由。</p>
+    <h3>路由判斷（現況：人工 + 腳本混合）</h3>
+    <table class="mb-3">
+        <thead><tr><th>條件</th><th>路由</th><th>執行者</th></tr></thead>
+        <tbody>
+            <tr><td>子任務 1–2、單 agent、&lt;30 分鐘</td><td><span class="badge bb">L3A sessions_spawn</span></td><td>auto_dispatch.sh → sessions_spawn</td></tr>
+            <tr><td>子任務 ≥3、需並行、需 git 隔離</td><td><span class="badge bo">L3B ClawTeam</span></td><td>Travis 手動判斷（自動分解器未實作）</td></tr>
+            <tr><td>影響生產環境、架構決策</td><td><span class="badge bp">通知 William</span></td><td>notify_telegram.sh → 等確認 → 回 S1</td></tr>
+        </tbody>
+    </table>
+    <h3>串接腳本</h3>
+    <pre><span class="c"># L3A 路由（auto_dispatch.sh 核心邏輯）</span>
+<span class="kw">while</span> task = SELECT * FROM board_tasks WHERE status=<span class="str">'待派發'</span>:
+    <span class="c"># EMERGENCY_STOP 檢查</span>
+    [ -f ~/clawd/shared/EMERGENCY_STOP ] && exit 0
+    sessions_spawn(task=dispatch_prompt, model=model, label=<span class="str">"task-{id}"</span>)
+    UPDATE board_tasks SET status=<span class="str">'執行中'</span> WHERE id={id}
+
+<span class="c"># L3B 路由（未自動化，Travis 手動觸發）</span>
+clawteam team spawn-team {team} -d {description} -n travis
+clawteam spawn tmux openclaw --team {team} --agent-name blake --task {prompt}</pre>
+    <div class="warn text-xs">⚠️ <strong>智能任務分解器尚未實作</strong>。目前所有路由都靠 Travis 人工判斷或 dispatch_prompt 裡明確指定走哪條路。</div>
+</div>
+
+<!-- §3 L3A -->
+<div class="card section-anchor" id="l3a">
+    <h2>§3 L3A 輕量執行（sessions_spawn）</h2>
+    <h3>完整串接</h3>
+    <pre><span class="c">① auto_dispatch.sh 每 5 分鐘掃 board_tasks WHERE status='待派發'</span>
+  → sessions_spawn(task=dispatch_prompt, model=X, label=<span class="str">"task-{id}-auto"</span>)
+  → UPDATE board_tasks SET status=<span class="str">'執行中'</span>, updated_at=NOW()
+
+<span class="c">② subagent 執行完成</span>
+  → bash ~/clawd/scripts/task_complete.sh {ID} <span class="str">"完成摘要"</span>
+     └→ UPDATE board_tasks SET status=<span class="str">'已完成'</span>, result={摘要}
+     └→ notify_telegram.sh 1029808355 <span class="str">"✅ 任務 #{ID} 完成"</span>
+     └→ 觸發下一輪 auto_dispatch
+
+<span class="c">③ 失敗偵測（heartbeat_stuck_check.sh 每 10 分鐘）</span>
+  → 執行中 >5 分鐘 且 session 不存在 → 判定卡住
+  → retry_count < 3：UPDATE status=<span class="str">'待派發'</span>, retry_count+1
+  → retry_count = 3：UPDATE status=<span class="str">'已失敗'</span> + 通知 William + 回填 L1</pre>
+    <div class="warn text-xs">⚠️ 上限 2 個同時 subagent（AGENTS.md §16）。超過排隊等待。</div>
+</div>
+
+<!-- §4 L3B -->
+<div class="card section-anchor" id="l3b">
+    <h2>§4 L3B ClawTeam Swarm（基於原碼審查）</h2>
+    <div class="danger text-xs mb-3">
+        <strong>原碼確認的關鍵差異</strong>：ClawTeam worker 是獨立 <code>openclaw</code> CLI 進程（tmux 新 window），不是 OpenClaw session。<br>
+        • 不繼承 AGENTS.md / SOUL.md / MEMORY.md（<strong>P0 必修</strong>）<br>
+        • EMERGENCY_STOP 無法停止已啟動的 ClawTeam（<strong>P0 必修</strong>）<br>
+        • 需要 ~/clawd 是 git repo（✅ 已確認）
+    </div>
+    <h3>完整串接（目前未自動化，需手動觸發）</h3>
+    <pre><span class="c">① 安裝（一次性，尚未完成）</span>
+git clone https://github.com/win4r/ClawTeam-OpenClaw.git ~/clawd/tools/clawteam
+cd ~/clawd/tools/clawteam && pip install -e .
+
+<span class="c">② Travis 判斷需要 ClawTeam 時手動執行</span>
+clawteam team spawn-team {team} -d {description} -n travis
+
+<span class="c">③ spawn workers（每個 worker 取得獨立 git worktree）</span>
+clawteam spawn tmux openclaw \
+  --team {team} --agent-name blake \
+  --task <span class="str">"實作 X 模組。完成後呼叫 task_complete.sh {ID}"</span>
+clawteam spawn tmux openclaw \
+  --team {team} --agent-name rex \
+  --task <span class="str">"研究 Y。完成後通知 leader"</span>
+
+<span class="c">④ 監控</span>
+clawteam board attach {team}   <span class="c"># 即時看 tmux 面板</span>
+
+<span class="c">⑤ 結果彙整（leader 等所有 worker 完成）</span>
+clawteam task wait {team} --all
+<span class="c"># 彙整後，回寫我們的 board_tasks</span>
+bash ~/clawd/scripts/task_complete.sh {TASK_ID} <span class="str">"ClawTeam 完成"</span>
+
+<span class="c">⑥ 清理 worktree</span>
+git -C ~/clawd worktree list         <span class="c"># 查看所有 worktree</span>
+git -C ~/clawd worktree remove .clawteam/{team}/{agent}   <span class="c"># 清理</span></pre>
+    <h3>P0 必修項目</h3>
+    <div class="danger text-xs mb-2">
+        <strong>1. TOML 注入核心規則</strong>（防止 worker 不遵守系統規則）
+        <pre class="mt-1"><span class="c"># ~/clawd/clawteam-templates/travis-team.toml</span>
+[template]
+name = <span class="str">"travis-team"</span>
+command = [<span class="str">"openclaw"</span>]
+system_prompt = <span class="str">"""
+禁止直接 SQL INSERT board_tasks，必須用 ~/clawd/scripts/create_task.sh。
+任務完成後必須呼叫 bash ~/clawd/scripts/task_complete.sh &lt;ID&gt; "摘要"。
+禁止 rm -rf，刪除用 trash。
+不確定時先問 leader，不要自行決策。
+"""</span></pre>
+    </div>
+    <div class="danger text-xs">
+        <strong>2. emergency_stop.sh 整合 ClawTeam</strong>
+        <pre class="mt-1"><span class="c"># 在 emergency_stop.sh 加入</span>
+<span class="kw">if</span> command -v clawteam &>/dev/null; then
+    tmux list-sessions 2>/dev/null | grep <span class="str">"^clawteam-"</span> | awk -F: <span class="str">'{print $1}'</span> | \
+        xargs -I{} tmux kill-session -t {} 2>/dev/null
+    echo <span class="str">"⛔ ClawTeam sessions 已終止"</span>
+fi</pre>
+    </div>
+</div>
+
+<!-- §5 L4 -->
+<div class="card section-anchor" id="l4">
+    <h2>§5 L4 反饋優化層（閉環）</h2>
+    <h3>完整串接</h3>
+    <pre><span class="c"># 成功路徑</span>
+task_complete.sh {ID} {摘要}
+  → UPDATE board_tasks SET status=<span class="str">'已完成'</span>, result={摘要}, completed_at=NOW()
+  → 寫入 experience_log（成功記錄）
+  → notify_telegram.sh → William 知道
+  → 觸發 auto_dispatch.sh 掃下一批任務
+
+<span class="c"># 失敗路徑（heartbeat_stuck_check.sh）</span>
+retry_count &lt; 3:
+  → 第 2 次重試前呼叫智能診斷（分析失敗原因）
+  → UPDATE status=<span class="str">'待派發'</span>, retry_count += 1
+  → 回到 auto_dispatch.sh
+
+retry_count = 3:
+  → UPDATE status=<span class="str">'已失敗'</span>
+  → notify_telegram.sh 1029808355 <span class="str">"🔴 任務 #{ID} 失敗 3 次，需人工介入"</span>
+  → <span class="c"># 回填 L1（重新建卡，待 William 決定）</span>
+  → UPDATE status=<span class="str">'待執行'</span>  <span class="c"># 等 William 重新確認</span>
+
+<span class="c"># 審計路徑（daily_system_analysis.sh § 3.5）</span>
+L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
+  → 7 天內相同標題不重複建卡（audit_to_task.sh 內建去重）</pre>
+    <h3>EMERGENCY_STOP 覆蓋範圍</h3>
+    <div class="ok-box text-xs">
+        ✅ auto_dispatch.sh &nbsp;|&nbsp; ✅ auto_retry.sh &nbsp;|&nbsp; ✅ unified_dispatcher.sh<br>
+        ✅ unified_monitor.sh &nbsp;|&nbsp; ✅ heartbeat_stuck_check.sh<br>
+        ❌ ClawTeam workers（需要 §4 的 emergency_stop.sh 整合）
+    </div>
+</div>
+
+<!-- §6 斷點清單 -->
+<div class="card section-anchor" id="gaps">
+    <h2>§6 斷點清單（需補齊的「最後一公里」）</h2>
+    <table>
+        <thead><tr><th>#</th><th>斷點</th><th>影響</th><th>修法</th></tr></thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>daily_system_analysis.sh 無排程</td>
+                <td>每日審計從未自動執行</td>
+                <td>補 crontab：03:30 每日</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>notion_idea_pipeline.py 無排程</td>
+                <td>Notion Ideas 永遠積在那，不會變任務</td>
+                <td>補 crontab：04:00 每日</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>daily_ideation.py 沒有建卡邏輯</td>
+                <td>每日自省提案只存 .md，不被執行</td>
+                <td>修改腳本，P1/P2 提案自動呼叫 create_task.sh</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>reference_analyzer.py 存完 Notion 就結束</td>
+                <td>參考資料不會被評分或建卡</td>
+                <td>腳本結尾呼叫 notion_idea_pipeline.py --single-item</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>daily_research_to_tasks.py 靜默失敗</td>
+                <td>失敗時無通知，問題消失</td>
+                <td>加 except 通知 + crontab 補 2>&amp;1</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>ClawTeam EMERGENCY_STOP 未整合</td>
+                <td>/stop 無法停止 ClawTeam workers</td>
+                <td>修改 emergency_stop.sh 加 tmux kill</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>ClawTeam TOML 模板未建立</td>
+                <td>Workers 不繼承系統規則</td>
+                <td>建立 ~/clawd/clawteam-templates/travis-team.toml</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- §7 待辦 -->
+<div class="card section-anchor" id="todo">
+    <h2>§7 實作待辦（依優先序）</h2>
+    <table>
+        <thead><tr><th>優先</th><th>任務</th><th>影響</th><th>複雜度</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：daily_system_analysis（每日 03:30）</td><td>審計才會真的跑</td><td>低（一行 crontab）</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（每日 04:00）</td><td>Ideas 才會變任務</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>daily_ideation.py 加建卡邏輯（P1/P2 提案）</td><td>自省結果被執行</td><td>中（修改腳本末尾）</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分</td><td>中</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>安裝 ClawTeam-OpenClaw + 建 TOML 模板</td><td>L3B 路徑可用</td><td>中</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge by">P1</span></td><td>emergency_stop.sh 整合 ClawTeam</td><td>/stop 全面有效</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td><span class="badge bb">P2</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷</td><td>高（需 AI 分析）</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td>—</td><td>Task #3748 修補漏洞</td><td>SQL 建卡漏洞</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>緊急停止覆蓋</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3750 audit_to_task.sh</td><td>審計→自動建卡</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- §8 流程圖 -->
+<div class="card section-anchor" id="flow">
+    <h2>§8 完整流程圖</h2>
+    <div class="mermaid">
+flowchart TD
+    subgraph S["任務來源層（六條路徑）"]
+        S1([William\nTelegram]) -->|手動 create_task.sh| Q
+        S2([William 說參考]) -->|reference_analyzer.py\n→ Notion| N6[Notion Ideas]
+        S3([每日搜索\n09:00]) -->|daily_research_to_tasks.py\n⚠️ 狀態不明| Q
+        S4([daily_ideation\n03:30]) -->|"❌ 只存 .md\n待補：→ create_task.sh"| Q
+        S5([每日審計\n03:30]) -->|"❌ 未排程\n待補：crontab"| S5b[audit_to_task.sh]
+        S5b --> Q
+        N6 -->|"❌ 未排程\n待補：notion_idea_pipeline.py"| N6b{評分\n≥15→建卡}
+        N6b -->|≥15分| Q
+        N6b -->|10-14分| W([🔔 William\n人工確認])
+        W -->|確認| Q
+    end
+
+    Q[(board_tasks\n待派發)]
+
+    Q --> CHK{EMERGENCY_STOP?}
+    CHK -->|是| STOP([⛔ 中止])
+    CHK -->|否| L2[L2 路由決策\nTravis 判斷]
+
+    L2 -->|子任務≤2\n輕量| L3A[L3A sessions_spawn\nBlake/Rex/Oscar]
+    L2 -->|子任務≥3\n需並行+git隔離| L3B[L3B ClawTeam\nLeader+Workers]
+    L2 -->|生產/架構決策| W2([🔔 William]) -->|確認| Q
+
+    L3A --> DONE[task_complete.sh]
+    L3B --> CW1[Worker A\ngit worktree]
+    L3B --> CW2[Worker B\ngit worktree]
+    CW1 & CW2 -->|inbox 彙整| MERGE[merge → main] --> DONE
+
+    DONE --> L4[L4 反饋優化]
+    L4 --> R{成功?}
+    R -->|✅| EXP[experience_log\ndispatch_prompt 優化]
+    R -->|❌ retry<3| RETRY[智能診斷\nretry_count+1] --> Q
+    R -->|🔴 retry=3| FAIL[已失敗\n通知 William] --> Q
+
+    style Q fill:#7B68EE22,stroke:#7B68EE
     style L2 fill:#20B2AA22,stroke:#20B2AA
     style L3A fill:#3B82F622,stroke:#3B82F6
     style L3B fill:#FF6B3522,stroke:#FF6B35
     style L4 fill:#10B98122,stroke:#10B981
-    </div>
-    <div class="warn">
-        <span class="text-yellow-400 font-semibold">⚠️ 核心差異（原碼確認）</span><br>
-        <span style="color:var(--muted)">L3A <code>sessions_spawn</code> 是在現有 OpenClaw 進程內建立 session。L3B ClawTeam 是在 tmux 開新 window，啟動獨立的 <code>openclaw</code> CLI 進程。兩者完全不同，不能混用。</span>
-    </div>
-</div>
-
-<!-- §2 L1 -->
-<div class="card" id="l1">
-    <h2>§2 L1 統一入口層</h2>
-    <h3>現有機制（已實作）</h3>
-    <table class="mb-3">
-        <thead><tr><th>來源</th><th>腳本/方法</th><th>存入位置</th><th>狀態</th></tr></thead>
-        <tbody>
-            <tr><td>William 對話</td><td>手動 <code>create_task.sh</code></td><td>board_tasks</td><td><span class="badge bg">✅ 運作中</span></td></tr>
-            <tr><td>Ideas/參考</td><td><code>save_idea_to_notion.py</code></td><td>Notion Ideas DB</td><td><span class="badge bg">✅ 運作中</span></td></tr>
-            <tr><td>Cron 排程</td><td>crontab 各腳本</td><td>board_tasks</td><td><span class="badge bg">✅ 運作中</span></td></tr>
-            <tr><td>審計告警</td><td><code>audit_to_task.sh</code>（Task #3750 新建）</td><td>board_tasks</td><td><span class="badge bg">✅ 2026-03-22 新增</span></td></tr>
-            <tr><td>失敗任務回填</td><td><code>heartbeat_stuck_check.sh</code> retry=3 觸發</td><td>board_tasks（重置）</td><td><span class="badge bg">✅ 運作中</span></td></tr>
-        </tbody>
-    </table>
-    <h3>已知問題</h3>
-    <div class="danger text-xs">
-        <strong style="color:var(--red)">漏洞（Task #3748 已修補）</strong>：subagent 直接用 <code>supabase_sql.sh INSERT INTO board_tasks</code> 建卡，繞過 <code>create_task.sh</code>，導致 dispatch_prompt 缺失。<br>
-        <strong>修補方式</strong>：Supabase trigger（board_tasks INSERT 時若 dispatch_prompt IS NULL 寫入 task_warnings 表）+ dispatch_prompt 模板末尾禁止直接 SQL 建卡。
-    </div>
-    <h3>注意事項</h3>
-    <div class="info text-xs">所有建卡必須走 <code>~/clawd/scripts/create_task.sh</code>，不得直接 SQL INSERT。dispatch_prompt、acceptance_criteria 為必填欄位。</div>
-</div>
-
-<!-- §3 L2 -->
-<div class="card" id="l2">
-    <h2>§3 L2 任務形成層（路由決策）</h2>
-    <p style="color:var(--muted)" class="mb-3">L2 是 Travis 主控的判斷層。任務進入 board_tasks 後，由 Travis（或 auto_dispatch.sh）判斷走哪條路。</p>
-    <h3>路由判斷標準</h3>
-    <table class="mb-3">
-        <thead><tr><th>條件</th><th>路由</th><th>理由</th></tr></thead>
-        <tbody>
-            <tr><td>子任務數 1–2 個、單一 agent 即可完成、&lt;30 分鐘</td><td><span class="badge bb">L3A sessions_spawn</span></td><td>低成本、快速</td></tr>
-            <tr><td>子任務 ≥3 個、需要並行、需要獨立 git branch</td><td><span class="badge bo">L3B ClawTeam</span></td><td>隔離執行、真正並行</td></tr>
-            <tr><td>影響生產環境、金額 >$X、架構決策</td><td><span class="badge bp">通知 William</span></td><td>需人工確認</td></tr>
-        </tbody>
-    </table>
-    <h3>分解邏輯（尚未實作，需開發）</h3>
-    <div class="card2 text-xs mb-2">
-        <div class="font-semibold mb-1" style="color:var(--teal)">目標：智能任務分解器</div>
-        <div style="color:var(--muted)">Travis 收到任務後，分析 dispatch_prompt 內容，自動判斷：
-        <ol class="list-decimal ml-4 mt-1 space-y-0.5">
-            <li>需要幾個子任務（NLP 分析或規則判斷）</li>
-            <li>子任務間是否有依賴關係（DAG）</li>
-            <li>路由到 L3A 或 L3B</li>
-        </ol>
-        <div class="mt-1">⚠️ 現況：Travis 仍靠人工判斷。自動分解器尚未實作，為 V4.5 後續開發項目。</div>
-        </div>
-    </div>
-    <h3>EMERGENCY_STOP 檢查（L2 層必須）</h3>
-    <pre><span class="c"># 所有 L2 路由腳本開頭必須有</span>
-<span class="kw">if</span> [ -f <span class="str">"$HOME/clawd/shared/EMERGENCY_STOP"</span> ]; then
-  echo <span class="str">"⛔ EMERGENCY_STOP 存在，跳過執行"</span> &gt;&amp;2
-  exit 0
-fi</pre>
-</div>
-
-<!-- §4 L3A -->
-<div class="card" id="l3a">
-    <h2>§4 L3A 輕量執行（sessions_spawn）</h2>
-    <p style="color:var(--muted)" class="mb-3">現有機制，已在生產環境運作。每次 spawn 在 OpenClaw 進程內建立新 session。</p>
-    <h3>標準派發流程</h3>
-    <pre><span class="c"># Travis 派發（主 session 內呼叫）</span>
-sessions_spawn(
-  task=<span class="str">"完整 dispatch_prompt 內容"</span>,
-  label=<span class="str">"task-{id}-{name}"</span>,
-  mode=<span class="str">"run"</span>,
-  model=<span class="str">"openai-codex/gpt-5.4"</span>   <span class="c"># 或 grok / kimi</span>
-)
-
-<span class="c"># Blake/Rex 完成後必須呼叫</span>
-bash ~/clawd/scripts/task_complete.sh {TASK_ID} <span class="str">"完成摘要"</span></pre>
-    <div class="warn text-xs">
-        <strong style="color:var(--yellow)">⚠️ 同時上限</strong>：最多 2 個 subagent 同時執行（AGENTS.md §16 Token 節流規則）。超過會排隊等待。
-    </div>
-    <h3>結果回傳到 L4</h3>
-    <div class="info text-xs"><code>task_complete.sh</code> 會自動：更新 board_tasks status→已完成、寫入 result 欄位、發 Telegram 通知、觸發下一輪 auto_dispatch。</div>
-</div>
-
-<!-- §5 L3B ClawTeam -->
-<div class="card" id="l3b">
-    <h2>§5 L3B ClawTeam Swarm 執行</h2>
-    <div class="danger mb-3 text-xs">
-        <strong style="color:var(--red)">重要：基於原始碼審查的關鍵差異</strong><br>
-        ClawTeam workers 不是 OpenClaw session，而是在 tmux 開新 window 啟動獨立 <code>openclaw</code> CLI 進程。<br>
-        • Worker 不繼承主 session 的 AGENTS.md、SOUL.md、MEMORY.md<br>
-        • Worker 透過 ClawTeam 的 prompt injection 取得身份和任務<br>
-        • 所有 agent 間通訊走 <code>clawteam inbox</code>，不走 Telegram
-    </div>
-
-    <h3>5.1 架構圖（基於 tmux_backend.py）</h3>
-    <pre><span class="c"># 實際執行結構（原碼確認）</span>
-tmux session: <span class="str">clawteam-{team_name}</span>
-├── window 0: leader-agent   ← openclaw CLI 進程
-├── window 1: worker-blake   ← openclaw CLI 進程
-│   env: CLAWTEAM_AGENT_ID, CLAWTEAM_AGENT_NAME, CLAWTEAM_TEAM_NAME
-│   cwd: ~/clawd (git worktree branch: clawteam/{team}/blake)
-├── window 2: worker-rex     ← openclaw CLI 進程
-└── window 3: worker-oscar   ← openclaw CLI 進程</pre>
-
-    <h3>5.2 Worker Prompt 注入（基於 prompt.py）</h3>
-    <p style="color:var(--muted)" class="text-xs mb-2">每個 worker 啟動時自動注入的 prompt（<code>spawn/prompt.py build_agent_prompt()</code>）：</p>
-    <pre><span class="c">## Identity</span>
-- Name: blake
-- Type: worker
-- Team: my-team
-- Leader: travis-leader
-
-<span class="c">## Workspace</span>
-- Working directory: ~/clawd
-- Branch: clawteam/my-team/blake   <span class="c">← 獨立 git worktree</span>
-
-<span class="c">## Task</span>
-{task 內容}
-
-<span class="c">## Coordination Protocol（自動注入）</span>
-- clawteam task list my-team --owner blake
-- clawteam task update my-team &lt;id&gt; --status in_progress
-- clawteam inbox send my-team travis-leader "完成了 X"
-- clawteam cost report my-team --input-tokens N --output-tokens N</pre>
-
-    <div class="warn text-xs mb-3">
-        <strong style="color:var(--yellow)">⚠️ AGENTS.md 不會自動繼承</strong><br>
-        Worker 只拿到 ClawTeam 注入的 prompt，不會讀取 AGENTS.md/SOUL.md。<br>
-        解法：在 TOML 模板的 <code>system_prompt</code> 欄位加入我們的核心規則（至少是禁止直接 SQL 建卡、task_complete.sh 必須呼叫等關鍵規則）。
-    </div>
-
-    <h3>5.3 Git Worktree 隔離（基於 workspace/git.py）</h3>
-    <pre><span class="c"># ClawTeam 執行的 git 指令（原碼確認）</span>
-git worktree add -b clawteam/my-team/blake \
-  ~/clawd/.clawteam/my-team/blake HEAD
-
-<span class="c"># 前提：~/clawd 必須是 git repo ← 已確認 ✅</span>
-<span class="c"># 注意：每個 worker 的 worktree branch 不能有未 commit 的衝突</span></pre>
-    <div class="info text-xs">worktree 路徑預設是 <code>~/clawd/.clawteam/{team}/{agent}</code>。Worker 完成後需 merge 或 cherry-pick 回主 branch，ClawTeam 目前不自動合併。</div>
-
-    <h3>5.4 使用 OpenClaw 專用 Fork</h3>
-    <div class="good text-xs mb-3">
-        <strong style="color:var(--green)">推薦：win4r/ClawTeam-OpenClaw</strong>（非 pip install clawteam）<br>
-        • OpenClaw 為預設 agent（不是 claude）<br>
-        • per-agent session isolation 已設定<br>
-        • exec approval auto-config（不會每次問）
-    </div>
-    <pre><span class="c"># 安裝（見 §7 完整步驟）</span>
-git clone https://github.com/win4r/ClawTeam-OpenClaw.git
-cd ClawTeam-OpenClaw
-pip install -e .
-<span class="c"># 或一鍵安裝</span>
-bash scripts/install-openclaw.sh</pre>
-
-    <h3>5.5 TOML 模板（我們需要自訂）</h3>
-    <pre><span class="c"># ~/clawd/clawteam-templates/travis-team.toml</span>
-[template]
-name = <span class="str">"travis-team"</span>
-command = [<span class="str">"openclaw"</span>]
-
-<span class="c"># 注入我們的關鍵規則</span>
-system_prompt = <span class="str">"""
-禁止直接 SQL INSERT board_tasks，必須用 create_task.sh。
-完成後必須呼叫 task_complete.sh。
-"""</span>
-
-[[agents]]
-name = <span class="str">"blake"</span>
-type = <span class="str">"worker"</span>
-model = <span class="str">"openai-codex/gpt-5.4"</span>
-role = <span class="str">"Coder，負責程式碼實作"</span>
-
-[[agents]]
-name = <span class="str">"rex"</span>
-type = <span class="str">"worker"</span>
-model = <span class="str">"xai/grok-4.20-beta-0309-reasoning"</span>
-role = <span class="str">"Thinker，負責研究與分析"</span></pre>
-    <div class="warn text-xs">⚠️ TOML 模板尚未建立。這是 V4.5 實作的第一個具體工作項目。</div>
-
-    <h3>5.6 結果彙整回 L4</h3>
-    <p style="color:var(--muted)" class="text-xs mb-2">Leader 收到所有 worker 完成訊息後，需呼叫我們的 task_complete.sh 觸發 L4：</p>
-    <pre><span class="c"># Leader 彙整完成後（在 ClawTeam leader 的 task prompt 末尾加入）</span>
-<span class="c"># 等待所有 worker 完成</span>
-clawteam task wait my-team --all
-
-<span class="c"># 彙整結果，回寫到我們的 board_tasks</span>
-bash ~/clawd/scripts/task_complete.sh {TASK_ID} <span class="str">"ClawTeam swarm 完成：{摘要}"</span></pre>
-</div>
-
-<!-- §6 L4 -->
-<div class="card" id="l4">
-    <h2>§6 L4 反饋優化層（閉環）</h2>
-    <table class="mb-3">
-        <thead><tr><th>情況</th><th>觸發條件</th><th>動作</th><th>腳本</th></tr></thead>
-        <tbody>
-            <tr><td>✅ 成功</td><td>task_complete.sh 呼叫</td><td>存 experience_log、更新 dispatch_prompt 分數</td><td>task_complete.sh</td></tr>
-            <tr><td>⚠️ 失敗 retry&lt;3</td><td>heartbeat_stuck_check.sh 偵測</td><td>retry_count+1、第2次觸發智能診斷、重置回待派發</td><td>heartbeat_stuck_check.sh</td></tr>
-            <tr><td>🔴 失敗 retry=3</td><td>heartbeat_stuck_check.sh</td><td>標「已失敗」+ Telegram 通知 William + 回填 L1 任務堆疊</td><td>heartbeat_stuck_check.sh + notify_telegram.sh</td></tr>
-            <tr><td>📋 審計發現問題</td><td>daily_system_analysis.sh</td><td>自動呼叫 audit_to_task.sh 建任務卡</td><td>audit_to_task.sh（Task #3750）</td></tr>
-        </tbody>
-    </table>
-    <h3>EMERGENCY_STOP 覆蓋範圍（已實作）</h3>
-    <div class="good text-xs">
-        ✅ auto_dispatch.sh &nbsp;|&nbsp; ✅ auto_retry.sh &nbsp;|&nbsp; ✅ unified_dispatcher.sh &nbsp;|&nbsp; ✅ unified_monitor.sh &nbsp;|&nbsp; ✅ heartbeat_stuck_check.sh<br>
-        觸發方式：<code>touch ~/clawd/shared/EMERGENCY_STOP</code> 或發送 <code>/stop</code>
-    </div>
-    <div class="warn text-xs mt-2">⚠️ ClawTeam workers 不受 EMERGENCY_STOP 控制。停止 ClawTeam 需用 <code>tmux kill-session -t clawteam-{team}</code>。需要加入 emergency_stop.sh 整合。</div>
-</div>
-
-<!-- §7 安裝 -->
-<div class="card" id="install">
-    <h2>§7 ClawTeam 安裝與設定（完整步驟）</h2>
-    <div class="space-y-3">
-        <div>
-            <div class="flex items-center gap-2 mb-1"><span class="step-num bg text-green-900">1</span><span class="font-semibold">前置確認</span></div>
-            <pre>python3 --version    <span class="c"># 需要 3.10+</span>
-tmux -V              <span class="c"># 需要任意版本</span>
-openclaw --version   <span class="c"># 確認已安裝</span>
-git -C ~/clawd rev-parse --is-inside-work-tree  <span class="c"># 應輸出 true ✅</span></pre>
-        </div>
-        <div>
-            <div class="flex items-center gap-2 mb-1"><span class="step-num bo text-orange-900">2</span><span class="font-semibold">安裝 ClawTeam-OpenClaw fork（非官方版）</span></div>
-            <pre>cd ~/clawd/tools   <span class="c"># 或任何合適目錄</span>
-git clone https://github.com/win4r/ClawTeam-OpenClaw.git
-cd ClawTeam-OpenClaw
-pip install -e .
-<span class="c"># 驗證安裝</span>
-clawteam --help</pre>
-            <div class="danger text-xs mt-1">❌ 不要用 <code>pip install clawteam</code>——那是上游版本，預設 claude 而非 openclaw，缺少 OpenClaw 整合。</div>
-        </div>
-        <div>
-            <div class="flex items-center gap-2 mb-1"><span class="step-num bp text-purple-900">3</span><span class="font-semibold">建立 TOML 模板</span></div>
-            <pre>mkdir -p ~/clawd/clawteam-templates
-<span class="c"># 建立 travis-team.toml（見 §5.5）</span></pre>
-        </div>
-        <div>
-            <div class="flex items-center gap-2 mb-1"><span class="step-num bt text-teal-900">4</span><span class="font-semibold">整合 EMERGENCY_STOP 到 ClawTeam</span></div>
-            <pre><span class="c"># 在 emergency_stop.sh 加入 ClawTeam 停止邏輯</span>
-<span class="kw">if</span> tmux list-sessions 2&gt;/dev/null | grep -q <span class="str">"clawteam-"</span>; then
-  tmux list-sessions | grep <span class="str">"clawteam-"</span> | awk -F: <span class="str">'{print $1}'</span> | \
-    xargs -I{} tmux kill-session -t {}
-fi</pre>
-        </div>
-        <div>
-            <div class="flex items-center gap-2 mb-1"><span class="step-num bb text-blue-900">5</span><span class="font-semibold">第一次測試</span></div>
-            <pre><span class="c"># 小規模測試（先用 --dry-run 或小任務）</span>
-clawteam team spawn-team test-team -d <span class="str">"測試用"</span> -n travis
-clawteam spawn tmux openclaw \
-  --team test-team \
-  --agent-name blake-test \
-  --task <span class="str">"echo 'Hello from ClawTeam' && clawteam task list test-team"</span>
-clawteam board attach test-team</pre>
-        </div>
-    </div>
-</div>
-
-<!-- §8 限制與風險 -->
-<div class="card" id="limits">
-    <h2>§8 已知限制與風險</h2>
-    <table>
-        <thead><tr><th>問題</th><th>影響</th><th>解法</th><th>優先級</th></tr></thead>
-        <tbody>
-            <tr>
-                <td>Workers 不繼承 AGENTS.md</td>
-                <td>Worker 可能不遵循我們的行為規則</td>
-                <td>在 TOML system_prompt 注入關鍵規則</td>
-                <td><span class="badge br">P0 必修</span></td>
-            </tr>
-            <tr>
-                <td>ClawTeam 不受 EMERGENCY_STOP 控制</td>
-                <td>/stop 無法停止執行中的 swarm</td>
-                <td>修改 emergency_stop.sh 加入 tmux kill</td>
-                <td><span class="badge br">P0 必修</span></td>
-            </tr>
-            <tr>
-                <td>git worktree 需要 clean 狀態</td>
-                <td>~/clawd 有未 commit 檔案會導致 worktree 建立失敗</td>
-                <td>派發前確認 git status 乾淨</td>
-                <td><span class="badge by">P1</span></td>
-            </tr>
-            <tr>
-                <td>Worker 結果不自動 merge 回主 branch</td>
-                <td>Worker 的程式碼改動留在獨立 branch</td>
-                <td>Leader 任務 prompt 需包含 merge 步驟</td>
-                <td><span class="badge by">P1</span></td>
-            </tr>
-            <tr>
-                <td>Token 成本翻倍</td>
-                <td>3 個 workers = 3 倍 token 用量</td>
-                <td>只有真正需要並行的任務才走 ClawTeam</td>
-                <td><span class="badge bt">P2</span></td>
-            </tr>
-            <tr>
-                <td>tmux 環境依賴</td>
-                <td>無 tmux 則完全無法使用</td>
-                <td>tmux 已安裝，確認版本即可</td>
-                <td><span class="badge bg">已確認</span></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- §9 流程圖 -->
-<div class="card" id="flow">
-    <h2>§9 完整流程圖（含所有細節）</h2>
-    <div class="mermaid">
-flowchart TD
-    A([William 任何輸入]) --> B[L1 任務堆疊\nboard_tasks]
-    AUDIT([📋 每日審計告警]) -->|audit_to_task.sh| B
-    FAIL_BACK([🔴 失敗 retry=3]) -->|回填| B
-
-    B --> CHK{EMERGENCY_STOP?}
-    CHK -->|是| STOP([⛔ 中止])
-    CHK -->|否| C[L2 任務形成\nTravis 分析 dispatch_prompt]
-
-    C --> D{路由決策}
-    D -->|子任務≤2\n輕量| E[L3A\nsessions_spawn]
-    D -->|子任務≥3\n需並行/git隔離| F[L3B\nClawTeam Swarm]
-    D -->|生產環境/架構決策| G[🔔 通知 William]
-    G -->|William 確認| B
-
-    E --> H[Blake/Rex/Oscar\n單 openclaw session]
-    H --> DONE[task_complete.sh]
-
-    F --> J[Leader Agent\nclawteam team spawn-team]
-    J --> K1[Worker A\ngit worktree branch]
-    J --> K2[Worker B\ngit worktree branch]
-    J --> K3[Worker C\ngit worktree branch]
-    K1 & K2 & K3 -->|clawteam inbox| L[Leader 彙整]
-    L --> M[merge worktree → main branch]
-    M --> DONE
-
-    DONE --> N[L4 反饋優化]
-    N --> R{成功?}
-    R -->|✅| O[experience_log\n優化 dispatch_prompt]
-    R -->|❌ retry<3| P[智能診斷\nretry_count+1\n重置→待派發]
-    P --> B
-    R -->|🔴 retry=3| FAIL_BACK
-
-    style B fill:#7B68EE22,stroke:#7B68EE
-    style C fill:#20B2AA22,stroke:#20B2AA
-    style E fill:#3B82F622,stroke:#3B82F6
-    style F fill:#FF6B3522,stroke:#FF6B35
-    style J fill:#FF6B3533,stroke:#FF6B35
-    style N fill:#10B98122,stroke:#10B981
-    style FAIL_BACK fill:#EF444422,stroke:#EF4444
     style STOP fill:#EF444433,stroke:#EF4444
-    style AUDIT fill:#F59E0B22,stroke:#F59E0B
+    style FAIL fill:#EF444422,stroke:#EF4444
+    style S fill:#7B68EE08,stroke:#7B68EE33
     </div>
-</div>
-
-<!-- 待辦 -->
-<div class="card">
-    <h2>📌 V4.5 實作待辦（依優先序）</h2>
-    <table>
-        <thead><tr><th>#</th><th>任務</th><th>說明</th><th>狀態</th></tr></thead>
-        <tbody>
-            <tr><td>1</td><td>安裝 ClawTeam-OpenClaw</td><td><code>git clone win4r/ClawTeam-OpenClaw && pip install -e .</code></td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td>2</td><td>建立 TOML 模板</td><td><code>~/clawd/clawteam-templates/travis-team.toml</code>，注入核心規則</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td>3</td><td>EMERGENCY_STOP 整合</td><td>修改 emergency_stop.sh 加入 tmux kill clawteam sessions</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td>4</td><td>小規模測試</td><td>2-agent 小任務驗證整條流程</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td>5</td><td>智能任務分解器</td><td>自動判斷走 L3A/L3B 的邏輯</td><td><span class="badge br">未開始</span></td></tr>
-            <tr><td>—</td><td>Task #3748 修補漏洞</td><td>trigger + 模板禁止直接 SQL 建卡</td><td><span class="badge bg">✅ 完成</span></td></tr>
-            <tr><td>—</td><td>Task #3749 EMERGENCY_STOP</td><td>auto_retry + unified_dispatcher + monitor</td><td><span class="badge bg">✅ 完成</span></td></tr>
-            <tr><td>—</td><td>Task #3750 審計→自動建卡</td><td>audit_to_task.sh</td><td><span class="badge bg">✅ 完成</span></td></tr>
-        </tbody>
-    </table>
 </div>
 
 </main>
 
 <footer class="border-t py-5 mt-6" style="border-color:var(--border)">
     <div class="max-w-4xl mx-auto px-5 text-xs" style="color:var(--muted)">
-        Travis V4.5 實作規劃書 · 基於 ClawTeam 原碼審查（spawn/tmux_backend.py, workspace/git.py, spawn/prompt.py）· 2026-03-22
+        Travis V4.5 實作規劃書 v2 · 六條任務來源完整版 · 基於原碼審查 · 2026-03-22
     </div>
 </footer>
 
 <script>
-mermaid.initialize({ startOnLoad: true, theme: 'dark', flowchart: { curve: 'basis', padding: 20 } });
+mermaid.initialize({ startOnLoad:true, theme:'dark', flowchart:{ curve:'basis', padding:15 } });
 </script>
 </body>
 </html>
