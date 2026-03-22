@@ -3,338 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travis V4.5 工作流進化</title>
+    <title>Travis V4.5 實作規劃書</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0f1e;
-            --bg-card: #111827;
-            --bg-card2: #1a2236;
-            --purple: #7B68EE;
-            --teal: #20B2AA;
-            --orange: #FF6B35;
-            --blue: #3B82F6;
-            --green: #10B981;
-            --red: #EF4444;
-            --yellow: #F59E0B;
-            --border: #1e2d45;
+            --bg: #080e1d; --card: #0f1829; --card2: #141f33;
+            --border: #1a2845; --border2: #1e3050;
+            --purple: #7B68EE; --teal: #20B2AA; --orange: #FF6B35;
+            --blue: #3B82F6; --green: #10B981; --red: #EF4444; --yellow: #F59E0B;
+            --text: #cbd5e1; --muted: #475569;
         }
-        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-dark); color: #e2e8f0; min-height: 100vh; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-        .card2 { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
-        .badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; }
-        .badge-purple { background: #7B68EE22; color: var(--purple); border: 1px solid #7B68EE44; }
-        .badge-teal { background: #20B2AA22; color: var(--teal); border: 1px solid #20B2AA44; }
-        .badge-blue { background: #3B82F622; color: var(--blue); border: 1px solid #3B82F644; }
-        .badge-green { background: #10B98122; color: var(--green); border: 1px solid #10B98144; }
-        .badge-orange { background: #FF6B3522; color: var(--orange); border: 1px solid #FF6B3544; }
-        .badge-red { background: #EF444422; color: var(--red); border: 1px solid #EF444444; }
-        .badge-yellow { background: #F59E0B22; color: var(--yellow); border: 1px solid #F59E0B44; }
-        .layer-block { border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 0; }
-        .l1 { background: linear-gradient(135deg,#7B68EE14,#7B68EE08); border-left: 3px solid var(--purple); }
-        .l2 { background: linear-gradient(135deg,#20B2AA14,#20B2AA08); border-left: 3px solid var(--teal); }
-        .l3-simple { background: linear-gradient(135deg,#3B82F614,#3B82F608); border-left: 3px solid var(--blue); }
-        .l3-claw { background: linear-gradient(135deg,#FF6B3514,#FF6B3508); border-left: 3px solid var(--orange); }
-        .l4 { background: linear-gradient(135deg,#10B98114,#10B98108); border-left: 3px solid var(--green); }
-        .arrow { text-align: center; color: #334155; font-size: 1.2rem; padding: 0.25rem 0; }
-        .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-        .cmp-table th { background: #0d1526; color: #64748b; font-weight: 500; padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .cmp-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #0d1526; }
-        .cmp-table tr:last-child td { border-bottom: none; }
-        code { font-family: 'JetBrains Mono', monospace; background: #0d1526; padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.82em; color: #94a3b8; }
-        .section-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-        .flow-connector { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.4rem 0; color: #475569; font-size: 0.8rem; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-        .gate { background: #0d1526; border: 1px solid #1e2d45; border-radius: 8px; padding: 0.4rem 0.75rem; font-size: 0.78rem; color: #64748b; display: inline-flex; align-items: center; gap: 0.4rem; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 0.875rem; line-height: 1.6; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+        .card2 { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 0.875rem; }
+        .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+        .bp { background: #7B68EE22; color: var(--purple); border: 1px solid #7B68EE44; }
+        .bt { background: #20B2AA22; color: var(--teal); border: 1px solid #20B2AA44; }
+        .bb { background: #3B82F622; color: var(--blue); border: 1px solid #3B82F644; }
+        .bg { background: #10B98122; color: var(--green); border: 1px solid #10B98144; }
+        .bo { background: #FF6B3522; color: var(--orange); border: 1px solid #FF6B3544; }
+        .br { background: #EF444422; color: var(--red); border: 1px solid #EF444444; }
+        .by { background: #F59E0B22; color: var(--yellow); border: 1px solid #F59E0B44; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        code { background: #060c18; padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.8em; color: #94a3b8; }
+        pre { background: #060c18; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.78rem; color: #94a3b8; white-space: pre; }
+        pre .c { color: #475569; }
+        pre .kw { color: #7B68EE; }
+        pre .str { color: #20B2AA; }
+        pre .fn { color: #3B82F6; }
+        h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 0.875rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.5rem; }
+        .warn { background: #F59E0B0d; border: 1px solid #F59E0B33; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
+        .info { background: #3B82F60d; border: 1px solid #3B82F633; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
+        .good { background: #10B9810d; border: 1px solid #10B98133; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
+        .danger { background: #EF44440d; border: 1px solid #EF444433; border-radius: 8px; padding: 0.75rem; margin: 0.5rem 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: #060c18; color: var(--muted); font-weight: 500; padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #0a1220; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        .step-num { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+        .divider { border-top: 1px solid var(--border); margin: 1.5rem 0; }
+        nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0.875rem 1.5rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 50; }
+        .toc { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+        .toc a { display: block; color: var(--muted); text-decoration: none; padding: 0.2rem 0; font-size: 0.8rem; }
+        .toc a:hover { color: var(--text); }
     </style>
 </head>
 <body>
-<header class="sticky top-0 z-50 border-b border-slate-800 bg-[#0a0f1e]/95 backdrop-blur">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div>
-            <div class="text-xl font-bold">Travis <span style="color:var(--purple)">V4.5</span> 工作流</div>
-            <div class="text-xs text-slate-500 mt-0.5">完整架構 · ClawTeam 整合版</div>
-        </div>
-        <div class="flex gap-2">
-            <span class="badge badge-purple">2026-03-22</span>
-            <span class="badge badge-orange">ClawTeam</span>
-        </div>
-    </div>
-</header>
+<nav>
+    <div class="font-bold" style="color:var(--purple)">Travis V4.5</div>
+    <span class="badge bp">實作規劃書</span>
+    <span class="badge bo">ClawTeam 整合</span>
+    <span class="text-xs" style="color:var(--muted); margin-left:auto">基於程式碼審查 · 2026-03-22</span>
+</nav>
 
-<main class="max-w-5xl mx-auto px-6 py-8 space-y-6">
+<main class="max-w-4xl mx-auto px-5 py-7 space-y-5">
 
-<!-- 核心概念 -->
-<div class="card text-center py-8">
-    <div class="text-2xl font-bold mb-2">三層分離 · 動態調度 · Swarm 執行</div>
-    <div class="text-slate-400 text-sm max-w-xl mx-auto mt-2">
-        William 負責輸入，Travis 負責分解與路由，ClawTeam 負責複雜任務的 Swarm 執行，L4 閉環所有結果回饋。
+<!-- 摘要 -->
+<div class="card">
+    <h2>📋 規劃書摘要</h2>
+    <p style="color:var(--muted)" class="mb-3">本文件為 Travis V4.5 系統的完整實作規劃書，基於對 ClawTeam 原始碼的直接審查（<code>spawn/tmux_backend.py</code>、<code>workspace/git.py</code>、<code>spawn/prompt.py</code>）。每個環節都包含具體指令、程式碼細節、已知限制與注意事項。這份文件的目的是作為實作依據，而非概念說明。</p>
+    <div class="grid grid-cols-3 gap-3 text-xs">
+        <div class="card2"><div class="text-purple-400 font-semibold mb-1">已確認可行</div><div style="color:var(--muted)">~/clawd 是 git repo ✅<br>tmux 已安裝 ✅<br>openclaw CLI 可用 ✅</div></div>
+        <div class="card2"><div class="text-yellow-400 font-semibold mb-1">需要安裝</div><div style="color:var(--muted)">ClawTeam-OpenClaw fork<br>（非 pip install clawteam）</div></div>
+        <div class="card2"><div class="text-red-400 font-semibold mb-1">需要解決</div><div style="color:var(--muted)">Workers 不繼承 AGENTS.md<br>需自訂 TOML 注入配置</div></div>
     </div>
 </div>
 
-<!-- 完整流程 -->
-<div class="card">
-    <div class="section-title"><span>🔗</span> 完整 V4.5 架構流程</div>
+<!-- 目錄 -->
+<div class="toc">
+    <div class="text-xs font-semibold mb-2" style="color:var(--muted)">目錄</div>
+    <a href="#arch">§1 整體架構設計</a>
+    <a href="#l1">§2 L1 統一入口層（現有 + 補充）</a>
+    <a href="#l2">§3 L2 任務形成層（路由決策）</a>
+    <a href="#l3a">§4 L3A 輕量執行（sessions_spawn）</a>
+    <a href="#l3b">§5 L3B ClawTeam Swarm 執行</a>
+    <a href="#l4">§6 L4 反饋優化層（閉環）</a>
+    <a href="#install">§7 ClawTeam 安裝與設定</a>
+    <a href="#limits">§8 已知限制與風險</a>
+    <a href="#flow">§9 完整流程圖</a>
+</div>
 
-    <!-- L1 -->
-    <div class="layer-block l1">
-        <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold" style="color:var(--purple)">L1 討論層 · 統一入口</div>
-            <span class="badge badge-purple">不變</span>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-xs">
-            <div class="card2 text-center">💬 William 對話</div>
-            <div class="card2 text-center">⏰ Cron 排程</div>
-            <div class="card2 text-center">💡 Ideas / 審計告警</div>
-        </div>
-        <div class="mt-2 text-xs text-slate-500">所有來源統一進入任務堆疊，保留原有 <code>save_idea_to_notion.py</code> + <code>audit_to_task.sh</code> 流程</div>
+<!-- §1 整體架構 -->
+<div class="card" id="arch">
+    <h2>§1 整體架構設計</h2>
+    <div class="mermaid mb-4">
+flowchart LR
+    L1[L1\n統一入口] --> L2[L2\n任務形成\n路由決策]
+    L2 -->|子任務≤2| L3A[L3A\nsessions_spawn]
+    L2 -->|子任務≥3\n需並行/git隔離| L3B[L3B\nClawTeam Swarm]
+    L2 -->|需人工| W[🔔 William]
+    W -->|確認後| L1
+    L3A --> L4[L4\n反饋優化\n閉環]
+    L3B --> L4
+    L4 -->|失敗回填| L1
+    style L1 fill:#7B68EE22,stroke:#7B68EE
+    style L2 fill:#20B2AA22,stroke:#20B2AA
+    style L3A fill:#3B82F622,stroke:#3B82F6
+    style L3B fill:#FF6B3522,stroke:#FF6B35
+    style L4 fill:#10B98122,stroke:#10B981
     </div>
-
-    <div class="arrow">↓ 任務堆疊</div>
-
-    <!-- L2 -->
-    <div class="layer-block l2">
-        <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold" style="color:var(--teal)">L2 任務形成層 · 智能分解 + 路由決策</div>
-            <span class="badge badge-teal">Travis 主控</span>
-        </div>
-        <div class="grid grid-cols-2 gap-3 text-xs mb-3">
-            <div class="card2">
-                <div class="text-slate-400 mb-1">分析維度</div>
-                <div class="space-y-0.5 text-slate-300">
-                    <div>▸ 複雜度（任務拆分需求）</div>
-                    <div>▸ 語言 / 工具需求</div>
-                    <div>▸ Token 成本估算</div>
-                    <div>▸ 時間限制</div>
-                </div>
-            </div>
-            <div class="card2">
-                <div class="text-slate-400 mb-1">路由決策（核心新增）</div>
-                <div class="space-y-0.5">
-                    <div class="flex items-center gap-2"><span class="badge badge-blue text-xs">簡單</span><span class="text-slate-300">→ sessions_spawn 單 agent</span></div>
-                    <div class="flex items-center gap-2"><span class="badge badge-orange text-xs">複雜</span><span class="text-slate-300">→ ClawTeam Swarm</span></div>
-                    <div class="flex items-center gap-2"><span class="badge badge-purple text-xs">人工</span><span class="text-slate-300">→ 通知 William 確認</span></div>
-                </div>
-            </div>
-        </div>
-        <div class="text-xs text-slate-500">判斷標準：子任務 ≥3 個、需要並行、需要 git 隔離 → 走 ClawTeam；其餘走 sessions_spawn</div>
-    </div>
-
-    <div class="flow-connector"><div class="dot"></div><span>路由分叉</span><div class="dot"></div></div>
-
-    <!-- L3 雙軌 -->
-    <div class="grid grid-cols-2 gap-4">
-        <!-- 簡單路徑 -->
-        <div class="layer-block l3-simple" style="border-radius:12px">
-            <div class="font-semibold mb-2 text-sm" style="color:var(--blue)">L3A · 輕量執行</div>
-            <div class="text-xs text-slate-400 mb-3">簡單任務 / 單一 agent</div>
-            <div class="space-y-1.5 text-xs">
-                <div class="card2">sessions_spawn (GPT-5.4 / Grok / Kimi)</div>
-                <div class="card2">Blake / Rex / Oscar 直接執行</div>
-                <div class="card2">完成 → task_complete.sh → L4</div>
-            </div>
-        </div>
-        <!-- ClawTeam 路徑 -->
-        <div class="layer-block l3-claw" style="border-radius:12px">
-            <div class="font-semibold mb-2 text-sm" style="color:var(--orange)">L3B · ClawTeam Swarm</div>
-            <div class="text-xs text-slate-400 mb-3">複雜任務 / 多 agent 並行</div>
-            <div class="space-y-1.5 text-xs">
-                <div class="card2">
-                    <div class="font-medium text-slate-300 mb-1">Leader Agent（Travis 派發）</div>
-                    <code>clawteam team spawn-team &lt;team&gt;</code>
-                </div>
-                <div class="card2">
-                    <div class="font-medium text-slate-300 mb-1">Workers 並行執行</div>
-                    <code>clawteam spawn tmux openclaw</code>
-                    <div class="text-slate-500 mt-1">各自獨立 git worktree + tmux</div>
-                </div>
-                <div class="card2">
-                    <div class="font-medium text-slate-300 mb-1">即時協調</div>
-                    <code>clawteam inbox send/receive</code>
-                    <div class="text-slate-500 mt-1">結果彙整 → task_complete.sh → L4</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="arrow">↓ 結果彙整</div>
-
-    <!-- L4 -->
-    <div class="layer-block l4">
-        <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold" style="color:var(--green)">L4 反饋優化層 · 閉環機制</div>
-            <span class="badge badge-green">全自動</span>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-xs">
-            <div class="card2">
-                <div class="text-green-400 font-medium mb-1">✅ 成功</div>
-                <div class="text-slate-400">存入 experience_log<br>優化 dispatch_prompt</div>
-            </div>
-            <div class="card2">
-                <div class="text-yellow-400 font-medium mb-1">⚠️ 失敗（retry &lt;3）</div>
-                <div class="text-slate-400">智能診斷 → 重新路由<br>retry_count +1</div>
-            </div>
-            <div class="card2">
-                <div class="text-red-400 font-medium mb-1">🔴 失敗（retry=3）</div>
-                <div class="text-slate-400">標記已失敗 + 通知 William<br>回填 L1 任務堆疊</div>
-            </div>
-        </div>
-        <div class="mt-2 text-xs text-slate-500">⛔ EMERGENCY_STOP 在 L2/L3/L4 任一環節均可即時中斷（<code>touch ~/clawd/shared/EMERGENCY_STOP</code> 或發送 /stop）</div>
+    <div class="warn">
+        <span class="text-yellow-400 font-semibold">⚠️ 核心差異（原碼確認）</span><br>
+        <span style="color:var(--muted)">L3A <code>sessions_spawn</code> 是在現有 OpenClaw 進程內建立 session。L3B ClawTeam 是在 tmux 開新 window，啟動獨立的 <code>openclaw</code> CLI 進程。兩者完全不同，不能混用。</span>
     </div>
 </div>
 
-<!-- 兩條路徑對比 -->
-<div class="card">
-    <div class="section-title"><span>⚖️</span> L3A vs L3B 路由判斷</div>
-    <table class="cmp-table">
-        <thead>
-            <tr><th>判斷維度</th><th>→ L3A sessions_spawn</th><th>→ L3B ClawTeam Swarm</th></tr>
-        </thead>
+<!-- §2 L1 -->
+<div class="card" id="l1">
+    <h2>§2 L1 統一入口層</h2>
+    <h3>現有機制（已實作）</h3>
+    <table class="mb-3">
+        <thead><tr><th>來源</th><th>腳本/方法</th><th>存入位置</th><th>狀態</th></tr></thead>
         <tbody>
-            <tr><td>子任務數量</td><td>1–2 個</td><td>≥3 個並行</td></tr>
-            <tr><td>程式碼隔離需求</td><td>不需要</td><td>需要獨立 git worktree</td></tr>
-            <tr><td>執行時間</td><td>&lt;30 分鐘</td><td>長時間 / 多輪迭代</td></tr>
-            <tr><td>Agent 溝通需求</td><td>無 / Telegram 即可</td><td>即時協調（inbox P2P）</td></tr>
-            <tr><td>典型場景</td><td>研究報告、腳本修復、單頁面</td><td>全棧開發、ML 實驗、審計整改</td></tr>
-            <tr><td>Token 成本</td><td>低</td><td>高（多 agent 並行）</td></tr>
+            <tr><td>William 對話</td><td>手動 <code>create_task.sh</code></td><td>board_tasks</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td>Ideas/參考</td><td><code>save_idea_to_notion.py</code></td><td>Notion Ideas DB</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td>Cron 排程</td><td>crontab 各腳本</td><td>board_tasks</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+            <tr><td>審計告警</td><td><code>audit_to_task.sh</code>（Task #3750 新建）</td><td>board_tasks</td><td><span class="badge bg">✅ 2026-03-22 新增</span></td></tr>
+            <tr><td>失敗任務回填</td><td><code>heartbeat_stuck_check.sh</code> retry=3 觸發</td><td>board_tasks（重置）</td><td><span class="badge bg">✅ 運作中</span></td></tr>
+        </tbody>
+    </table>
+    <h3>已知問題</h3>
+    <div class="danger text-xs">
+        <strong style="color:var(--red)">漏洞（Task #3748 已修補）</strong>：subagent 直接用 <code>supabase_sql.sh INSERT INTO board_tasks</code> 建卡，繞過 <code>create_task.sh</code>，導致 dispatch_prompt 缺失。<br>
+        <strong>修補方式</strong>：Supabase trigger（board_tasks INSERT 時若 dispatch_prompt IS NULL 寫入 task_warnings 表）+ dispatch_prompt 模板末尾禁止直接 SQL 建卡。
+    </div>
+    <h3>注意事項</h3>
+    <div class="info text-xs">所有建卡必須走 <code>~/clawd/scripts/create_task.sh</code>，不得直接 SQL INSERT。dispatch_prompt、acceptance_criteria 為必填欄位。</div>
+</div>
+
+<!-- §3 L2 -->
+<div class="card" id="l2">
+    <h2>§3 L2 任務形成層（路由決策）</h2>
+    <p style="color:var(--muted)" class="mb-3">L2 是 Travis 主控的判斷層。任務進入 board_tasks 後，由 Travis（或 auto_dispatch.sh）判斷走哪條路。</p>
+    <h3>路由判斷標準</h3>
+    <table class="mb-3">
+        <thead><tr><th>條件</th><th>路由</th><th>理由</th></tr></thead>
+        <tbody>
+            <tr><td>子任務數 1–2 個、單一 agent 即可完成、&lt;30 分鐘</td><td><span class="badge bb">L3A sessions_spawn</span></td><td>低成本、快速</td></tr>
+            <tr><td>子任務 ≥3 個、需要並行、需要獨立 git branch</td><td><span class="badge bo">L3B ClawTeam</span></td><td>隔離執行、真正並行</td></tr>
+            <tr><td>影響生產環境、金額 >$X、架構決策</td><td><span class="badge bp">通知 William</span></td><td>需人工確認</td></tr>
+        </tbody>
+    </table>
+    <h3>分解邏輯（尚未實作，需開發）</h3>
+    <div class="card2 text-xs mb-2">
+        <div class="font-semibold mb-1" style="color:var(--teal)">目標：智能任務分解器</div>
+        <div style="color:var(--muted)">Travis 收到任務後，分析 dispatch_prompt 內容，自動判斷：
+        <ol class="list-decimal ml-4 mt-1 space-y-0.5">
+            <li>需要幾個子任務（NLP 分析或規則判斷）</li>
+            <li>子任務間是否有依賴關係（DAG）</li>
+            <li>路由到 L3A 或 L3B</li>
+        </ol>
+        <div class="mt-1">⚠️ 現況：Travis 仍靠人工判斷。自動分解器尚未實作，為 V4.5 後續開發項目。</div>
+        </div>
+    </div>
+    <h3>EMERGENCY_STOP 檢查（L2 層必須）</h3>
+    <pre><span class="c"># 所有 L2 路由腳本開頭必須有</span>
+<span class="kw">if</span> [ -f <span class="str">"$HOME/clawd/shared/EMERGENCY_STOP"</span> ]; then
+  echo <span class="str">"⛔ EMERGENCY_STOP 存在，跳過執行"</span> &gt;&amp;2
+  exit 0
+fi</pre>
+</div>
+
+<!-- §4 L3A -->
+<div class="card" id="l3a">
+    <h2>§4 L3A 輕量執行（sessions_spawn）</h2>
+    <p style="color:var(--muted)" class="mb-3">現有機制，已在生產環境運作。每次 spawn 在 OpenClaw 進程內建立新 session。</p>
+    <h3>標準派發流程</h3>
+    <pre><span class="c"># Travis 派發（主 session 內呼叫）</span>
+sessions_spawn(
+  task=<span class="str">"完整 dispatch_prompt 內容"</span>,
+  label=<span class="str">"task-{id}-{name}"</span>,
+  mode=<span class="str">"run"</span>,
+  model=<span class="str">"openai-codex/gpt-5.4"</span>   <span class="c"># 或 grok / kimi</span>
+)
+
+<span class="c"># Blake/Rex 完成後必須呼叫</span>
+bash ~/clawd/scripts/task_complete.sh {TASK_ID} <span class="str">"完成摘要"</span></pre>
+    <div class="warn text-xs">
+        <strong style="color:var(--yellow)">⚠️ 同時上限</strong>：最多 2 個 subagent 同時執行（AGENTS.md §16 Token 節流規則）。超過會排隊等待。
+    </div>
+    <h3>結果回傳到 L4</h3>
+    <div class="info text-xs"><code>task_complete.sh</code> 會自動：更新 board_tasks status→已完成、寫入 result 欄位、發 Telegram 通知、觸發下一輪 auto_dispatch。</div>
+</div>
+
+<!-- §5 L3B ClawTeam -->
+<div class="card" id="l3b">
+    <h2>§5 L3B ClawTeam Swarm 執行</h2>
+    <div class="danger mb-3 text-xs">
+        <strong style="color:var(--red)">重要：基於原始碼審查的關鍵差異</strong><br>
+        ClawTeam workers 不是 OpenClaw session，而是在 tmux 開新 window 啟動獨立 <code>openclaw</code> CLI 進程。<br>
+        • Worker 不繼承主 session 的 AGENTS.md、SOUL.md、MEMORY.md<br>
+        • Worker 透過 ClawTeam 的 prompt injection 取得身份和任務<br>
+        • 所有 agent 間通訊走 <code>clawteam inbox</code>，不走 Telegram
+    </div>
+
+    <h3>5.1 架構圖（基於 tmux_backend.py）</h3>
+    <pre><span class="c"># 實際執行結構（原碼確認）</span>
+tmux session: <span class="str">clawteam-{team_name}</span>
+├── window 0: leader-agent   ← openclaw CLI 進程
+├── window 1: worker-blake   ← openclaw CLI 進程
+│   env: CLAWTEAM_AGENT_ID, CLAWTEAM_AGENT_NAME, CLAWTEAM_TEAM_NAME
+│   cwd: ~/clawd (git worktree branch: clawteam/{team}/blake)
+├── window 2: worker-rex     ← openclaw CLI 進程
+└── window 3: worker-oscar   ← openclaw CLI 進程</pre>
+
+    <h3>5.2 Worker Prompt 注入（基於 prompt.py）</h3>
+    <p style="color:var(--muted)" class="text-xs mb-2">每個 worker 啟動時自動注入的 prompt（<code>spawn/prompt.py build_agent_prompt()</code>）：</p>
+    <pre><span class="c">## Identity</span>
+- Name: blake
+- Type: worker
+- Team: my-team
+- Leader: travis-leader
+
+<span class="c">## Workspace</span>
+- Working directory: ~/clawd
+- Branch: clawteam/my-team/blake   <span class="c">← 獨立 git worktree</span>
+
+<span class="c">## Task</span>
+{task 內容}
+
+<span class="c">## Coordination Protocol（自動注入）</span>
+- clawteam task list my-team --owner blake
+- clawteam task update my-team &lt;id&gt; --status in_progress
+- clawteam inbox send my-team travis-leader "完成了 X"
+- clawteam cost report my-team --input-tokens N --output-tokens N</pre>
+
+    <div class="warn text-xs mb-3">
+        <strong style="color:var(--yellow)">⚠️ AGENTS.md 不會自動繼承</strong><br>
+        Worker 只拿到 ClawTeam 注入的 prompt，不會讀取 AGENTS.md/SOUL.md。<br>
+        解法：在 TOML 模板的 <code>system_prompt</code> 欄位加入我們的核心規則（至少是禁止直接 SQL 建卡、task_complete.sh 必須呼叫等關鍵規則）。
+    </div>
+
+    <h3>5.3 Git Worktree 隔離（基於 workspace/git.py）</h3>
+    <pre><span class="c"># ClawTeam 執行的 git 指令（原碼確認）</span>
+git worktree add -b clawteam/my-team/blake \
+  ~/clawd/.clawteam/my-team/blake HEAD
+
+<span class="c"># 前提：~/clawd 必須是 git repo ← 已確認 ✅</span>
+<span class="c"># 注意：每個 worker 的 worktree branch 不能有未 commit 的衝突</span></pre>
+    <div class="info text-xs">worktree 路徑預設是 <code>~/clawd/.clawteam/{team}/{agent}</code>。Worker 完成後需 merge 或 cherry-pick 回主 branch，ClawTeam 目前不自動合併。</div>
+
+    <h3>5.4 使用 OpenClaw 專用 Fork</h3>
+    <div class="good text-xs mb-3">
+        <strong style="color:var(--green)">推薦：win4r/ClawTeam-OpenClaw</strong>（非 pip install clawteam）<br>
+        • OpenClaw 為預設 agent（不是 claude）<br>
+        • per-agent session isolation 已設定<br>
+        • exec approval auto-config（不會每次問）
+    </div>
+    <pre><span class="c"># 安裝（見 §7 完整步驟）</span>
+git clone https://github.com/win4r/ClawTeam-OpenClaw.git
+cd ClawTeam-OpenClaw
+pip install -e .
+<span class="c"># 或一鍵安裝</span>
+bash scripts/install-openclaw.sh</pre>
+
+    <h3>5.5 TOML 模板（我們需要自訂）</h3>
+    <pre><span class="c"># ~/clawd/clawteam-templates/travis-team.toml</span>
+[template]
+name = <span class="str">"travis-team"</span>
+command = [<span class="str">"openclaw"</span>]
+
+<span class="c"># 注入我們的關鍵規則</span>
+system_prompt = <span class="str">"""
+禁止直接 SQL INSERT board_tasks，必須用 create_task.sh。
+完成後必須呼叫 task_complete.sh。
+"""</span>
+
+[[agents]]
+name = <span class="str">"blake"</span>
+type = <span class="str">"worker"</span>
+model = <span class="str">"openai-codex/gpt-5.4"</span>
+role = <span class="str">"Coder，負責程式碼實作"</span>
+
+[[agents]]
+name = <span class="str">"rex"</span>
+type = <span class="str">"worker"</span>
+model = <span class="str">"xai/grok-4.20-beta-0309-reasoning"</span>
+role = <span class="str">"Thinker，負責研究與分析"</span></pre>
+    <div class="warn text-xs">⚠️ TOML 模板尚未建立。這是 V4.5 實作的第一個具體工作項目。</div>
+
+    <h3>5.6 結果彙整回 L4</h3>
+    <p style="color:var(--muted)" class="text-xs mb-2">Leader 收到所有 worker 完成訊息後，需呼叫我們的 task_complete.sh 觸發 L4：</p>
+    <pre><span class="c"># Leader 彙整完成後（在 ClawTeam leader 的 task prompt 末尾加入）</span>
+<span class="c"># 等待所有 worker 完成</span>
+clawteam task wait my-team --all
+
+<span class="c"># 彙整結果，回寫到我們的 board_tasks</span>
+bash ~/clawd/scripts/task_complete.sh {TASK_ID} <span class="str">"ClawTeam swarm 完成：{摘要}"</span></pre>
+</div>
+
+<!-- §6 L4 -->
+<div class="card" id="l4">
+    <h2>§6 L4 反饋優化層（閉環）</h2>
+    <table class="mb-3">
+        <thead><tr><th>情況</th><th>觸發條件</th><th>動作</th><th>腳本</th></tr></thead>
+        <tbody>
+            <tr><td>✅ 成功</td><td>task_complete.sh 呼叫</td><td>存 experience_log、更新 dispatch_prompt 分數</td><td>task_complete.sh</td></tr>
+            <tr><td>⚠️ 失敗 retry&lt;3</td><td>heartbeat_stuck_check.sh 偵測</td><td>retry_count+1、第2次觸發智能診斷、重置回待派發</td><td>heartbeat_stuck_check.sh</td></tr>
+            <tr><td>🔴 失敗 retry=3</td><td>heartbeat_stuck_check.sh</td><td>標「已失敗」+ Telegram 通知 William + 回填 L1 任務堆疊</td><td>heartbeat_stuck_check.sh + notify_telegram.sh</td></tr>
+            <tr><td>📋 審計發現問題</td><td>daily_system_analysis.sh</td><td>自動呼叫 audit_to_task.sh 建任務卡</td><td>audit_to_task.sh（Task #3750）</td></tr>
+        </tbody>
+    </table>
+    <h3>EMERGENCY_STOP 覆蓋範圍（已實作）</h3>
+    <div class="good text-xs">
+        ✅ auto_dispatch.sh &nbsp;|&nbsp; ✅ auto_retry.sh &nbsp;|&nbsp; ✅ unified_dispatcher.sh &nbsp;|&nbsp; ✅ unified_monitor.sh &nbsp;|&nbsp; ✅ heartbeat_stuck_check.sh<br>
+        觸發方式：<code>touch ~/clawd/shared/EMERGENCY_STOP</code> 或發送 <code>/stop</code>
+    </div>
+    <div class="warn text-xs mt-2">⚠️ ClawTeam workers 不受 EMERGENCY_STOP 控制。停止 ClawTeam 需用 <code>tmux kill-session -t clawteam-{team}</code>。需要加入 emergency_stop.sh 整合。</div>
+</div>
+
+<!-- §7 安裝 -->
+<div class="card" id="install">
+    <h2>§7 ClawTeam 安裝與設定（完整步驟）</h2>
+    <div class="space-y-3">
+        <div>
+            <div class="flex items-center gap-2 mb-1"><span class="step-num bg text-green-900">1</span><span class="font-semibold">前置確認</span></div>
+            <pre>python3 --version    <span class="c"># 需要 3.10+</span>
+tmux -V              <span class="c"># 需要任意版本</span>
+openclaw --version   <span class="c"># 確認已安裝</span>
+git -C ~/clawd rev-parse --is-inside-work-tree  <span class="c"># 應輸出 true ✅</span></pre>
+        </div>
+        <div>
+            <div class="flex items-center gap-2 mb-1"><span class="step-num bo text-orange-900">2</span><span class="font-semibold">安裝 ClawTeam-OpenClaw fork（非官方版）</span></div>
+            <pre>cd ~/clawd/tools   <span class="c"># 或任何合適目錄</span>
+git clone https://github.com/win4r/ClawTeam-OpenClaw.git
+cd ClawTeam-OpenClaw
+pip install -e .
+<span class="c"># 驗證安裝</span>
+clawteam --help</pre>
+            <div class="danger text-xs mt-1">❌ 不要用 <code>pip install clawteam</code>——那是上游版本，預設 claude 而非 openclaw，缺少 OpenClaw 整合。</div>
+        </div>
+        <div>
+            <div class="flex items-center gap-2 mb-1"><span class="step-num bp text-purple-900">3</span><span class="font-semibold">建立 TOML 模板</span></div>
+            <pre>mkdir -p ~/clawd/clawteam-templates
+<span class="c"># 建立 travis-team.toml（見 §5.5）</span></pre>
+        </div>
+        <div>
+            <div class="flex items-center gap-2 mb-1"><span class="step-num bt text-teal-900">4</span><span class="font-semibold">整合 EMERGENCY_STOP 到 ClawTeam</span></div>
+            <pre><span class="c"># 在 emergency_stop.sh 加入 ClawTeam 停止邏輯</span>
+<span class="kw">if</span> tmux list-sessions 2&gt;/dev/null | grep -q <span class="str">"clawteam-"</span>; then
+  tmux list-sessions | grep <span class="str">"clawteam-"</span> | awk -F: <span class="str">'{print $1}'</span> | \
+    xargs -I{} tmux kill-session -t {}
+fi</pre>
+        </div>
+        <div>
+            <div class="flex items-center gap-2 mb-1"><span class="step-num bb text-blue-900">5</span><span class="font-semibold">第一次測試</span></div>
+            <pre><span class="c"># 小規模測試（先用 --dry-run 或小任務）</span>
+clawteam team spawn-team test-team -d <span class="str">"測試用"</span> -n travis
+clawteam spawn tmux openclaw \
+  --team test-team \
+  --agent-name blake-test \
+  --task <span class="str">"echo 'Hello from ClawTeam' && clawteam task list test-team"</span>
+clawteam board attach test-team</pre>
+        </div>
+    </div>
+</div>
+
+<!-- §8 限制與風險 -->
+<div class="card" id="limits">
+    <h2>§8 已知限制與風險</h2>
+    <table>
+        <thead><tr><th>問題</th><th>影響</th><th>解法</th><th>優先級</th></tr></thead>
+        <tbody>
+            <tr>
+                <td>Workers 不繼承 AGENTS.md</td>
+                <td>Worker 可能不遵循我們的行為規則</td>
+                <td>在 TOML system_prompt 注入關鍵規則</td>
+                <td><span class="badge br">P0 必修</span></td>
+            </tr>
+            <tr>
+                <td>ClawTeam 不受 EMERGENCY_STOP 控制</td>
+                <td>/stop 無法停止執行中的 swarm</td>
+                <td>修改 emergency_stop.sh 加入 tmux kill</td>
+                <td><span class="badge br">P0 必修</span></td>
+            </tr>
+            <tr>
+                <td>git worktree 需要 clean 狀態</td>
+                <td>~/clawd 有未 commit 檔案會導致 worktree 建立失敗</td>
+                <td>派發前確認 git status 乾淨</td>
+                <td><span class="badge by">P1</span></td>
+            </tr>
+            <tr>
+                <td>Worker 結果不自動 merge 回主 branch</td>
+                <td>Worker 的程式碼改動留在獨立 branch</td>
+                <td>Leader 任務 prompt 需包含 merge 步驟</td>
+                <td><span class="badge by">P1</span></td>
+            </tr>
+            <tr>
+                <td>Token 成本翻倍</td>
+                <td>3 個 workers = 3 倍 token 用量</td>
+                <td>只有真正需要並行的任務才走 ClawTeam</td>
+                <td><span class="badge bt">P2</span></td>
+            </tr>
+            <tr>
+                <td>tmux 環境依賴</td>
+                <td>無 tmux 則完全無法使用</td>
+                <td>tmux 已安裝，確認版本即可</td>
+                <td><span class="badge bg">已確認</span></td>
+            </tr>
         </tbody>
     </table>
 </div>
 
-<!-- ClawTeam 整合細節 -->
-<div class="card">
-    <div class="section-title"><span>🦞</span> ClawTeam 核心指令速查</div>
-    <div class="grid grid-cols-2 gap-3 text-xs">
-        <div class="card2">
-            <div class="text-orange-400 font-medium mb-2">初始化團隊</div>
-            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam team spawn-team &lt;team&gt; \
-  -d "任務描述" \
-  -n leader-agent</code>
-        </div>
-        <div class="card2">
-            <div class="text-orange-400 font-medium mb-2">Spawn Worker</div>
-            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam spawn tmux openclaw \
-  --team myteam \
-  --agent-name blake \
-  --task "實作功能 X"</code>
-        </div>
-        <div class="card2">
-            <div class="text-orange-400 font-medium mb-2">Agent 間通訊</div>
-            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam inbox send \
-  --to rex --msg "完成 A 模組"
-clawteam inbox receive</code>
-        </div>
-        <div class="card2">
-            <div class="text-orange-400 font-medium mb-2">監控看板</div>
-            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam board show
-clawteam board serve  # Web UI
-clawteam task list --team myteam</code>
-        </div>
-    </div>
-    <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
-        <div class="flex items-center gap-2"><span class="badge badge-green">✅</span> pip install clawteam</div>
-        <div class="flex items-center gap-2"><span class="badge badge-green">✅</span> 官方支援 OpenClaw</div>
-        <div class="flex items-center gap-2"><span class="badge badge-yellow">⚠️</span> 需 tmux + git 環境</div>
-    </div>
-</div>
-
-<!-- 閉環補強 -->
-<div class="card">
-    <div class="section-title"><span>🔒</span> 閉環補強狀態</div>
-    <div class="grid grid-cols-3 gap-4 text-xs">
-        <div class="card2 border-l-2 border-red-500">
-            <div class="text-red-400 font-semibold mb-2">失敗閉環</div>
-            <div class="space-y-1 text-slate-400">
-                <div>✅ retry_count 上限（3次）</div>
-                <div>✅ 達上限 → 回填 L1</div>
-                <div>✅ 審計告警 → audit_to_task.sh → 自動建卡</div>
-            </div>
-        </div>
-        <div class="card2 border-l-2 border-yellow-500">
-            <div class="text-yellow-400 font-semibold mb-2">重試機制</div>
-            <div class="space-y-1 text-slate-400">
-                <div>✅ heartbeat_stuck_check.sh</div>
-                <div>✅ 第2次重試前智能診斷</div>
-                <div>✅ auto_retry.sh（每30分鐘）</div>
-            </div>
-        </div>
-        <div class="card2 border-l-2 border-purple-500">
-            <div class="text-purple-400 font-semibold mb-2">緊急停止</div>
-            <div class="space-y-1 text-slate-400">
-                <div>✅ auto_dispatch.sh</div>
-                <div>✅ auto_retry.sh</div>
-                <div>✅ unified_dispatcher.sh</div>
-                <div>✅ unified_monitor.sh</div>
-                <div>✅ heartbeat_stuck_check.sh</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Mermaid 完整圖 -->
-<div class="card">
-    <div class="section-title"><span>📊</span> 完整流程圖</div>
+<!-- §9 流程圖 -->
+<div class="card" id="flow">
+    <h2>§9 完整流程圖（含所有細節）</h2>
     <div class="mermaid">
 flowchart TD
-    A([William 任何輸入]) --> B[L1 統一入口\n任務堆疊]
-    AUDIT([📋 審計告警]) -->|audit_to_task.sh| B
-    
-    B --> C[L2 任務形成\n複雜度分析 + 路由決策]
-    
-    C --> D{路由判斷}
-    D -->|子任務≤2\n輕量任務| E[L3A\nsessions_spawn]
-    D -->|子任務≥3\n需並行/隔離| F[L3B\nClawTeam Swarm]
-    D -->|需人工確認| G[🔔 通知 William\n等待確認]
-    G -->|William 確認| B
-    
-    E --> H[Blake/Rex/Oscar\n單 agent 執行]
-    H --> I[task_complete.sh]
-    
-    F --> J[Leader Agent\nspawn-team]
-    J --> K1[Worker A\ngit worktree]
-    J --> K2[Worker B\ngit worktree]
-    J --> K3[Worker C\ngit worktree]
-    K1 & K2 & K3 -->|inbox 彙整| L[結果合併]
-    L --> I
-    
-    I --> M[L4 反饋優化]
-    M --> N{成功?}
-    N -->|✅ 是| O[experience_log\ndispatch_prompt 優化]
-    N -->|❌ retry<3| P[智能診斷\n重新路由]
-    P --> C
-    N -->|🔴 retry=3| Q[標記已失敗\n通知 William]
-    Q --> B
-    
-    STOP([⛔ /stop]) -.->|EMERGENCY_STOP| C
-    STOP -.-> E
-    STOP -.-> F
-    STOP -.-> M
+    A([William 任何輸入]) --> B[L1 任務堆疊\nboard_tasks]
+    AUDIT([📋 每日審計告警]) -->|audit_to_task.sh| B
+    FAIL_BACK([🔴 失敗 retry=3]) -->|回填| B
 
-    style A fill:#7B68EE22,stroke:#7B68EE
+    B --> CHK{EMERGENCY_STOP?}
+    CHK -->|是| STOP([⛔ 中止])
+    CHK -->|否| C[L2 任務形成\nTravis 分析 dispatch_prompt]
+
+    C --> D{路由決策}
+    D -->|子任務≤2\n輕量| E[L3A\nsessions_spawn]
+    D -->|子任務≥3\n需並行/git隔離| F[L3B\nClawTeam Swarm]
+    D -->|生產環境/架構決策| G[🔔 通知 William]
+    G -->|William 確認| B
+
+    E --> H[Blake/Rex/Oscar\n單 openclaw session]
+    H --> DONE[task_complete.sh]
+
+    F --> J[Leader Agent\nclawteam team spawn-team]
+    J --> K1[Worker A\ngit worktree branch]
+    J --> K2[Worker B\ngit worktree branch]
+    J --> K3[Worker C\ngit worktree branch]
+    K1 & K2 & K3 -->|clawteam inbox| L[Leader 彙整]
+    L --> M[merge worktree → main branch]
+    M --> DONE
+
+    DONE --> N[L4 反饋優化]
+    N --> R{成功?}
+    R -->|✅| O[experience_log\n優化 dispatch_prompt]
+    R -->|❌ retry<3| P[智能診斷\nretry_count+1\n重置→待派發]
+    P --> B
+    R -->|🔴 retry=3| FAIL_BACK
+
     style B fill:#7B68EE22,stroke:#7B68EE
     style C fill:#20B2AA22,stroke:#20B2AA
     style E fill:#3B82F622,stroke:#3B82F6
     style F fill:#FF6B3522,stroke:#FF6B35
     style J fill:#FF6B3533,stroke:#FF6B35
-    style M fill:#10B98122,stroke:#10B981
-    style Q fill:#EF444422,stroke:#EF4444
+    style N fill:#10B98122,stroke:#10B981
+    style FAIL_BACK fill:#EF444422,stroke:#EF4444
     style STOP fill:#EF444433,stroke:#EF4444
     style AUDIT fill:#F59E0B22,stroke:#F59E0B
     </div>
 </div>
 
+<!-- 待辦 -->
+<div class="card">
+    <h2>📌 V4.5 實作待辦（依優先序）</h2>
+    <table>
+        <thead><tr><th>#</th><th>任務</th><th>說明</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>安裝 ClawTeam-OpenClaw</td><td><code>git clone win4r/ClawTeam-OpenClaw && pip install -e .</code></td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>2</td><td>建立 TOML 模板</td><td><code>~/clawd/clawteam-templates/travis-team.toml</code>，注入核心規則</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>3</td><td>EMERGENCY_STOP 整合</td><td>修改 emergency_stop.sh 加入 tmux kill clawteam sessions</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>4</td><td>小規模測試</td><td>2-agent 小任務驗證整條流程</td><td><span class="badge by">待執行</span></td></tr>
+            <tr><td>5</td><td>智能任務分解器</td><td>自動判斷走 L3A/L3B 的邏輯</td><td><span class="badge br">未開始</span></td></tr>
+            <tr><td>—</td><td>Task #3748 修補漏洞</td><td>trigger + 模板禁止直接 SQL 建卡</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3749 EMERGENCY_STOP</td><td>auto_retry + unified_dispatcher + monitor</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3750 審計→自動建卡</td><td>audit_to_task.sh</td><td><span class="badge bg">✅ 完成</span></td></tr>
+        </tbody>
+    </table>
+</div>
+
 </main>
 
-<footer class="border-t border-slate-800 py-6 mt-8">
-    <div class="max-w-5xl mx-auto px-6 text-center text-slate-600 text-xs">
-        Travis V4.5 · ClawTeam 整合版 · 2026-03-22 · 由 Travis + Rex + Blake 設計
+<footer class="border-t py-5 mt-6" style="border-color:var(--border)">
+    <div class="max-w-4xl mx-auto px-5 text-xs" style="color:var(--muted)">
+        Travis V4.5 實作規劃書 · 基於 ClawTeam 原碼審查（spawn/tmux_backend.py, workspace/git.py, spawn/prompt.py）· 2026-03-22
     </div>
 </footer>
 
 <script>
-mermaid.initialize({ startOnLoad: true, theme: 'dark', flowchart: { curve: 'basis' } });
+mermaid.initialize({ startOnLoad: true, theme: 'dark', flowchart: { curve: 'basis', padding: 20 } });
 </script>
 </body>
 </html>
