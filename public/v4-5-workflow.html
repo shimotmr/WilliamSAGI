@@ -86,6 +86,7 @@
         <a href="#gaps">§7 斷點清單（需補齊）</a>
         <a href="#todo">§8 實作待辦（依優先序）</a>
         <a href="#flow">§9 完整流程圖</a>
+        <a href="#tests">§10 整合測試清單</a>
     </div>
     </div>
 </div>
@@ -562,7 +563,7 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
                 <td><code>audit_dispatch_prompt.py</code></td>
                 <td>應在派發前強制呼叫（<strong>未接入 auto_dispatch.sh</strong>）</td>
                 <td>→ 檢查結構/安全/清晰度（schema + rules）<br>→ ≥70 分 → 允許派發<br>→ &lt;70 分 → exit 1 阻止 + 通知 Travis 修正</td>
-                <td><span class="badge by">⚠️ 腳本存在，未接入 L2（待 P1-0c）</span></td>
+                <td><span class="badge by">✅ 已接入 auto_dispatch.sh（Task #3760）</span></td>
             </tr>
             <tr>
                 <td><code>L2-01</code></td>
@@ -838,14 +839,14 @@ flowchart LR
             <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（03:50）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
             <tr><td><span class="badge br">P0</span></td><td>排程錯開（Race Condition 修正）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
             <!-- P1-0 審計新增（最優先） -->
-            <tr style="background:#EF444408"><td><span class="badge br">P1-0</span></td><td>supabase_sql.sh 失敗靜默處理修復（⭐ 先做）</td><td>所有改善的基礎，DB 失敗才可見</td><td>低（加 exit code 檢查 + 通知）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#EF444408"><td><span class="badge br">P1-0b</span></td><td>heartbeat_stuck_check + auto_dispatch 重複派發保護</td><td>競態條件：同任務 spawn 兩次</td><td>低（SELECT FOR UPDATE）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#EF444408"><td><span class="badge br">P1-0c</span></td><td>audit_dispatch_prompt.py 接入 auto_dispatch.sh（品質 Gate L2-00b）</td><td>派發前強制品質檢查，&lt;70分阻止 spawn</td><td>低（在 auto_dispatch.sh 加 5 行呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0</span></td><td>supabase_sql.sh 失敗靜默處理修復（⭐ 先做）</td><td>所有改善的基礎，DB 失敗才可見</td><td>低（加 exit code 檢查 + 通知）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0b</span></td><td>heartbeat_stuck_check + auto_dispatch 重複派發保護</td><td>競態條件：同任務 spawn 兩次</td><td>低（SELECT FOR UPDATE）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#EF444408"><td><span class="badge br">P1-0c</span></td><td>audit_dispatch_prompt.py 接入 auto_dispatch.sh（品質 Gate L2-00b）</td><td>派發前強制品質檢查，&lt;70分阻止 spawn</td><td>低（在 auto_dispatch.sh 加 5 行呼叫）</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <!-- P1 任務來源閉環 -->
-            <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#F59E0B08"><td><span class="badge by">P1-C</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低（加 except + crontab 修正）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#F59E0B08"><td><span class="badge by">P1-Cb</span></td><td>notion_idea_pipeline.py 死碼修復</td><td>ask_clarification() monkey-patch 順序問題</td><td>低（修函數呼叫順序）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-C</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低（加 except + crontab 修正）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-Cb</span></td><td>notion_idea_pipeline.py 死碼修復</td><td>ask_clarification() monkey-patch 順序問題</td><td>低（修函數呼叫順序）</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <tr style="background:#F59E0B08">
                 <td><span class="badge by">P1-D</span></td>
                 <td><code>idea_research_booster.py</code>（新腳本 S-06a）</td>
@@ -862,11 +863,11 @@ flowchart LR
                 <td><span class="badge by">待啟動</span></td>
             </tr>
             <!-- P1 ClawTeam -->
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-E</span></td><td>安裝 ClawTeam-OpenClaw（win4r fork）</td><td>L3B 路徑啟用</td><td>低（git clone + pip install）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-F</span></td><td>建立 TOML 模板（travis-team.toml）</td><td>Workers 遵守系統規則</td><td>低（建文件）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-G</span></td><td>emergency_stop.sh 整合 ClawTeam tmux kill</td><td>/stop 可停止所有 ClawTeam</td><td>低（加 5 行）</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>clawteam_health_check.sh（新增）</td><td>Worker 崩潰後 heartbeat 可偵測（查 tmux）</td><td>低</td><td><span class="badge by">待啟動</span></td></tr>
-            <tr style="background:#FF6B3508"><td><span class="badge by">P1-I</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-E</span></td><td>安裝 ClawTeam-OpenClaw（win4r fork）</td><td>L3B 路徑啟用</td><td>低（git clone + pip install）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-F</span></td><td>建立 TOML 模板（travis-team.toml）</td><td>Workers 遵守系統規則</td><td>低（建文件）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-G</span></td><td>emergency_stop.sh 整合 ClawTeam tmux kill</td><td>/stop 可停止所有 ClawTeam</td><td>低（加 5 行）</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>clawteam_health_check.sh（新增）</td><td>Worker 崩潰後 heartbeat 可偵測（查 tmux）</td><td>低</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-I</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge bg">✅ 完成</span></td></tr>
             <!-- P2 -->
             <tr><td><span class="badge bb">P2-A</span></td><td>Notion API exponential backoff</td><td>批量評分時 rate limit 處理</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
             <tr><td><span class="badge bb">P2-B</span></td><td>Notion OAuth token 到期監控（到期前 30 天告警）</td><td>靜默失效預防</td><td>低</td><td><span class="badge br">未開始</span></td></tr>
@@ -954,6 +955,30 @@ flowchart TD
     style OK fill:#10B98122,stroke:#10B981
     style QG fill:#F59E0B22,stroke:#F59E0B
     style L405 fill:#10B98122,stroke:#10B981
+    </div>
+</div>
+
+<!-- §10 整合測試清單 -->
+<div class="card section-anchor" id="tests">
+    <h2>§10 整合測試清單（P1 完成後執行）</h2>
+    <p style="color:var(--muted)" class="text-xs mb-4">所有 P1 任務於 2026-03-22 完成。以下為待執行的錯誤情境測試，結果將填入後列。</p>
+    <table>
+        <thead><tr><th>編號</th><th>測試項目</th><th>測試方式</th><th>預期結果</th><th>實際結果</th><th>狀態</th></tr></thead>
+        <tbody>
+            <tr><td>T-01</td><td>supabase_sql.sh 失敗可見</td><td>執行錯誤 SQL</td><td>exit 1 + stderr 錯誤訊息</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-02</td><td>dispatch 重複派發保護</td><td>同時執行 auto_dispatch + heartbeat_stuck</td><td>後者顯示「⚠️ 另一個 dispatch 正在執行」</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-03</td><td>dispatch_prompt 品質 Gate</td><td>建空 dispatch_prompt 任務觸發 auto_dispatch</td><td>任務狀態→品質不足，Telegram 通知</td><td>✅ score 45/100 被阻止（Task #3760 測試）</td><td><span class="badge bg">✅ 已驗證</span></td></tr>
+            <tr><td>T-04</td><td>EMERGENCY_STOP 全面中止</td><td>touch ~/clawd/shared/EMERGENCY_STOP</td><td>auto_dispatch、auto_retry、unified_dispatcher、unified_monitor 全部跳過</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-05</td><td>ClawTeam EMERGENCY_STOP</td><td>啟動 ClawTeam session 後觸發 /stop</td><td>tmux clawteam-* sessions 全部被 kill</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-06</td><td>retry=3 失敗回填</td><td>建一個永遠失敗的任務，讓 heartbeat 偵測 3 次</td><td>狀態→已失敗，Telegram 通知 William，回填任務堆疊</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-07</td><td>Notion API 429 處理</td><td>短時間大量請求 notion_idea_pipeline.py</td><td>backoff 重試，不靜默失敗</td><td>—</td><td><span class="badge by">待測試（P2-A 完成後）</span></td></tr>
+            <tr><td>T-08</td><td>daily_ideation 建卡</td><td>執行 daily_ideation.py，觸發 P1/P2 提案</td><td>P1/P2 提案自動出現在 board_tasks，P3 不建卡</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-09</td><td>ClawTeam 2-worker dry-run</td><td>clawteam spawn 2 個 worker 執行 echo 任務</td><td>兩個 tmux window，board 顯示進度，彙整後 task_complete</td><td>—</td><td><span class="badge by">待測試</span></td></tr>
+            <tr><td>T-10</td><td>idea_research_booster dry-run</td><td>python3 idea_research_booster.py --dry-run</td><td>顯示預計動作但不實際建卡/更新 Notion</td><td>⚠️ Notion API 400 錯誤（status filter 格式待修正）</td><td><span class="badge by">待修正</span></td></tr>
+        </tbody>
+    </table>
+    <div class="info text-xs mt-3">
+        <strong>執行時機</strong>：P2 任務啟動前完成 T-01~T-09。每個測試通過後填入「實際結果」欄位並更新狀態。T-10 待 Notion status filter 修正後執行。
     </div>
 </div>
 
