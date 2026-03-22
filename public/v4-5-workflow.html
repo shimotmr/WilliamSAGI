@@ -81,7 +81,7 @@
     </div>
     <div>
         <a href="#l2">§2 L2 任務形成 + 路由決策</a>
-        <a href="#l3a">§3 L3A 輕量執行（sessions_spawn）</a>
+        <a href="#l3a">§3 L3A 輕量執行（cron isolated）</a>
         <a href="#l3b">§4 L3B ClawTeam Swarm</a>
         <a href="#l4">§5 L4 反饋優化閉環</a>
         <a href="#scripts">§6 腳本清單（編號 + 層級 + 相依）</a>
@@ -307,13 +307,13 @@ notion_idea_pipeline.py（每日 04:00）
     <table class="mb-3">
         <thead><tr><th>條件</th><th>路由</th><th>執行者</th></tr></thead>
         <tbody>
-            <tr><td>子任務 1–2、單 agent、&lt;30 分鐘</td><td><span class="badge bb">L3A sessions_spawn</span></td><td>auto_dispatch.sh → sessions_spawn</td></tr>
+            <tr><td>子任務 1–2、單 agent、&lt;30 分鐘</td><td><span class="badge bb">L3A cron isolated</span></td><td>auto_dispatch.sh → openclaw cron add --session isolated（Gateway 直接執行）</td></tr>
             <tr><td>子任務 ≥3、需並行、需 git 隔離</td><td><span class="badge bo">L3B ClawTeam</span></td><td>Travis 手動判斷（自動分解器未實作）</td></tr>
             <tr><td>影響生產環境、架構決策</td><td><span class="badge bp">通知 William</span></td><td>notify_telegram.sh → 等確認 → 回 S1</td></tr>
         </tbody>
     </table>
     <h3>串接腳本</h3>
-    <pre><span class="c"># L3A 路由（auto_dispatch.sh 核心邏輯）</span>
+    <pre><span class="c"># L3A 路由（auto_dispatch.sh 核心邏輯，2026-03-23 修正）</span>
 <span class="kw">while</span> task = SELECT * FROM board_tasks WHERE status=<span class="str">'待派發'</span>:
     <span class="c"># EMERGENCY_STOP 檢查</span>
     [ -f ~/clawd/shared/EMERGENCY_STOP ] && exit 0
@@ -328,10 +328,10 @@ clawteam spawn tmux openclaw --team {team} --agent-name blake --task {prompt}</p
 
 <!-- §3 L3A -->
 <div class="card section-anchor" id="l3a">
-    <h2>§3 L3A 輕量執行（sessions_spawn）</h2>
+    <h2>§3 L3A 輕量執行（openclaw cron isolated）</h2>
     <h3>完整串接</h3>
     <pre><span class="c">① auto_dispatch.sh 每 5 分鐘掃 board_tasks WHERE status='待派發'</span>
-  → sessions_spawn(task=dispatch_prompt, model=X, label=<span class="str">"task-{id}-auto"</span>)
+  → openclaw cron add --session isolated --at 1m --message &lt;dispatch_prompt&gt; --model X --delete-after-run<br>  <span class="ok">→ Gateway 直接 spawn isolated agentTurn（無需 Travis 介入）</span>
   → UPDATE board_tasks SET status=<span class="str">'執行中'</span>, updated_at=NOW()
 
 <span class="c">② subagent 執行完成</span>
@@ -686,13 +686,12 @@ flowchart LR
         S06[S-06\nnotion_idea_pipeline.py]
         S06a[S-06a\nidea_research_booster.py]
     end
-    subgraph L2["L2 路由層"]
-        L201[L2-01\nauto_dispatch.sh]
-        L202[L2-02\nauto_claim_and_spawn.sh]
+    subgraph L2["L2 路由 + 直接 Spawn 層"]
+        L201[L2-01\nauto_dispatch.sh\n決策 + 直接 Spawn]
     end
-    subgraph L3["L3 執行層"]
-        L3A[L3A-01\nsessions_spawn]
-        L3B[L3B-01\nclawteam spawn]
+    subgraph L3["L3 執行層（全自動）"]
+        L3A[L3A\nopenclaw cron isolated\nGateway 直接執行]
+        L3B[L3B\nclawteam spawn\n高複雜度任務]
     end
     subgraph L4["L4 反饋層"]
         L401[L4-01\ntask_complete.sh]
@@ -708,15 +707,18 @@ flowchart LR
     S06a -.->|待開發| S06
 
     S01 --> L201
-    L201 --> L202 --> L3A
+    L201 -->|route=L3A| L3A
+    L201 -->|route=L3B| L3B
     L3A --> L401 --> U01
-    L3B -.->|待啟用| L401
+    L3B --> L401
     L402 -->|retry<3| L201
     L402 -->|retry=3| S01
 
     style S06a fill:#EF444422,stroke:#EF4444
     style S02 fill:#F59E0B22,stroke:#F59E0B
     style S04 fill:#F59E0B22,stroke:#F59E0B
+    style L3A fill:#10B98122,stroke:#10B981
+    style L201 fill:#10B98122,stroke:#10B981
     </div>
 </div>
 
@@ -1114,11 +1116,12 @@ flowchart TD
     L201 --> QG{L2-00b\naudit_dispatch_prompt.py\n品質 Gate ≥70分}
     QG -->|"❌ <70分"| FIX[通知 Travis 修正\n回到 board_tasks]
     FIX --> Q
-    QG -->|"✅ ≥70分"| L202[L2-02\nauto_claim_and_spawn.sh]
-    L201 -->|複雜任務| L3B_gate{Travis 判斷\nL3B?}
+    QG -->|"✅ ≥70分"| SPAWN_GATE{route?}
+    SPAWN_GATE -->|"L3A（預設）"| L3A
+    SPAWN_GATE -->|"L3B（_use_clawteam）"| L3B_gate
 
-    L202 -->|openclaw sessions spawn| L3A[L3A-01\nsessions_spawn\nBlake/Rex/Oscar]
-    L3B_gate -->|子任務≥3\n需並行+隔離| L3B[L3B-01\nclawteam spawn\n❌待安裝]
+    L3A[L3A\nopenclaw cron add\n--session isolated\nGateway 直接執行]
+    L3B_gate[L3B\nclawteam spawn\n高複雜度任務]
 
     L3A --> DONE[L4-01\ntask_complete.sh]
     L3B --> CW1[Worker A\ngit worktree]
