@@ -496,18 +496,26 @@ L2/L3 問題 → audit_to_task.sh → create_task.sh → board_tasks
     <table>
         <thead><tr><th>優先</th><th>任務</th><th>影響</th><th>複雜度</th><th>狀態</th></tr></thead>
         <tbody>
-            <tr><td><span class="badge br">P0</span></td><td>補 crontab：daily_system_analysis（每日 03:30）</td><td>審計才會真的跑</td><td>低（一行 crontab）</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（每日 04:00）</td><td>Ideas 才會變任務</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>daily_ideation.py 加建卡邏輯（P1/P2 提案）</td><td>自省結果被執行</td><td>中（修改腳本末尾）</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分</td><td>中</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>安裝 ClawTeam-OpenClaw + 建 TOML 模板</td><td>L3B 路徑可用</td><td>中</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>emergency_stop.sh 整合 ClawTeam</td><td>/stop 全面有效</td><td>低</td><td><span class="badge by">待執行</span></td></tr>
-            <tr><td><span class="badge by">P1</span></td><td>idea_research_booster.py（Auto Research 增強評分）</td><td>低分 Ideas 被研究後提升分數、自動建卡</td><td>中（新腳本 + sessions_spawn）</td><td><span class="badge br">未開始</span></td></tr>
-            <tr><td><span class="badge bb">P2</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷</td><td>高（需 AI 分析）</td><td><span class="badge br">未開始</span></td></tr>
-            <tr><td>—</td><td>Task #3748 修補漏洞</td><td>SQL 建卡漏洞</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
-            <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>緊急停止覆蓋</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
-            <tr><td>—</td><td>Task #3750 audit_to_task.sh</td><td>審計→自動建卡</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <!-- P0 已完成 -->
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：daily_system_analysis（每日 03:30）</td><td>審計才會真的跑</td><td>低</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <tr><td><span class="badge br">P0</span></td><td>補 crontab：notion_idea_pipeline（每日 04:00）</td><td>Ideas 才會變任務</td><td>低</td><td><span class="badge bg">✅ 2026-03-22</span></td></tr>
+            <!-- P1 任務來源閉環 -->
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-A</span></td><td>daily_ideation.py 加建卡邏輯</td><td>自省提案 P1/P2 自動建卡</td><td>中（修改腳本末尾 ~20 行）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-B</span></td><td>reference_analyzer.py 接 notion_idea_pipeline</td><td>參考存完即評分，不再積壓</td><td>中（腳本結尾加呼叫）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-C</span></td><td>daily_research_to_tasks.py 加失敗通知 + 2>&amp;1</td><td>靜默失敗變可見</td><td>低（加 except + crontab 修正）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#F59E0B08"><td><span class="badge by">P1-D</span></td><td>idea_research_booster.py（新腳本）</td><td>低分 Ideas 被研究升分後建卡</td><td>中（新腳本 + sessions_spawn Rex）</td><td><span class="badge by">待啟動</span></td></tr>
+            <!-- P1 ClawTeam -->
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-E</span></td><td>安裝 ClawTeam-OpenClaw（win4r fork）</td><td>L3B 路徑啟用</td><td>低（git clone + pip install）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-F</span></td><td>建立 TOML 模板（travis-team.toml）</td><td>Workers 遵守系統規則</td><td>低（建文件）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-G</span></td><td>emergency_stop.sh 整合 ClawTeam</td><td>/stop 可停止所有 ClawTeam</td><td>低（加 5 行 tmux kill）</td><td><span class="badge by">待啟動</span></td></tr>
+            <tr style="background:#FF6B3508"><td><span class="badge by">P1-H</span></td><td>ClawTeam 小規模測試（2 worker 驗證）</td><td>確認整條 L3B 流程可用</td><td>中（測試 + 驗證）</td><td><span class="badge by">待啟動</span></td></tr>
+            <!-- P2 -->
+            <tr><td><span class="badge bb">P2</span></td><td>智能任務分解器（自動判斷 L3A/L3B）</td><td>Travis 不用人工判斷路由</td><td>高（需 AI 分析 dispatch_prompt）</td><td><span class="badge br">未開始</span></td></tr>
+            <!-- 已完成 -->
+            <tr><td>—</td><td>Task #3748 修補 SQL 建卡漏洞</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3749 EMERGENCY_STOP × 3 腳本</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>Task #3750 audit_to_task.sh</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
+            <tr><td>—</td><td>memory 排程補齊（distiller/extractor/dedup）</td><td>—</td><td>—</td><td><span class="badge bg">✅ 完成</span></td></tr>
         </tbody>
     </table>
 </div>
