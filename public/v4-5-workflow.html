@@ -6,11 +6,12 @@
     <title>Travis V4.5 工作流進化</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
+            --bg-dark: #0a0f1e;
+            --bg-card: #111827;
+            --bg-card2: #1a2236;
             --purple: #7B68EE;
             --teal: #20B2AA;
             --orange: #FF6B35;
@@ -18,692 +19,321 @@
             --green: #10B981;
             --red: #EF4444;
             --yellow: #F59E0B;
+            --border: #1e2d45;
         }
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background: var(--bg-dark);
-            color: #e2e8f0;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, var(--purple), var(--teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #334155;
-        }
-        .layer {
-            position: relative;
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin-bottom: 1rem;
-        }
-        .layer-1 { background: linear-gradient(135deg, #7B68EE22, #7B68EE11); border-left: 4px solid var(--purple); }
-        .layer-2 { background: linear-gradient(135deg, #20B2AA22, #20B2AA11); border-left: 4px solid var(--teal); }
-        .layer-3 { background: linear-gradient(135deg, #3B82F622, #3B82F611); border-left: 4px solid var(--blue); }
-        .layer-4 { background: linear-gradient(135deg, #10B98122, #10B98111); border-left: 4px solid var(--green); }
-        .arrow-down {
-            width: 0; 
-            height: 0; 
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 16px solid #475569;
-            margin: 0.5rem auto;
-        }
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .comparison-table th, .comparison-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #334155;
-        }
-        .comparison-table th {
-            background: #1e293b;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        .badge-purple { background: #7B68EE33; color: var(--purple); }
-        .badge-teal { background: #20B2AA33; color: var(--teal); }
-        .badge-blue { background: #3B82F633; color: var(--blue); }
-        .badge-green { background: #10B98133; color: var(--green); }
-        .badge-orange { background: #FF6B3533; color: var(--orange); }
-        .source-item, .script-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            background: #0f172a;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .flow-line {
-            position: absolute;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background: #475569;
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-dark); color: #e2e8f0; min-height: 100vh; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+        .card2 { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+        .badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; }
+        .badge-purple { background: #7B68EE22; color: var(--purple); border: 1px solid #7B68EE44; }
+        .badge-teal { background: #20B2AA22; color: var(--teal); border: 1px solid #20B2AA44; }
+        .badge-blue { background: #3B82F622; color: var(--blue); border: 1px solid #3B82F644; }
+        .badge-green { background: #10B98122; color: var(--green); border: 1px solid #10B98144; }
+        .badge-orange { background: #FF6B3522; color: var(--orange); border: 1px solid #FF6B3544; }
+        .badge-red { background: #EF444422; color: var(--red); border: 1px solid #EF444444; }
+        .badge-yellow { background: #F59E0B22; color: var(--yellow); border: 1px solid #F59E0B44; }
+        .layer-block { border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 0; }
+        .l1 { background: linear-gradient(135deg,#7B68EE14,#7B68EE08); border-left: 3px solid var(--purple); }
+        .l2 { background: linear-gradient(135deg,#20B2AA14,#20B2AA08); border-left: 3px solid var(--teal); }
+        .l3-simple { background: linear-gradient(135deg,#3B82F614,#3B82F608); border-left: 3px solid var(--blue); }
+        .l3-claw { background: linear-gradient(135deg,#FF6B3514,#FF6B3508); border-left: 3px solid var(--orange); }
+        .l4 { background: linear-gradient(135deg,#10B98114,#10B98108); border-left: 3px solid var(--green); }
+        .arrow { text-align: center; color: #334155; font-size: 1.2rem; padding: 0.25rem 0; }
+        .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .cmp-table th { background: #0d1526; color: #64748b; font-weight: 500; padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .cmp-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #0d1526; }
+        .cmp-table tr:last-child td { border-bottom: none; }
+        code { font-family: 'JetBrains Mono', monospace; background: #0d1526; padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.82em; color: #94a3b8; }
+        .section-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .flow-connector { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.4rem 0; color: #475569; font-size: 0.8rem; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .gate { background: #0d1526; border: 1px solid #1e2d45; border-radius: 8px; padding: 0.4rem 0.75rem; font-size: 0.78rem; color: #64748b; display: inline-flex; align-items: center; gap: 0.4rem; }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-sm border-b border-slate-700">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold">Travis <span class="text-purple-400">V4.5</span> 工作流進化</h1>
-                <p class="text-slate-400 text-sm">任務來源 → 任務建立 → 派發執行 三大環節整合</p>
+<body>
+<header class="sticky top-0 z-50 border-b border-slate-800 bg-[#0a0f1e]/95 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div>
+            <div class="text-xl font-bold">Travis <span style="color:var(--purple)">V4.5</span> 工作流</div>
+            <div class="text-xs text-slate-500 mt-0.5">完整架構 · ClawTeam 整合版</div>
+        </div>
+        <div class="flex gap-2">
+            <span class="badge badge-purple">2026-03-22</span>
+            <span class="badge badge-orange">ClawTeam</span>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-8 space-y-6">
+
+<!-- 核心概念 -->
+<div class="card text-center py-8">
+    <div class="text-2xl font-bold mb-2">三層分離 · 動態調度 · Swarm 執行</div>
+    <div class="text-slate-400 text-sm max-w-xl mx-auto mt-2">
+        William 負責輸入，Travis 負責分解與路由，ClawTeam 負責複雜任務的 Swarm 執行，L4 閉環所有結果回饋。
+    </div>
+</div>
+
+<!-- 完整流程 -->
+<div class="card">
+    <div class="section-title"><span>🔗</span> 完整 V4.5 架構流程</div>
+
+    <!-- L1 -->
+    <div class="layer-block l1">
+        <div class="flex justify-between items-start mb-2">
+            <div class="font-semibold" style="color:var(--purple)">L1 討論層 · 統一入口</div>
+            <span class="badge badge-purple">不變</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+            <div class="card2 text-center">💬 William 對話</div>
+            <div class="card2 text-center">⏰ Cron 排程</div>
+            <div class="card2 text-center">💡 Ideas / 審計告警</div>
+        </div>
+        <div class="mt-2 text-xs text-slate-500">所有來源統一進入任務堆疊，保留原有 <code>save_idea_to_notion.py</code> + <code>audit_to_task.sh</code> 流程</div>
+    </div>
+
+    <div class="arrow">↓ 任務堆疊</div>
+
+    <!-- L2 -->
+    <div class="layer-block l2">
+        <div class="flex justify-between items-start mb-2">
+            <div class="font-semibold" style="color:var(--teal)">L2 任務形成層 · 智能分解 + 路由決策</div>
+            <span class="badge badge-teal">Travis 主控</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs mb-3">
+            <div class="card2">
+                <div class="text-slate-400 mb-1">分析維度</div>
+                <div class="space-y-0.5 text-slate-300">
+                    <div>▸ 複雜度（任務拆分需求）</div>
+                    <div>▸ 語言 / 工具需求</div>
+                    <div>▸ Token 成本估算</div>
+                    <div>▸ 時間限制</div>
+                </div>
             </div>
-            <div class="text-right">
-                <span class="badge badge-purple">2026-03-22</span>
+            <div class="card2">
+                <div class="text-slate-400 mb-1">路由決策（核心新增）</div>
+                <div class="space-y-0.5">
+                    <div class="flex items-center gap-2"><span class="badge badge-blue text-xs">簡單</span><span class="text-slate-300">→ sessions_spawn 單 agent</span></div>
+                    <div class="flex items-center gap-2"><span class="badge badge-orange text-xs">複雜</span><span class="text-slate-300">→ ClawTeam Swarm</span></div>
+                    <div class="flex items-center gap-2"><span class="badge badge-purple text-xs">人工</span><span class="text-slate-300">→ 通知 William 確認</span></div>
+                </div>
             </div>
         </div>
-    </header>
+        <div class="text-xs text-slate-500">判斷標準：子任務 ≥3 個、需要並行、需要 git 隔離 → 走 ClawTeam；其餘走 sessions_spawn</div>
+    </div>
 
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        
-        <!-- 核心理念 -->
-        <section class="mb-12">
-            <div class="card text-center py-8">
-                <h2 class="text-3xl font-bold mb-4">三層分離 + 連續推進</h2>
-                <p class="text-slate-300 max-w-2xl mx-auto">
-                    討論一件事不需要當下就執行，但討論的過程會被自動記住、分解、最後才執行。<br>
-                    <span class="text-teal-400">這是「智能任務分解器」的核心概念。</span>
-                </p>
+    <div class="flow-connector"><div class="dot"></div><span>路由分叉</span><div class="dot"></div></div>
+
+    <!-- L3 雙軌 -->
+    <div class="grid grid-cols-2 gap-4">
+        <!-- 簡單路徑 -->
+        <div class="layer-block l3-simple" style="border-radius:12px">
+            <div class="font-semibold mb-2 text-sm" style="color:var(--blue)">L3A · 輕量執行</div>
+            <div class="text-xs text-slate-400 mb-3">簡單任務 / 單一 agent</div>
+            <div class="space-y-1.5 text-xs">
+                <div class="card2">sessions_spawn (GPT-5.4 / Grok / Kimi)</div>
+                <div class="card2">Blake / Rex / Oscar 直接執行</div>
+                <div class="card2">完成 → task_complete.sh → L4</div>
             </div>
-        </section>
-
-        <!-- V4 vs V4.5 對比 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">🔄</span> V4 vs V4.5 流程對比
-            </h2>
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- V4 流程 -->
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-4 text-slate-400">V4 現有流程</h3>
-                    <pre class="text-xs text-slate-400 whitespace-pre-wrap">
-William 討論
-    │
-    ├─→ 直接執行（小任務）
-    │
-    └─→ 討論筆記
-              │
-              └─→ 手動 create_task.sh
-                         │
-                         └─→ 派發選擇（難）
-                                    │
-                                    ├─→ auto_dispatch
-                                    ├─→ sessions_spawn
-                                    └─→ 忘記→擱置
-                    </pre>
+        </div>
+        <!-- ClawTeam 路徑 -->
+        <div class="layer-block l3-claw" style="border-radius:12px">
+            <div class="font-semibold mb-2 text-sm" style="color:var(--orange)">L3B · ClawTeam Swarm</div>
+            <div class="text-xs text-slate-400 mb-3">複雜任務 / 多 agent 並行</div>
+            <div class="space-y-1.5 text-xs">
+                <div class="card2">
+                    <div class="font-medium text-slate-300 mb-1">Leader Agent（Travis 派發）</div>
+                    <code>clawteam team spawn-team &lt;team&gt;</code>
                 </div>
-                <!-- V4.5 流程 -->
-                <div class="card border-teal-500/30">
-                    <h3 class="font-bold text-lg mb-4 text-teal-400">V4.5 進化流程</h3>
-                    <pre class="text-xs text-slate-300 whitespace-pre-wrap">
-William 任何輸入
-    │
-    └─→ 統一入口 → 任務堆疊
-                      │
-                      ↓ 自動萃取
-              任務形成層（智能分解）
-                      │
-                      ↓ William確認
-              執行調度層（派誰+模型）
-                      │
-                      ↓ 完成
-              反饋優化層（經驗記憶）
-                    </pre>
+                <div class="card2">
+                    <div class="font-medium text-slate-300 mb-1">Workers 並行執行</div>
+                    <code>clawteam spawn tmux openclaw</code>
+                    <div class="text-slate-500 mt-1">各自獨立 git worktree + tmux</div>
+                </div>
+                <div class="card2">
+                    <div class="font-medium text-slate-300 mb-1">即時協調</div>
+                    <code>clawteam inbox send/receive</code>
+                    <div class="text-slate-500 mt-1">結果彙整 → task_complete.sh → L4</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- 四大環節 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">🔗</span> 任務流動的四層架構
-            </h2>
-            
-            <!-- L1 討論層 -->
-            <div class="layer layer-1">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg text-purple-400">L1 討論層 (Think)</h3>
-                    <span class="badge badge-purple">輸入統一</span>
-                </div>
-                <p class="text-slate-400 text-sm mb-4">William 任何討論、點子、指令 → 自動存入任務堆疊</p>
-                <div class="grid md:grid-cols-3 gap-4 text-sm">
-                    <div class="source-item">
-                        <span class="text-xl">💬</span>
-                        <div>
-                            <div class="font-medium">對話輸入</div>
-                            <div class="text-slate-500 text-xs">隨時對話</div>
-                        </div>
-                    </div>
-                    <div class="source-item">
-                        <span class="text-xl">⏰</span>
-                        <div>
-                            <div class="font-medium">Cron 排程</div>
-                            <div class="text-slate-500 text-xs">每日定時</div>
-                        </div>
-                    </div>
-                    <div class="source-item">
-                        <span class="text-xl">💡</span>
-                        <div>
-                            <div class="font-medium">Ideas/參考</div>
-                            <div class="text-slate-500 text-xs">Notion 萃取</div>
-                        </div>
-                    </div>
-                </div>
+    <div class="arrow">↓ 結果彙整</div>
+
+    <!-- L4 -->
+    <div class="layer-block l4">
+        <div class="flex justify-between items-start mb-2">
+            <div class="font-semibold" style="color:var(--green)">L4 反饋優化層 · 閉環機制</div>
+            <span class="badge badge-green">全自動</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+            <div class="card2">
+                <div class="text-green-400 font-medium mb-1">✅ 成功</div>
+                <div class="text-slate-400">存入 experience_log<br>優化 dispatch_prompt</div>
             </div>
-
-            <div class="arrow-down"></div>
-
-            <!-- L2 任務形成層 -->
-            <div class="layer layer-2">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg text-teal-400">L2 任務形成層 (Form)</h3>
-                    <span class="badge badge-teal">智能分解</span>
-                </div>
-                <p class="text-slate-400 text-sm mb-4">自動分析複雜度 → 拆成子任務 → 選擇最佳模型與工具</p>
-                <div class="grid md:grid-cols-3 gap-4 text-sm">
-                    <div class="script-item">
-                        <span class="text-xl">📋</span>
-                        <div>
-                            <div class="font-medium">複雜度分析</div>
-                            <div class="text-slate-500 text-xs">判斷拆不拆</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">🤖</span>
-                        <div>
-                            <div class="font-medium">模型選擇</div>
-                            <div class="text-slate-500 text-xs">Claude/GLM/本地</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">⚡</span>
-                        <div>
-                            <div class="font-medium">工具調度</div>
-                            <div class="text-slate-500 text-xs">CLI/網路/本地</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card2">
+                <div class="text-yellow-400 font-medium mb-1">⚠️ 失敗（retry &lt;3）</div>
+                <div class="text-slate-400">智能診斷 → 重新路由<br>retry_count +1</div>
             </div>
-
-            <div class="arrow-down"></div>
-
-            <!-- L3 執行調度層 -->
-            <div class="layer layer-3">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg text-blue-400">L3 執行調度層 (Execute)</h3>
-                    <span class="badge badge-blue">統一派發</span>
-                </div>
-                <p class="text-slate-400 text-sm mb-4">自動派給最適 Agent → 並行/串行 → 結果彙整</p>
-                <div class="grid md:grid-cols-3 gap-4 text-sm">
-                    <div class="script-item">
-                        <span class="text-xl">🎯</span>
-                        <div>
-                            <div class="font-medium">派發策略</div>
-                            <div class="text-slate-500 text-xs">Blake/Rex/Oscar</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">🔀</span>
-                        <div>
-                            <div class="font-medium">並行執行</div>
-                            <div class="text-slate-500 text-xs">多工處理</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">📦</span>
-                        <div>
-                            <div class="font-medium">結果彙整</div>
-                            <div class="text-slate-500 text-xs">統一輸出</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card2">
+                <div class="text-red-400 font-medium mb-1">🔴 失敗（retry=3）</div>
+                <div class="text-slate-400">標記已失敗 + 通知 William<br>回填 L1 任務堆疊</div>
             </div>
+        </div>
+        <div class="mt-2 text-xs text-slate-500">⛔ EMERGENCY_STOP 在 L2/L3/L4 任一環節均可即時中斷（<code>touch ~/clawd/shared/EMERGENCY_STOP</code> 或發送 /stop）</div>
+    </div>
+</div>
 
-            <div class="arrow-down"></div>
+<!-- 兩條路徑對比 -->
+<div class="card">
+    <div class="section-title"><span>⚖️</span> L3A vs L3B 路由判斷</div>
+    <table class="cmp-table">
+        <thead>
+            <tr><th>判斷維度</th><th>→ L3A sessions_spawn</th><th>→ L3B ClawTeam Swarm</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>子任務數量</td><td>1–2 個</td><td>≥3 個並行</td></tr>
+            <tr><td>程式碼隔離需求</td><td>不需要</td><td>需要獨立 git worktree</td></tr>
+            <tr><td>執行時間</td><td>&lt;30 分鐘</td><td>長時間 / 多輪迭代</td></tr>
+            <tr><td>Agent 溝通需求</td><td>無 / Telegram 即可</td><td>即時協調（inbox P2P）</td></tr>
+            <tr><td>典型場景</td><td>研究報告、腳本修復、單頁面</td><td>全棧開發、ML 實驗、審計整改</td></tr>
+            <tr><td>Token 成本</td><td>低</td><td>高（多 agent 並行）</td></tr>
+        </tbody>
+    </table>
+</div>
 
-            <!-- L4 反饋優化層 -->
-            <div class="layer layer-4">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg text-green-400">L4 反饋優化層 (Feedback)</h3>
-                    <span class="badge badge-green">自我進化</span>
-                </div>
-                <p class="text-slate-400 text-sm mb-4">失敗重試 → 經驗記憶 → dispatch_prompt 優化</p>
-                <div class="grid md:grid-cols-3 gap-4 text-sm">
-                    <div class="script-item">
-                        <span class="text-xl">🔄</span>
-                        <div>
-                            <div class="font-medium">失敗重試</div>
-                            <div class="text-slate-500 text-xs">自動分析重跑</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">🧠</span>
-                        <div>
-                            <div class="font-medium">經驗記憶</div>
-                            <div class="text-slate-500 text-xs">failure-memory</div>
-                        </div>
-                    </div>
-                    <div class="script-item">
-                        <span class="text-xl">📈</span>
-                        <div>
-                            <div class="font-medium">Prompt 優化</div>
-                            <div class="text-slate-500 text-xs">自動化</div>
-                        </div>
-                    </div>
-                </div>
+<!-- ClawTeam 整合細節 -->
+<div class="card">
+    <div class="section-title"><span>🦞</span> ClawTeam 核心指令速查</div>
+    <div class="grid grid-cols-2 gap-3 text-xs">
+        <div class="card2">
+            <div class="text-orange-400 font-medium mb-2">初始化團隊</div>
+            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam team spawn-team &lt;team&gt; \
+  -d "任務描述" \
+  -n leader-agent</code>
+        </div>
+        <div class="card2">
+            <div class="text-orange-400 font-medium mb-2">Spawn Worker</div>
+            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam spawn tmux openclaw \
+  --team myteam \
+  --agent-name blake \
+  --task "實作功能 X"</code>
+        </div>
+        <div class="card2">
+            <div class="text-orange-400 font-medium mb-2">Agent 間通訊</div>
+            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam inbox send \
+  --to rex --msg "完成 A 模組"
+clawteam inbox receive</code>
+        </div>
+        <div class="card2">
+            <div class="text-orange-400 font-medium mb-2">監控看板</div>
+            <code class="block p-2 rounded bg-slate-900 text-slate-300 whitespace-pre">clawteam board show
+clawteam board serve  # Web UI
+clawteam task list --team myteam</code>
+        </div>
+    </div>
+    <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+        <div class="flex items-center gap-2"><span class="badge badge-green">✅</span> pip install clawteam</div>
+        <div class="flex items-center gap-2"><span class="badge badge-green">✅</span> 官方支援 OpenClaw</div>
+        <div class="flex items-center gap-2"><span class="badge badge-yellow">⚠️</span> 需 tmux + git 環境</div>
+    </div>
+</div>
+
+<!-- 閉環補強 -->
+<div class="card">
+    <div class="section-title"><span>🔒</span> 閉環補強狀態</div>
+    <div class="grid grid-cols-3 gap-4 text-xs">
+        <div class="card2 border-l-2 border-red-500">
+            <div class="text-red-400 font-semibold mb-2">失敗閉環</div>
+            <div class="space-y-1 text-slate-400">
+                <div>✅ retry_count 上限（3次）</div>
+                <div>✅ 達上限 → 回填 L1</div>
+                <div>✅ 審計告警 → audit_to_task.sh → 自動建卡</div>
             </div>
-        </section>
-
-        <!-- 現有腳本對照 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">📜</span> 現有腳本 → 新流程映射
-            </h2>
-            <div class="card overflow-x-auto">
-                <table class="comparison-table text-sm">
-                    <thead>
-                        <tr>
-                            <th>現有腳本</th>
-                            <th>歸屬</th>
-                            <th>功能</th>
-                            <th>狀態</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>save_idea_to_notion.py</td>
-                            <td><span class="badge badge-purple">L1</span></td>
-                            <td>討論存入 Notion</td>
-                            <td class="text-green-400">✅ 現有</td>
-                        </tr>
-                        <tr>
-                            <td>create_task.sh</td>
-                            <td><span class="badge badge-teal">L2</span></td>
-                            <td>建立任務卡</td>
-                            <td class="text-green-400">✅ 現有</td>
-                        </tr>
-                        <tr>
-                            <td>auto_dispatch.sh</td>
-                            <td><span class="badge badge-blue">L3</span></td>
-                            <td>智能派發</td>
-                            <td class="text-yellow-400">⚡ 需整合</td>
-                        </tr>
-                        <tr>
-                            <td>heartbeat_*.sh</td>
-                            <td><span class="badge badge-green">L4</span></td>
-                            <td>監控與修復</td>
-                            <td class="text-green-400">✅ 現有</td>
-                        </tr>
-                        <tr>
-                            <td>dispatch_prompt_evolution.py</td>
-                            <td><span class="badge badge-green">L4</span></td>
-                            <td>Prompt 優化</td>
-                            <td class="text-yellow-400">⚡ 需自動化</td>
-                        </tr>
-                        <tr class="bg-purple-500/10">
-                            <td class="font-bold">task_stack_manager.py</td>
-                            <td><span class="badge badge-purple">NEW</span></td>
-                            <td>堆疊統一管理</td>
-                            <td class="text-orange-400">⏳ 待開發</td>
-                        </tr>
-                        <tr class="bg-teal-500/10">
-                            <td class="font-bold">task_decomposer.py</td>
-                            <td><span class="badge badge-teal">NEW</span></td>
-                            <td>智能任務分解</td>
-                            <td class="text-orange-400">⏳ 待開發</td>
-                        </tr>
-                    </tbody>
-                </table>
+        </div>
+        <div class="card2 border-l-2 border-yellow-500">
+            <div class="text-yellow-400 font-semibold mb-2">重試機制</div>
+            <div class="space-y-1 text-slate-400">
+                <div>✅ heartbeat_stuck_check.sh</div>
+                <div>✅ 第2次重試前智能診斷</div>
+                <div>✅ auto_retry.sh（每30分鐘）</div>
             </div>
-        </section>
-
-        <!-- 改善亮點 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">✨</span> V4.5 核心改善
-            </h2>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="card">
-                    <h3 class="font-bold text-teal-400 mb-2">統一入口</h3>
-                    <p class="text-slate-400 text-sm">不管 William 從哪裡輸入，最後都會進入統一的「任務堆疊」，不會忘記。</p>
-                </div>
-                <div class="card">
-                    <h3 class="font-bold text-purple-400 mb-2">智能分解</h3>
-                    <p class="text-slate-400 text-sm">複雜任務自動拆解，選擇最適合的模型與工具組合執行。</p>
-                </div>
-                <div class="card">
-                    <h3 class="font-bold text-blue-400 mb-2">並行處理</h3>
-                    <p class="text-slate-400 text-sm">多個獨立子任務同時執行，最後自動彙整結果（gstack 概念）。</p>
-                </div>
-                <div class="card">
-                    <h3 class="font-bold text-green-400 mb-2">自我進化</h3>
-                    <p class="text-slate-400 text-sm">失敗經驗自動記住，dispatch_prompt 持續優化。</p>
-                </div>
+        </div>
+        <div class="card2 border-l-2 border-purple-500">
+            <div class="text-purple-400 font-semibold mb-2">緊急停止</div>
+            <div class="space-y-1 text-slate-400">
+                <div>✅ auto_dispatch.sh</div>
+                <div>✅ auto_retry.sh</div>
+                <div>✅ unified_dispatcher.sh</div>
+                <div>✅ unified_monitor.sh</div>
+                <div>✅ heartbeat_stuck_check.sh</div>
             </div>
-        </section>
+        </div>
+    </div>
+</div>
 
-        <!-- 三個閉環缺口補充 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">🔒</span> V4.5 閉環補強（2026-03-22 新增）
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- 失敗回填 -->
-                <div class="card border-l-4 border-red-500">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-2xl">🔄</span>
-                        <h3 class="font-bold text-red-400">失敗閉環</h3>
-                    </div>
-                    <div class="space-y-2 text-sm text-slate-300">
-                        <div class="flex items-start gap-2"><span class="text-red-400 mt-0.5">▸</span><span>失敗任務自動回填 L1 任務來源，不讓問題消失</span></div>
-                        <div class="flex items-start gap-2"><span class="text-yellow-400 mt-0.5">▸</span><span>每日審計告警（缺 dispatch_prompt、殭屍任務）→ 自動建任務卡</span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">▸</span><span>現有機制：<code class="bg-slate-800 px-1 rounded">auto_retry.sh</code> + <code class="bg-slate-800 px-1 rounded">heartbeat_stuck_check.sh</code></span></div>
-                    </div>
-                    <div class="mt-3 p-2 bg-slate-800 rounded text-xs text-slate-400">
-                        ⚠️ 待補：審計告警 → 自動建卡管道尚未實作
-                    </div>
-                </div>
-
-                <!-- 重試上限 -->
-                <div class="card border-l-4 border-yellow-500">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-2xl">🔢</span>
-                        <h3 class="font-bold text-yellow-400">重試上限</h3>
-                    </div>
-                    <div class="space-y-2 text-sm text-slate-300">
-                        <div class="flex items-start gap-2"><span class="text-yellow-400 mt-0.5">▸</span><span><strong>retry_count 上限：3 次</strong>（已實作於 heartbeat_stuck_check.sh）</span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">▸</span><span>達上限 → 標記「已失敗」+ Telegram 通知 William</span></div>
-                        <div class="flex items-start gap-2"><span class="text-blue-400 mt-0.5">▸</span><span>第 2 次重試前執行智能診斷（分析失敗原因）</span></div>
-                    </div>
-                    <div class="mt-3 p-2 bg-slate-800 rounded text-xs text-slate-400">
-                        流程：第1次失敗→重試→第2次失敗→診斷+重試→第3次失敗→標已失敗+通知
-                    </div>
-                </div>
-
-                <!-- 緊急停止 -->
-                <div class="card border-l-4 border-purple-500">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-2xl">⛔</span>
-                        <h3 class="font-bold text-purple-400">緊急停止</h3>
-                    </div>
-                    <div class="space-y-2 text-sm text-slate-300">
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">auto_dispatch.sh</code></span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">heartbeat_snapshot.sh</code></span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">heartbeat_stuck_check.sh</code></span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">auto_retry.sh</code></span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">unified_dispatcher.sh</code></span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✅</span><span><code class="bg-slate-800 px-1 rounded">unified_monitor.sh</code></span></div>
-                    </div>
-                    <div class="mt-3 p-2 bg-slate-800 rounded text-xs text-slate-400">
-                        觸發：發送 /stop 或 touch ~/clawd/shared/EMERGENCY_STOP
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 並行 Sprint -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">⚡</span> 並行 Sprint（借鑑 gstack）
-            </h2>
-            <div class="card">
-                <p class="text-slate-400 text-sm mb-6">gstack 的關鍵創新：多個功能同時跑完整的 L1→L4 生命週期，不是單一任務內的並行，而是多條任務線同時進行。</p>
-                <div class="overflow-x-auto">
-                    <table class="comparison-table text-sm">
-                        <thead>
-                            <tr>
-                                <th>Sprint 線</th>
-                                <th>L1 討論</th>
-                                <th>L2 形成</th>
-                                <th>L3 執行</th>
-                                <th>L4 反饋</th>
-                                <th>負責人</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="badge badge-purple">Sprint A</span></td>
-                                <td class="text-green-400">✅ 已完成</td>
-                                <td class="text-green-400">✅ 已完成</td>
-                                <td class="text-yellow-400">⏳ 執行中</td>
-                                <td class="text-slate-500">—</td>
-                                <td>Blake</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge badge-teal">Sprint B</span></td>
-                                <td class="text-green-400">✅ 已完成</td>
-                                <td class="text-yellow-400">⏳ 進行中</td>
-                                <td class="text-slate-500">—</td>
-                                <td class="text-slate-500">—</td>
-                                <td>Rex</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge badge-blue">Sprint C</span></td>
-                                <td class="text-yellow-400">⏳ 討論中</td>
-                                <td class="text-slate-500">—</td>
-                                <td class="text-slate-500">—</td>
-                                <td class="text-slate-500">—</td>
-                                <td>待決定</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div class="p-3 bg-slate-800 rounded">
-                        <div class="text-teal-400 font-medium mb-2">✅ gstack 概念（已借鑑）</div>
-                        <ul class="space-y-1 text-slate-400">
-                            <li>▸ 多 subagent 同時執行不同任務</li>
-                            <li>▸ 每個 Sprint 有獨立 session</li>
-                            <li>▸ 上限 2 個同時子代理（Token 節流）</li>
-                        </ul>
-                    </div>
-                    <div class="p-3 bg-slate-800 rounded">
-                        <div class="text-orange-400 font-medium mb-2">⏳ 待實作（來自 gstack）</div>
-                        <ul class="space-y-1 text-slate-400">
-                            <li>▸ Skill 串接流：產出自動流入下游 Agent</li>
-                            <li>▸ CEO/QA/Designer 獨立角色分層審查</li>
-                            <li>▸ Sprint 狀態即時看板（類 Kanban）</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ClawTeam 整合方案 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">🦞</span> ClawTeam 整合方案
-            </h2>
-            <div class="card">
-                <div class="mb-6">
-                    <h3 class="font-bold text-orange-400 mb-2">ClawTeam 是什麼？為什麼選它？</h3>
-                    <p class="text-slate-400 text-sm">ClawTeam 是 HKUDS 開發的 Agent Swarm Intelligence 工具，讓 Leader Agent 自主 spawn Worker、透過 CLI 協調任務、通訊與監控。支援 OpenClaw、git worktree 隔離、TOML 團隊模板與 ZeroMQ 通訊。選它因為它完美補足我們 sessions_spawn 在「agent 自組織 swarm」上的不足，特別適合大型複雜專案（如全棧開發、ML 研究）。</p>
-                </div>
-
-                <!-- 核心指令速查 (card style) -->
-                <div class="mb-6">
-                    <h3 class="font-bold text-teal-400 mb-3">核心指令速查</h3>
-                    <div class="grid md:grid-cols-2 gap-3 text-xs">
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam team spawn-team myteam</div>
-                            <div class="text-slate-500">建立團隊 (Leader)</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam spawn --team myteam --agent-name alice --task "..."</div>
-                            <div class="text-slate-500">Spawn Worker (支援 openclaw)</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam task list/update</div>
-                            <div class="text-slate-500">任務管理 + 依賴</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam inbox send/receive</div>
-                            <div class="text-slate-500">Agent 間通訊</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam board attach/serve</div>
-                            <div class="text-slate-500">tmux/Web 監控</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded border border-teal-500/30">
-                            <div class="font-mono text-teal-400 mb-1">clawteam launch hedge-fund --goal "..."</div>
-                            <div class="text-slate-500">TOML 模板一鍵啟動</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 對比表 -->
-                <div class="mb-6">
-                    <h3 class="font-bold text-blue-400 mb-3">ClawTeam vs sessions_spawn 對比</h3>
-                    <table class="comparison-table text-sm">
-                        <thead>
-                            <tr>
-                                <th>面向</th>
-                                <th>ClawTeam</th>
-                                <th>sessions_spawn</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Spawn 機制</td>
-                                <td>Leader agent 呼叫 CLI spawn</td>
-                                <td>Travis 主動 tool call</td>
-                            </tr>
-                            <tr>
-                                <td>配置</td>
-                                <td>TOML 模板</td>
-                                <td>dispatch_prompt</td>
-                            </tr>
-                            <tr>
-                                <td>隔離</td>
-                                <td>git worktree + tmux</td>
-                                <td>Session 隔離</td>
-                            </tr>
-                            <tr>
-                                <td>通訊</td>
-                                <td>inbox + kanban</td>
-                                <td>message tool</td>
-                            </tr>
-                            <tr>
-                                <td>適用</td>
-                                <td>大型 swarm、自組織</td>
-                                <td>快速、輕量任務</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 安裝評估 -->
-                <div>
-                    <h3 class="font-bold text-purple-400 mb-2">安裝與整合評估</h3>
-                    <div class="flex gap-4 text-sm">
-                        <div class="flex-1 p-4 bg-slate-800 rounded">
-                            <span class="badge badge-green">✅ 可行性</span><br>
-                            pip install clawteam (官方支援 OpenClaw)
-                        </div>
-                        <div class="flex-1 p-4 bg-slate-800 rounded">
-                            <span class="badge badge-yellow">⚠️ 注意</span><br>
-                            需要 tmux + git 環境；建議先在測試目錄驗證
-                        </div>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-4">建議：在 V4.5 L3 層增加 ClawTeam 作為高階 swarm 選項，與現有 sessions_spawn 互補。</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mermaid 流程圖 -->
-        <section class="mb-12">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <span class="text-2xl">📊</span> 完整流程圖（含閉環）
-            </h2>
-            <div class="card">
-                <div class="mermaid">
+<!-- Mermaid 完整圖 -->
+<div class="card">
+    <div class="section-title"><span>📊</span> 完整流程圖</div>
+    <div class="mermaid">
 flowchart TD
-                    A[William 任何輸入] --> B{來源判斷}
-                    B -->|對話| C[統一入口]
-                    B -->|Cron| C
-                    B -->|Ideas| C
-                    C --> D[任務堆疊]
-                    D --> E[L2: 任務形成]
-                    E --> F{複雜度分析}
-                    F -->|簡單| G[直接派發]
-                    F -->|複雜| H[智能分解]
-                    H --> I[拆分子任務]
-                    I --> J[模型選擇]
-                    J --> K[工具調度]
-                    K --> L[L3: 執行調度]
-                    L --> M{執行模式}
-                    M -->|串行| N[依序執行]
-                    M -->|並行| O[同時執行]
-                    N --> P[結果彙整]
-                    O --> P
-                    P --> Q[L4: 反饋優化]
-                    Q --> R{成功?}
-                    R -->|是| S[存入經驗]
-                    R -->|否| T[分析原因]
-                    T --> U{retry_count >= 3?}
-                    U -->|未達上限| G
-                    U -->|已達上限| V[標記已失敗]
-                    V --> W[🔔 通知 William]
-                    V --> X[回填任務來源 L1]
-                    X --> D
-                    
-                    STOP([⛔ EMERGENCY_STOP]) -.->|任一環節檢查| B
-                    STOP -.-> E
-                    STOP -.-> L
-                    STOP -.-> Q
-                    
-                    AUDIT([📋 每日審計告警]) --> X
-                    
-                    style A fill:#7B68EE22,stroke:#7B68EE
-                    style C fill:#7B68EE22,stroke:#7B68EE
-                    style E fill:#20B2AA22,stroke:#20B2AA
-                    style L fill:#3B82F622,stroke:#3B82F6
-                    style Q fill:#10B98122,stroke:#10B981
-                    style V fill:#EF444422,stroke:#EF4444
-                    style W fill:#F59E0B22,stroke:#F59E0B
-                    style X fill:#7B68EE22,stroke:#7B68EE
-                    style STOP fill:#EF444433,stroke:#EF4444
-                    style AUDIT fill:#F59E0B22,stroke:#F59E0B
-                </div>
-            </div>
-        </section>
+    A([William 任何輸入]) --> B[L1 統一入口\n任務堆疊]
+    AUDIT([📋 審計告警]) -->|audit_to_task.sh| B
+    
+    B --> C[L2 任務形成\n複雜度分析 + 路由決策]
+    
+    C --> D{路由判斷}
+    D -->|子任務≤2\n輕量任務| E[L3A\nsessions_spawn]
+    D -->|子任務≥3\n需並行/隔離| F[L3B\nClawTeam Swarm]
+    D -->|需人工確認| G[🔔 通知 William]
+    
+    E --> H[Blake/Rex/Oscar\n單 agent 執行]
+    H --> I[task_complete.sh]
+    
+    F --> J[Leader Agent\nspawn-team]
+    J --> K1[Worker A\ngit worktree]
+    J --> K2[Worker B\ngit worktree]
+    J --> K3[Worker C\ngit worktree]
+    K1 & K2 & K3 -->|inbox 彙整| L[結果合併]
+    L --> I
+    
+    I --> M[L4 反饋優化]
+    M --> N{成功?}
+    N -->|✅ 是| O[experience_log\ndispatch_prompt 優化]
+    N -->|❌ retry<3| P[智能診斷\n重新路由]
+    P --> C
+    N -->|🔴 retry=3| Q[標記已失敗\n通知 William]
+    Q --> B
+    
+    STOP([⛔ /stop]) -.->|EMERGENCY_STOP| C
+    STOP -.-> E
+    STOP -.-> F
+    STOP -.-> M
 
-    </main>
+    style A fill:#7B68EE22,stroke:#7B68EE
+    style B fill:#7B68EE22,stroke:#7B68EE
+    style C fill:#20B2AA22,stroke:#20B2AA
+    style E fill:#3B82F622,stroke:#3B82F6
+    style F fill:#FF6B3522,stroke:#FF6B35
+    style J fill:#FF6B3533,stroke:#FF6B35
+    style M fill:#10B98122,stroke:#10B981
+    style Q fill:#EF444422,stroke:#EF4444
+    style STOP fill:#EF444433,stroke:#EF4444
+    style AUDIT fill:#F59E0B22,stroke:#F59E0B
+    </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-700 py-8 mt-12">
-        <div class="max-w-6xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p>由 Travis + Blake + Rex 共同設計 | V4.5 進化版</p>
-            <p class="mt-2">Last Updated: 2026-03-22</p>
-        </div>
-    </footer>
+</main>
 
-    <script>
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'dark',
-            flowchart: {
-                useMaxWidth: true,
-                htmlLabels: true
-            }
-        });
-    </script>
+<footer class="border-t border-slate-800 py-6 mt-8">
+    <div class="max-w-5xl mx-auto px-6 text-center text-slate-600 text-xs">
+        Travis V4.5 · ClawTeam 整合版 · 2026-03-22 · 由 Travis + Rex + Blake 設計
+    </div>
+</footer>
+
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'dark', flowchart: { curve: 'basis' } });
+</script>
 </body>
 </html>
