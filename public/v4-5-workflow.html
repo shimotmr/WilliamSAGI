@@ -58,9 +58,9 @@
     <div class="font-bold" style="color:var(--purple)">Travis V4.5</div>
     <span class="badge bp">實作規劃書 v4</span>
     <span class="badge bo">任務來源完整版</span>
-    <span class="badge bg">全自動 Spawn 打通</span>
+    <span class="badge bg">全自動 Spawn + 記憶閉環</span>
     <span class="badge br">E1-E6 + F1 決策錯誤修正</span>
-    <span style="color:var(--muted);margin-left:auto;font-size:.75rem">V4.5 最終版 · 2026-03-23 · openclaw cron isolated 全自動</span>
+    <span style="color:var(--muted);margin-left:auto;font-size:.75rem">V4.5 最終版 · 2026-03-23 · S-07 自我檢討 + 記憶管道 + 洞察閉環</span>
 </nav>
 
 <main class="max-w-4xl mx-auto px-5 py-7 space-y-5">
@@ -105,11 +105,12 @@
         <thead><tr><th>路徑</th><th>腳本</th><th>排程</th><th>接到建卡</th><th>真實狀態</th></tr></thead>
         <tbody>
             <tr><td>William Telegram 手動輸入</td><td><code>create_task.sh</code></td><td>即時</td><td>✅</td><td><span class="badge bg">運作中</span></td></tr>
-            <tr><td>參考分享 → Notion</td><td><code>reference_analyzer.py</code></td><td>關鍵詞觸發</td><td>❌ 未串</td><td><span class="badge by">部分有效</span></td></tr>
+            <tr><td>參考分享 → Notion</td><td><code>reference_analyzer.py</code></td><td>關鍵詞觸發</td><td>✅ 存入→pipeline 評分</td><td><span class="badge bg">✅ 運作中</span></td></tr>
             <tr><td>自我搜索 → 任務</td><td><code>daily_research_to_tasks.py</code></td><td>09:00 每日</td><td>✅ 有建卡邏輯</td><td><span class="badge by">狀態不明</span></td></tr>
-            <tr><td>daily_ideation 自省</td><td><code>daily_ideation.py</code></td><td>03:40 每日（已調整）</td><td>❌ 只存 .md</td><td><span class="badge br">管道斷（待 P1-A）</span></td></tr>
+            <tr><td>daily_ideation 自省</td><td><code>daily_ideation.py</code></td><td>03:40 每日</td><td>✅ P1/P2 自動建卡</td><td><span class="badge bg">✅ 運作中</span></td></tr>
             <tr><td>每日審計 → 任務</td><td><code>daily_system_analysis.sh</code></td><td>✅ 03:30 每日</td><td>✅ audit_to_task.sh</td><td><span class="badge bg">排程已補</span></td></tr>
             <tr><td>Notion Ideas 評分管道</td><td><code>notion_idea_pipeline.py</code></td><td>✅ 03:50 每日</td><td>✅ 有建卡邏輯</td><td><span class="badge bg">排程已補</span></td></tr>
+            <tr><td>自我檢討 + 記憶萃取</td><td><code>self-reflection</code>（cron isolated）</td><td>✅ 01:50 每日</td><td>✅ 技術問題直接建卡，探索方向→daily_ideation</td><td><span class="badge bg">✅ 2026-03-23 新增</span></td></tr>
         </tbody>
     </table>
 </div>
@@ -676,15 +677,16 @@ flowchart LR
         U03[U-03\nheartbeat_wrapper.sh]
         U04[U-04\nemergency_stop.sh]
     end
-    subgraph S["S 來源層"]
-        S01[S-01\ncreate_task.sh]
-        S02[S-02\nreference_analyzer.py]
-        S03[S-03\ndaily_research_to_tasks.py]
-        S04[S-04\ndaily_ideation.py]
-        S05[S-05\ndaily_system_analysis.sh]
+    subgraph S["S 來源層（7 條路徑）"]
+        S01[S-01\ncreate_task.sh\nWilliam 手動]
+        S02[S-02\nreference_analyzer.py\n說參考→Notion]
+        S03[S-03\ndaily_research_to_tasks.py\n每日科技搜尋]
+        S04[S-04\ndaily_ideation.py\n每日自省提案]
+        S05[S-05\ndaily_system_analysis.sh\n每日審計]
         S05a[S-05a\naudit_to_task.sh]
-        S06[S-06\nnotion_idea_pipeline.py]
-        S06a[S-06a\nidea_research_booster.py]
+        S06[S-06\nnotion_idea_pipeline.py\nNotion Ideas 評分]
+        S06a[S-06a\nidea_research_booster.py\nAuto Research]
+        S07[S-07\nself-reflection\n01:50 自我檢討]
     end
     subgraph L2["L2 路由 + 直接 Spawn 層"]
         L201[L2-01\nauto_dispatch.sh\n決策 + 直接 Spawn]
@@ -694,17 +696,20 @@ flowchart LR
         L3B[L3B\nclawteam spawn\n高複雜度任務]
     end
     subgraph L4["L4 反饋層"]
-        L401[L4-01\ntask_complete.sh]
+        L401[L4-01\ntask_complete.sh\n+洞察萃取→Notion]
         L402[L4-02\nheartbeat_stuck_check]
     end
 
     S01 --> U01
-    S02 -.->|待串| S06
+    S02 --> S06
     S03 --> S01
-    S04 -.->|待串| S01
+    S04 --> S01
     S05 --> S05a --> S01
-    S06 --> S01
-    S06a -.->|待開發| S06
+    S06 --> S06a --> S01
+    S07 -->|技術性問題| S01
+    S07 -->|探索性改善| S04
+
+    L401 -->|洞察萃取| S06
 
     S01 --> L201
     L201 -->|route=L3A| L3A
@@ -714,11 +719,12 @@ flowchart LR
     L402 -->|retry<3| L201
     L402 -->|retry=3| S01
 
-    style S06a fill:#EF444422,stroke:#EF4444
-    style S02 fill:#F59E0B22,stroke:#F59E0B
-    style S04 fill:#F59E0B22,stroke:#F59E0B
+    style S07 fill:#7B68EE33,stroke:#7B68EE
+    style S06a fill:#10B98122,stroke:#10B981
+    style S02 fill:#10B98122,stroke:#10B981
     style L3A fill:#10B98122,stroke:#10B981
     style L201 fill:#10B98122,stroke:#10B981
+    style L401 fill:#10B98122,stroke:#10B981
     </div>
 </div>
 
@@ -1080,29 +1086,32 @@ flowchart TD
     <h2>§9 完整流程圖（含腳本編號 + Auto Research）</h2>
     <div class="mermaid">
 flowchart TD
-    subgraph SRC["S 來源層"]
-        S1([S-01\nWilliam Telegram\ncreate_task.sh])
-        S2([S-02\nWilliam 說參考\nreference_analyzer.py])
+    subgraph SRC["S 來源層（7 條路徑）"]
+        S1([S-01\nWilliam 手動\ncreate_task.sh])
+        S2([S-02\n說參考→Notion\nreference_analyzer.py])
         S3([S-03\n每日搜索 09:00\ndaily_research_to_tasks.py])
-        S4([S-04\ndaily_ideation 03:30])
+        S4([S-04\n自省提案 03:40\ndaily_ideation.py])
         S5([S-05\n每日審計 03:30\ndaily_system_analysis.sh])
         S05a[S-05a\naudit_to_task.sh]
+        S7([S-07\n自我檢討 01:50\nself-reflection])
         N6[(Notion Ideas DB)]
-        S06[S-06\nnotion_idea_pipeline.py\n04:00 每日]
-        S06a[S-06a\nidea_research_booster.py\n04:10 每日\n本地Qwen快篩+Rex深研]
+        S06[S-06\nnotion_idea_pipeline.py\n03:50 每日]
+        S06a[S-06a\nidea_research_booster.py\n04:10 Auto Research\nBrave Search+Grok三角評估]
         R6{評分結果}
     end
 
     S1 --> Q
     S2 -->|存入| N6
-    N6 -.->|"待串 P1-B"| S06
+    N6 --> S06
     S3 -->|建卡| Q
-    S4 -.->|"❌待串 P1-A"| Q
+    S4 --> Q
     S5 --> S05a --> Q
+    S7 -->|技術性問題直接建卡| Q
+    S7 -->|探索性改善→daily notes| S4
     S06 --> R6
-    R6 -->|"≥15分"| Q
+    R6 -->|"≥15分 → 直接建卡"| Q
     R6 -->|"10-14分"| S06a
-    S06a -->|"Rex 研究後升分"| R6b{重新評分}
+    S06a -->|"Brave+Grok評估"| R6b{重新評分}
     R6b -->|"新≥15分"| Q
     R6b -->|"仍低分"| N6
     R6b -->|"<10分"| DEAD[標記不可行\n30天不重研]
