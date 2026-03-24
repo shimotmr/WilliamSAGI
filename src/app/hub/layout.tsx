@@ -11,7 +11,7 @@ import {
   MessageSquare, Shield, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car, MapPin, Network, ScanText, GitFork,
+  Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -47,7 +47,7 @@ const navGroups = [
     items: [
       { href: '/hub/reports',   icon: FileText,    label: '報告' },
       { href: '/hub/approvals', icon: CheckSquare, label: '審批' },
-      { href: '/hub/trade',     icon: TrendingUp,  label: '交易' },
+      { href: 'https://shioaji.williamhsiao.tw', icon: TrendingUp, label: '交易', external: true },
       { href: '/hub/growth',    icon: Sprout,      label: '成長' },
       { href: '/hub/tesla',     icon: Car,         label: 'Tesla' },
     ],
@@ -301,16 +301,23 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
               <>
                 {navGroups.flatMap(g => g.items).map(link => {
                   const Icon = link.icon;
-                  const active = isActive(link.href);
+                  const active = !('external' in link) && isActive(link.href);
+                  const linkStyle = {
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '0.5rem', borderRadius: '0.5rem',
+                    color: active ? '#EDEDEF' : '#8A8F98',
+                    background: active ? 'rgba(94,106,210,0.18)' : 'transparent',
+                    textDecoration: 'none', transition: 'all 150ms',
+                  };
+                  if ('external' in link) {
+                    return (
+                      <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" title={link.label} style={linkStyle}>
+                        <Icon size={16} />
+                      </a>
+                    );
+                  }
                   return (
-                    <Link key={link.href} href={link.href} title={link.label}
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        padding: '0.5rem', borderRadius: '0.5rem',
-                        color: active ? '#EDEDEF' : '#8A8F98',
-                        background: active ? 'rgba(94,106,210,0.18)' : 'transparent',
-                        textDecoration: 'none', transition: 'all 150ms',
-                      }}>
+                    <Link key={link.href} href={link.href} title={link.label} style={linkStyle}>
                       <Icon size={16} />
                     </Link>
                   );
@@ -328,7 +335,17 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
                   <div className="hub-group-label">{group.label}</div>
                   {group.items.map(link => {
                     const Icon = link.icon;
-                    const active = isActive(link.href);
+                    const active = !('external' in link) && isActive(link.href);
+                    if ('external' in link) {
+                      return (
+                        <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
+                          className="hub-nav-link" style={{ gap: '0.625rem' }}>
+                          <Icon size={16} style={{ flexShrink: 0 }} />
+                          {link.label}
+                          <ExternalLink size={10} style={{ marginLeft: 'auto', opacity: 0.4 }} />
+                        </a>
+                      );
+                    }
                     return (
                       <Link key={link.href} href={link.href}
                         className={`hub-nav-link ${active ? 'active' : ''}`}>
@@ -442,7 +459,17 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
                 <div className="mobile-drawer-group-label">{group.label}</div>
                 {group.items.map(link => {
                   const Icon = link.icon;
-                  const active = isActive(link.href);
+                  const active = !('external' in link) && isActive(link.href);
+                  if ('external' in link) {
+                    return (
+                      <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
+                        className="mobile-drawer-link" onClick={() => setMobileDrawerOpen(false)}>
+                        <Icon size={18} />
+                        {link.label}
+                        <ExternalLink size={12} style={{ marginLeft: 'auto', opacity: 0.4 }} />
+                      </a>
+                    );
+                  }
                   return (
                     <Link 
                       key={link.href} 
