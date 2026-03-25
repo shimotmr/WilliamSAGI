@@ -109,6 +109,7 @@ const NAV_GROUPS: NavGroup[] = [
       { id: 'cases', title: '案件管理', href: '/portal/cases', icon: icons.performance },
       { id: 'employees', title: '員工通訊錄', href: '/portal/employees', icon: icons.agents },
       { id: 'knowledge', title: 'SOP知識庫', href: '/portal/knowledge', icon: icons.marketing },
+      { id: 'flow-rules', title: 'Flow 審核規則', href: '/aurotek/flow-rules', icon: icons.quotations },
     ]
   },
   {
@@ -116,6 +117,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'transcripts', title: '會議逐字稿', href: '/portal/transcripts', icon: icons.transcripts },
       { id: 'marketing', title: '數位資源庫', href: '/portal/marketing', icon: icons.marketing },
+      { id: 'trade', title: '交易中心', href: '/hub/trade', icon: icons.performance },
     ]
   },
   {
