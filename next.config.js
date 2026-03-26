@@ -2,8 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // Build performance optimizations
-  swcMinify: true,  // Use SWC for faster minification
   
   // Disable x-powered-by header (minor security + perf)
   poweredByHeader: false,
