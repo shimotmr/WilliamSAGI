@@ -125,7 +125,6 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'humanoid', title: '人形機器人', href: '/portal/humanoid', icon: icons.agents },
       { id: 'linebot', title: 'LINE Bot 訓練台', href: '/portal/linebot-validation', icon: icons.agents },
-      { id: 'audit-v45', title: 'v4.5 系統審計', href: '/audit/v45', icon: icons.admin, adminOnly: true },
       { id: 'agents', title: 'Agent 中控台', href: '/portal/agents', icon: icons.agents, adminOnly: true },
       { id: 'admin', title: '後台管理', href: '/portal/admin/allowlist', icon: icons.admin, adminOnly: true },
       { id: 'dealers', title: '經銷商', href: '/portal/admin/dealers', icon: icons.home, adminOnly: true },
