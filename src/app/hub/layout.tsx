@@ -75,6 +75,7 @@ const navGroups = [
   {
     label: '系統設定',
     items: [
+      { href: '/aurotek/flow-rules', icon: CheckSquare, label: '自動簽核規則' },
       { href: '/hub/prompts', icon: MessageSquare, label: 'Prompt 管理' },
       { href: '/hub/rules',   icon: ShieldCheck,   label: '規則' },
       { href: '/hub/wecom',       icon: MessageCircle, label: 'WeCom 歸類' },
