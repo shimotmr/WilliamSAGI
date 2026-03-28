@@ -19,6 +19,7 @@ const navGroups = [
   {
     label: '核心監控',
     items: [
+      { href: '/dashboard/today', icon: LayoutDashboard, label: '📋 今日看板' },
       { href: '/hub/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
       { href: '/command',       icon: Swords,          label: '🎯 指揮中心' },
       { href: '/hub/monitor',   icon: Activity,        label: '系統監控' },
