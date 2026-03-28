@@ -231,26 +231,26 @@ export default function ModelBenchmarkPage() {
         <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-4">
           <Trophy size={18} className="text-yellow-400" /> 模型排行榜
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-2 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {profiles.map((p, i) => (
             <div
               key={p.model_id}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 hover:border-white/20 transition-colors"
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:p-5 hover:border-white/20 transition-colors overflow-hidden"
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{MEDAL[i] ?? `#${i + 1}`}</span>
-                  <span className="font-bold text-white text-base">{p.model_id}</span>
+              <div className="flex items-start justify-between mb-3 min-w-0">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="text-lg shrink-0">{MEDAL[i] ?? `#${i + 1}`}</span>
+                  <span className="font-bold text-white text-sm sm:text-base truncate">{p.model_id}</span>
                 </div>
                 <span
-                  className="text-2xl font-black tabular-nums"
+                  className="text-2xl font-black tabular-nums shrink-0 ml-2"
                   style={{ color: scoreColor(p.overall_score) }}
                 >
                   {p.overall_score}
                 </span>
               </div>
               {p.capability_description && (
-                <p className="text-xs text-zinc-400 leading-relaxed mb-3 line-clamp-2">
+                <p className="text-xs text-zinc-400 leading-relaxed mb-3 line-clamp-3 break-words">
                   {p.capability_description}
                 </p>
               )}
