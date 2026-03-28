@@ -81,6 +81,7 @@ const navGroups = [
       { href: '/hub/wecom',       icon: MessageCircle, label: 'WeCom 歸類' },
       { href: '/hub/wecom-board', icon: LayoutGrid,    label: 'WeCom 看板' },
 
+      { href: '/system-audit', icon: Shield, label: '系統審計' },
       { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
