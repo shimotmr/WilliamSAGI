@@ -95,11 +95,10 @@ function Section({ icon, title, count, children }: {
   icon: React.ReactNode; title: string; count?: number; children: React.ReactNode;
 }) {
   return (
-    <div style={{
+    <div className="today-section" style={{
       background: 'rgba(255,255,255,0.03)',
       border: '1px solid rgba(255,255,255,0.06)',
       borderRadius: '16px',
-      padding: '1.25rem',
       display: 'flex', flexDirection: 'column', gap: '0.75rem',
       minHeight: '200px',
     }}>
@@ -114,7 +113,9 @@ function Section({ icon, title, count, children }: {
           }}>{count}</span>
         )}
       </div>
-      {children}
+      <div className="today-section-content" style={{ flex: 1, minHeight: 0 }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -125,7 +126,7 @@ function RunningTaskCard({ task }: { task: BoardTask }) {
   const stuck = isStuck(task);
 
   return (
-    <div style={{
+    <div className="today-task-card" style={{
       background: 'rgba(255,255,255,0.03)',
       border: `1px solid ${stuck ? 'rgba(234,179,8,0.3)' : 'rgba(255,255,255,0.05)'}`,
       borderRadius: '12px', padding: '0.875rem',
@@ -139,7 +140,7 @@ function RunningTaskCard({ task }: { task: BoardTask }) {
           flexShrink: 0, marginTop: '0.15rem',
         }}>{task.priority}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#EDEDEF', lineHeight: 1.4 }}>
+          <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#EDEDEF', lineHeight: 1.4, wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {task.title}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem', flexWrap: 'wrap' }}>
@@ -346,9 +347,18 @@ export default function TodayDashboard() {
   }
 
   return (
-    <div style={{ color: '#EDEDEF' }}>
+    <div style={{ color: '#EDEDEF', maxWidth: '1280px', margin: '0 auto', padding: '0 1rem' }}>
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .today-section { padding: 1.25rem; }
+        .today-section-content { overflow-y: visible; }
+        @media (max-width: 768px) {
+          .today-grid { grid-template-columns: 1fr !important; gap: 0.625rem !important; }
+          .today-section { padding: 0.75rem !important; }
+          .today-section-content { max-height: 300px; overflow-y: auto; }
+          .today-task-card { padding: 0.625rem !important; }
+          .today-stat-card { padding: 0.625rem !important; }
+        }
       `}</style>
 
       {/* Header */}
@@ -367,11 +377,6 @@ export default function TodayDashboard() {
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '1rem',
       }} className="today-grid">
-        <style>{`
-          @media (max-width: 768px) {
-            .today-grid { grid-template-columns: 1fr !important; }
-          }
-        `}</style>
 
         {/* ── 🔥 進行中 ── */}
         <Section
@@ -405,7 +410,7 @@ export default function TodayDashboard() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
               {completed.map(task => (
-                <div key={task.id} style={{
+                <div key={task.id} className="today-task-card" style={{
                   display: 'flex', alignItems: 'center', gap: '0.5rem',
                   padding: '0.625rem 0.75rem',
                   background: 'rgba(255,255,255,0.03)',
@@ -413,10 +418,10 @@ export default function TodayDashboard() {
                   borderRadius: '10px', fontSize: '0.8125rem',
                 }}>
                   <CheckCircle2 size={14} style={{ color: '#4ade80', flexShrink: 0 }} />
-                  <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#EDEDEF' }}>
+                  <span style={{ flex: 1, minWidth: 0, wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', color: '#EDEDEF' }}>
                     {task.title}
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#8A8F98', flexShrink: 0 }}>
+                  <span style={{ fontSize: '0.7rem', color: '#8A8F98', flexShrink: 0, whiteSpace: 'nowrap' }}>
                     {task.completed_at ? formatTime(task.completed_at) : ''}
                   </span>
                   {task.md_url && (
@@ -448,17 +453,17 @@ export default function TodayDashboard() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
               {pending.map(task => (
-                <div key={task.id} style={{
+                <div key={task.id} className="today-task-card" style={{
                   display: 'flex', alignItems: 'center', gap: '0.5rem',
                   padding: '0.625rem 0.75rem',
                   background: 'rgba(255,255,255,0.03)',
                   border: '1px solid rgba(255,255,255,0.05)',
                   borderRadius: '10px', fontSize: '0.8125rem',
                 }}>
-                  <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#EDEDEF' }}>
+                  <span style={{ flex: 1, minWidth: 0, wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', color: '#EDEDEF' }}>
                     {task.title}
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#8A8F98', flexShrink: 0 }}>
+                  <span style={{ fontSize: '0.7rem', color: '#8A8F98', flexShrink: 0, whiteSpace: 'nowrap' }}>
                     {timeAgo(task.created_at)}
                   </span>
                   <button onClick={() => handleApprove(task.id)} style={{
@@ -517,7 +522,7 @@ export default function TodayDashboard() {
                 icon: <AlertTriangle size={16} />,
               },
             ].map(stat => (
-              <div key={stat.label} style={{
+              <div key={stat.label} className="today-stat-card" style={{
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid rgba(255,255,255,0.05)',
                 borderRadius: '10px', padding: '0.875rem',
