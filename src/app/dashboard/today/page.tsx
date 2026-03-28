@@ -36,6 +36,7 @@ interface BoardTask {
   created_at: string;
   updated_at: string;
   completed_at: string | null;
+  progress?: number;
   steps?: TaskStep[];
 }
 
@@ -120,6 +121,59 @@ function Section({ icon, title, count, children }: {
   );
 }
 
+// ── Progress bar for running tasks ──
+function TaskProgressBar({ progress, stuck }: { progress: number; stuck: boolean }) {
+  const p = progress ?? 0;
+
+  // Color rules
+  let barColor = '#8A8F98'; // grey for 0
+  let label = `${p}%`;
+  let showSpinner = false;
+
+  if (stuck && p > 0 && p < 100) {
+    barColor = '#eab308'; // orange warning
+    label = `⚠️ ${p}%`;
+  } else if (p === 0) {
+    barColor = '#8A8F98';
+    label = '待派發';
+  } else if (p === 10) {
+    barColor = '#5E6AD2';
+    showSpinner = true;
+  } else if (p >= 11 && p <= 89) {
+    barColor = '#5E6AD2';
+  } else if (p === 95) {
+    barColor = '#f97316';
+    label = '95% 待審查';
+  } else if (p >= 100) {
+    barColor = '#4ade80';
+    label = '100%';
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+      <div style={{
+        flex: 1, height: '6px', borderRadius: '3px',
+        background: 'rgba(255,255,255,0.08)', overflow: 'hidden',
+      }}>
+        <div style={{
+          width: `${Math.max(p, 2)}%`,
+          height: '100%', borderRadius: '3px',
+          background: barColor,
+          transition: 'width 0.5s ease, background 0.5s ease',
+        }} />
+      </div>
+      <span style={{
+        fontSize: '0.65rem', fontWeight: 600, color: barColor,
+        whiteSpace: 'nowrap', minWidth: '3rem', textAlign: 'right',
+        display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+      }}>
+        {showSpinner && <Loader2 size={10} style={{ animation: 'spin 1s linear infinite' }} />}
+        {label}
+      </span>
+    </div>
+  );
+}
+
 // ── Collapsible task card for 進行中 ──
 function RunningTaskCard({ task }: { task: BoardTask }) {
   const [open, setOpen] = useState(true);
@@ -167,6 +221,9 @@ function RunningTaskCard({ task }: { task: BoardTask }) {
           </button>
         )}
       </div>
+
+      {/* Progress bar */}
+      <TaskProgressBar progress={task.progress ?? 0} stuck={stuck} />
 
       {open && task.steps && task.steps.length > 0 && (
         <div style={{
