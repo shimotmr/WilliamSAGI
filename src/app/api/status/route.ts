@@ -2,7 +2,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export const dynamic = 'force-dynamic'
+// Cache: 30 秒 TTL，避免每次都打 Supabase（健檢每小時跑 8 次，不需要即時數據）
+export const revalidate = 30
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,11 +14,23 @@ export async function GET() {
   try {
     const supabase = getSupabase()
 
-    // 1. Task stats
-    const { data: allTasks } = await supabase
-      .from('board_tasks')
-      .select('status')
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
 
+    // 4 個查詢並行執行，從循序改為 Promise.all
+    const [
+      { data: allTasks },
+      { data: tokenData },
+      { data: agentsData },
+      { data: recentTasks },
+    ] = await Promise.all([
+      supabase.from('board_tasks').select('status'),
+      supabase.from('model_usage_log').select('total_tokens, model, agent').gte('created_at', todayStart.toISOString()),
+      supabase.from('agents').select('id, status').eq('status', 'active'),
+      supabase.from('board_tasks').select('assignee, status').order('updated_at', { ascending: false }).limit(20),
+    ])
+
+    // 1. Task stats
     const taskStats = (allTasks || []).reduce((acc: Record<string, number>, row) => {
       acc[row.status] = (acc[row.status] || 0) + 1
       return acc
@@ -27,34 +40,14 @@ export async function GET() {
     const running = (taskStats['執行中'] || 0)
     const completed = (taskStats['已完成'] || 0)
 
-    // 2. Today's token usage - 修正欄位名稱
-    const todayStart = new Date()
-    todayStart.setHours(0, 0, 0, 0)
-
-    const { data: tokenData } = await supabase
-      .from('model_usage_log')
-      .select('total_tokens, model, agent')
-      .gte('created_at', todayStart.toISOString())
-
+    // 2. Token usage
     const todayTokens = (tokenData || []).reduce((sum, row) => sum + (row.total_tokens || 0), 0)
     const topModel = getMostFrequent(tokenData || [], 'model')
     const topAgent = getMostFrequent(tokenData || [], 'agent')
 
-    // 3. Health score - 從 agents 表讀取狀態
-    const { data: agentsData } = await supabase
-      .from('agents')
-      .select('id, status')
-      .eq('status', 'active')
-
+    // 3. Health score
     const activeAgents = agentsData?.length || 0
     const healthScore = activeAgents >= 8 ? 95 : activeAgents >= 5 ? 80 : 50
-
-    // 4. Agent activity - 從 board_tasks 統計
-    const { data: recentTasks } = await supabase
-      .from('board_tasks')
-      .select('assignee, status')
-      .order('updated_at', { ascending: false })
-      .limit(20)
 
     const agentActivity: Record<string, { name: string; status: string; tasks: number }> = {}
     for (const t of recentTasks || []) {
