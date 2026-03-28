@@ -11,7 +11,7 @@ import {
   MessageSquare, Shield, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink, Zap,
+  Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink, Zap, RefreshCw,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -83,6 +83,7 @@ const navGroups = [
 
       { href: '/system-audit', icon: Shield, label: '系統審計' },
       { href: '/superpowers-audit', icon: Zap, label: 'Superpowers 審計' },
+      { href: '/system-redesign', icon: RefreshCw, label: '系統重設計' },
       { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
