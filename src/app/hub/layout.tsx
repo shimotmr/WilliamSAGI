@@ -42,6 +42,7 @@ const navGroups = [
       { href: '/hub/analytics',    icon: BarChart3, label: '分析' },
       { href: '/hub/model-usage',  icon: Cpu,       label: '模型使用' },
       { href: '/hub/token-usage',  icon: Coins,     label: 'Token 使用' },
+      { href: '/model-benchmark',  icon: Cpu,       label: '模型評比' },
     ],
   },
   {
