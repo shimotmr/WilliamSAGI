@@ -11,7 +11,7 @@ import {
   MessageSquare, Shield, ShieldCheck, User,
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
-  Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink,
+  Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink, Zap,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -82,6 +82,7 @@ const navGroups = [
       { href: '/hub/wecom-board', icon: LayoutGrid,    label: 'WeCom 看板' },
 
       { href: '/system-audit', icon: Shield, label: '系統審計' },
+      { href: '/superpowers-audit', icon: Zap, label: 'Superpowers 審計' },
       { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
