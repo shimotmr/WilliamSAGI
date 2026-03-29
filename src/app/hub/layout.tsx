@@ -88,6 +88,7 @@ const navGroups = [
       { href: '/hub/rag-testing', icon: FlaskConical, label: 'RAG 測試' },
       { href: '/hub/linebot-training', icon: BookOpen, label: 'LineBot 訓練' },
       { href: '/hub/disk-health', icon: HardDrive, label: '磁碟健康' },
+      { href: '/hub/upgrade-tracker', icon: RefreshCw, label: '升級追蹤' },
     ],
   },
   v4EvolutionGroup,
