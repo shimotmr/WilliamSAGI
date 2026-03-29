@@ -14,6 +14,17 @@ import {
   Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink, Zap, RefreshCw,
 } from 'lucide-react';
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+
+const v4EvolutionGroup = {
+  label: '🗂 V4系統演進',
+  collapsible: true,
+  items: [
+    { href: '/hub/v4',               icon: Activity, label: 'V4 工作流',   date: '2026-03-15' },
+    { href: '/hub/architecture',     icon: Network,  label: '架構總覽',    date: '2026-03-15' },
+    { href: '/hub/system-refactor',  icon: GitFork,  label: '系統重構',    date: '2026-03-15' },
+  ],
+};
 
 const navGroups = [
   {
@@ -74,6 +85,7 @@ const navGroups = [
       { href: '/hub/chat', icon: MessageSquare, label: '本地 Chat' },
     ],
   },
+  v4EvolutionGroup,
   {
     label: '系統設定',
     items: [
@@ -104,6 +116,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [v4EvolutionOpen, setV4EvolutionOpen] = useState(true);
 
   // 交易頁面有自己的底部導航，隱藏 Hub 的
   const isTradeRoute = pathname?.startsWith('/hub/trade');
@@ -338,32 +351,55 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
               </>
             ) : (
               /* Expanded: grouped */
-              navGroups.map(group => (
-                <div key={group.label}>
-                  <div className="hub-group-label">{group.label}</div>
-                  {group.items.map(link => {
-                    const Icon = link.icon;
-                    const active = !('external' in link) && isActive(link.href);
-                    if ('external' in link) {
+              navGroups.map(group => {
+                const isCollapsible = 'collapsible' in group && group.collapsible;
+                const isOpen = isCollapsible ? v4EvolutionOpen : true;
+                return (
+                  <div key={group.label}>
+                    {isCollapsible ? (
+                      <button
+                        onClick={() => setV4EvolutionOpen(!v4EvolutionOpen)}
+                        className="hub-group-label"
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+                          paddingRight: '0.75rem',
+                        }}
+                      >
+                        <span>{group.label}</span>
+                        <ChevronDown size={12} style={{
+                          transition: 'transform 200ms ease',
+                          transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
+                          opacity: 0.6,
+                        }} />
+                      </button>
+                    ) : (
+                      <div className="hub-group-label">{group.label}</div>
+                    )}
+                    {isOpen && group.items.map(link => {
+                      const Icon = link.icon;
+                      const active = !('external' in link) && isActive(link.href);
+                      if ('external' in link) {
+                        return (
+                          <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
+                            className="hub-nav-link" style={{ gap: '0.625rem' }}>
+                            <Icon size={16} style={{ flexShrink: 0 }} />
+                            {link.label}
+                            <ExternalLink size={10} style={{ marginLeft: 'auto', opacity: 0.4 }} />
+                          </a>
+                        );
+                      }
                       return (
-                        <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
-                          className="hub-nav-link" style={{ gap: '0.625rem' }}>
+                        <Link key={link.href} href={link.href}
+                          className={`hub-nav-link ${active ? 'active' : ''}`}>
                           <Icon size={16} style={{ flexShrink: 0 }} />
                           {link.label}
-                          <ExternalLink size={10} style={{ marginLeft: 'auto', opacity: 0.4 }} />
-                        </a>
+                        </Link>
                       );
-                    }
-                    return (
-                      <Link key={link.href} href={link.href}
-                        className={`hub-nav-link ${active ? 'active' : ''}`}>
-                        <Icon size={16} style={{ flexShrink: 0 }} />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))
+                    })}
+                  </div>
+                );
+              }))
             )}
           </nav>
 
