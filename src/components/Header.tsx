@@ -21,23 +21,14 @@ interface NavItem {
 const navItems: Record<ContextType, NavItem[]> = {
   portal: [
     { label: '首頁', href: '/portal' },
-    { label: 'Daily', href: '/portal/daily' },
     { label: '知識庫', href: '/portal/knowledge' },
-    { label: '關於', href: '/portal/about' },
   ],
   showcase: [
     { label: '首頁', href: '/showcase' },
-    { label: '功能', href: '/showcase/features' },
-    { label: '元件', href: '/showcase/components' },
-    { label: '系統架構', href: '/showcase/architecture' },
-    { label: '關於', href: '/showcase/about' },
   ],
   hub: [
     { label: '儀表板', href: '/hub' },
-    { label: '任務', href: '/hub/tasks' },
-    { label: '實驗', href: '/experiments' },
     { label: '報告', href: '/hub/reports' },
-    { label: '設置', href: '/hub/settings' },
   ],
 };
 
