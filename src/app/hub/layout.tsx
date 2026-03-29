@@ -12,6 +12,7 @@ import {
   ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft,
   MessageCircle, LayoutGrid, Calendar, Database,
   Menu, X, Car, MapPin, Network, ScanText, GitFork, ExternalLink, Zap, RefreshCw,
+  HardDrive, Users, BookOpen, PlusSquare, FlaskConical, Lock,
 } from 'lucide-react';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -64,6 +65,7 @@ const navGroups = [
       { href: 'https://shioaji.williamhsiao.tw', icon: TrendingUp, label: '交易', external: true },
       { href: '/hub/growth',    icon: Sprout,      label: '成長' },
       { href: '/hub/tesla',     icon: Car,         label: 'Tesla' },
+      { href: '/hub/leads',     icon: Users,       label: '潛在客戶' },
     ],
   },
   {
@@ -83,6 +85,9 @@ const navGroups = [
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
       { href: '/hub/chat', icon: MessageSquare, label: '本地 Chat' },
+      { href: '/hub/rag-testing', icon: FlaskConical, label: 'RAG 測試' },
+      { href: '/hub/linebot-training', icon: BookOpen, label: 'LineBot 訓練' },
+      { href: '/hub/disk-health', icon: HardDrive, label: '磁碟健康' },
     ],
   },
   v4EvolutionGroup,
@@ -98,6 +103,8 @@ const navGroups = [
       { href: '/system-audit', icon: Shield, label: '系統審計' },
       { href: '/superpowers-audit', icon: Zap, label: 'Superpowers 審計' },
       { href: '/system-redesign', icon: RefreshCw, label: '系統重設計' },
+      { href: '/hub/new-task', icon: PlusSquare, label: '新增任務' },
+      { href: '/hub/admin/permissions', icon: Lock, label: '權限管理' },
       { href: '/hub/profile', icon: User,          label: '個人檔案' },
     ],
   },
