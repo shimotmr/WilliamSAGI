@@ -1,7 +1,23 @@
 'use client';
 
+import type { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { LucideProps } from 'lucide-react';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { usePathname } from 'next/navigation';
+
+interface NavLink {
+  href: string;
+  icon: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
+  label: string;
+  external?: boolean;
+  date?: string;
+}
+
+interface NavGroup {
+  label: string;
+  collapsible?: boolean;
+  items: NavLink[];
+}
 import Link from 'next/link';
 import {
   LayoutDashboard, Activity, Bell, Swords,
@@ -17,7 +33,7 @@ import {
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const v4EvolutionGroup = {
+const v4EvolutionGroup: NavGroup = {
   label: '🗂 V4系統演進',
   collapsible: true,
   items: [
@@ -27,7 +43,7 @@ const v4EvolutionGroup = {
   ],
 };
 
-const navGroups = [
+const navGroups: NavGroup[] = [
   {
     label: '核心監控',
     items: [
