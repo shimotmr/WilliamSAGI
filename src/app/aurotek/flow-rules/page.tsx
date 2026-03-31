@@ -37,7 +37,7 @@ export default function FlowRulesPage() {
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState('全部')
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [editForm, setEditForm] = useState({ default_action: '', human_reviewer: '', rule_notes: '' })
+  const [editForm, setEditForm] = useState({ default_action: '', rule_notes: '' })
   const [saving, setSaving] = useState(false)
 
   const supabase = useMemo(() => createClient(), [])
@@ -82,7 +82,6 @@ export default function FlowRulesPage() {
     setEditingId(rule.id)
     setEditForm({
       default_action: rule.default_action,
-      human_reviewer: rule.human_reviewer || '',
       rule_notes: rule.rule_notes || '',
     })
   }
@@ -96,7 +95,6 @@ export default function FlowRulesPage() {
       .from('aurotek_form_rules')
       .update({
         default_action: editForm.default_action,
-        human_reviewer: editForm.human_reviewer || null,
         rule_notes: editForm.rule_notes || null,
         updated_at: new Date().toISOString(),
       })
@@ -104,7 +102,7 @@ export default function FlowRulesPage() {
     if (!error) {
       setRules(prev => prev.map(r =>
         r.id === editingId
-          ? { ...r, default_action: editForm.default_action as any, human_reviewer: editForm.human_reviewer || null, rule_notes: editForm.rule_notes || null }
+          ? { ...r, default_action: editForm.default_action as any, rule_notes: editForm.rule_notes || null }
           : r
       ))
       setEditingId(null)
@@ -185,7 +183,6 @@ export default function FlowRulesPage() {
                   <th className="text-left px-4 py-3 font-medium">表單代碼</th>
                   <th className="text-left px-4 py-3 font-medium">表單名稱</th>
                   <th className="text-left px-4 py-3 font-medium">預設動作</th>
-                  <th className="text-left px-4 py-3 font-medium">審核人</th>
                   <th className="text-left px-4 py-3 font-medium">備註</th>
                 </tr>
               </thead>
@@ -210,14 +207,13 @@ export default function FlowRulesPage() {
                           {ACTION_LABELS[rule.default_action] || rule.default_action}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-zinc-400">{rule.human_reviewer || '—'}</td>
                       <td className="px-4 py-3 text-zinc-500 text-xs max-w-[200px] truncate">
                         {rule.rule_notes ? (rule.rule_notes.length > 50 ? rule.rule_notes.slice(0, 50) + '…' : rule.rule_notes) : '—'}
                       </td>
                     </tr>
                     {editingId === rule.id && (
                       <tr className="border-b border-zinc-800/50 bg-zinc-800/30">
-                        <td colSpan={6} className="px-4 py-4">
+                        <td colSpan={5} className="px-4 py-4">
                           <div className="flex flex-col sm:flex-row gap-4">
                             <div className="flex-shrink-0">
                               <label className="block text-xs text-zinc-500 mb-1">預設動作</label>
@@ -230,15 +226,6 @@ export default function FlowRulesPage() {
                                 <option value="human">人工審核</option>
                                 <option value="auto_reject">自動駁回</option>
                               </select>
-                            </div>
-                            <div className="flex-shrink-0">
-                              <label className="block text-xs text-zinc-500 mb-1">審核人</label>
-                              <input
-                                type="text"
-                                value={editForm.human_reviewer}
-                                onChange={e => setEditForm(f => ({ ...f, human_reviewer: e.target.value }))}
-                                className="bg-zinc-900 border border-zinc-700 rounded-md px-3 py-2 text-sm text-zinc-100 w-40 focus:outline-none focus:border-zinc-500"
-                              />
                             </div>
                             <div className="flex-1">
                               <label className="block text-xs text-zinc-500 mb-1">備註</label>
@@ -272,7 +259,7 @@ export default function FlowRulesPage() {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-12 text-center text-zinc-600">
+                    <td colSpan={5} className="px-4 py-12 text-center text-zinc-600">
                       {search ? '沒有符合搜尋條件的規則' : '尚無規則資料'}
                     </td>
                   </tr>
@@ -289,4 +276,3 @@ export default function FlowRulesPage() {
     </div>
   )
 }
-
