@@ -144,8 +144,8 @@ export default function PerformancePage() {
             {(data?.monthlyTrend||[]).map(t=>(
               <div key={t.month} className="flex-1 flex flex-col items-center">
                 <div className="w-full flex gap-1 h-48 items-end">
-                  <div className="flex-1 bg-gray-200 rounded-t" style={{height:`${Math.min((t.target/(Math.max(...(data?.monthlyTrend||[]).map(x=>x.target)||[1])))*100),100)}%`}} title={`目標: ${formatMoney(t.target)}`}/>
-                  <div className="flex-1 bg-blue-500 rounded-t" style={{height:`${Math.min((t.actual/(Math.max(...(data?.monthlyTrend||[]).map(x=>x.actual)||[1])))*100),100)}%`}} title={`業績: ${formatMoney(t.actual)}`}/>
+                  <div className="flex-1 bg-gray-200 rounded-t" style={{height:`${Math.min((t.target/(Math.max(...(data?.monthlyTrend||[]).map(x=>x.target)||[1])))*100, 100)}%`}} title={`目標: ${formatMoney(t.target)}`}/>
+                  <div className="flex-1 bg-blue-500 rounded-t" style={{height:`${Math.min((t.actual/(Math.max(...(data?.monthlyTrend||[]).map(x=>x.actual)||[1])))*100, 100)}%`}} title={`業績: ${formatMoney(t.actual)}`}/>
                 </div>
                 <span className="text-xs text-gray-500 mt-2">{t.month}月</span>
                 <span className={`text-xs font-medium ${t.rate>=100?'text-green-600':t.rate>=60?'text-blue-600':'text-orange-500'}`}>{t.rate}%</span>
