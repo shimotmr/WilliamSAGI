@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
+export const dynamic = 'force-dynamic'
+
 // Read Google OAuth credentials from ~/.openclaw/credentials/google-oauth.json
 function getGoogleCredentials() {
   try {

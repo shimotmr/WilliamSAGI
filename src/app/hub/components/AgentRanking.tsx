@@ -7,7 +7,7 @@ import {
   Legend,
 } from 'chart.js'
 import { Users, PieChart } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -68,7 +68,7 @@ export default function AgentRanking() {
   const [days, setDays] = useState(7)
   const [metric, setMetric] = useState<'tokens' | 'prompts' | 'cost'>('tokens')
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true)
       const res = await fetch(`/api/model-usage/by-agent?days=${days}&limit=10`)
@@ -84,11 +84,11 @@ export default function AgentRanking() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [days])
 
   useEffect(() => {
     fetchData()
-  }, [days])
+  }, [fetchData])
 
   // Prepare chart data
   const rankings = data?.data?.rankings || []

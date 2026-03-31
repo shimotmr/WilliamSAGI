@@ -1,7 +1,7 @@
 'use client'
 
 import { MessageCircle, Send, Reply, X, CornerDownRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from './AuthProvider'
 
@@ -56,19 +56,19 @@ export function CommentSection({ slug }: { slug: string }) {
   const [loading, setLoading] = useState(false)
   const [show, setShow] = useState(true)
   const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null)
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const res = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`)
     if (res.ok) {
       const data = await res.json()
       setComments(data)
     }
-  }
+  }, [slug])
 
   useEffect(() => {
     if (show) fetchComments()
-  }, [slug, show])
+  }, [fetchComments, show])
 
   const submit = async () => {
     if (!user || !text.trim() || loading) return

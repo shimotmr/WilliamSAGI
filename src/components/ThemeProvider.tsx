@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -63,11 +64,16 @@ export function ThemeProvider({
     root.setAttribute('data-context', context)
   }, [theme, context])
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const next = mode === 'dark' ? 'light' : 'dark'
     setMode(next)
     localStorage.setItem('williamsagi-mode', next)
-  }
+  }, [mode])
+
+  const updateMode = useCallback((nextMode: ThemeMode) => {
+    setMode(nextMode)
+    localStorage.setItem('williamsagi-mode', nextMode)
+  }, [])
 
   const value = useMemo(
     () => ({
@@ -75,12 +81,9 @@ export function ThemeProvider({
       currentMode: effectiveMode,
       context,
       toggleTheme,
-      setMode: (nextMode: ThemeMode) => {
-        setMode(nextMode)
-        localStorage.setItem('williamsagi-mode', nextMode)
-      },
+      setMode: updateMode,
     }),
-    [theme, effectiveMode, context, mode]
+    [context, effectiveMode, theme, toggleTheme, updateMode]
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

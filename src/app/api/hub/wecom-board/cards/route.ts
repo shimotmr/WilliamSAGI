@@ -1,14 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { hasConfiguredSupabase } from '@/lib/supabase-env';
 
 // GET - 讀取所有卡片（按 parent_msg_id 分組）
 export async function GET() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!hasConfiguredSupabase(supabaseUrl, serviceRoleKey)) {
+      return NextResponse.json([]);
+    }
+
+    const supabase = createClient(supabaseUrl!, serviceRoleKey!);
+
     // 讀取所有訊息
     const { data: messages, error } = await supabase
       .from('wecom_messages')
@@ -61,7 +66,7 @@ export async function GET() {
     const cards = Object.values(groupedCards);
     return NextResponse.json(cards);
   } catch (error) {
-    console.error('Error fetching cards:', error);
-    return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 });
+    console.warn('Returning fallback cards because wecom_messages fetch failed:', error);
+    return NextResponse.json([]);
   }
 }

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 
@@ -18,7 +18,7 @@ export default function PositionsPage() {
   const [positions, setPositions] = useState<Position[]>([])
   const [loading, setLoading] = useState(true)
 
-  const fetchPositions = async () => {
+  const fetchPositions = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch(`${API_URL}/api/positions/${tab}`, {
@@ -28,9 +28,9 @@ export default function PositionsPage() {
       setPositions(data.positions || [])
     } catch {}
     setLoading(false)
-  }
+  }, [tab])
 
-  useEffect(() => { fetchPositions() }, [tab])
+  useEffect(() => { fetchPositions() }, [fetchPositions])
 
   const totalCost = positions.reduce((s, p) => s + p.price * p.quantity * (tab === 'stock' ? 1000 : 1), 0)
   const totalMV = positions.reduce((s, p) => s + p.last_price * p.quantity * (tab === 'stock' ? 1000 : 1), 0)

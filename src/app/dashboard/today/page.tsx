@@ -362,18 +362,14 @@ export default function TodayDashboard() {
     const taskChannel = supabase
       .channel('today-board-tasks')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'board_tasks' }, () => {
-        fetchRunning();
-        fetchCompleted();
-        fetchPending();
-        fetchStats();
+        fetchAll();
       })
       .subscribe();
 
     const stepChannel = supabase
       .channel('today-task-steps')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_steps' }, () => {
-        fetchRunning();
-        fetchStats();
+        fetchAll();
       })
       .subscribe();
 
@@ -384,7 +380,7 @@ export default function TodayDashboard() {
   }, [fetchAll]);
 
   // Compute stuck count from running tasks
-  const stuckCount = useMemo(() => running.filter(isStuck).length, [running, now]);
+  const stuckCount = useMemo(() => running.filter(isStuck).length, [running]);
 
   // ── Action handlers ──
   const handleApprove = async (id: number) => {

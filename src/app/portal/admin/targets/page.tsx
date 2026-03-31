@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface Target {
   id: string
@@ -30,11 +30,7 @@ export default function TargetsPage() {
   const [isNew, setIsNew] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
-  useEffect(() => {
-    loadData()
-  }, [selectedYear])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true)
     try {
       // 載入目標
@@ -56,7 +52,11 @@ export default function TargetsPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [selectedYear])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleEdit = (target: Target) => {
     setEditingTarget({ ...target })
@@ -105,7 +105,7 @@ export default function TargetsPage() {
         setMessage({ type: 'success', text: '儲存成功' })
         setShowModal(false)
         setEditingTarget(null)
-        loadData()
+        await loadData()
       } else {
         setMessage({ type: 'error', text: data.message || '儲存失敗' })
       }

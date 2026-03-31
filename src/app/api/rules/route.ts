@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { hasConfiguredSupabase } from '@/lib/supabase-env'
 
 
 export interface RuleItem {
@@ -43,7 +44,7 @@ export async function GET() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!hasConfiguredSupabase(supabaseUrl, supabaseServiceKey)) {
       const fallbackData: RuleSummary = {
         totalRules: 0,
         completeBinding: 0,
@@ -68,7 +69,7 @@ export async function GET() {
       .order('scanned_at', { ascending: false })
 
     if (error) {
-      console.error('Supabase error:', error)
+      console.warn('Skipping /api/rules Supabase fetch because backend returned an error:', error)
       throw error
     }
 
@@ -135,7 +136,7 @@ export async function GET() {
     return NextResponse.json(summary)
     
   } catch (error) {
-    console.error('Error in /api/rules:', error)
+    console.warn('Returning fallback data from /api/rules:', error)
     
     // Return empty structure on error
     const fallbackData: RuleSummary = {

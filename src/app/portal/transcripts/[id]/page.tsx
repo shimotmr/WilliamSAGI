@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { supabase } from '@/lib/supabase'
 
@@ -64,25 +64,7 @@ export default function TranscriptDetailPage() {
   const [toast, setToast] = useState<string | null>(null)
   const [editingSpeakerId, setEditingSpeakerId] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadTranscript()
-    const interval = setInterval(() => {
-      if (transcript?.status === 'processing') {
-        checkStatus()
-      }
-    }, 5000)
-    
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => {
-      clearInterval(interval)
-      window.removeEventListener('resize', checkMobile)
-    }
-  }, [id, transcript?.status])
-
-  const loadTranscript = async () => {
+  const loadTranscript = useCallback(async () => {
     setLoading(true)
     
     // Load transcript
@@ -125,9 +107,9 @@ export default function TranscriptDetailPage() {
     }
     
     setLoading(false)
-  }
+  }, [id])
 
-  const checkStatus = async () => {
+  const checkStatus = useCallback(async () => {
     setPolling(true)
     const res = await fetch(`/api/transcripts/${id}/status`)
     if (res.ok) {
@@ -137,7 +119,25 @@ export default function TranscriptDetailPage() {
       }
     }
     setPolling(false)
-  }
+  }, [id, loadTranscript, transcript?.status])
+
+  useEffect(() => {
+    loadTranscript()
+    const interval = setInterval(() => {
+      if (transcript?.status === 'processing') {
+        checkStatus()
+      }
+    }, 5000)
+
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('resize', checkMobile)
+    }
+  }, [checkStatus, loadTranscript, transcript?.status])
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {

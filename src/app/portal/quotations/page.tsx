@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 
 interface Quotation { id: string; quotation_no: string; customer_name: string; quote_date: string; valid_until: string; total_amount: number; currency: string; status: string; created_by: string }
@@ -15,18 +15,24 @@ export default function QuotationsPage() {
   const [status, setStatus] = useState('')
   const [q, setQ] = useState('')
   const [loading, setLoading] = useState(true)
+  const qRef = useRef(q)
 
-  const load = async () => {
+  useEffect(() => {
+    qRef.current = q
+  }, [q])
+
+  const load = useCallback(async (searchQuery = qRef.current) => {
     setLoading(true)
     const p = new URLSearchParams()
     if (status) p.set('status', status)
-    if (q) p.set('q', q)
+    if (searchQuery) p.set('q', searchQuery)
     const r = await fetch(`/api/portal/quotations?${p}`)
     const d = await r.json()
     setQuotes(d.quotations || [])
     setLoading(false)
-  }
-  useEffect(() => { load() }, [status])
+  }, [status])
+
+  useEffect(() => { load() }, [load])
 
   return (
     <div className="p-6">
@@ -39,7 +45,7 @@ export default function QuotationsPage() {
           <button key={s} onClick={()=>setStatus(s)} className={`px-3 py-1.5 rounded-lg text-sm ${status===s?'bg-blue-600 text-white':'bg-gray-100'}`}>{s||'全部'}</button>
         ))}
         <div className="flex-1"/>
-        <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&load()} placeholder="搜尋客戶/報價單號..."
+        <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&load(q)} placeholder="搜尋客戶/報價單號..."
           className="border rounded-lg px-3 py-2 text-sm w-48" />
       </div>
       {loading ? <p className="text-gray-400 text-sm">載入中...</p> : (

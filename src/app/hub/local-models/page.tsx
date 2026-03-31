@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Cpu, RefreshCw, Zap, AlertTriangle, CheckCircle2, Loader2, Server } from 'lucide-react';
+import { Cpu, RefreshCw, Zap, AlertTriangle, CheckCircle2, Loader2, Server, Globe, Wrench, Sparkles, Search } from 'lucide-react';
 
 interface LMModel {
   id: string;
@@ -15,12 +15,51 @@ interface TestResult {
   tokens?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
 }
 
+interface BridgeResponse {
+  completion?: { content?: string };
+  query?: string;
+  model?: string;
+  research_bundle?: {
+    results?: Array<{ title?: string; url?: string }>;
+    mountedSkills?: Array<{ name: string }>;
+    autoSkillExecution?: { skill?: { name?: string } };
+    autoSkillExecutions?: Array<{ skill?: { name?: string } }>;
+    searchError?: string;
+    internalKnowledge?: {
+      success?: boolean;
+      error?: string;
+      results?: Array<{ title?: string; file?: string; snippet?: string }>;
+    };
+  };
+  error?: string;
+}
+
 export default function LocalModelsPage() {
   const [models, setModels] = useState<LMModel[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [testing, setTesting] = useState<Record<string, boolean>>({});
   const [results, setResults] = useState<Record<string, TestResult | { error: string }>>({});
+  const [bridgeForm, setBridgeForm] = useState({
+    model: '',
+    query: '請檢查 OpenClaw gateway health，並補一個 web search 重點。',
+    provider: 'auto',
+    maxResults: 2,
+    fetchPages: 1,
+    autoSkillRoute: true,
+    autoSkillRouteMulti: true,
+    strictSites: false,
+    includeInternal: true,
+    internalAgent: 'researcher',
+    internalLimit: 4,
+    skills: ['openclaw-ops'],
+    sites: [] as string[],
+    topics: [] as string[],
+  });
+  const [bridgeLoading, setBridgeLoading] = useState(false);
+  const [bridgeResult, setBridgeResult] = useState<BridgeResponse | null>(null);
+  const [bridgeError, setBridgeError] = useState<string | null>(null);
 
   const fetchModels = useCallback(async () => {
     setLoading(true);
@@ -42,7 +81,28 @@ export default function LocalModelsPage() {
     }
   }, []);
 
-  useEffect(() => { fetchModels(); }, [fetchModels]);
+  const fetchSkills = useCallback(async () => {
+    try {
+      const res = await fetch('/api/local-models/skills');
+      const data = await res.json();
+      if (res.ok) {
+        setSkills(data.skills ?? []);
+      }
+    } catch {
+      setSkills([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchModels();
+    fetchSkills();
+  }, [fetchModels, fetchSkills]);
+
+  useEffect(() => {
+    if (!bridgeForm.model && models.length > 0) {
+      setBridgeForm(prev => ({ ...prev, model: models[0].id }));
+    }
+  }, [bridgeForm.model, models]);
 
   const testModel = async (modelId: string) => {
     setTesting(prev => ({ ...prev, [modelId]: true }));
@@ -62,6 +122,45 @@ export default function LocalModelsPage() {
       setResults(prev => ({ ...prev, [modelId]: { error: '請求失敗' } }));
     } finally {
       setTesting(prev => ({ ...prev, [modelId]: false }));
+    }
+  };
+
+  const toggleSkill = (skill: string) => {
+    setBridgeForm(prev => ({
+      ...prev,
+      skills: prev.skills.includes(skill) ? prev.skills.filter(item => item !== skill) : [...prev.skills, skill],
+    }));
+  };
+
+  const toggleListValue = (field: 'sites' | 'topics', value: string) => {
+    setBridgeForm(prev => ({
+      ...prev,
+      [field]: prev[field].includes(value)
+        ? prev[field].filter(item => item !== value)
+        : [...prev[field], value],
+    }));
+  };
+
+  const runBridge = async () => {
+    setBridgeLoading(true);
+    setBridgeError(null);
+    setBridgeResult(null);
+    try {
+      const res = await fetch('/api/local-models/bridge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bridgeForm),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setBridgeError(data.error || 'bridge 執行失敗');
+      } else {
+        setBridgeResult(data);
+      }
+    } catch {
+      setBridgeError('bridge 請求失敗');
+    } finally {
+      setBridgeLoading(false);
     }
   };
 
@@ -121,6 +220,322 @@ export default function LocalModelsPage() {
           連線中...
         </div>
       )}
+
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="p-5 bg-zinc-900/60 border border-zinc-800 rounded-xl space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-sky-500/10 rounded-lg">
+              <Globe className="w-4 h-4 text-sky-400" />
+            </div>
+            <div>
+              <h2 className="text-white font-semibold">離線模型 Web + Skill Bridge</h2>
+              <p className="text-sm text-zinc-400">本地模型可混合使用搜尋結果與本地 skills</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">模型</span>
+              <select
+                value={bridgeForm.model}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, model: e.target.value }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              >
+                <option value="">請選擇模型</option>
+                {models.map((model) => (
+                  <option key={model.id} value={model.id}>{model.id}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">搜尋來源</span>
+              <select
+                value={bridgeForm.provider}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, provider: e.target.value }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              >
+                {['auto', 'duckduckgo', 'brave', 'tavily'].map((provider) => (
+                  <option key={provider} value={provider}>{provider}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <label className="space-y-2 block">
+            <span className="text-sm text-zinc-300">查詢</span>
+            <textarea
+              value={bridgeForm.query}
+              onChange={(e) => setBridgeForm(prev => ({ ...prev, query: e.target.value }))}
+              rows={4}
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+            />
+          </label>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">最大結果數</span>
+              <input
+                type="number"
+                min={0}
+                max={8}
+                value={bridgeForm.maxResults}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, maxResults: Number(e.target.value) }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              />
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">抓頁數</span>
+              <input
+                type="number"
+                min={0}
+                max={4}
+                value={bridgeForm.fetchPages}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, fetchPages: Number(e.target.value) }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              />
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">內部知識 Agent</span>
+              <select
+                value={bridgeForm.internalAgent}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, internalAgent: e.target.value }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              >
+                {['researcher', 'coder', 'writer'].map((agent) => (
+                  <option key={agent} value={agent}>{agent}</option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm text-zinc-300">內部知識數量</span>
+              <input
+                type="number"
+                min={1}
+                max={8}
+                value={bridgeForm.internalLimit}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, internalLimit: Number(e.target.value) }))}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+              />
+            </label>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm text-zinc-300">
+              <Wrench className="w-4 h-4 text-violet-400" />
+              可掛載 skills
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => {
+                const active = bridgeForm.skills.includes(skill);
+                return (
+                  <button
+                    key={skill}
+                    onClick={() => toggleSkill(skill)}
+                    className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                      active
+                        ? 'border-violet-500 bg-violet-500/15 text-violet-200'
+                        : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600'
+                    }`}
+                  >
+                    {skill}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-zinc-300">
+                <Search className="w-4 h-4 text-sky-400" />
+                來源限制
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['github.com', 'reddit.com', 'huggingface.co', 'youtube.com'].map((site) => {
+                  const active = bridgeForm.sites.includes(site);
+                  return (
+                    <button
+                      key={site}
+                      onClick={() => toggleListValue('sites', site)}
+                      className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                        active
+                          ? 'border-sky-500 bg-sky-500/15 text-sky-200'
+                          : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600'
+                      }`}
+                    >
+                      {site}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-zinc-300">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                主題限制
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['ai-agent-trends', 'local-models', 'dev-tooling'].map((topic) => {
+                  const active = bridgeForm.topics.includes(topic);
+                  return (
+                    <button
+                      key={topic}
+                      onClick={() => toggleListValue('topics', topic)}
+                      className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                        active
+                          ? 'border-amber-500 bg-amber-500/15 text-amber-200'
+                          : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600'
+                      }`}
+                    >
+                      {topic}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            <label className="flex items-center gap-2 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                checked={bridgeForm.autoSkillRoute}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, autoSkillRoute: e.target.checked }))}
+              />
+              單 skill 自動路由
+            </label>
+            <label className="flex items-center gap-2 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                checked={bridgeForm.autoSkillRouteMulti}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, autoSkillRouteMulti: e.target.checked }))}
+              />
+              多 skill 自動路由
+            </label>
+            <label className="flex items-center gap-2 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                checked={bridgeForm.includeInternal}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, includeInternal: e.target.checked }))}
+              />
+              附帶內部知識
+            </label>
+            <label className="flex items-center gap-2 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                checked={bridgeForm.strictSites}
+                onChange={(e) => setBridgeForm(prev => ({ ...prev, strictSites: e.target.checked }))}
+              />
+              嚴格網域過濾
+            </label>
+          </div>
+
+          <button
+            onClick={runBridge}
+            disabled={bridgeLoading || !bridgeForm.model || !bridgeForm.query.trim()}
+            className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-500 disabled:opacity-50"
+          >
+            {bridgeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            {bridgeLoading ? '執行中...' : '執行 Bridge'}
+          </button>
+        </div>
+
+        <div className="p-5 bg-zinc-900/60 border border-zinc-800 rounded-xl space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-500/10 rounded-lg">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-white font-semibold">Bridge 結果</h2>
+              <p className="text-sm text-zinc-400">先看 skill / 搜尋整合是否符合預期</p>
+            </div>
+          </div>
+
+          {bridgeError && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">
+              ❌ {bridgeError}
+            </div>
+          )}
+
+          {!bridgeError && !bridgeResult && (
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-500">
+              尚未執行。建議先用 `openclaw-ops` 或 `context-anchor` 做 smoke。
+            </div>
+          )}
+
+          {bridgeResult && (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4">
+                <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">回答</div>
+                <pre className="whitespace-pre-wrap break-words text-sm text-zinc-200">{bridgeResult.completion?.content || '（無內容）'}</pre>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-300">
+                  <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">掛載 Skills</div>
+                  <div className="flex flex-wrap gap-2">
+                    {(bridgeResult.research_bundle?.mountedSkills ?? []).map((skill) => (
+                      <span key={skill.name} className="rounded-full bg-violet-500/10 px-2 py-1 text-xs text-violet-200">{skill.name}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-300">
+                  <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">自動路由</div>
+                  <div className="space-y-1">
+                    {bridgeResult.research_bundle?.autoSkillExecution?.skill?.name && <div>單一路由：{bridgeResult.research_bundle.autoSkillExecution.skill.name}</div>}
+                    {(bridgeResult.research_bundle?.autoSkillExecutions ?? []).map((item, index) => (
+                      <div key={`${item.skill?.name}-${index}`}>多路由：{item.skill?.name || '未知 skill'}</div>
+                    ))}
+                    {!bridgeResult.research_bundle?.autoSkillExecution?.skill?.name &&
+                      !(bridgeResult.research_bundle?.autoSkillExecutions ?? []).length && (
+                        <div className="text-zinc-500">這次沒有命中自動 skill 路由</div>
+                      )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-300">
+                <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">搜尋來源</div>
+                <div className="space-y-2">
+                  {(bridgeResult.research_bundle?.results ?? []).slice(0, 5).map((item, index) => (
+                    <div key={`${item.url}-${index}`} className="leading-relaxed">
+                      <div className="text-zinc-100">{item.title || item.url}</div>
+                      <div className="break-all text-xs text-sky-300">{item.url}</div>
+                    </div>
+                  ))}
+                  {bridgeResult.research_bundle?.searchError && (
+                    <div className="text-amber-300">搜尋錯誤：{bridgeResult.research_bundle.searchError}</div>
+                  )}
+                  {!(bridgeResult.research_bundle?.results ?? []).length && !bridgeResult.research_bundle?.searchError && (
+                    <div className="text-zinc-500">這次沒有搜尋結果。</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-300">
+                <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">內部知識</div>
+                <div className="space-y-2">
+                  {(bridgeResult.research_bundle?.internalKnowledge?.results ?? []).slice(0, 5).map((item, index) => (
+                    <div key={`${item.file || item.title || 'internal'}-${index}`} className="leading-relaxed">
+                      <div className="text-zinc-100">{item.file || item.title || '內部知識條目'}</div>
+                      {item.snippet && <div className="text-xs text-zinc-400">{item.snippet}</div>}
+                    </div>
+                  ))}
+                  {bridgeResult.research_bundle?.internalKnowledge?.error && (
+                    <div className="text-amber-300">內部知識錯誤：{bridgeResult.research_bundle.internalKnowledge.error}</div>
+                  )}
+                  {!(bridgeResult.research_bundle?.internalKnowledge?.results ?? []).length &&
+                    !bridgeResult.research_bundle?.internalKnowledge?.error && (
+                      <div className="text-zinc-500">這次沒有命中內部知識結果。</div>
+                    )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Model Cards */}
       {!loading && models.length > 0 && (

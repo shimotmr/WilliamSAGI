@@ -1,23 +1,7 @@
 'use client';
 
-import type { ForwardRefExoticComponent, RefAttributes } from 'react';
-import type { LucideProps } from 'lucide-react';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { usePathname } from 'next/navigation';
-
-interface NavLink {
-  href: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
-  label: string;
-  external?: boolean;
-  date?: string;
-}
-
-interface NavGroup {
-  label: string;
-  collapsible?: boolean;
-  items: NavLink[];
-}
 import Link from 'next/link';
 import {
   LayoutDashboard, Activity, Bell, Swords,
@@ -32,6 +16,20 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+
+type NavLink = {
+  href: string;
+  icon: typeof LayoutDashboard;
+  label: string;
+  date?: string;
+  external?: boolean;
+};
+
+type NavGroup = {
+  label: string;
+  collapsible?: boolean;
+  items: NavLink[];
+};
 
 const v4EvolutionGroup: NavGroup = {
   label: '🗂 V4系統演進',
@@ -105,13 +103,16 @@ const navGroups: NavGroup[] = [
       { href: '/hub/linebot-training', icon: BookOpen, label: 'LineBot 訓練' },
       { href: '/hub/disk-health', icon: HardDrive, label: '磁碟健康' },
       { href: '/hub/upgrade-tracker', icon: RefreshCw, label: '升級追蹤' },
+      { href: '/hub/tag-intel', icon: Database, label: 'Tag 情報' },
+      { href: '/hub/search-intel', icon: Database, label: 'Search Intel' },
+      { href: '/hub/task-debug', icon: ScanText, label: 'Task Debug' },
     ],
   },
   v4EvolutionGroup,
   {
     label: '系統設定',
     items: [
-      { href: '/aurotek/flow-rules', icon: CheckSquare, label: '自動簽核規則' },
+      { href: '/hub/aurotek/flow-rules', icon: CheckSquare, label: '自動簽核規則' },
       { href: '/hub/prompts', icon: MessageSquare, label: 'Prompt 管理' },
       { href: '/hub/rules',   icon: ShieldCheck,   label: '規則' },
       { href: '/hub/wecom',       icon: MessageCircle, label: 'WeCom 歸類' },
@@ -128,7 +129,7 @@ const navGroups: NavGroup[] = [
 ];
 
 // Flatten for mobile nav (pick top 5)
-const mobileLinks = [
+const mobileLinks: NavLink[] = [
   { href: '/hub/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/hub/board',     icon: Kanban,          label: '看板' },
   { href: '/hub/agents',    icon: Bot,             label: 'Agents' },

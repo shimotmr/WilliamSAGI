@@ -12,7 +12,7 @@ import {
   Filler,
 } from 'chart.js'
 import { LineChart, TrendingUp } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Line } from 'react-chartjs-2'
 
 ChartJS.register(
@@ -91,7 +91,7 @@ export default function ModelTrendChart() {
   const [error, setError] = useState<string | null>(null)
   const [days, setDays] = useState(7)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true)
       const res = await fetch(`/api/model-usage/trend?days=${days}`)
@@ -107,11 +107,11 @@ export default function ModelTrendChart() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [days])
 
   useEffect(() => {
     fetchData()
-  }, [days])
+  }, [fetchData])
 
   // Prepare chart data
   const chartData = data ? {

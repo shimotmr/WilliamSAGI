@@ -33,15 +33,22 @@ export default function BenchmarkPage() {
       try {
         setLoading(true);
         
-        // 先嘗試載入真實數據
-        let response = await fetch('/data/model-benchmark-2026-03-17.json');
-        
-        // 如果真實數據不存在，載入 mock data
-        if (!response.ok) {
-          response = await fetch('/data/model-benchmark-mock.json');
+        const candidates = [
+          '/data/model-benchmark-2026-03-29.json',
+          '/data/model-benchmark-2026-03-17.json',
+          '/data/model-benchmark-mock.json',
+        ];
+
+        let response: Response | null = null;
+        for (const path of candidates) {
+          const current = await fetch(path);
+          if (current.ok) {
+            response = current;
+            break;
+          }
         }
-        
-        if (!response.ok) {
+
+        if (!response) {
           throw new Error('無法載入 benchmark 數據');
         }
         

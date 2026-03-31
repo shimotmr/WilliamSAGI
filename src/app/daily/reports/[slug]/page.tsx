@@ -9,13 +9,6 @@ import { formatDate, typeConfig } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-export async function generateStaticParams() {
-  const posts = await getAllPosts()
-  return posts
-    .filter(p => p.type === 'research' && p.slug)
-    .map(p => ({ slug: String(p.slug).replace('reports/', '') }))
-}
-
 export default async function ReportPage({ params }: { params: { slug: string } }) {
   const posts = await getAllPosts()
   const post = posts.find(p => p.type === 'research' && p.slug === `reports/${params.slug}`)

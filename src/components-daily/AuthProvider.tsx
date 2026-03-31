@@ -1,7 +1,7 @@
 'use client'
 
 import type { User, Session } from '@supabase/supabase-js'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { createClient } from '@/lib/supabase-client'
 
@@ -35,9 +35,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<UserRole>(null)
   const [loading, setLoading] = useState(true)
   const [pendingCount, setPendingCount] = useState(0)
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
-  const syncUser = async () => {
+  const syncUser = useCallback(async () => {
     try {
       const res = await fetch('/api/user/sync', { method: 'POST' })
       if (res.ok) {
@@ -45,9 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setRole(data.role)
       }
     } catch (e) {}
-  }
+  }, [])
 
-  const fetchPendingCount = async () => {
+  const fetchPendingCount = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/pending-count')
       if (res.ok) {
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPendingCount(data.count)
       }
     } catch (e) {}
-  }
+  }, [])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [fetchPendingCount, supabase, syncUser])
 
   const signInWithGitHub = async () => {
     await supabase.auth.signInWithOAuth({

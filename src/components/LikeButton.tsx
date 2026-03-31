@@ -1,7 +1,7 @@
 'use client'
 
 import { Heart } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from './AuthProvider'
 
@@ -12,7 +12,7 @@ export function LikeButton({ slug }: { slug: string }) {
   const [liked, setLiked] = useState(false)
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
   useEffect(() => {
     // Fetch count
@@ -32,7 +32,7 @@ export function LikeButton({ slug }: { slug: string }) {
         .maybeSingle()
         .then(({ data }) => setLiked(!!data))
     }
-  }, [slug, user])
+  }, [slug, supabase, user])
 
   const toggle = async () => {
     if (!user || loading) return

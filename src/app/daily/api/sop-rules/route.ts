@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { hasConfiguredSupabase } from '@/lib/supabase-env'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,14 +10,15 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY
 
 export async function GET(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseKey || supabaseUrl === 'https://example.supabase.co') {
-      return NextResponse.json(
-        { error: 'Supabase not configured' },
-        { status: 500 }
-      )
+    if (!hasConfiguredSupabase(supabaseUrl, supabaseKey)) {
+      return NextResponse.json({
+        status: 'success',
+        data: [],
+        count: 0
+      })
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createClient(supabaseUrl!, supabaseKey!)
 
     const { data, error } = await supabase
       .from('sop_rules')
@@ -26,8 +28,12 @@ export async function GET(request: NextRequest) {
       .order('name', { ascending: true })
 
     if (error) {
-      console.error('Supabase error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.warn('Returning empty SOP rules because Supabase fetch failed:', error)
+      return NextResponse.json({
+        status: 'success',
+        data: [],
+        count: 0
+      })
     }
 
     return NextResponse.json({
@@ -36,10 +42,11 @@ export async function GET(request: NextRequest) {
       count: data?.length || 0
     })
   } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.warn('Returning empty SOP rules due to API error:', error)
+    return NextResponse.json({
+      status: 'success',
+      data: [],
+      count: 0
+    })
   }
 }

@@ -10,6 +10,11 @@ export function useSupabaseRealtime(
   filter?: string
 ) {
   const channelRef = useRef<RealtimeChannel | null>(null)
+  const onUpdateRef = useRef(onUpdate)
+
+  useEffect(() => {
+    onUpdateRef.current = onUpdate
+  }, [onUpdate])
 
   useEffect(() => {
     const supabase = createClient()
@@ -25,7 +30,7 @@ export function useSupabaseRealtime(
     const channel = supabase
       .channel(channelName)
       .on('postgres_changes', opts, () => {
-        onUpdate()
+        onUpdateRef.current()
       })
       .subscribe()
 

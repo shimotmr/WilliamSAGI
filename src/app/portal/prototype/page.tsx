@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, ClipboardList, Package, User, FileText, Mic, Bot, BarChart3, Image, DollarSign, Zap } from 'lucide-react'
+import { Home, ClipboardList, Package, User, FileText, Mic, Bot, BarChart3, Image as ImageIcon, DollarSign, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
@@ -41,7 +41,7 @@ const QUICK_ACTIONS = [
   { icon: <Mic size={20} />, label: '逐字稿', href: '/transcripts' },
   { icon: <Bot size={20} />, label: 'AI 助手', href: '/agents' },
   { icon: <BarChart3 size={20} />, label: '業績', href: '/performance' },
-  { icon: <Image size={20} />, label: '資源庫', href: '/marketing' },
+  { icon: <ImageIcon size={20} />, label: '資源庫', href: '/marketing' },
 ]
 
 function formatAmount(num: number): string {

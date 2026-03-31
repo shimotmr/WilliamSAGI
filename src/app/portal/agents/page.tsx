@@ -199,6 +199,21 @@ export default function AgentsPage() {
     }
   }, [])
 
+  const fetchTasks = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('agent_tasks')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (!error && data) setTasks(data)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   useEffect(() => {
     // Check admin cookie
     const admin = document.cookie.split(';').some(c => c.trim().startsWith('is_admin=true'))
@@ -210,7 +225,7 @@ export default function AgentsPage() {
       const interval = setInterval(() => { fetchTasks(); loadAgents(); loadCronSchedules() }, 30000)
       return () => clearInterval(interval)
     }
-  }, [])
+  }, [fetchTasks, loadAgents, loadCronSchedules])
 
   const loadRuns = useCallback(async () => {
     
@@ -227,22 +242,6 @@ export default function AgentsPage() {
   useEffect(() => {
     if (isAdmin) { loadRuns(); const i = setInterval(loadRuns, 30000); return () => clearInterval(i) }
   }, [isAdmin, loadRuns])
-
-  async function fetchTasks() {
-    try {
-      
-      const { data, error } = await supabase
-        .from('agent_tasks')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50)
-      if (!error && data) setTasks(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   if (isAdmin === false) {
     return (

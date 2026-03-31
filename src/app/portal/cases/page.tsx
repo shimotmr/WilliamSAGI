@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 interface Case { id: string; stage: string; order_id: string; rep: string; dealer: string; end_customer: string; machine: string; probability: number; quantity: number; amount: number; expected: number; order_date: string; ship_date: string; category: string; brand: string; updated_at: string }
 
@@ -16,21 +16,26 @@ export default function CasesPage() {
   const [expired, setExpired] = useState('')
   const [q, setQ] = useState('')
   const [loading, setLoading] = useState(true)
+  const qRef = useRef(q)
 
-  const load = async () => {
+  useEffect(() => {
+    qRef.current = q
+  }, [q])
+
+  const load = useCallback(async (searchQuery = qRef.current) => {
     setLoading(true)
     const p = new URLSearchParams()
     if (stage) p.set('stage', stage)
     if (expired) p.set('expired', expired)
-    if (q) p.set('q', q)
+    if (searchQuery) p.set('q', searchQuery)
     const r = await fetch(`/api/portal/cases?${p}`)
     const d = await r.json()
     setCases(d.cases || [])
     setStats(d.stats || {count:0,totalAmount:0,totalExpected:0})
     setLoading(false)
-  }
+  }, [expired, stage])
 
-  useEffect(() => { load() }, [stage, expired])
+  useEffect(() => { load() }, [load])
 
   const stages = ['已出貨','待出貨','進行中','失敗','結案']
   const totalAmt = stats.totalAmount
@@ -63,9 +68,9 @@ export default function CasesPage() {
         <div className="flex-1"/>
         
         {/* 搜尋 */}
-        <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&load()} placeholder="搜尋客戶/廠商/型號..."
+        <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&load(q)} placeholder="搜尋客戶/廠商/型號..."
           className="border rounded-lg px-3 py-2 text-sm w-56" />
-        <button onClick={load} className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm">搜尋</button>
+        <button onClick={() => load(q)} className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm">搜尋</button>
       </div>
 
       {loading ? <p className="text-gray-400 text-sm">載入中...</p> : (

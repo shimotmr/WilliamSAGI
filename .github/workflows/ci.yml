@@ -8,6 +8,11 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+      SUPABASE_SERVICE_ROLE_KEY: placeholder
+      JWT_SECRET: ci-placeholder-secret
 
     steps:
       - name: Checkout
@@ -24,6 +29,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Build
+        run: npm run build
 
       - name: Type Check
         run: npx tsc --noEmit

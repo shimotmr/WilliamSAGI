@@ -7,10 +7,9 @@ module.exports = {
     './components-hub/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   safelist: [
-    // Critical layout classes that must always be generated
-    'hidden', 'flex', 'block',
-    { pattern: /^md:(flex|hidden|block|ml-|pt-|flex-)/ },
-    { pattern: /^lg:(flex|hidden|block|ml-)/ },
+    'hidden',
+    'flex',
+    'block',
   ],
   theme: {
     extend: {

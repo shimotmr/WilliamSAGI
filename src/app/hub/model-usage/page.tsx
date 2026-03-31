@@ -82,10 +82,8 @@ export default function ModelUsageDashboard() {
     
     // Timeout fallback - ensure loading state is always cleared
     const timeoutId = setTimeout(() => {
-      if (loading) {
-        setLoading(false)
-        setError('請求超時，請重新整理頁面')
-      }
+      setLoading(false)
+      setError('請求超時，請重新整理頁面')
     }, 10000)
 
     fetch('/api/model-usage', { signal: controller.signal })
