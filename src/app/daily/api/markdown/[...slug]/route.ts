@@ -19,9 +19,10 @@ function estimateTokens(text: string): number {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  const slug = params.slug.join('/')
+  const { slug: slugParts } = await params
+  const slug = slugParts.join('/')
 
   // 初始化 Supabase client
   const supabase = createClient(

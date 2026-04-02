@@ -4,10 +4,10 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
 
     // 1. 從 transcript_dictionary 拉取辭典
     const { data: dictData } = await supabase

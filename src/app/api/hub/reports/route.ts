@@ -7,13 +7,14 @@ export async function GET(req: Request) {
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
   const { searchParams } = new URL(req.url)
-  const limit = parseInt(searchParams.get('limit') || '20')
-  const { data } = await getSupabase()
+  const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') || '20'), 200))
+  const offset = Math.max(0, parseInt(searchParams.get('offset') || '0'))
+  const { data, count } = await getSupabase()
     .from('reports')
-    .select('id,title,author,type,created_at')
+    .select('id,title,author,type,created_at', { count: 'exact' })
     .order('created_at', { ascending: false })
-    .limit(limit)
+    .range(offset, offset + limit - 1)
   // Map `type` -> `report_type` for frontend compatibility
   const reports = (data || []).map(r => ({ ...r, report_type: r.type }))
-  return NextResponse.json({ reports })
+  return NextResponse.json({ reports, total: count || 0, limit, offset })
 }

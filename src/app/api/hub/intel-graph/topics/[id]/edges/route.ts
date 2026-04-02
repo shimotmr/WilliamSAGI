@@ -6,8 +6,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
-  const topicId = params.id;
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: topicId } = await params;
   const body = await req.json();
   const { data, error } = await supabase
     .from('intel_edges')

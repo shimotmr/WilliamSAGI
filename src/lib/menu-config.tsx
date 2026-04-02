@@ -207,7 +207,7 @@ export const PORTAL_MENU_ITEMS: MenuItem[] = [
   // 效率工具
   { id: 'transcripts', title: '會議逐字稿', desc: 'AI 語音轉文字 · 講者辨識 · 智慧校正', href: '/portal/transcripts', icon: 'transcript', gradient: 'from-indigo-500 to-indigo-600', textColor: 'text-indigo-100', status: 'live', group: 'tools' },
   { id: 'marketing', title: '數位資源庫', desc: '產品影片 · 簡報範本 · 技術文件', href: '/portal/marketing', icon: 'marketing', gradient: 'from-violet-500 to-violet-600', textColor: 'text-violet-100', status: 'live', group: 'tools' },
-  { id: 'knowledge', title: '知識庫', desc: '產品知識 · 銷售技巧 · 常見問題', href: '/portal/knowledge', icon: 'knowledge', gradient: 'from-purple-500 to-purple-600', textColor: 'text-purple-100', status: 'beta', group: 'tools' },
+  { id: 'knowledge', title: 'SOP知識庫 (SAGI)', desc: 'SAGI 系統文件 · SOP 手冊 · 核心知識入口', href: '/hub/reports?tab=sop', icon: 'knowledge', gradient: 'from-purple-500 to-purple-600', textColor: 'text-purple-100', status: 'beta', group: 'tools' },
   { id: 'samples', title: '樣品借用', desc: '借出歸還追蹤 · 庫位管理', href: '/portal/samples', icon: 'samples', gradient: 'from-amber-500 to-amber-600', textColor: 'text-amber-100', status: 'soon', group: 'tools' },
   // 系統管理
   { id: 'agents', title: 'Agent 中控台', desc: '多 Agent 狀態 · 任務監控 · 執行紀錄', href: '/portal/agents', icon: 'agent', gradient: 'from-cyan-500 to-cyan-600', textColor: 'text-cyan-100', status: 'live', group: 'system' },

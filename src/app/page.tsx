@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LayoutDashboard, Users, Gamepad2 } from 'lucide-react'
+import { LayoutDashboard, Users, Gamepad2, TerminalSquare } from 'lucide-react'
 
 const portals = [
   {
@@ -22,6 +22,13 @@ const portals = [
     href: '/showcase',
     icon: Gamepad2,
     gradient: 'from-pink-500 to-rose-600',
+  },
+  {
+    title: 'Codex',
+    subtitle: 'Remote Session UI',
+    href: '/codex',
+    icon: TerminalSquare,
+    gradient: 'from-cyan-500 to-sky-600',
   },
 ]
 

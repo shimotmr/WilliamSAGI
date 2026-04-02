@@ -48,8 +48,9 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/today', icon: LayoutDashboard, label: '📋 今日看板' },
       { href: '/hub/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
       { href: '/command',       icon: Swords,          label: '🎯 指揮中心' },
-      { href: '/hub/monitor',   icon: Activity,        label: '系統監控' },
-      { href: '/hub/alerts',    icon: Bell,            label: '告警中心' },
+      { href: '/hub/monitor',        icon: Activity,        label: '系統監控' },
+      { href: '/hub/observability',  icon: Activity,        label: '🔍 診斷中心' },
+      { href: '/hub/alerts',         icon: Bell,            label: '告警中心' },
       { href: '/hub/warroom',   icon: Swords,          label: '作戰室' },
     ],
   },
@@ -147,8 +148,15 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
   const isTradeRoute = pathname?.startsWith('/hub/trade');
 
   const isActive = (href: string) => {
-    if (href === '/hub/dashboard') return pathname === '/hub/dashboard' || pathname === '/hub';
-    return pathname === href || pathname?.startsWith(href + '/');
+    const [hrefPath] = href.split('?');
+    const isSopTab = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'sop';
+    if (hrefPath === '/hub/dashboard') return pathname === '/hub/dashboard' || pathname === '/hub';
+
+    const pathMatches = pathname === hrefPath || pathname?.startsWith(hrefPath + '/');
+    if (!pathMatches) return false;
+    if (href === '/hub/reports?tab=sop') return pathname === '/hub/reports' && isSopTab;
+    if (href === '/hub/reports') return pathname === '/hub/reports' && !isSopTab;
+    return true;
   };
 
   return (

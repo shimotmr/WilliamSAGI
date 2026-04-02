@@ -76,9 +76,9 @@ ${cleaned.map((seg, idx) => `${idx}|${seg.cleanText}`).join('\n')}`
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const transcriptId = params.id
+  const { id: transcriptId } = await params
 
   const { data: segments, error: fetchError } = await supabase
     .from('transcript_segments')

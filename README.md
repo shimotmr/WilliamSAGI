@@ -18,3 +18,10 @@
 ## 部署
 Vercel → 連結此 repo → 設定環境變數（參考 .env.example）
 
+## Codex Phase 2
+
+`/codex` 頁面在 Phase 2 會直接連本機 `codex app-server` WebSocket。
+
+- 預設 URL：`ws://127.0.0.1:8765`
+- 啟動腳本：`scripts/codex-app-server.sh`
+- 維運說明：`docs/codex-app-server.md`

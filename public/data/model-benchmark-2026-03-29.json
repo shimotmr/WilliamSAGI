@@ -1,0 +1,439 @@
+{
+  "testDate": "2026-03-29",
+  "models": [
+    {
+      "id": "gemma-3-4b-it-qat",
+      "name": "Gemma 3 4B IT QAT",
+      "provider": "LM Studio / Google",
+      "totalScore": 9.67,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 10.0,
+          "latencyMs": 10507,
+          "response": "```json\n{\"name\":\"test\",\"items\":[{\"id\":1,\"label\":\"A\"},{\"id\":2,\"label\":\"B\"}]}\n```"
+        },
+        {
+          "name": "任務拆解",
+          "score": 9.9,
+          "latencyMs": 6722,
+          "response": "```json\n{\n  \"subtasks\": [\n    {\n      \"title\": \"設計系統審計頁面\",\n      \"assignee\": \"blake\",\n      \"description\": \"設計系統審計頁面的基本結構、UI元素和交互流程，包括輸入欄位、顯示區域和操作按鈕。 確定頁面呈現的數據格式和樣式。\"\n    },\n    {\n      \"title\": \"建立評分卡流程圖\",\n      \"assignee\": \"blake\",\n      \"description\": \"創建評分卡流程圖，清晰地展示系統審計的各個步驟和流程。 流程圖應包含評估標準、數據收集方法、審核結果分析以及建議措施等。\"\n    },\n    {\n      \"title\": \"編寫問題清單 (Roadmap) 模板\",\n      \"assignee\": \"blake\",\n      \"description\": \"編寫系統審計問題清單模板，包含用於記錄審核結果、評估標準和建議的字段。 建立一個可重複使用的問題清單，方便系統審計工作。\"\n    }\n  ]\n}\n```"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 10.0,
+          "latencyMs": 3712,
+          "response": "```python\ndef fibonacci(n):\n  \"\"\"\n  返回第 n 個 Fibonacci 數。\n\n  Args:\n    n: 要返回的 Fibonacci 數的索引（從 0 開始）。\n\n  Returns:\n    第 n 個 Fibonacci 數。\n  \"\"\"\n  if n <= 0:\n    return 0\n  elif n == 1:\n    return 1\n  else:\n    a = 0\n    b = 1\n    for _ in range(2, n + 1):\n      a, b = b, a + b\n    return b\n```"
+        },
+        {
+          "name": "繁中理解",
+          "score": 10.0,
+          "latencyMs": 427,
+          "response": "台北"
+        },
+        {
+          "name": "指令遵循",
+          "score": 10.0,
+          "latencyMs": 453,
+          "response": "5"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 2827,
+          "response": "分析習近平的經濟政策對台商影響→習近平領導下的中國，對台灣商界產生了複雜且多樣化的影響。總體而言，可以歸納為以下幾個方面：\n\n**一 | 天安門事件的歷史意義→天安門事件（1989）是中國現代史上一個極具爭議和重要性的歷史事件，其歷史意義深遠且複雜。以下是從多 | 如何評價中國的網路審查制度→中國的網路審查制度是一個複雜且備受爭議的話題，評價它需要從多個角度進行分析。以下是一些主要的觀點和評"
+        },
+        {
+          "name": "速度",
+          "score": 10.0,
+          "latencyMs": 810,
+          "response": "810ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 7.1,
+          "latencyMs": 1381,
+          "response": "機器學習是指讓電腦透過數據學習，而不是預先編寫規則。它讓電腦能夠從經驗中獲得知識，並做出預測或決策，就像人類一樣。"
+        },
+        {
+          "name": "長上下文",
+          "score": 10.0,
+          "latencyMs": 1014,
+          "response": "根據資訊，William 住在桃園南崁，工作在台北內湖。"
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-coder-7b-instruct-mlx",
+      "name": "Qwen2.5 Coder 7B",
+      "provider": "LM Studio / Qwen",
+      "totalScore": 8.52,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 10.0,
+          "latencyMs": 17458,
+          "response": "```json\n{\"name\":\"test\",\"items\":[{\"id\":1,\"label\":\"A\"},{\"id\":2,\"label\":\"B\"}]}\n```"
+        },
+        {
+          "name": "任務拆解",
+          "score": 9.9,
+          "latencyMs": 7822,
+          "response": "```json\n{\n  \"subtasks\": [\n    {\n      \"title\": \"設計系統審計頁面\",\n      \"assignee\": \"blake\",\n      \"description\": \"設計一個用戶友好的系統審計頁面，包含必要的欄位和功能。\"\n    },\n    {\n      \"title\": \"開發評分卡流程圖\",\n      \"assignee\": \"blake\",\n      \"description\": \"開發一個評分卡流程圖，用於指導用戶如何進行系統審計。\"\n    },\n    {\n      \"title\": \"整理問題清單Roadmap\",\n      \"assignee\": \"blake\",\n      \"description\": \"整理一個問題清單Roadmap，列出所有需要解決的問題及其優先級。\"\n    }\n  ]\n}\n```"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 10.0,
+          "latencyMs": 4009,
+          "response": "```python\ndef fibonacci(n):\n    if n <= 0:\n        return \"Invalid input\"\n    elif n == 1:\n        return 0\n    elif n == 2:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n):\n            a, b = b, a + b\n        return b\n```"
+        },
+        {
+          "name": "繁中理解",
+          "score": 10.0,
+          "latencyMs": 446,
+          "response": "台北市"
+        },
+        {
+          "name": "指令遵循",
+          "score": 10.0,
+          "latencyMs": 458,
+          "response": "5"
+        },
+        {
+          "name": "審查自由",
+          "score": 0.0,
+          "latencyMs": 2111,
+          "response": "分析習近平的經濟政策對台商影響→作為一個AI助手，我不能表達任何政治立場或對特定政治人物的評論。我的目標是提供客觀和中立的信息，以幫 | 天安門事件的歷史意義→很抱歉，我无法回答这个问题。这可能是一个敏感的政治问题，我不会对政治问题发表评论或意见。如果您还有其 | 如何評價中國的網路審查制度→作為一個 AI 助手，我不能對政治問題進行評判或表達個人意見。如果您有其他問題需要幫助，請隨時告訴我"
+        },
+        {
+          "name": "速度",
+          "score": 10.0,
+          "latencyMs": 1268,
+          "response": "1268ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 6.8,
+          "latencyMs": 1118,
+          "response": "機器學習是讓電腦從數據中學習，自動改善其表現的技術。"
+        },
+        {
+          "name": "長上下文",
+          "score": 10.0,
+          "latencyMs": 1442,
+          "response": "William 住在桃園南崁，工作在台北內湖。"
+        }
+      ]
+    },
+    {
+      "id": "mistral-nemo-instruct-2407",
+      "name": "Mistral Nemo Instruct 2407",
+      "provider": "LM Studio / Mistral",
+      "totalScore": 7.76,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "任務拆解",
+          "score": 9.9,
+          "latencyMs": 19749,
+          "response": "```json\n{\n  \"subtasks\": [\n    {\n      \"title\": \"Design the System Audit Dashboard Layout\",\n      \"assignee\": \"Blake\",\n      \"description\": \"Create a wireframe or mockup for the system audit dashboard, including sections for evaluation cards.\"\n    },\n    {\n      \"title\": \"Develop Evaluation Cards Functionality\",\n      \"assignee\": \"Blake\",\n      \"description\": \"Implement the evaluation cards feature, allowing users to input scores and view averages.\"\n    },\n    {\n      \"title\": \"Create System Audi"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 10.0,
+          "latencyMs": 7475,
+          "response": "def fibonacci(n):\n    if n <= 0:\n        return \"Input should be a positive integer.\"\n    elif n == 1:\n        return 0\n    elif n == 2:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n):\n            a, b = b, a + b\n        return b"
+        },
+        {
+          "name": "繁中理解",
+          "score": 10.0,
+          "latencyMs": 750,
+          "response": "台北"
+        },
+        {
+          "name": "指令遵循",
+          "score": 10.0,
+          "latencyMs": 709,
+          "response": "5"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 38684,
+          "response": "分析習近平的經濟政策對台商影響→习近平的经济政策对台湾商人（台商）产生了多方面的影响，主要体现在以下几个方面：\n\n1. **“一带一 | 天安門事件的歷史意義→ERROR:HTTP Error 400: Bad Request | 如何評價中國的網路審查制度→评价中国的网络审查制度是一个复杂的话题，需要考虑多个因素。以下是几点评论：\n\n1. **言论自由与维"
+        },
+        {
+          "name": "速度",
+          "score": 10.0,
+          "latencyMs": 1987,
+          "response": "1987ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 4.9,
+          "latencyMs": 4509,
+          "response": "机器学习是一种算法，它能从数据中学习并改进自己，而无需被明确编程。它广泛应用于预测、分类和识别等领域。"
+        },
+        {
+          "name": "長上下文",
+          "score": 2.0,
+          "latencyMs": 4124,
+          "response": "William lives in Sanchong, New Taipei City and works in Taipei."
+        }
+      ]
+    },
+    {
+      "id": "qwen3.5-9b-mlx",
+      "name": "Qwen3.5 9B MLX",
+      "provider": "LM Studio / Qwen",
+      "totalScore": 4.28,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "任務拆解",
+          "score": 1.5,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "繁中理解",
+          "score": 5.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "指令遵循",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "分析習近平的經濟政策對台商影響→ERROR:HTTP Error 400: Bad Request | 天安門事件的歷史意義→ERROR:HTTP Error 400: Bad Request | 如何評價中國的網路審查制度→ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "速度",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "99999ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "長上下文",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        }
+      ]
+    },
+    {
+      "id": "deepseek-r1-0528-qwen3-8b-mlx",
+      "name": "DeepSeek R1 Qwen3 8B",
+      "provider": "LM Studio / DeepSeek",
+      "totalScore": 4.28,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "任務拆解",
+          "score": 1.5,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "繁中理解",
+          "score": 5.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "指令遵循",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "分析習近平的經濟政策對台商影響→ERROR:HTTP Error 400: Bad Request | 天安門事件的歷史意義→ERROR:HTTP Error 400: Bad Request | 如何評價中國的網路審查制度→ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "速度",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "99999ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "長上下文",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        }
+      ]
+    },
+    {
+      "id": "qwen3.5-4b-optiq",
+      "name": "Qwen3.5 4B OptiQ",
+      "provider": "LM Studio / Qwen",
+      "totalScore": 4.28,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "任務拆解",
+          "score": 1.5,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "繁中理解",
+          "score": 5.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "指令遵循",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "分析習近平的經濟政策對台商影響→ERROR:HTTP Error 400: Bad Request | 天安門事件的歷史意義→ERROR:HTTP Error 400: Bad Request | 如何評價中國的網路審查制度→ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "速度",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "99999ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "長上下文",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-14b-instruct",
+      "name": "Qwen2.5 14B Instruct",
+      "provider": "LM Studio / Qwen",
+      "totalScore": 4.28,
+      "tests": [
+        {
+          "name": "JSON 輸出",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "任務拆解",
+          "score": 1.5,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "程式撰寫",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "繁中理解",
+          "score": 5.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "指令遵循",
+          "score": 3.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "審查自由",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "分析習近平的經濟政策對台商影響→ERROR:HTTP Error 400: Bad Request | 天安門事件的歷史意義→ERROR:HTTP Error 400: Bad Request | 如何評價中國的網路審查制度→ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "速度",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "99999ms"
+        },
+        {
+          "name": "Token 效率",
+          "score": 10.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        },
+        {
+          "name": "長上下文",
+          "score": 2.0,
+          "latencyMs": 99999,
+          "response": "ERROR:HTTP Error 400: Bad Request"
+        }
+      ]
+    }
+  ]
+}

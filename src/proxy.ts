@@ -9,7 +9,7 @@ import {
 import { authCookieName } from '@/lib/auth/session'
 import { getPortalSessionFromRequest, isPortalPublicRoute, portalSessionCookieName } from '@/lib/auth/portal'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Early exit for all /api routes and .well-known
@@ -26,17 +26,17 @@ export async function middleware(request: NextRequest) {
     if (isPortalPublicRoute(pathname)) {
       return NextResponse.next()
     }
-    
+
     // 驗證 signed portal session cookie
     const portalSession = await getPortalSessionFromRequest(request)
-    
+
     if (!portalSession) {
       // 無效的 session，清除 cookie 並重導向登入
       const res = NextResponse.redirect(new URL('/portal/login', request.url))
       res.cookies.delete(portalSessionCookieName)
       return res
     }
-    
+
     return NextResponse.next()
   }
 

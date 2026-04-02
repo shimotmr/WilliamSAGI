@@ -4,11 +4,11 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: transcriptId } = await params
     const { search, replace, addToDict } = await req.json()
-    const transcriptId = params.id
 
     if (!search) {
       return NextResponse.json({ error: '搜尋字串不能為空' }, { status: 400 })

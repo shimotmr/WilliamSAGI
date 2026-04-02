@@ -6,10 +6,10 @@ const ASSEMBLYAI_API_KEY = process.env.ASSEMBLYAI_API_KEY || ''
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
 
     // 1. 取得 transcript
     const { data: transcript, error: fetchErr } = await supabase

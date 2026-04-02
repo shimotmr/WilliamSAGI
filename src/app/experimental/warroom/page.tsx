@@ -166,7 +166,7 @@ function TaskPanel({ tasks, loading }: { tasks: BoardTask[], loading: boolean })
     P3: 'bg-green-500'
   }
 
-  const statusIcons: Record<string, JSX.Element> = {
+  const statusIcons: Record<string, React.ReactNode> = {
     執行中: <Zap size={12} className="text-yellow-400" />,
     待處理: <Clock size={12} className="text-gray-400" />,
     已完成: <CheckCircle2 size={12} className="text-green-400" />

@@ -34,9 +34,22 @@ interface BridgeResponse {
   error?: string;
 }
 
+interface SearchSourceOption {
+  id: string;
+  label: string;
+  domains?: string[];
+}
+
+interface SearchTopicOption {
+  id: string;
+  label: string;
+}
+
 export default function LocalModelsPage() {
   const [models, setModels] = useState<LMModel[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
+  const [sourceOptions, setSourceOptions] = useState<SearchSourceOption[]>([]);
+  const [topicOptions, setTopicOptions] = useState<SearchTopicOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [testing, setTesting] = useState<Record<string, boolean>>({});
@@ -93,10 +106,28 @@ export default function LocalModelsPage() {
     }
   }, []);
 
+  const fetchRegistry = useCallback(async () => {
+    try {
+      const res = await fetch('/api/local-models/registry');
+      const data = await res.json();
+      if (!res.ok) {
+        setSourceOptions([]);
+        setTopicOptions([]);
+        return;
+      }
+      setSourceOptions(data.sources ?? []);
+      setTopicOptions(data.topics ?? []);
+    } catch {
+      setSourceOptions([]);
+      setTopicOptions([]);
+    }
+  }, []);
+
   useEffect(() => {
     fetchModels();
     fetchSkills();
-  }, [fetchModels, fetchSkills]);
+    fetchRegistry();
+  }, [fetchModels, fetchSkills, fetchRegistry]);
 
   useEffect(() => {
     if (!bridgeForm.model && models.length > 0) {
@@ -352,19 +383,21 @@ export default function LocalModelsPage() {
                 來源限制
               </div>
               <div className="flex flex-wrap gap-2">
-                {['github.com', 'reddit.com', 'huggingface.co', 'youtube.com'].map((site) => {
+                {sourceOptions.map((source) => {
+                  const site = source.domains?.[0] || source.id;
                   const active = bridgeForm.sites.includes(site);
                   return (
                     <button
-                      key={site}
+                      key={source.id}
                       onClick={() => toggleListValue('sites', site)}
                       className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
                         active
                           ? 'border-sky-500 bg-sky-500/15 text-sky-200'
                           : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600'
                       }`}
+                      title={source.label}
                     >
-                      {site}
+                      {source.label}
                     </button>
                   );
                 })}
@@ -377,19 +410,19 @@ export default function LocalModelsPage() {
                 主題限制
               </div>
               <div className="flex flex-wrap gap-2">
-                {['ai-agent-trends', 'local-models', 'dev-tooling'].map((topic) => {
-                  const active = bridgeForm.topics.includes(topic);
+                {topicOptions.map((topic) => {
+                  const active = bridgeForm.topics.includes(topic.id);
                   return (
                     <button
-                      key={topic}
-                      onClick={() => toggleListValue('topics', topic)}
+                      key={topic.id}
+                      onClick={() => toggleListValue('topics', topic.id)}
                       className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
                         active
                           ? 'border-amber-500 bg-amber-500/15 text-amber-200'
                           : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600'
                       }`}
                     >
-                      {topic}
+                      {topic.label}
                     </button>
                   );
                 })}

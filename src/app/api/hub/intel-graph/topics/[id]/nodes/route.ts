@@ -6,8 +6,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  const topicId = params.id;
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: topicId } = await params;
   const [nodesRes, edgesRes] = await Promise.all([
     supabase.from('intel_nodes').select('*').eq('topic_id', topicId).order('created_at'),
     supabase.from('intel_edges').select('*').eq('topic_id', topicId),
@@ -16,8 +16,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return NextResponse.json({ nodes: nodesRes.data, edges: edgesRes.data || [] });
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
-  const topicId = params.id;
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: topicId } = await params;
   const body = await req.json();
 
   // Support batch insert

@@ -1,0 +1,266 @@
+{
+  "generatedAt": "2026-04-01T16:17:42+08:00",
+  "sources": [
+    {
+      "sourceId": "github-security-blog",
+      "sourceName": "GitHub Security Blog",
+      "status": "ok",
+      "items": [
+        {
+          "title": "A year of open source vulnerability trends: CVEs, advisories, and malware",
+          "link": "https://github.blog/security/supply-chain-security/a-year-of-open-source-vulnerability-trends-cves-advisories-and-malware/",
+          "description": "Reviewed advisories hit a four-year low, malware advisories surged, and CNA publishing grew—here’s what changed and what it means for your triage and response.    The post  A year of open source vulnerability trends: CVEs, advisories, and malware  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-03-27T00:00:00+08:00",
+          "riskScore": 2,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "GitHub expands application security coverage with AI‑powered detections",
+          "link": "https://github.blog/security/application-security/github-expands-application-security-coverage-with-ai-powered-detections/",
+          "description": "CodeQL and AI‑powered detections work together in GitHub Code Security to identify vulnerabilities across more languages and frameworks.   The post  GitHub expands application security coverage with AI‑powered detections  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-03-24T00:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Investing in the people shaping open source and securing the future together",
+          "link": "https://github.blog/security/supply-chain-security/investing-in-the-people-shaping-open-source-and-securing-the-future-together/",
+          "description": "See how GitHub is investing in open source security funding maintainers, partnering with Alpha-Omega, and expanding access to help reduce burden and strengthen software supply chains.   The post  Investing in the people shaping open source and securing the future together  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-03-18T00:00:00+08:00",
+          "riskScore": 2,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "How to scan for vulnerabilities with GitHub Security Lab’s open source AI-powered framework",
+          "link": "https://github.blog/security/how-to-scan-for-vulnerabilities-with-github-security-labs-open-source-ai-powered-framework/",
+          "description": "GitHub Security Lab Taskflow Agent is very effective at finding Auth Bypasses, IDORs, Token Leaks, and other high-impact vulnerabilities.   The post  How to scan for vulnerabilities with GitHub Security Lab’s open source AI-powered framework  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-03-07T05:09:04+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "AI-supported vulnerability triage with the GitHub Security Lab Taskflow Agent",
+          "link": "https://github.blog/security/ai-supported-vulnerability-triage-with-the-github-security-lab-taskflow-agent/",
+          "description": "Learn how we are using the newly released GitHub Security Lab Taskflow Agent to triage categories of vulnerabilities in GitHub Actions and JavaScript projects.   The post  AI-supported vulnerability triage with the GitHub Security Lab Taskflow Agent  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-01-21T03:52:50+08:00",
+          "riskScore": 2,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Community-powered security with AI: an open source framework for security research",
+          "link": "https://github.blog/security/community-powered-security-with-ai-an-open-source-framework-for-security-research/",
+          "description": "Announcing GitHub Security Lab Taskflow Agent, an open source and collaborative framework for security research with AI.   The post  Community-powered security with AI: an open source framework for security research  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-01-15T02:45:09+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Strengthening supply chain security: Preparing for the next malware campaign",
+          "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
+          "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
+          "publishedAt": "2025-12-24T07:52:08+08:00",
+          "riskScore": 3,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Top security researcher shares their bug bounty process",
+          "link": "https://github.blog/security/top-security-researcher-shares-their-bug-bounty-process/",
+          "description": "For this year’s Cybersecurity Awareness Month, the GitHub Bug Bounty team is excited to put the spotlight on a talented security researcher—André Storfjord Kristiansen!   The post  Top security researcher shares their bug bounty process  appeared first on  The GitHub Blog .",
+          "publishedAt": "2025-10-23T00:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "How a top bug bounty researcher got their start in security",
+          "link": "https://github.blog/security/how-a-top-bug-bounty-researcher-got-their-start-in-security/",
+          "description": "For this year’s Cybersecurity Awareness Month, the GitHub Bug Bounty team is excited to feature another spotlight on a talented security researcher — @xiridium!   The post  How a top bug bounty researcher got their start in security  appeared first on  The GitHub Blog .",
+          "publishedAt": "2025-10-08T00:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        }
+      ]
+    },
+    {
+      "sourceId": "openssf-blog",
+      "sourceName": "OpenSSF Blog",
+      "status": "ok",
+      "items": [
+        {
+          "title": "OpenSSF Newsletter – March 2026",
+          "link": "https://openssf.org/newsletter/2026/03/26/openssf-newsletter-march-2026/",
+          "description": "TL;DR:  💰 $12.5M New Funding → Anthropic, AWS, Google, and more invest in OSS &#038; AI security   🤝 Ambassador Program Launch → New global initiative to empower community leaders   🛠️ No-Cost Tooling → Kusari Inspector now free for OpenSSF project maintainers   💎 The Gemara Model → A new 7-layer framework for GRC and automated risk assessment",
+          "publishedAt": "2026-03-27T00:24:14+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "What’s in the SOSS? Podcast #57 – S3E9 From Noise to Signal: Security Expertise and Kusari Inspector with Mike Lieberman",
+          "link": "https://openssf.org/podcast/2026/03/24/whats-in-the-soss-podcast-57-s3e9-from-noise-to-signal-security-expertise-and-kusari-inspector-with-mike-lieberman/",
+          "description": "",
+          "publishedAt": "2026-03-24T22:31:52+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Kusari Partners with OpenSSF to Strengthen Open Source Software Supply Chain Security",
+          "link": "https://openssf.org/blog/2026/03/23/kusari-partners-with-openssf-to-strengthen-open-source-software-supply-chain-security/",
+          "description": "",
+          "publishedAt": "2026-03-23T20:43:33+08:00",
+          "riskScore": 2,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Leading Tech Coalition Invests $12.5 Million Through OpenSSF and Alpha-Omega to Strengthen Open Source Security",
+          "link": "https://openssf.org/blog/2026/03/17/leading-tech-coalition-invests-12-5-million-through-openssf-and-alpha-omega-to-strengthen-open-source-security/",
+          "description": "",
+          "publishedAt": "2026-03-18T04:19:30+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Linux Foundation Announces $12.5 Million in Grant Funding from Leading Organizations to Advance Open Source Security",
+          "link": "https://openssf.org/press-release/2026/03/17/linux-foundation-announces-12-5-million-in-grant-funding-from-leading-organizations-to-advance-open-source-security/",
+          "description": "",
+          "publishedAt": "2026-03-17T20:00:51+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "KubeCon + CloudNativeCon Europe 2026 Co-located Event Deep Dive: Open Source SecurityCon",
+          "link": "https://openssf.org/blog/2026/03/16/kubecon-cloudnativecon-europe-2026-co-located-event-deep-dive-open-source-securitycon/",
+          "description": "Open Source SecurityCon (evolved from Cloud Native SecurityCon) returns for its second event, co-located with KubeCon + CloudNativeCon Europe 2026. The conference advances innovation and collaboration across open source software security and cloud native security. It brings together creators, maintainers, operators, and consumers who are actively involved in securing the software ecosystem.",
+          "publishedAt": "2026-03-17T04:12:52+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Securing Agentic AI in Practice: From OpenSSF Guidance to Real-World Implementation",
+          "link": "https://openssf.org/blog/2026/03/13/securing-agentic-ai-in-practice-from-openssf-guidance-to-real-world-implementation/",
+          "description": "Agentic AI systems and AI-driven software workflows are evolving quickly, with more people building on top of them. With that shift comes new questions around trust, control, provenance, and secure interaction between models, tools, and users. Traditional cybersecurity models are being pushed to their limits, and the security stakes have never been higher.",
+          "publishedAt": "2026-03-14T01:02:36+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        }
+      ]
+    },
+    {
+      "sourceId": "snyk-blog",
+      "sourceName": "Snyk Blog",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Axios npm Package Compromised: Supply Chain Attack Delivers Cross-Platform RAT",
+          "link": "https://snyk.io/blog/axios-npm-package-compromised-supply-chain-attack-delivers-cross-platform/",
+          "description": "Meta description: Malicious versions of the Axios npm package (1.14.1 and 0.30.4) were published via a compromised maintainer account, injecting a hidden dependency that deploys a cross-platform remote access trojan. Here's what happened, who's affected, and how to check your exposure.",
+          "publishedAt": "2026-03-31T07:00:00+08:00",
+          "riskScore": 3,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        },
+        {
+          "title": "The 5 Principles of Snyk’s Developer Experience",
+          "link": "https://snyk.io/blog/5-principles-of-snyk-developer-experience/",
+          "description": "Discover the 5 principles behind Snyk’s developer experience. Learn how seamless workflows, actionable fixes, and AI-driven security help developers ship secure code faster without disrupting productivity.",
+          "publishedAt": "2026-03-26T12:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        },
+        {
+          "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
+          "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
+          "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
+          "publishedAt": "2026-03-24T12:00:00+08:00",
+          "riskScore": 3,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        },
+        {
+          "title": "Introducing Agent Security",
+          "link": "https://snyk.io/blog/introducing-agent-security/",
+          "description": "Introducing Agent Security, a unified approach to governing AI agents and ensuring safe behavior from code to runtime. Start with Evo AI-SPM, now generally available.",
+          "publishedAt": "2026-03-23T12:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        }
+      ]
+    }
+  ],
+  "matches": {
+    "package-litellm": [
+      {
+        "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
+        "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
+        "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
+        "publishedAt": "2026-03-24T12:00:00+08:00",
+        "riskScore": 3,
+        "sourceId": "snyk-blog",
+        "sourceName": "Snyk Blog",
+        "trust": "medium"
+      }
+    ],
+    "frontend-next": [
+      {
+        "title": "Strengthening supply chain security: Preparing for the next malware campaign",
+        "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
+        "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
+        "publishedAt": "2025-12-24T07:52:08+08:00",
+        "riskScore": 3,
+        "sourceId": "github-security-blog",
+        "sourceName": "GitHub Security Blog",
+        "trust": "high"
+      }
+    ]
+  },
+  "summary": {
+    "sourceCount": 3,
+    "matchedTargets": 2,
+    "topTargets": [
+      {
+        "targetId": "package-litellm",
+        "count": 1
+      },
+      {
+        "targetId": "frontend-next",
+        "count": 1
+      }
+    ]
+  }
+}

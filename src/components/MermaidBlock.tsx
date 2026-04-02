@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export function MermaidBlock({ code }: { code: string }) {
+type MermaidTheme = 'dark' | 'light'
+
+export function MermaidBlock({ code, theme = 'dark' }: { code: string; theme?: MermaidTheme }) {
   const ref = useRef<HTMLDivElement>(null)
   const [svg, setSvg] = useState<string>('')
   const [error, setError] = useState(false)
@@ -10,18 +12,19 @@ export function MermaidBlock({ code }: { code: string }) {
   useEffect(() => {
     let cancelled = false
     import('mermaid').then(({ default: mermaid }) => {
+      const isDark = theme === 'dark'
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',
+        theme: isDark ? 'dark' : 'base',
         themeVariables: {
-          darkMode: true,
-          background: '#1a1a2e',
-          primaryColor: '#a78bfa',
-          primaryTextColor: '#e2e8f0',
-          primaryBorderColor: '#6d28d9',
-          lineColor: '#94a3b8',
-          secondaryColor: '#1e293b',
-          tertiaryColor: '#0f172a',
+          darkMode: isDark,
+          background: isDark ? '#1a1a2e' : '#ffffff',
+          primaryColor: isDark ? '#a78bfa' : '#dbeafe',
+          primaryTextColor: isDark ? '#e2e8f0' : '#111827',
+          primaryBorderColor: isDark ? '#6d28d9' : '#2563eb',
+          lineColor: isDark ? '#94a3b8' : '#475569',
+          secondaryColor: isDark ? '#1e293b' : '#eff6ff',
+          tertiaryColor: isDark ? '#0f172a' : '#f8fafc',
         },
         gantt: { useWidth: 800 },
         flowchart: { useMaxWidth: true, htmlLabels: true },
@@ -34,7 +37,7 @@ export function MermaidBlock({ code }: { code: string }) {
       })
     })
     return () => { cancelled = true }
-  }, [code])
+  }, [code, theme])
 
   if (error) {
     return <pre className="text-xs overflow-x-auto p-4 bg-muted/30 rounded-lg"><code>{code}</code></pre>

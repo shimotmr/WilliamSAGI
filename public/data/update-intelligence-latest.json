@@ -1,0 +1,3889 @@
+{
+  "generatedAt": "2026-04-01T16:18:29+08:00",
+  "metadata": {
+    "name": "Travis Update Intelligence Registry",
+    "version": 1,
+    "timezone": "Asia/Taipei"
+  },
+  "summary": {
+    "totalTargets": 55,
+    "categoryCounts": {
+      "model": 8,
+      "tool": 17,
+      "package": 8,
+      "skill": 4,
+      "extension": 4,
+      "frontend": 7,
+      "api": 7
+    },
+    "recommendationCounts": {
+      "已最新": 12,
+      "建議升級": 26,
+      "等待OpenClaw支援": 1,
+      "觀察等待": 1,
+      "手動檢查": 15
+    },
+    "urgent": [
+      {
+        "name": "next",
+        "label": "建議升級",
+        "summary": "14.2.35 → 16.2.2；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。 / 外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign"
+      },
+      {
+        "name": "litellm",
+        "label": "建議升級",
+        "summary": "1.81.16 → 1.83.0；外部風險：Snyk Blog / How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM；Library to easily interface with LLM API providers"
+      },
+      {
+        "name": "@anthropic-ai/claude-code",
+        "label": "建議升級",
+        "summary": "2.1.86 → 2.1.89"
+      },
+      {
+        "name": "@byterover/byterover",
+        "label": "建議升級",
+        "summary": "1.1.0 → 1.1.4"
+      },
+      {
+        "name": "@openclaw/lobster",
+        "label": "建議升級",
+        "summary": "2026.3.1 → 2026.3.13"
+      },
+      {
+        "name": "@playwright/mcp",
+        "label": "建議升級",
+        "summary": "0.0.64 → 0.0.70"
+      },
+      {
+        "name": "apify-cli",
+        "label": "建議升級",
+        "summary": "1.2.1 → 1.4.0"
+      },
+      {
+        "name": "bun",
+        "label": "建議升級",
+        "summary": "1.3.8 → 1.3.11；Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one."
+      }
+    ],
+    "topPriority": [
+      {
+        "name": "next",
+        "tier": "critical",
+        "score": 12.0,
+        "summary": "14.2.35 → 16.2.2；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。 / 外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級",
+          "先讀外部風險來源，確認是否為真實相關事件",
+          "先清現有 App Router / metadata 問題，再規劃 14→16 遷移"
+        ]
+      },
+      {
+        "name": "litellm",
+        "tier": "high",
+        "score": 8.0,
+        "summary": "1.81.16 → 1.83.0；外部風險：Snyk Blog / How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM；Library to easily interface with LLM API providers",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級",
+          "先讀外部風險來源，確認是否為真實相關事件"
+        ]
+      },
+      {
+        "name": "@anthropic-ai/claude-code",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "2.1.86 → 2.1.89",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "@byterover/byterover",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "1.1.0 → 1.1.4",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "@openclaw/lobster",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "2026.3.1 → 2026.3.13",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "@playwright/mcp",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "0.0.64 → 0.0.70",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "@supabase/supabase-js",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "^2.45.0 → 2.101.1",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "@tanstack/react-query",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "^5.90.21 → 5.96.1",
+        "nextActions": [
+          "先做本機 smoke test，再安排灰度升級"
+        ]
+      }
+    ],
+    "macFitHighlights": [
+      "ffmpeg",
+      "tailscale"
+    ]
+  },
+  "scanPolicies": {
+    "daily": [
+      "model",
+      "tool",
+      "package"
+    ],
+    "weekly": [
+      "skill",
+      "extension",
+      "frontend",
+      "api"
+    ]
+  },
+  "categoryTags": {
+    "model": [
+      "agentic",
+      "beta",
+      "cn",
+      "coding",
+      "engineering",
+      "fast",
+      "general",
+      "high-cost",
+      "long-context",
+      "low-cost",
+      "manual-fix-needed",
+      "multimodal",
+      "provider-missing",
+      "reasoning",
+      "research",
+      "stable",
+      "telegram-risk",
+      "tool-use"
+    ],
+    "tool": [
+      "agent",
+      "automation",
+      "breaking-risk",
+      "browser",
+      "cli",
+      "companion",
+      "core",
+      "downloader",
+      "extension",
+      "fast-moving",
+      "gateway",
+      "github",
+      "javascript",
+      "legacy",
+      "macos-fit",
+      "marketplace",
+      "mcp",
+      "media",
+      "memory",
+      "network",
+      "openclaw",
+      "risky-fast-moving",
+      "runtime",
+      "scraping",
+      "skills",
+      "transcoding",
+      "tunnel",
+      "vpn"
+    ],
+    "package": [
+      "api",
+      "asgi",
+      "browser",
+      "database",
+      "http",
+      "llm-gateway",
+      "openai",
+      "python",
+      "schema"
+    ],
+    "skill": [
+      "marketplace",
+      "minimax",
+      "official",
+      "research",
+      "skills"
+    ],
+    "extension": [
+      "extension",
+      "local",
+      "memory",
+      "weixin"
+    ],
+    "frontend": [
+      "charts",
+      "code-rendering",
+      "database",
+      "framework",
+      "frontend",
+      "google",
+      "sagi",
+      "state",
+      "visualization"
+    ],
+    "api": [
+      "backend",
+      "bot",
+      "cloudflare",
+      "database",
+      "deploy",
+      "developer",
+      "github",
+      "line",
+      "network",
+      "notion",
+      "telegram",
+      "vercel",
+      "workspace"
+    ]
+  },
+  "items": [
+    {
+      "id": "api-cloudflare",
+      "name": "Cloudflare API",
+      "category": "api",
+      "subcategory": "developer-api",
+      "tags": [
+        "cloudflare",
+        "network"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://developers.cloudflare.com/changelog/",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-github",
+      "name": "GitHub API",
+      "category": "api",
+      "subcategory": "developer-api",
+      "tags": [
+        "github",
+        "developer"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://docs.github.com/en/rest/overview/api-versions",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-vercel",
+      "name": "Vercel API",
+      "category": "api",
+      "subcategory": "developer-api",
+      "tags": [
+        "vercel",
+        "deploy"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://vercel.com/changelog",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-line",
+      "name": "LINE Messaging API",
+      "category": "api",
+      "subcategory": "messaging-api",
+      "tags": [
+        "line",
+        "bot"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://developers.line.biz/en/news/",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-telegram",
+      "name": "Telegram Bot API",
+      "category": "api",
+      "subcategory": "messaging-api",
+      "tags": [
+        "telegram",
+        "bot"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://core.telegram.org/bots/api-changelog",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-notion",
+      "name": "Notion API",
+      "category": "api",
+      "subcategory": "saas-api",
+      "tags": [
+        "notion",
+        "workspace"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://developers.notion.com/changelog",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "api-supabase",
+      "name": "Supabase API",
+      "category": "api",
+      "subcategory": "saas-api",
+      "tags": [
+        "database",
+        "backend"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://supabase.com/changelog",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "extension-byterover",
+      "name": "byterover",
+      "category": "extension",
+      "subcategory": "openclaw-extension",
+      "tags": [
+        "extension",
+        "memory"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "local_extension",
+      "sourceUrl": "local",
+      "currentVersion": "1.1.0",
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "local extension needs manual provenance review",
+          "本地 extension 需額外確認來源與更新流程，不能只依賴版本號。"
+        ],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "Extension 類優先看維護活性與供應鏈風險，不要只看版本新舊。"
+      ],
+      "summary": "local extension needs manual provenance review / 本地 extension 需額外確認來源與更新流程，不能只依賴版本號。",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "extension-openclaw-mem0",
+      "name": "openclaw-mem0",
+      "category": "extension",
+      "subcategory": "openclaw-extension",
+      "tags": [
+        "extension",
+        "memory"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": null,
+      "latestVersion": "0.0.2",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "Extension 類優先看維護活性與供應鏈風險，不要只看版本新舊。"
+      ],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "extension-openclaw-weixin",
+      "name": "openclaw-weixin",
+      "category": "extension",
+      "subcategory": "openclaw-extension",
+      "tags": [
+        "extension",
+        "weixin"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "Extension 類優先看維護活性與供應鏈風險，不要只看版本新舊。"
+      ],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "extension-rtk-rewrite",
+      "name": "rtk-rewrite",
+      "category": "extension",
+      "subcategory": "openclaw-extension",
+      "tags": [
+        "extension",
+        "local"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "local_extension",
+      "sourceUrl": "local",
+      "currentVersion": "1.0.0",
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "local extension needs manual provenance review",
+          "本地 extension 缺少上游版本來源，需要人工驗證 provenance。"
+        ],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "Extension 類優先看維護活性與供應鏈風險，不要只看版本新舊。"
+      ],
+      "summary": "local extension needs manual provenance review / 本地 extension 缺少上游版本來源，需要人工驗證 provenance。",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "frontend-supabase-js",
+      "name": "@supabase/supabase-js",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "database"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://github.com/supabase/supabase-js/tree/master/packages/core/supabase-js",
+      "currentVersion": "^2.45.0",
+      "latestVersion": "2.101.1",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^2.45.0 → 2.101.1",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "frontend-react-query",
+      "name": "@tanstack/react-query",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "state"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://tanstack.com/query",
+      "currentVersion": "^5.90.21",
+      "latestVersion": "5.96.1",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^5.90.21 → 5.96.1",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "frontend-googleapis",
+      "name": "googleapis",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "google"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://github.com/googleapis/google-api-nodejs-client#readme",
+      "currentVersion": "^171.4.0",
+      "latestVersion": "171.4.0",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 208",
+          "repo 更新於 2026-03-31"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^171.4.0 → 171.4.0",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 208",
+        "repo 更新於 2026-03-31"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "frontend-mermaid",
+      "name": "mermaid",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "visualization"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://github.com/mermaid-js/mermaid#readme",
+      "currentVersion": "^11.12.3",
+      "latestVersion": "11.13.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 1641",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^11.12.3 → 11.13.0",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 1641",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "frontend-next",
+      "name": "next",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "framework"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://nextjs.org",
+      "currentVersion": "14.2.35",
+      "latestVersion": "16.2.2",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "warning",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。",
+          "外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign"
+        ],
+        "activitySignals": [
+          "open issues 高於 3631",
+          "repo 更新於 2026-04-01",
+          "外部風險 feed 命中 1 則"
+        ],
+        "advisories": {
+          "count": 4,
+          "critical": 0,
+          "high": 1,
+          "aliases": [
+            "CVE-2026-27980",
+            "CVE-2025-59471",
+            "CVE-2026-29057"
+          ],
+          "details": [
+            {
+              "id": "GHSA-3x4c-7xq6-9pq8",
+              "summary": "Next.js: Unbounded next/image disk cache growth can exhaust storage",
+              "severity": "moderate"
+            },
+            {
+              "id": "GHSA-9g9p-9gw9-jx7f",
+              "summary": "Next.js self-hosted applications vulnerable to DoS via Image Optimizer remotePatterns configuration",
+              "severity": "moderate"
+            },
+            {
+              "id": "GHSA-ggv3-7p47-pfv8",
+              "summary": "Next.js: HTTP request smuggling in rewrites",
+              "severity": "moderate"
+            },
+            {
+              "id": "GHSA-h25m-26qc-wcjf",
+              "summary": "Next.js HTTP request deserialization can lead to DoS when using insecure React Server Components",
+              "severity": "high"
+            }
+          ]
+        },
+        "externalHits": [
+          {
+            "title": "Strengthening supply chain security: Preparing for the next malware campaign",
+            "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
+            "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
+            "publishedAt": "2025-12-24T07:52:08+08:00",
+            "riskScore": 3,
+            "sourceId": "github-security-blog",
+            "sourceName": "GitHub Security Blog",
+            "trust": "high"
+          }
+        ]
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "14 → 16 屬於跨主版本跳升，先補齊現有 App Router / metadata / client component 問題，再規劃升級。",
+        "這種升級更適合拆成 framework smoke + lint/type/build 三步，不要一次拉上 production。"
+      ],
+      "summary": "14.2.35 → 16.2.2；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。 / 外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 3631",
+        "repo 更新於 2026-04-01",
+        "外部風險 feed 命中 1 則"
+      ],
+      "externalRiskHits": [
+        {
+          "title": "Strengthening supply chain security: Preparing for the next malware campaign",
+          "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
+          "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
+          "publishedAt": "2025-12-24T07:52:08+08:00",
+          "riskScore": 3,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        }
+      ],
+      "priority": {
+        "score": 12.0,
+        "tier": "critical",
+        "reasons": [
+          "已有可行升級",
+          "有安全警示",
+          "版本落後",
+          "外部風險來源有命中",
+          "前端框架影響面大"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級",
+        "先讀外部風險來源，確認是否為真實相關事件",
+        "先清現有 App Router / metadata 問題，再規劃 14→16 遷移"
+      ]
+    },
+    {
+      "id": "frontend-recharts",
+      "name": "recharts",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "charts"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://github.com/recharts/recharts",
+      "currentVersion": "^3.7.0",
+      "latestVersion": "3.8.1",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 433",
+          "repo 更新於 2026-03-31"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^3.7.0 → 3.8.1",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 433",
+        "repo 更新於 2026-03-31"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "frontend-shiki",
+      "name": "shiki",
+      "category": "frontend",
+      "subcategory": "npm-dependency",
+      "tags": [
+        "sagi",
+        "frontend",
+        "code-rendering"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "npm_package_json",
+      "sourceUrl": "https://github.com/shikijs/shiki#readme",
+      "currentVersion": "^3.23.0",
+      "latestVersion": "4.0.2",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "^3.23.0 → 4.0.2",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "model-claude-opus-4-6",
+      "name": "Claude Opus 4.6",
+      "category": "model",
+      "subcategory": "anthropic",
+      "tags": [
+        "agentic",
+        "coding",
+        "reasoning"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "currentVersion": "claude-opus-4-6",
+      "latestVersion": "claude-opus-4-6",
+      "versionComparison": 0,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "claude-opus-4-6 → claude-opus-4-6；OpenClaw: native",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "model-claude-sonnet-4-6",
+      "name": "Claude Sonnet 4.6",
+      "category": "model",
+      "subcategory": "anthropic",
+      "tags": [
+        "general",
+        "tool-use",
+        "stable"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "currentVersion": "claude-sonnet-4-6",
+      "latestVersion": "claude-sonnet-4-6",
+      "versionComparison": 0,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "claude-sonnet-4-6 → claude-sonnet-4-6；OpenClaw: native",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "model-gemini-2-5-pro-flash",
+      "name": "Gemini 2.5 Pro / Flash",
+      "category": "model",
+      "subcategory": "google",
+      "tags": [
+        "multimodal",
+        "research",
+        "long-context"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+      "currentVersion": "gemini-2.5-pro",
+      "latestVersion": "gemini-2.5-pro / gemini-2.5-flash",
+      "versionComparison": -1,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "gemini-2.5-pro → gemini-2.5-pro / gemini-2.5-flash；OpenClaw: native",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "model-minimax-m2-7",
+      "name": "MiniMax M2.7",
+      "category": "model",
+      "subcategory": "minimax",
+      "tags": [
+        "low-cost",
+        "fast",
+        "telegram-risk"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-tokenplan",
+      "currentVersion": "MiniMax-M2.7-highspeed",
+      "latestVersion": "MiniMax-M2.7-highspeed",
+      "versionComparison": 0,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "已觀測到 MiniMax × lossless-claw × Telegram delivery 交互 bug，會漏出 TOOL_CALL 文字。"
+        ],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "目前主代理 Telegram 不建議直接把 MiniMax 當 primary，除非 tool-call 文字化輸出已被 parser 或 sanitizer 吃乾淨。",
+        "MiniMax 比較適合低成本 fallback，而不是直接放在最外層 user-facing channel。"
+      ],
+      "summary": "MiniMax-M2.7-highspeed → MiniMax-M2.7-highspeed；OpenClaw: native；已觀測到 MiniMax × lossless-claw × Telegram delivery 交互 bug，會漏出 TOOL_CALL 文字。",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "Telegram 主代理先不要直接切回 MiniMax primary"
+      ]
+    },
+    {
+      "id": "model-kimi-k2",
+      "name": "Kimi K2",
+      "category": "model",
+      "subcategory": "moonshot",
+      "tags": [
+        "cn",
+        "provider-missing",
+        "manual-fix-needed"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://platform.moonshot.cn/blog/posts/kimi-k2-0905",
+      "currentVersion": null,
+      "latestVersion": "kimi-k2",
+      "versionComparison": 0,
+      "support": {
+        "level": "restorable-from-backup",
+        "note": "本機有 moonshot.json 憑證且舊版 clawdbot.json 備份含 moonshot provider，可回復但尚未重新驗證。"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "現況只有 defaults alias，沒有完整 provider catalog。"
+        ],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "support-gap",
+        "label": "等待OpenClaw支援",
+        "why": [
+          "目前不是完整 native provider，先補支援矩陣或 provider 接線。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "若要真的啟用 Kimi，先補 moonshot provider，而不是只保留舊 alias。",
+        "這條目前最合理的下一步不是直接宣稱支援，而是先恢復 moonshot provider 或切到 Ollama Cloud / 其他已驗證入口。"
+      ],
+      "summary": "OpenClaw: restorable-from-backup；現況只有 defaults alias，沒有完整 provider catalog。",
+      "installedStatus": "provider-missing",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "有版本差但仍受支援缺口限制",
+          "支援狀態不完整"
+        ]
+      },
+      "nextActions": [
+        "先做 provider restore smoke test，不要直接 apply 到 live config"
+      ]
+    },
+    {
+      "id": "model-codex-gpt-5-4",
+      "name": "Codex GPT-5.4",
+      "category": "model",
+      "subcategory": "openai-codex",
+      "tags": [
+        "coding",
+        "tool-use",
+        "high-cost"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://platform.openai.com/docs/models/gpt-5/",
+      "currentVersion": "gpt-5.4",
+      "latestVersion": "gpt-5.4-pro-2026-03-05",
+      "versionComparison": -1,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "gpt-5.4 → gpt-5.4-pro-2026-03-05；OpenClaw: native",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "model-grok-4-20",
+      "name": "Grok 4.20",
+      "category": "model",
+      "subcategory": "xai",
+      "tags": [
+        "reasoning",
+        "research",
+        "beta"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://docs.x.ai/developers/release-notes",
+      "currentVersion": "grok-4.20-beta-0309-reasoning",
+      "latestVersion": "grok-4.20",
+      "versionComparison": 1,
+      "support": {
+        "level": "native",
+        "note": "configured"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "grok-4.20-beta-0309-reasoning → grok-4.20；OpenClaw: native",
+      "installedStatus": "configured",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "model-glm-5-1",
+      "name": "GLM 5.1",
+      "category": "model",
+      "subcategory": "zai",
+      "tags": [
+        "cn",
+        "engineering",
+        "reasoning"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "cloud_model",
+      "sourceUrl": "https://docs.z.ai/release-notes/new-released",
+      "currentVersion": "glm-5.1",
+      "latestVersion": "glm-5.1",
+      "versionComparison": 0,
+      "support": {
+        "level": "native",
+        "note": "configured-live"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "glm-5.1 → glm-5.1；OpenClaw: native",
+      "installedStatus": "configured-live",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "package-fastapi",
+      "name": "fastapi",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "api"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/fastapi/",
+      "currentVersion": "0.133.1",
+      "latestVersion": "0.135.2",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "0.133.1 → 0.135.2；FastAPI framework, high performance, easy to learn, fast to code, ready for production",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "package-litellm",
+      "name": "litellm",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "llm-gateway"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/litellm/",
+      "currentVersion": "1.81.16",
+      "latestVersion": "1.83.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "外部風險：Snyk Blog / How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM"
+        ],
+        "activitySignals": [
+          "open issues 高於 2154",
+          "repo 更新於 2026-04-01",
+          "外部風險 feed 命中 1 則"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        },
+        "externalHits": [
+          {
+            "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
+            "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
+            "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
+            "publishedAt": "2026-03-24T12:00:00+08:00",
+            "riskScore": 3,
+            "sourceId": "snyk-blog",
+            "sourceName": "Snyk Blog",
+            "trust": "medium"
+          }
+        ]
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.81.16 → 1.83.0；外部風險：Snyk Blog / How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM；Library to easily interface with LLM API providers",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 2154",
+        "repo 更新於 2026-04-01",
+        "外部風險 feed 命中 1 則"
+      ],
+      "externalRiskHits": [
+        {
+          "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
+          "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
+          "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
+          "publishedAt": "2026-03-24T12:00:00+08:00",
+          "riskScore": 3,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        }
+      ],
+      "priority": {
+        "score": 8.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後",
+          "外部風險來源有命中"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級",
+        "先讀外部風險來源，確認是否為真實相關事件"
+      ]
+    },
+    {
+      "id": "package-openai-py",
+      "name": "openai",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "openai"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/openai/",
+      "currentVersion": "2.24.0",
+      "latestVersion": "2.30.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 362",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.24.0 → 2.30.0；The official Python library for the openai API",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 362",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "package-playwright-py",
+      "name": "playwright",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "browser"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/playwright/",
+      "currentVersion": "1.58.0",
+      "latestVersion": "1.58.0",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-03-31"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.58.0 → 1.58.0；A high-level API to automate web browsers",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-03-31"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "package-pydantic",
+      "name": "pydantic",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "schema"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/pydantic/",
+      "currentVersion": "2.12.5",
+      "latestVersion": "2.12.5",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.12.5 → 2.12.5；Data validation using Python type hints",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "package-requests",
+      "name": "requests",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "http"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/requests/",
+      "currentVersion": "2.33.1",
+      "latestVersion": "2.33.1",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 241",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.33.1 → 2.33.1；Python HTTP for Humans.",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 241",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "package-supabase",
+      "name": "supabase",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "database"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/supabase/",
+      "currentVersion": "2.28.0",
+      "latestVersion": "2.28.3",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-03-31"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.28.0 → 2.28.3；Supabase client for Python.",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-03-31"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "package-uvicorn",
+      "name": "uvicorn",
+      "category": "package",
+      "subcategory": "pypi",
+      "tags": [
+        "python",
+        "asgi"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/uvicorn/",
+      "currentVersion": "0.41.0",
+      "latestVersion": "0.42.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "0.41.0 → 0.42.0；The lightning-fast ASGI server.",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "skill-minimax-skills",
+      "name": "MiniMax Skills",
+      "category": "skill",
+      "subcategory": "github",
+      "tags": [
+        "skills",
+        "minimax"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "github_repo",
+      "sourceUrl": "https://github.com/minimax-ai/skills",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "skill-openspace",
+      "name": "OpenSpace",
+      "category": "skill",
+      "subcategory": "github",
+      "tags": [
+        "skills",
+        "research"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "github_repo",
+      "sourceUrl": "https://github.com/HKUDS/OpenSpace",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "skill-clawhub-official",
+      "name": "clawhub skills",
+      "category": "skill",
+      "subcategory": "marketplace",
+      "tags": [
+        "skills",
+        "official"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://clawhub.ai",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "skill-skilless",
+      "name": "skilless skills",
+      "category": "skill",
+      "subcategory": "marketplace",
+      "tags": [
+        "skills",
+        "marketplace"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "manual_url",
+      "sourceUrl": "https://skilless.ai",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "尚無足夠自動摘要",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "tool-bun",
+      "name": "bun",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "runtime",
+        "javascript"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://bun.sh/",
+      "currentVersion": "1.3.8",
+      "latestVersion": "1.3.11",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.3.8 → 1.3.11；Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-cloudflared",
+      "name": "cloudflared",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "network",
+        "tunnel"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      "currentVersion": "2026.2.0",
+      "latestVersion": "2026.3.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2026.2.0 → 2026.3.0；Cloudflare Tunnel client (formerly Argo Tunnel)",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-ffmpeg",
+      "name": "ffmpeg",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "media",
+        "transcoding",
+        "macos-fit"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://ffmpeg.org/",
+      "currentVersion": "8.0.1_4",
+      "latestVersion": "8.1",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [
+        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
+        "影音處理屬於本機強項，建議保持在穩定新版本。"
+      ],
+      "featureSuggestions": [],
+      "summary": "8.0.1_4 → 8.1；Play, record, convert, and stream select audio and video codecs",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-gh",
+      "name": "gh",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "github",
+        "cli"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://cli.github.com/",
+      "currentVersion": "2.86.0",
+      "latestVersion": "2.89.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.86.0 → 2.89.0；GitHub command-line tool",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-node",
+      "name": "node",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "runtime",
+        "javascript"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://nodejs.org/",
+      "currentVersion": "25.8.0",
+      "latestVersion": "25.8.2",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "25.8.0 → 25.8.2；Open-source, cross-platform JavaScript runtime environment",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-tailscale",
+      "name": "tailscale",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "network",
+        "vpn",
+        "macos-fit"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://tailscale.com",
+      "currentVersion": "1.94.1",
+      "latestVersion": "1.96.4",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [
+        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。"
+      ],
+      "featureSuggestions": [],
+      "summary": "1.94.1 → 1.96.4；Easiest, most secure way to use WireGuard and 2FA",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-yt-dlp",
+      "name": "yt-dlp",
+      "category": "tool",
+      "subcategory": "brew",
+      "tags": [
+        "media",
+        "downloader"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "brew",
+      "sourceUrl": "https://github.com/yt-dlp/yt-dlp",
+      "currentVersion": "2026.2.4",
+      "latestVersion": "2026.3.17",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2026.2.4 → 2026.3.17；Feature-rich command-line audio/video downloader",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-openclaw",
+      "name": "OpenClaw",
+      "category": "tool",
+      "subcategory": "core-cli",
+      "tags": [
+        "core",
+        "gateway",
+        "breaking-risk"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "github_release",
+      "sourceUrl": "https://github.com/openclaw/openclaw/releases/tag/v2026.3.31",
+      "currentVersion": "2026.3.31",
+      "latestVersion": "v2026.3.31",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。"
+        ],
+        "activitySignals": [
+          "open issues 高於 16833",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "先看新 release 是否改善 provider/tool-call compatibility，再安排灰度升級。",
+        "OpenClaw 升級前一定先看 provider / tool-call compatibility，尤其 MiniMax 與 Telegram 輸出鏈。",
+        "如果 release notes 涉及 gateway / parser / protocol，先做本機 smoke test，不要直接上 production。"
+      ],
+      "summary": "2026.3.31 → v2026.3.31；OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。；Nodes/exec: remove the duplicated `nodes.run` shell wrapper from the CLI and agent `nodes` tool so node shell execution always goes through `exec host=node`, keeping node-specific capabilities on `nodes invoke` and the dedicated media/location/notify actions. / Plugin SDK: deprecate the legacy provider compat subpaths plus the older bundled provider setup and channel-runtime compatibility shims, emit migration warnings, and keep the current documented `openclaw/plugin-sdk/*` entrypoints plus local `api.ts` / `runtime-api.ts` barrels as the forward path ahead of a future major-release removal. / Skills/install and Plugins/install: built-in dangerous-code `critical` findings and install-time scan failures now fail closed by default, so plugin installs and gateway-backed skill dependency installs that previously succeeded may now require an explicit dangerous override such as `--dangerously-force-unsafe-install` to proceed.",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 16833",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 1.0,
+        "tier": "low",
+        "reasons": [
+          "核心控制面元件"
+        ]
+      },
+      "nextActions": [
+        "先做 provider/tool-call smoke test，再決定要不要升級 gateway"
+      ]
+    },
+    {
+      "id": "tool-claude-code",
+      "name": "@anthropic-ai/claude-code",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "cli",
+        "agent",
+        "fast-moving"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://github.com/anthropics/claude-code",
+      "currentVersion": "2.1.86",
+      "latestVersion": "2.1.89",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "open issues 高於 8569",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2.1.86 → 2.1.89",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 8569",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-byterover-cli",
+      "name": "@byterover/byterover",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "extension",
+        "memory"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": "1.1.0",
+      "latestVersion": "1.1.4",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.1.0 → 1.1.4",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-codex-cli",
+      "name": "@openai/codex",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "cli",
+        "agent",
+        "fast-moving"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://github.com/openai/codex#readme",
+      "currentVersion": "0.118.0-alpha.3",
+      "latestVersion": "0.118.0",
+      "versionComparison": 1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "協定變更頻繁，舊客戶端容易出現 unknown variant / timeout。"
+        ],
+        "activitySignals": [
+          "open issues 高於 2247",
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "Codex CLI 建議與 LabIDE /桌面端協定一起觀察，避免再踩 protocol mismatch。",
+        "Codex CLI 升級要和桌面端 / LabIDE app-server protocol 一起看，避免再次出現 shim 等級 workaround。"
+      ],
+      "summary": "0.118.0-alpha.3 → 0.118.0；協定變更頻繁，舊客戶端容易出現 unknown variant / timeout。",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "open issues 高於 2247",
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "tool-lobster",
+      "name": "@openclaw/lobster",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "openclaw",
+        "companion"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": "2026.3.1",
+      "latestVersion": "2026.3.13",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2026.3.1 → 2026.3.13",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-playwright-mcp",
+      "name": "@playwright/mcp",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "browser",
+        "mcp"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://playwright.dev",
+      "currentVersion": "0.0.64",
+      "latestVersion": "0.0.70",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "0.0.64 → 0.0.70",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-apify-cli",
+      "name": "apify-cli",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "scraping",
+        "automation"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://github.com/apify/apify-cli#readme",
+      "currentVersion": "1.2.1",
+      "latestVersion": "1.4.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.2.1 → 1.4.0",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-clawdbot",
+      "name": "clawdbot",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "legacy",
+        "openclaw"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": "2026.1.24-3",
+      "latestVersion": "2026.1.24-3",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "warning",
+        "reviewStatus": "monitor",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 11,
+          "critical": 0,
+          "high": 6,
+          "aliases": [
+            "CVE-2026-26317",
+            "CVE-2026-26328",
+            "CVE-2026-25253",
+            "CVE-2026-28452",
+            "CVE-2026-24763",
+            "CVE-2026-28480",
+            "CVE-2026-25157",
+            "CVE-2026-28478"
+          ],
+          "details": [
+            {
+              "id": "GHSA-3fqr-4cg8-h96q",
+              "summary": "OpenClaw affected by cross-site request forgery (CSRF) through loopback browser mutation endpoints",
+              "severity": "high"
+            },
+            {
+              "id": "GHSA-chm2-m3w2-wcxm",
+              "summary": "OpenClaw Google Chat spoofing access with allowlist authorized mutable email principal despite sender-ID mismatch",
+              "severity": "low"
+            },
+            {
+              "id": "GHSA-g34w-4xqq-h79m",
+              "summary": "OpenClaw iMessage group allowlist authorization inherited DM pairing-store identities",
+              "severity": "moderate"
+            },
+            {
+              "id": "GHSA-g8p2-7wf7-98mq",
+              "summary": "OpenClaw/Clawdbot has 1-Click RCE via Authentication Token Exfiltration From gatewayUrl",
+              "severity": "high"
+            },
+            {
+              "id": "GHSA-h89v-j3x9-8wqj",
+              "summary": "OpenClaw affected by denial of service through unguarded archive extraction allowing high expansion/resource abuse (ZIP/TAR)",
+              "severity": "moderate"
+            }
+          ]
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "2026.1.24-3 → 2026.1.24-3",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 3.0,
+        "tier": "low",
+        "reasons": [
+          "有安全警示"
+        ]
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "tool-clawhub",
+      "name": "clawhub",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "skills",
+        "marketplace"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": null,
+      "currentVersion": "0.5.0",
+      "latestVersion": "0.9.0",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "upgrade",
+        "label": "建議升級",
+        "why": [
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "0.5.0 → 0.9.0",
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先做本機 smoke test，再安排灰度升級"
+      ]
+    },
+    {
+      "id": "tool-firecrawl-cli",
+      "name": "firecrawl-cli",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "scraping",
+        "risky-fast-moving"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://docs.firecrawl.dev/cli",
+      "currentVersion": "1.9.8",
+      "latestVersion": "1.12.2",
+      "versionComparison": -1,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "monitor",
+        "negativeSignals": [
+          "web scraping 生態近期有供應鏈污染案例，快更新不一定更安全。"
+        ],
+        "activitySignals": [
+          "repo 更新於 2026-04-01"
+        ],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "observe",
+        "label": "觀察等待",
+        "why": [
+          "抓取工具更新很快，先觀察社群與安全訊號，再安排灰度升級。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [
+        "抓取類工具升級前要先查供應鏈與封鎖風險，不要用最新版本直接進 production pipeline。"
+      ],
+      "summary": "1.9.8 → 1.12.2；web scraping 生態近期有供應鏈污染案例，快更新不一定更安全。",
+      "installedStatus": "n/a",
+      "activitySignals": [
+        "repo 更新於 2026-04-01"
+      ],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 4.0,
+        "tier": "medium",
+        "reasons": [
+          "需先觀察風險",
+          "版本落後"
+        ]
+      },
+      "nextActions": [
+        "先觀察社群與供應鏈訊號，暫不追最新"
+      ]
+    }
+  ],
+  "modelRecommendations": {
+    "vectors": {
+      "coding": [
+        "openai-codex/gpt-5.4",
+        "anthropic/claude-sonnet-4-6",
+        "zai/glm-5.1",
+        "local-llm/qwen2.5-coder-7b-instruct-mlx"
+      ],
+      "research": [
+        "anthropic/claude-opus-4-6",
+        "zai/glm-5.1",
+        "xai/grok-4.20-beta-0309-reasoning",
+        "gemini/gemini-2.5-pro"
+      ],
+      "tool_use": [
+        "anthropic/claude-sonnet-4-6",
+        "openai-codex/gpt-5.4",
+        "zai/glm-5.1"
+      ],
+      "local_first": [
+        "local-llm/mistral-nemo-instruct-2407",
+        "local-llm/gemma-3-4b-it-qat",
+        "local-llm/qwen3.5-4b-optiq"
+      ],
+      "low_cost": [
+        "minimax/MiniMax-M2.7-highspeed",
+        "zai/glm-5-turbo",
+        "local-llm/qwen3.5-4b-optiq"
+      ],
+      "structured_output": [
+        "openai-codex/gpt-5.4-mini",
+        "anthropic/claude-sonnet-4-6",
+        "zai/glm-5.1"
+      ]
+    },
+    "agents": [
+      {
+        "agent": "Travis",
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": [
+          "zai/glm-5.1",
+          "openai-codex/gpt-5.4-mini",
+          "local-llm/mistral-nemo-instruct-2407"
+        ],
+        "notes": [
+          "主代理優先穩定與工具相容性，不要讓 Telegram 輸出鏈再吃到文字化 tool call。"
+        ],
+        "historicalHints": {
+          "anthropic/claude-sonnet-4-6": {
+            "score": 0.2,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.05,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 7,
+            "completed": 0,
+            "timeouts": 7,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0,
+              "rate_limit": 0.5
+            }
+          }
+        }
+      },
+      {
+        "agent": "Blake",
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [
+          "anthropic/claude-sonnet-4-6",
+          "zai/glm-5.1",
+          "local-llm/qwen2.5-coder-7b-instruct-mlx"
+        ],
+        "notes": [
+          "Coder 任務先選 coding 強且工具穩的模型，本地 coder 模型適合低風險 smoke。"
+        ],
+        "historicalHints": {
+          "openai-codex/gpt-5.4": {
+            "score": 0.2,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.05,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 29,
+            "completed": 0,
+            "timeouts": 29,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0,
+              "rate_limit": 0.5
+            }
+          },
+          "anthropic/claude-sonnet-4-6": {
+            "score": 0.2,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.05,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 7,
+            "completed": 0,
+            "timeouts": 7,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0,
+              "rate_limit": 0.5
+            }
+          }
+        }
+      },
+      {
+        "agent": "Rex",
+        "primary": "anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "zai/glm-5.1",
+          "xai/grok-4.20-beta-0309-reasoning",
+          "gemini/gemini-2.5-pro"
+        ],
+        "notes": [
+          "研究代理可偏向長推理與中文能力，但 beta / experimental 要保守驗證。"
+        ],
+        "historicalHints": {
+          "xai/grok-4.20-beta-0309-reasoning": {
+            "score": 0.3,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.03,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 8,
+            "completed": 0,
+            "timeouts": 8,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0.5,
+              "rate_limit": 0.5
+            }
+          },
+          "anthropic/claude-opus-4-6": {
+            "score": 0.2,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.05,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 2,
+            "completed": 0,
+            "timeouts": 2,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0,
+              "rate_limit": 0.5
+            }
+          }
+        }
+      },
+      {
+        "agent": "Oscar",
+        "primary": "minimax/MiniMax-M2.7-highspeed",
+        "fallbacks": [
+          "zai/glm-5-turbo",
+          "local-llm/qwen3.5-4b-optiq",
+          "local-llm/gemma-3-4b-it-qat"
+        ],
+        "notes": [
+          "輕任務與巡檢代理優先成本效率，必要時直接退到本地小模型。"
+        ],
+        "historicalHints": {}
+      },
+      {
+        "agent": "Warren",
+        "primary": "openai-codex/gpt-5.4-mini",
+        "fallbacks": [
+          "zai/glm-5.1",
+          "local-llm/gemma-3-4b-it-qat"
+        ],
+        "notes": [
+          "審核/結構化流程建議偏保守模型，避免不穩定 reasoning beta。"
+        ],
+        "historicalHints": {}
+      },
+      {
+        "agent": "Griffin",
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": [
+          "local-llm/mistral-nemo-instruct-2407",
+          "zai/glm-5.1"
+        ],
+        "notes": [
+          "驗收與稽核應重視穩定性，fallback 優先選擇輸出乾淨的模型。"
+        ],
+        "historicalHints": {
+          "anthropic/claude-sonnet-4-6": {
+            "score": 0.2,
+            "success_rate": 0.0,
+            "avg_duration_sec": 0,
+            "cost_per_job": 0.05,
+            "rate_limit_ratio": 0.0,
+            "total_jobs": 7,
+            "completed": 0,
+            "timeouts": 7,
+            "failed": 0,
+            "rate_limits": 0,
+            "sub_scores": {
+              "success": 0,
+              "speed": 0.5,
+              "cost": 0,
+              "rate_limit": 0.5
+            }
+          }
+        }
+      }
+    ],
+    "sourceWeightsUpdatedAt": "2026-03-16T06:30:45.934179"
+  },
+  "liveCatalogs": {
+    "openai": [
+      "gpt-5.4",
+      "gpt-5.4-2026-03-05",
+      "gpt-5.4-mini",
+      "gpt-5.4-mini-2026-03-17",
+      "gpt-5.4-nano",
+      "gpt-5.4-nano-2026-03-17",
+      "gpt-5.4-pro",
+      "gpt-5.4-pro-2026-03-05"
+    ],
+    "zai": [
+      "glm-4.5",
+      "glm-4.5-air",
+      "glm-4.6",
+      "glm-4.7",
+      "glm-5",
+      "glm-5-turbo",
+      "glm-5.1"
+    ],
+    "lmstudio": [
+      "deepseek-r1-0528-qwen3-8b-mlx",
+      "gemma-3-4b-it-qat",
+      "mistral-nemo-instruct-2407",
+      "qwen2.5-14b-instruct",
+      "qwen2.5-coder-7b-instruct-mlx",
+      "qwen3.5-4b-optiq",
+      "qwen3.5-9b-mlx"
+    ]
+  },
+  "externalRiskSummary": {
+    "sourceCount": 3,
+    "matchedTargets": 2,
+    "topTargets": [
+      {
+        "targetId": "package-litellm",
+        "count": 1
+      },
+      {
+        "targetId": "frontend-next",
+        "count": 1
+      }
+    ]
+  }
+}

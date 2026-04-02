@@ -21,7 +21,7 @@ interface NavItem {
 const navItems: Record<ContextType, NavItem[]> = {
   portal: [
     { label: '首頁', href: '/portal' },
-    { label: '知識庫', href: '/portal/knowledge' },
+    { label: 'SOP知識庫', href: '/hub/reports?tab=sop' },
   ],
   showcase: [
     { label: '首頁', href: '/showcase' },
@@ -47,10 +47,11 @@ export default function Header({ context }: HeaderProps) {
   const currentNavItems = navItems[context];
 
   const isActive = (href: string) => {
+    const hrefPath = href.split('?')[0];
     if (href === `/${context}`) {
-      return pathname === href || pathname === `${href}/`;
+      return pathname === hrefPath || pathname === `${hrefPath}/`;
     }
-    return pathname.startsWith(href);
+    return pathname.startsWith(hrefPath);
   };
 
   return (

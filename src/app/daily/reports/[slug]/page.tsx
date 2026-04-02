@@ -9,9 +9,10 @@ import { formatDate, typeConfig } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ReportPage({ params }: { params: { slug: string } }) {
+export default async function ReportPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const posts = await getAllPosts()
-  const post = posts.find(p => p.type === 'research' && p.slug === `reports/${params.slug}`)
+  const post = posts.find(p => p.type === 'research' && p.slug === `reports/${slug}`)
 
   if (!post) {
     return (

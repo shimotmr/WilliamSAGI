@@ -23,7 +23,7 @@ export default function KnowledgePage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">知識庫 / SOP</h1>
+      <h1 className="text-2xl font-bold mb-6">SOP知識庫 (SAGI)</h1>
       <div className="flex gap-3 mb-4 flex-wrap">
         <input value={q} onChange={e=>setQ(e.target.value)} placeholder="搜尋..." className="flex-1 border rounded-lg px-4 py-2 text-sm min-w-[200px]"/>
         <select value={cat} onChange={e=>setCat(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">

@@ -10,13 +10,14 @@ const getSupabase = () => createClient(
 // GET single task
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('board_tasks')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error) {
@@ -29,8 +30,9 @@ export async function GET(
 // PATCH update task
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const supabase = getSupabase()
   const body = await req.json()
   
@@ -58,7 +60,7 @@ export async function PATCH(
   const { data, error } = await supabase
     .from('board_tasks')
     .update(updateData)
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single()
 
