@@ -195,7 +195,7 @@ function renderInlineMarkdown(text: string) {
     .replace(codeRegex, '<code class="rounded bg-white/10 px-1.5 py-0.5 text-[0.85em] text-cyan-200 font-mono">$1</code>')
     .replace(/\n/g, '<br/>')
 
-  return <span dangerouslySetInnerHTML={{ __html: html }} />
+  return <div dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /** Get command name & truncated args from tool call text */
@@ -259,7 +259,7 @@ function MessageBubble({ message }: { message: CodexSessionMessage }) {
   if (category === 'user') {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-cyan-500/15 px-4 py-3 text-sm leading-6 text-cyan-50 [font-family:var(--font-sans)]">
+        <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-cyan-500/15 px-4 py-3 text-sm leading-6 text-cyan-50 break-words [font-family:var(--font-sans)]">
           {renderInlineMarkdown(message.text)}
         </div>
       </div>
@@ -276,7 +276,7 @@ function MessageBubble({ message }: { message: CodexSessionMessage }) {
             <Bot className="h-3 w-3" /> agent
           </span>
         )}
-        <div className="rounded-2xl border border-emerald-400/15 bg-emerald-400/5 px-4 py-3 text-sm leading-6 text-emerald-50 [font-family:var(--font-sans)]">
+        <div className="rounded-2xl border border-emerald-400/15 bg-emerald-400/5 px-4 py-3 text-sm leading-6 text-emerald-50 break-words [font-family:var(--font-sans)]">
           {renderInlineMarkdown(message.text || (message.streaming ? '...' : ''))}
           {message.streaming && (
             <span className="ml-1 inline-block h-4 w-1 animate-pulse bg-emerald-300/60" />
@@ -830,7 +830,7 @@ export default function CodexPage() {
           </div>
         </aside>
 
-        <main className="flex min-h-[60vh] flex-1 flex-col relative pb-[200px] lg:pb-0">
+        <main className="flex min-h-[60vh] flex-1 flex-col relative pb-14 lg:pb-0">
           <div className="border-b border-white/10 bg-[#0a0e14] px-4 py-4 sm:px-6">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
