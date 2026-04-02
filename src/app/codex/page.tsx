@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   ChevronDown,
@@ -377,6 +377,37 @@ function MessageBubble({ message }: { message: CodexSessionMessage }) {
 }
 
 /* ─── Main page ─── */
+
+/* ── Composer input (memo'd to avoid re-render on liveMessages changes) ── */
+const ComposerBar = React.memo(function ComposerBar({ composer, setComposer, onSubmit, attached, resuming, sending, connectionState, selectedId, onResume }: {
+  composer: string; setComposer: (v: string) => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void; attached: boolean;
+  resuming: boolean; sending: boolean; connectionState: string;
+  selectedId: string | null; onResume: () => void;
+}) {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#080b10] px-3 py-2 sm:px-6 sm:py-3 lg:static lg:z-auto">
+      <form onSubmit={onSubmit} className="flex items-center gap-2">
+        <textarea
+          value={composer}
+          onChange={(event) => setComposer(event.target.value)}
+          rows={1}
+          placeholder={attached ? '輸入訊息...' : '先 Resume 再傳訊'}
+          className="min-h-[36px] max-h-[72px] flex-1 resize-none rounded-[18px] border border-white/10 bg-black/30 px-3 py-2 text-sm leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/40"
+          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSubmit(e as any) } }}
+        />
+        <button type="button" onClick={onResume} disabled={!selectedId || connectionState === 'connecting' || resuming} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 text-xs font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50">
+          {resuming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Server className="h-3.5 w-3.5" />}
+          {attached ? '已接' : 'Resume'}
+        </button>
+        <button type="submit" disabled={!composer.trim() || !selectedId || connectionState === 'connecting' || connectionState === 'disconnected' || sending} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-medium text-emerald-100 transition hover:border-emerald-300/40 hover:text-emerald-50 disabled:cursor-not-allowed disabled:opacity-50">
+          {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+          Send
+        </button>
+      </form>
+    </div>
+  )
+})
 
 export default function CodexPage() {
   const [sessions, setSessions] = useState<CodexSessionSummary[]>([])
@@ -907,26 +938,7 @@ export default function CodexPage() {
             )}
           </div>
 
-          <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#080b10] px-3 py-2 sm:px-6 sm:py-3 lg:static lg:z-auto">
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
-              <textarea
-                value={composer}
-                onChange={(event) => setComposer(event.target.value)}
-                rows={1}
-                placeholder={attachedToSelected ? '輸入訊息...' : '先 Resume 再傳訊'}
-                className="min-h-[36px] max-h-[72px] flex-1 resize-none rounded-[18px] border border-white/10 bg-black/30 px-3 py-2 text-sm leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/40"
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e as any) } }}
-              />
-              <button type="button" onClick={resumeSelectedSession} disabled={!selectedId || connectionState === 'connecting' || resuming} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 text-xs font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50">
-                {resuming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Server className="h-3.5 w-3.5" />}
-                {attachedToSelected ? '已接' : 'Resume'}
-              </button>
-              <button type="submit" disabled={!composer.trim() || !selectedId || connectionState === 'connecting' || connectionState === 'disconnected' || sending} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-medium text-emerald-100 transition hover:border-emerald-300/40 hover:text-emerald-50 disabled:cursor-not-allowed disabled:opacity-50">
-                {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                Send
-              </button>
-            </form>
-          </div>
+              <ComposerBar composer={composer} setComposer={setComposer} onSubmit={handleSubmit} attached={!!attachedToSelected} resuming={resuming} sending={sending} connectionState={connectionState} selectedId={selectedId} onResume={resumeSelectedSession} />
         </main>
       </div>
 
