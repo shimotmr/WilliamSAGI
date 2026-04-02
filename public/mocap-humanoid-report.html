@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markerless 動作捕捉技術 — 人形機器人應用深度評估報告</title>
+<style>
+  :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --green: #4ade80; --orange: #fb923c; --red: #f87171; --text: #e2e8f0; --muted: #94a3b8; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.6em; color: var(--accent); margin-bottom: 4px; }
+  .meta { color: var(--muted); font-size: 0.85em; margin-bottom: 24px; }
+  h2 { font-size: 1.25em; color: var(--accent); margin: 28px 0 12px; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+  h3 { font-size: 1.05em; color: var(--green); margin: 16px 0 8px; }
+  p, li { font-size: 0.92em; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 4px; }
+  .card { background: var(--card); border-radius: 10px; padding: 16px; margin: 12px 0; }
+  .warn { border-left: 4px solid var(--orange); }
+  .danger { border-left: 4px solid var(--red); }
+  .success { border-left: 4px solid var(--green); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; }
+  th { background: #334155; padding: 8px 10px; text-align: left; color: var(--accent); }
+  td { padding: 7px 10px; border-bottom: 1px solid #1e293b; }
+  tr:nth-child(even) { background: #1a2332; }
+  .highlight { color: var(--accent); font-weight: 600; }
+  .cost-high { color: var(--red); }
+  .cost-low { color: var(--green); }
+
+  /* Comparison Chart */
+  .comparison { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .comp-card { background: var(--card); border-radius: 10px; padding: 14px; text-align: center; }
+  .comp-card h4 { margin-bottom: 8px; }
+  .comp-card .icon { font-size: 2em; margin-bottom: 6px; }
+  .comp-card .metric { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.82em; border-bottom: 1px solid #334155; }
+  .comp-card .metric:last-child { border: none; }
+  .blue-border { border-top: 3px solid var(--accent); }
+  .green-border { border-top: 3px solid var(--green); }
+  .orange-border { border-top: 3px solid var(--orange); }
+
+  /* Flowchart */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 20px 0; }
+  .flow-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+  .flow-box { background: var(--card); border: 1px solid #475569; border-radius: 8px; padding: 10px 16px; font-size: 0.85em; text-align: center; min-width: 120px; }
+  .flow-box.critical { border-color: var(--red); background: #2d1b1b; }
+  .flow-box.ai { border-color: var(--green); }
+  .flow-box.input { border-color: var(--accent); }
+  .flow-arrow { color: var(--muted); font-size: 1.2em; }
+  .flow-arrow-down { color: var(--muted); font-size: 1.4em; margin: 4px 0; }
+
+  /* Gantt */
+  .gantt { margin: 20px 0; }
+  .gantt-phase { display: flex; align-items: flex-start; margin: 8px 0; }
+  .gantt-label { width: 140px; flex-shrink: 0; font-size: 0.82em; padding-top: 4px; }
+  .gantt-label .cost { color: var(--muted); font-size: 0.78em; }
+  .gantt-bar-container { flex: 1; position: relative; height: 60px; }
+  .gantt-bar { position: absolute; height: 22px; border-radius: 4px; top: 0; display: flex; align-items: center; padding: 0 8px; font-size: 0.72em; color: #fff; font-weight: 500; }
+  .gantt-tasks { position: absolute; top: 26px; left: 0; right: 0; font-size: 0.7em; color: var(--muted); }
+  .gantt-weeks { display: flex; font-size: 0.7em; color: var(--muted); margin-left: 140px; }
+  .gantt-weeks span { flex: 1; text-align: center; }
+
+  .footer { text-align: center; color: var(--muted); font-size: 0.78em; margin-top: 32px; padding-top: 16px; border-top: 1px solid #334155; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🔬 Markerless 動作捕捉技術 — 人形機器人應用深度評估</h1>
+<p class="meta">Travis AI Research | 2026-04-02 | 和椿科技機器人事業處</p>
+
+<!-- Section 1 -->
+<h2>一、技術背景：什麼是 Markerless 動作捕捉</h2>
+<p>Markerless Motion Capture（無標記式動作捕捉）利用機器學習 + 多台相機，直接從影像推測人體 3D 骨骼關節位置，不需穿動捕服、不需貼反光 marker。</p>
+
+<div class="card">
+<h3>Vicon Shōgun Markerless 系統規格</h3>
+<ul>
+  <li><strong>Vanguard 專用相機</strong>：1080p @ 120fps，6.5mm 固定焦距，FOV 78°×49°</li>
+  <li><strong>紅外線感測</strong>：減少可見光干擾</li>
+  <li><strong>AI 追蹤引擎</strong>：基於 Vicon 40 年人體動捕數據訓練的專有 ML 模型</li>
+  <li><strong>Shōgun 軟體</strong>：即時串流 + 錄製回放一致、FBX 匯出、Genlock 同步</li>
+  <li><strong>混合模式</strong>：可同時捕捉無標記人員 + 有標記道具</li>
+  <li><strong>定位</strong>：影視/遊戲前期快速迭代，非精密測量</li>
+</ul>
+</div>
+
+<!-- Section 2: Comparison -->
+<h2>二、三種方案技術對比</h2>
+
+<div class="comparison">
+  <div class="comp-card blue-border">
+    <div class="icon">📡</div>
+    <h4 style="color:var(--accent)">光學 Marker</h4>
+    <p style="font-size:0.78em;color:var(--muted)">Vicon Vero / OptiTrack</p>
+    <div class="metric"><span>精度</span><span class="highlight">&lt; 1mm</span></div>
+    <div class="metric"><span>角度誤差</span><span class="highlight">&lt; 2°</span></div>
+    <div class="metric"><span>成本</span><span class="cost-high">$80K-$200K</span></div>
+    <div class="metric"><span>準備時間</span><span>30-60 分鐘</span></div>
+    <div class="metric"><span>即時性</span><span class="highlight">✅ 真即時</span></div>
+    <div class="metric"><span>遮擋處理</span><span>❌ 丟失</span></div>
+  </div>
+  <div class="comp-card green-border">
+    <div class="icon">📷</div>
+    <h4 style="color:var(--green)">Markerless 商用</h4>
+    <p style="font-size:0.78em;color:var(--muted)">Vicon Vanguard + Shōgun</p>
+    <div class="metric"><span>精度</span><span>~5-10mm</span></div>
+    <div class="metric"><span>角度誤差</span><span>3-5°</span></div>
+    <div class="metric"><span>成本</span><span class="cost-high">$100K-$200K+</span></div>
+    <div class="metric"><span>準備時間</span><span class="cost-low">5 分鐘</span></div>
+    <div class="metric"><span>即時性</span><span class="highlight">✅ 真即時</span></div>
+    <div class="metric"><span>遮擋處理</span><span>✅ ML 推測</span></div>
+  </div>
+  <div class="comp-card orange-border">
+    <div class="icon">🤖</div>
+    <h4 style="color:var(--orange)">AI/RL 方案</h4>
+    <p style="font-size:0.78em;color:var(--muted)">H2O / OpenPose / GMR</p>
+    <div class="metric"><span>精度</span><span>10-30mm</span></div>
+    <div class="metric"><span>角度誤差</span><span>5-15°</span></div>
+    <div class="metric"><span>成本</span><span class="cost-low">&lt; $1K-$8K</span></div>
+    <div class="metric"><span>準備時間</span><span class="cost-low">5 分鐘</span></div>
+    <div class="metric"><span>即時性</span><span>⚠️ 延遲 50-200ms</span></div>
+    <div class="metric"><span>遮擋處理</span><span>⚠️ 不穩定</span></div>
+  </div>
+</div>
+
+<!-- Section 3: Critical Questions -->
+<h2>三、關鍵質疑與驗證</h2>
+
+<div class="card warn">
+<h3>❓ 質疑 1：精度真的夠嗎？</h3>
+<p><strong>事實</strong>：2023 Nature Scientific Reports 系統性回顧指出，markerless 系統的「時間空間參數」已接近 marker 系統，但<strong>關節中心位置和關節角度仍不足以滿足臨床應用</strong>。</p>
+<p style="margin-top:6px"><strong>Vicon 的回應</strong>：利用 40 年累積的 ML 模型改善，但本質限制（從體表推測骨骼）沒變。</p>
+<p style="margin-top:6px"><strong>對機器人的影響</strong>：人→機器人需經過 retargeting，這一層的誤差（5-10°）遠大於捕捉精度差異（2-3°），所以高精度捕捉的優勢被吃掉。</p>
+</div>
+
+<div class="card warn">
+<h3>❓ 質疑 2：Markerless vs Marker 成本效益</h3>
+<p>Vicon Markerless 和 Vicon Marker 系統<strong>價格相當</strong>（都 $100K-$200K），但精度更低。Markerless 唯一優勢是「不用穿動捕服」，這對人形機器人應用幾乎沒意義 — 你不會讓機器人穿動捕服。</p>
+</div>
+
+<div class="card warn">
+<h3>❓ 質疑 3：人類動作能直接用在機器人上嗎？</h3>
+<p><strong>不能</strong>。這是最根本的問題：</p>
+<ul>
+  <li>人類肩關節 3 DOF，機器人可能只有 2 DOF</li>
+  <li>人類和機器人肢體比例完全不同</li>
+  <li>機器人有扭矩/速度限制，人類的快速動作機器人做不到</li>
+  <li>必須經過 <strong>Motion Retargeting</strong>（動作重定向）轉換</li>
+</ul>
+</div>
+
+<div class="card danger">
+<h3>🚨 核心洞察</h3>
+<p>人形機器人應用的瓶頸不在「捕捉精度」，而在「retargeting 品質」。花 $100K 提升 5mm 捕捉精度，但 retargeting 就吃掉 10mm，完全浪費。投資應放在 retargeting 和 RL 訓練，不是硬體。</p>
+</div>
+
+<!-- Section 4: Pipeline Flowchart -->
+<h2>四、技術流程圖：從人到機器人</h2>
+
+<div class="flow">
+  <div class="flow-row">
+    <div class="flow-box input">🧍 人類動作<br><small>Human Motion</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box input">📷 動作捕捉<br><small>Motion Capture</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box">🦴 姿態估計<br><small>Pose Estimation</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box critical">🔄 動作重定向<br><small>Motion Retargeting<br>(IK / RL / GMR)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box">⚙️ 關節指令<br><small>Joint Commands</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box ai">🤖 人形機器人<br><small>Humanoid Robot</small></div>
+  </div>
+  <div style="margin-top:12px;font-size:0.78em;color:var(--muted);text-align:center;">
+    ⬆️ 三種捕捉方案（Marker / Markerless / RGB Camera）都匯入同一個 pipeline<br>
+    🔴 紅色 = 關鍵瓶頸：Retargeting 品質決定最終效果，不是捕捉硬體
+  </div>
+</div>
+
+<h3>Retargeting 方案比較</h3>
+<table>
+  <tr><th>方案</th><th>原理</th><th>延遲</th><th>準確度</th><th>來源</th></tr>
+  <tr><td><strong>GMR</strong></td><td>IK 最佳化 + 旋轉約束</td><td>&lt;10ms (CPU)</td><td>高</td><td>ICRA 2026, 支援 14 種機器人</td></tr>
+  <tr><td><strong>H2O</strong></td><td>RL sim-to-real</td><td>~50ms</td><td>中高</td><td>CMU 2024, 只需 1 台 RGB</td></tr>
+  <tr><td><strong>OmniH2O</strong></td><td>RL + 大規模數據增強</td><td>~50ms</td><td>高</td><td>2024, 通用多機種</td></tr>
+  <tr><td><strong>傳統 IK</strong></td><td>逆運動學求解</td><td>&lt;5ms</td><td>中</td><td>Disney Research 2019</td></tr>
+  <tr><td><strong>Neural Retargeting</strong></td><td>Seq2Seq 學習映射</td><td>~20ms</td><td>中高</td><td>2025 arXiv</td></tr>
+</table>
+
+<!-- Section 5: Cost -->
+<h2>五、完整成本估算</h2>
+
+<table>
+  <tr><th>項目</th><th>Phase 0</th><th>Phase 1</th><th>Phase 2</th><th>Phase 3</th></tr>
+  <tr><td>相機硬體</td><td>NT$3,000<br>(1台 webcam)</td><td>NT$60,000<br>(4-6台消費級)</td><td>NT$200-400萬<br>(OptiTrack 12台)</td><td>NT$400-600萬<br>(Vicon Vanguard)</td></tr>
+  <tr><td>軟體授權</td><td>NT$0<br>(開源)</td><td>NT$0<br>(開源)</td><td>NT$30-50萬/年<br>(Motive)</td><td>NT$50-100萬/年<br>(Shōgun)</td></tr>
+  <tr><td>GPU 計算</td><td>NT$0<br>(現有電腦)</td><td>NT$60,000<br>(RTX 4070)</td><td>含在硬體內</td><td>含在硬體內</td></tr>
+  <tr><td>Retargeting 開發</td><td>NT$0<br>(H2O 開源)</td><td>NT$0-10萬<br>(自建)</td><td>NT$50-100萬<br>(專業 pipeline)</td><td>NT$100-200萬<br>(混合系統)</td></tr>
+  <tr><td>安裝/培訓</td><td>NT$0</td><td>NT$0</td><td>NT$20-30萬</td><td>NT$30-50萬</td></tr>
+  <tr style="font-weight:600"><td><strong>合計</strong></td><td class="cost-low"><strong>&lt; NT$5,000</strong></td><td><strong>NT$10-20萬</strong></td><td><strong>NT$300-580萬</strong></td><td class="cost-high"><strong>NT$580-950萬</strong></td></tr>
+</table>
+
+<!-- Section 6: Academic -->
+<h2>六、學術驗證摘要</h2>
+
+<div class="card">
+<table>
+  <tr><th>論文</th><th>年份</th><th>關鍵發現</th></tr>
+  <tr><td>Nature Sci. Reports<br>(精度比較)</td><td>2023</td><td>Markerless 時間空間參數接近 marker，但關節角度仍不足臨床標準</td></tr>
+  <tr><td>PMC / Frontiers<br>(臨床步態限制)</td><td>2022</td><td>無與雙平面 X 光比對，真實精度未知</td></tr>
+  <tr><td>MDPI Sensors<br>(系統性回顧)</td><td>2024</td><td>Markerless 不受 marker 滑動影響，但整體精度仍低於 marker</td></tr>
+  <tr><td><strong>H2O (CMU)</strong></td><td><strong>2024</strong></td><td><strong>1 台 RGB 相機即可即時遙操作全身人形機器人</strong></td></tr>
+  <tr><td><strong>GMR</strong></td><td><strong>ICRA 2026</strong></td><td><strong>CPU 即時 retarget，支援 14 種機器人，開源</strong></td></tr>
+  <tr><td>Neural Retargeting</td><td>2025</td><td>Seq2Seq 學習人→機器人映射，比傳統 IK 更好</td></tr>
+</table>
+</div>
+
+<!-- Section 7: Gantt -->
+<h2>七、實施甘特圖</h2>
+
+<div class="gantt">
+  <div class="gantt-weeks">
+    <span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W10</span><span>W12</span><span>W14</span><span>W16</span><span>W18</span><span>W20</span><span>W22</span><span>W24</span>
+  </div>
+
+  <!-- Phase 0 -->
+  <div class="gantt-phase">
+    <div class="gantt-label">Phase 0: 驗證<span class="cost">< NT$5K</span></div>
+    <div class="gantt-bar-container">
+      <div class="gantt-bar" style="left:0%;width:12.5%;background:linear-gradient(90deg,#4ade80,#22c55e);">W1-W2</div>
+      <div class="gantt-tasks">H2O 安裝 → MediaPipe 測試 → 單相機 retargeting 驗證</div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="gantt-phase">
+    <div class="gantt-label">Phase 1: 原型<span class="cost">NT$10-20萬</span></div>
+    <div class="gantt-bar-container">
+      <div class="gantt-bar" style="left:12.5%;width:18.75%;background:linear-gradient(90deg,#22c55e,#16a34a);">W3-W6</div>
+      <div class="gantt-tasks">多相機架設 → OpenPose 部署 → 自建 retargeting → 機器人連接測試</div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="gantt-phase">
+    <div class="gantt-label">Phase 2: 數據量產<span class="cost">NT$300-580萬</span></div>
+    <div class="gantt-bar-container">
+      <div class="gantt-bar" style="left:31.25%;width:43.75%;background:linear-gradient(90deg,#38bdf8,#0284c7);">W7-W18</div>
+      <div class="gantt-tasks">OptiTrack 採購(4W) → 安裝校正(2W) → Pipeline 自動化(3W) → 數據採集(5W) → 品保驗證(2W)</div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="gantt-phase">
+    <div class="gantt-label">Phase 3: 頂級系統<span class="cost">NT$580-950萬</span></div>
+    <div class="gantt-bar-container">
+      <div class="gantt-bar" style="left:75%;width:25%;background:linear-gradient(90deg,#818cf8,#6366f1);">W19-W24+</div>
+      <div class="gantt-tasks">Vicon 評估(3W) → 混合系統架設(3W) → 生產部署(3W+)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 8: Decision -->
+<h2>八、決策建議</h2>
+
+<div class="card success">
+<h3>✅ 建議路線</h3>
+<ol>
+  <li><strong>立即啟動 Phase 0</strong>（成本 &lt; NT$5,000）：
+    <ul>
+      <li>安裝 H2O 開源框架（<a href="https://human2humanoid.com" style="color:var(--accent)">human2humanoid.com</a>）</li>
+      <li>安裝 GMR（<a href="https://github.com/YanjieZe/GMR" style="color:var(--accent)">github.com/YanjieZe/GMR</a>）</li>
+      <li>用 1 台 webcam 驗證 retargeting 品質</li>
+      <li>確認和椿的機器人型號是否在 GMR 支援列表中（目前 14 種）</li>
+    </ul>
+  </li>
+  <li><strong>Phase 0 成功 → Phase 1</strong>：多相機 + OpenPose 提升穩定度</li>
+  <li><strong>需要大規模數據 → Phase 2</strong>：OptiTrack（非 Vicon）性價比最高</li>
+  <li><strong>Phase 3 謹慎評估</strong>：除非有明確的 ROI，否則不建議 Vicon Markerless</li>
+</ol>
+</div>
+
+<div class="card danger">
+<h3>❌ 不建議</h3>
+<ul>
+  <li>直接購買 Vicon Markerless 系統 — 成本 NT$500萬+，ROI 不明確</li>
+  <li>跳過 retargeting 直接用捕捉數據控制機器人 — 會損壞設備</li>
+  <li>把 markerless 精度當成機器人控制精度 — 誤差被 retargeting 吃掉</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>📋 籌備清單（Phase 0 快速啟動）</h3>
+<table>
+  <tr><th>項目</th><th>具體內容</th><th>預算</th></tr>
+  <tr><td>硬體</td><td>Logitech Brio 4K webcam ×1</td><td>NT$2,500</td></tr>
+  <tr><td>軟體</td><td>H2O + GMR 開源框架</td><td>NT$0</td></tr>
+  <tr><td>計算</td><td>需 GPU（RTX 3060+），先借用現有設備</td><td>NT$0</td></tr>
+  <tr><td>人力</td><td>1 名工程師 × 2 週</td><td>內部資源</td></tr>
+  <tr><td>機器人</td><td>需確認和椿機器人 URDF 模型可用</td><td>—</td></tr>
+  <tr><td>環境</td><td>空曠場地 3m×3m，充足照明</td><td>—</td></tr>
+</table>
+</div>
+
+<div class="footer">
+  <p>Travis AI Research | 和椿科技機器人事業處 | 2026-04-02</p>
+  <p>資料來源：Vicon.com, Nature Scientific Reports, arXiv (H2O/GMR/OmniH2O), MDPI Sensors, PMC, SIGGRAPH 2025</p>
+</div>
+
+</div>
+</body>
+</html>
