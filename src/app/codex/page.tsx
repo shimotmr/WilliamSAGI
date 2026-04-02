@@ -5,6 +5,7 @@ import Link from 'next/link'
 import {
   ChevronDown,
   FolderOpen,
+  Home,
   Laptop2,
   Loader2,
   Menu,
@@ -398,6 +399,17 @@ export default function CodexPage() {
   const [runtimeInfo, setRuntimeInfo] = useState<CodexRuntimeInfo | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [showScrollBtn, setShowScrollBtn] = useState(false)
+  const [homeBtnPos, setHomeBtnPos] = useState<{ x: number; y: number }>(() => {
+    if (typeof window === 'undefined') return { x: 16, y: 16 }
+    try {
+      const saved = localStorage.getItem('codex-home-btn-pos')
+      if (saved) return JSON.parse(saved)
+    } catch { /* ignore */ }
+    return { x: 16, y: 16 }
+  })
+  const homeBtnDragging = useRef(false)
+  const homeBtnStart = useRef({ x: 0, y: 0 })
+  const homeBtnOffset = useRef({ x: 0, y: 0 })
 
   const socketRef = useRef<WebSocket | null>(null)
   const streamRef = useRef<EventSource | null>(null)
@@ -936,12 +948,47 @@ export default function CodexPage() {
         </button>
       )}
 
-      <Link
-        href="/"
-        className="fixed bottom-4 right-4 rounded-full border border-white/10 bg-black/60 px-4 py-2 text-xs text-zinc-300 backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-200 z-50"
+      {/* Draggable floating home button */}
+      <div
+        className="fixed z-50"
+        style={{ bottom: homeBtnPos.y, right: homeBtnPos.x }}
       >
-        回 WilliamSAGI
-      </Link>
+        <Link
+          href="/"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/70 text-zinc-300 backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-200 touch-none select-none"
+          onPointerDown={(e) => {
+            homeBtnDragging.current = true
+            homeBtnStart.current = { x: e.clientX, y: e.clientY }
+            homeBtnOffset.current = { ...homeBtnPos }
+            ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+          }}
+          onPointerMove={(e) => {
+            if (!homeBtnDragging.current) return
+            const dx = homeBtnStart.current.x - e.clientX
+            const dy = homeBtnStart.current.y - e.clientY
+            setHomeBtnPos({
+              x: Math.max(8, Math.min(window.innerWidth - 60, homeBtnOffset.current.x + dx)),
+              y: Math.max(8, Math.min(window.innerHeight - 60, homeBtnOffset.current.y + dy)),
+            })
+          }}
+          onPointerUp={(e) => {
+            const moved = Math.abs(e.clientX - homeBtnStart.current.x) + Math.abs(e.clientY - homeBtnStart.current.y)
+            homeBtnDragging.current = false
+            ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
+            if (moved > 6) {
+              e.preventDefault()
+              e.stopPropagation()
+              try { localStorage.setItem('codex-home-btn-pos', JSON.stringify(homeBtnPos)) } catch { /* ignore */ }
+            }
+          }}
+          onClick={(e) => {
+            if (homeBtnDragging.current) { e.preventDefault(); return }
+            try { localStorage.setItem('codex-home-btn-pos', JSON.stringify(homeBtnPos)) } catch { /* ignore */ }
+          }}
+        >
+          <Home className="h-5 w-5" />
+        </Link>
+      </div>
     </div>
   )
 }
