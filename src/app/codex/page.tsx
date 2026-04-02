@@ -398,7 +398,7 @@ export default function CodexPage() {
   const [liveMessages, setLiveMessages] = useState<CodexSessionMessage[]>([])
   const [runtimeInfo, setRuntimeInfo] = useState<CodexRuntimeInfo | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [showScrollBtn, setShowScrollBtn] = useState(false)
+  const [showScrollBtn, setShowScrollBtn] = useState(true)
   const [homeBtnPos, setHomeBtnPos] = useState<{ x: number; y: number }>(() => {
     if (typeof window === 'undefined') return { x: 16, y: 16 }
     try {
@@ -736,8 +736,10 @@ export default function CodexPage() {
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    const el = messagesContainerRef.current
-    if (el) el.scrollTo({ top: el.scrollHeight })
+    const timer = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'instant' as ScrollBehavior })
+    }, 100)
+    return () => clearTimeout(timer)
   }, [displayedMessages])
 
   const attachedToSelected = Boolean(selectedId && attachedThreadId === selectedId)
@@ -932,7 +934,7 @@ export default function CodexPage() {
       {showScrollBtn && (
         <button
           onClick={() => { const el = messagesContainerRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }) }}
-          className="fixed bottom-16 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0c1018]/90 text-zinc-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-200 lg:bottom-6"
+          className="fixed bottom-28 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0c1018]/90 text-zinc-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-200 lg:bottom-6"
           aria-label="捲動到底部"
         >
           <ChevronDown className="h-5 w-5" />
