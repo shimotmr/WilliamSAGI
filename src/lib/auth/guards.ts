@@ -19,7 +19,9 @@ export function isPublicRoute(pathname: string): boolean {
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/favicon') ||
     pathname.endsWith('.html') ||
-    pathname.startsWith('/v4-')
+    pathname.startsWith('/v4-') ||
+    pathname.startsWith('/codex') ||
+    pathname.startsWith('/api/codex')
   )
 }
 
