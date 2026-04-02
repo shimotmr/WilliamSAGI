@@ -192,7 +192,7 @@ function renderInlineMarkdown(text: string) {
     .replace(/>/g, '&gt;')
     .replace(linkRegex, '<a href="$2" target="_blank" rel="noopener" class="text-cyan-300 underline hover:text-cyan-200">$1</a>')
     .replace(boldRegex, '<strong>$1</strong>')
-    .replace(codeRegex, '<code class="rounded bg-white/10 px-1.5 py-0.5 text-[0.85em] text-cyan-200 font-mono">$1</code>')
+    .replace(codeRegex, '<code class="rounded bg-white/10 px-1.5 py-0.5 text-[0.85em] text-cyan-200 font-mono break-all">$1</code>')
     .replace(/\n/g, '<br/>')
 
   return <div dangerouslySetInnerHTML={{ __html: html }} />
@@ -875,7 +875,7 @@ export default function CodexPage() {
               const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80
               setShowScrollBtn(!atBottom)
             }}
-            className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6"
+            className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 sm:px-6 sm:py-6"
           >
             {error ? (<div className="rounded-3xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</div>) : null}
             {connectionError ? (<div className="mb-4 rounded-3xl border border-amber-400/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">{connectionError}</div>) : null}
@@ -892,10 +892,10 @@ export default function CodexPage() {
               </div>
             ) : detail ? (
               <div className="space-y-3 pb-4">
-                <div ref={messagesEndRef} />
                 {displayedMessages.map((message) => (
                   <MessageBubble key={message.id} message={message} />
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             ) : (
               <div className="rounded-[28px] border border-dashed border-white/10 bg-white/[0.03] px-6 py-10 text-center text-sm text-zinc-500">
