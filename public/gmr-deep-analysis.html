@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMR 深度技術評估 — 人形機器人動作採集應用</title>
+<style>
+:root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --heading: #f0f6fc; --accent: #58a6ff; --red: #f85149; --green: #3fb950; --yellow: #d29922; --purple: #bc8cff; --orange: #f0883e; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; padding: 20px; max-width: 1100px; margin: 0 auto; }
+h1 { color: var(--heading); font-size: 1.8em; margin-bottom: 8px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+h2 { color: var(--accent); font-size: 1.4em; margin-top: 32px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+h3 { color: var(--purple); font-size: 1.1em; margin-top: 20px; margin-bottom: 8px; }
+p { margin-bottom: 12px; }
+.meta { color: #8b949e; font-size: 0.85em; margin-bottom: 24px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.stat-card .num { font-size: 2em; font-weight: bold; color: var(--accent); }
+.stat-card .label { font-size: 0.85em; color: #8b949e; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.9em; }
+th { background: #21262d; color: var(--heading); text-align: left; padding: 10px 12px; border: 1px solid var(--border); }
+td { padding: 10px 12px; border: 1px solid var(--border); }
+tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+.tag-high { background: rgba(248,81,73,0.15); color: var(--red); }
+.tag-mid { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.tag-low { background: rgba(63,185,80,0.15); color: var(--green); }
+.pros { border-left: 3px solid var(--green); padding-left: 12px; margin-bottom: 8px; }
+.cons { border-left: 3px solid var(--red); padding-left: 12px; margin-bottom: 8px; }
+ul { padding-left: 20px; margin-bottom: 12px; }
+li { margin-bottom: 6px; }
+.flow-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; overflow-x: auto; }
+.flow-step { display: inline-block; background: #21262d; border: 1px solid var(--accent); border-radius: 6px; padding: 8px 14px; margin: 4px; font-size: 0.85em; white-space: nowrap; }
+.flow-arrow { display: inline-block; color: var(--accent); margin: 4px; font-size: 1.2em; }
+.tl { position: relative; padding-left: 30px; margin-bottom: 16px; }
+.tl::before { content: ''; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.tl-item { position: relative; margin-bottom: 16px; }
+.tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+.tl-item.active::before { background: var(--accent); }
+.tl-item .phase { font-weight: bold; color: var(--accent); }
+.tl-item .time { color: #8b949e; font-size: 0.85em; }
+.chart-bar { height: 24px; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 0.8em; color: white; margin-bottom: 4px; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.8em; font-weight: 600; margin-right: 4px; }
+.badge-blue { background: rgba(88,166,255,0.2); color: var(--accent); }
+.badge-green { background: rgba(63,185,80,0.2); color: var(--green); }
+.badge-red { background: rgba(248,81,73,0.2); color: var(--red); }
+.badge-yellow { background: rgba(210,153,34,0.2); color: var(--yellow); }
+.summary-box { background: linear-gradient(135deg, #161b22, #1a2332); border: 2px solid var(--accent); border-radius: 12px; padding: 24px; margin: 24px 0; }
+.summary-box h3 { color: var(--accent); margin-top: 0; }
+@media (max-width: 600px) { body { padding: 12px; } h1 { font-size: 1.4em; } .card-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>🤖 GMR 深度技術評估報告</h1>
+<p class="meta">
+General Motion Retargeting — 人形機器人動作採集應用<br>
+📅 2026-04-02 | 🔬 三模型交叉質疑（Grok-4 / GPT-4o-mini / GLM-5）| 📊 Stanford ICRA 2026 + CoRL 2025
+</p>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="summary-box">
+<h3>📋 結論先講</h3>
+<p><strong>GMR 是目前開源 retargeting 中品質最好的方案</strong>，接近 Unitree 閉源水準。但它是<strong>工具鏈的一環</strong>，不是完整解決方案。從人類動作到機器人實際執行，GMR 只做了前 20%（retargeting），後面 80%（RL 訓練 + sim-to-real + 部署）才是真正的成本所在。</p>
+<p><strong>核心判斷：</strong>適合有 RL/simulation 團隊的研究機構或機器人公司；不適合沒有技術團隊的通路商直接導入。</p>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="card-grid">
+  <div class="stat-card">
+    <div class="num">17</div>
+    <div class="label">支援機器人種類</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">&lt;10ms</div>
+    <div class="label">CPU 即時推論</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:var(--yellow)">~50%</div>
+    <div class="label">首次 sim-to-real 成功率</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">NT$80萬</div>
+    <div class="label">最低起步成本</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:var(--red)">6-12月</div>
+    <div class="label">ML 工程師上手時間</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:var(--green)">MIT</div>
+    <div class="label">開源授權（可商用）</div>
+  </div>
+</div>
+
+<!-- ===== ARCHITECTURE ===== -->
+<h2>🏗️ 技術架構</h2>
+
+<div class="flow-box">
+<span class="flow-step">📹 人類動作輸入</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">🔍 非均勻局部縮放<br>(Non-uniform Local Scaling)</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">⚙️ 兩階段 IK 優化<br>(Coarse → Fine)</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">🦿 機器人關節軌跡</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">🧠 TWIST RL 訓練<br>(Teacher-Student)</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">🤖 實體機器人部署</span>
+</div>
+
+<p><strong>GMR 本體只負責前 3 步</strong>（縮放 + IK + 輸出軌跡）。要讓機器人真正動起來，還需要後面的 RL 訓練（TWIST）和實體部署。</p>
+
+<h3>核心技術亮點</h3>
+<div class="pros">
+<ul>
+<li><strong>非均勻局部縮放</strong>：逐段骨骼獨立縮放，避免等比縮放造成的足部滑動和穿模（PHC/ProtoMotions 的主要問題）</li>
+<li><strong>兩階段優化</strong>：第一階段粗解全身位置，第二階段 Mink 庫精調關節誤差最小化</li>
+<li><strong>速度限制約束</strong>：預設啟用 velocity limits (3π rad/s)，防止超出機器人物理極限</li>
+<li><strong>CPU 即時</strong>：不需 GPU，單核 <10ms，適合即時遙操作場景</li>
+<li><strong>多格式支援</strong>：SMPLX / BVH / FBX / PICO / 單目視頻（GVHMR pipeline）</li>
+</ul>
+</div>
+
+<!-- ===== SUPPORTED ROBOTS ===== -->
+<h2>🦾 支援機器人一覽</h2>
+<div class="card">
+<table>
+<tr><th>機器人</th><th>DOF</th><th>SMPLX</th><th>BVH</th><th>FBX</th><th>實體驗證</th></tr>
+<tr><td>Unitree G1</td><td>29</td><td>✅</td><td>✅</td><td>✅</td><td><span class="tag tag-high">✅ 已驗證</span></td></tr>
+<tr><td>Unitree G1 + Hands</td><td>43</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️ 部分</td></tr>
+<tr><td>Unitree H1</td><td>19</td><td>✅</td><td>TBD</td><td>TBD</td><td>❌ 僅仿真</td></tr>
+<tr><td>Unitree H1-2</td><td>27</td><td>✅</td><td>TBD</td><td>TBD</td><td>❌ 僅仿真</td></tr>
+<tr><td>Booster T1 / K1</td><td>22-29</td><td>✅</td><td>✅</td><td>✅</td><td>❌ 僅仿真</td></tr>
+<tr><td>Fourier GR3</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>❌ 僅仿真</td></tr>
+<tr><td>PAL Talos</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>❌ 僅仿真</td></tr>
+<tr><td colspan="6" style="text-align:center;color:#8b949e;">另有 Stanford ToddlerBot, HighTorque Hi, Galaxea R1 Pro, Kuavo, ENGINEAI PM01, PND Adam Lite, Tienkung, Berkeley Humanoid Lite 等</td></tr>
+</table>
+<p style="color:#8b949e;font-size:0.85em;">⚠️ 17 種機器人中，僅 Unitree G1 有完整實體驗證。其餘均僅在 MuJoCo 仿真環境中測試。</p>
+</div>
+
+<!-- ===== CRITICAL ANALYSIS ===== -->
+<h2>⚠️ 關鍵缺陷與風險（三模型交叉驗證）</h2>
+<p>以下問題由 Grok-4（運動學專家）、GPT-4o-mini（ML 工程師）、GLM-5（企業顧問）三個獨立模型分別分析後交叉比對，標記共識度。</p>
+
+<div class="card">
+<table>
+<tr><th style="width:30%">問題</th><th style="width:8%">嚴重度</th><th style="width:8%">共識</th><th>詳細說明</th></tr>
+
+<tr>
+<td><strong>Sim-to-Real Gap 嚴重</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">3/3</span></td>
+<td>17 種機器人僅 Unitree G1 有實體驗證。仿真忽略摩擦係數變化、感測器噪聲、馬達延遲。真機 tracking error 常比仿真放大 <strong>1.5-3 倍</strong>。首次上機成功率可能僅 20-50%。</td>
+</tr>
+
+<tr>
+<td><strong>不處理物體互動</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">3/3</span></td>
+<td>GMR 只做無接觸動作的 retargeting。抓取、避障、工具使用完全不在 scope 內。工業場景需要額外的 MPC/RRT* 規劃器，會破壞 <10ms 即時性。</td>
+</tr>
+
+<tr>
+<td><strong>手部操作極度有限</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">3/3</span></td>
+<td>僅 G1+Hands 支援手部（43 DOF），但 retargeting 品質粗糙。無法做精細操作（捏取、工具握持）。工業場景的靈巧手需求完全無法滿足。</td>
+</tr>
+
+<tr>
+<td><strong>Actuator Dynamics Mismatch</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">2/3</span></td>
+<td>GMR 輸出的是理想關節軌跡，忽略馬達扭矩限制、齒輪間隙、死區、熱衰減。仿真能追的軌跡，真機 controller 未必追得到。Hip/Knee/Ankle torque margin 不足時動作會變形。</td>
+</tr>
+
+<tr>
+<td><strong>需完整 URDF 模型</strong></td>
+<td><span class="tag tag-mid">中</span></td>
+<td><span class="tag tag-high">3/3</span></td>
+<td>每種新機器人需自建 URDF/MJCF，包含 link inertia、joint axis、collision geometry、actuator spec。很多商用機器人 CAD 不完整，inertia/friction 參數缺失。自動 URDF 生成工具精度不足。</td>
+</tr>
+
+<tr>
+<td><strong>兩階段 IK 局部最優問題</strong></td>
+<td><span class="tag tag-mid">中</span></td>
+<td><span class="tag tag-high">2/3</span></td>
+<td>Hessian 分析（NMR 論文 arxiv 2603.22201）證明此類優化本質非凸。複雜姿勢（蹲起+轉身）容易卡在局部最優，產生關節跳動、自穿模。GMR 的兩階段策略緩解但未根本解決。</td>
+</tr>
+
+<tr>
+<td><strong>RL 訓練成本與不穩定性</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">3/3</span></td>
+<td>TWIST 訓練需要 RTX 4090 跑 1-2 天（理想值）。實際 debug 週期常是 3-10 次實驗，一輪更新 1-3 週。每個新動作需要 fine-tune policy，複雜動作可能需要 1-4 週。RL 策略抖動大，retargeting 輸入變異被放大。</td>
+</tr>
+
+<tr>
+<td><strong>單人維護風險</strong></td>
+<td><span class="tag tag-mid">中</span></td>
+<td><span class="tag tag-high">2/3</span></td>
+<td>GMR + TWIST 主要由 Yanjie Ze（Stanford 博士生）一人維護。GitHub commits 少，社群貢獻薄弱。若主要作者畢業或轉向，專案可能停滯。</td>
+</tr>
+
+<tr>
+<td><strong>延遲敏感度</strong></td>
+<td><span class="tag tag-high">高</span></td>
+<td><span class="tag tag-high">2/3</span></td>
+<td>即時遙操作場景下，end-to-end latency 超過 15-30ms 動態動作就開始不穩。control loop 從仿真理想 500-1000Hz 降到真機有效 200-400Hz。balance-critical motion 額外 10ms latency 就可能大幅降低成功率。</td>
+</tr>
+
+<tr>
+<td><strong>非均勻縮放忽略生物力學</strong></td>
+<td><span class="tag tag-mid">中</span></td>
+<td><span class="tag tag-high">2/3</span></td>
+<td>純幾何縮放不考慮質量分布、慣量變化。某些 retargeted motion 在動力學上不可執行，需要額外 motion editing / stabilization pass。長期跑可能造成關節過載，損壞硬體。</td>
+</tr>
+</table>
+</div>
+
+<!-- ===== COMPETITOR COMPARISON ===== -->
+<h2>⚔️ 競品比較</h2>
+<div class="card">
+<table>
+<tr>
+<th></th>
+<th style="background:#1a3a5c">GMR<br>(Stanford)</th>
+<th>PHC<br>(ETH Zürich)</th>
+<th>ProtoMotions</th>
+<th>NMR<br>(Nanjing Univ.)</th>
+<th>H2O/OmniH2O<br>(CMU)</th>
+<th>Unitree<br>(閉源)</th>
+</tr>
+<tr>
+<td><strong>授權</strong></td>
+<td><span class="badge badge-green">MIT ✅</span></td>
+<td><span class="badge badge-green">BSD ✅</span></td>
+<td><span class="badge badge-green">MIT ✅</span></td>
+<td>—</td>
+<td><span class="badge badge-red">CC BY-NC ❌</span></td>
+<td><span class="badge badge-red">閉源</span></td>
+</tr>
+<tr>
+<td><strong>Retargeting 品質</strong></td>
+<td><span class="badge badge-blue">★★★★</span></td>
+<td><span class="badge badge-yellow">★★</span></td>
+<td><span class="badge badge-yellow">★★</span></td>
+<td><span class="badge badge-blue">★★★★★</span></td>
+<td><span class="badge badge-blue">★★★</span></td>
+<td><span class="badge badge-blue">★★★★★</span></td>
+</tr>
+<tr>
+<td><strong>即時性</strong></td>
+<td>&lt;10ms CPU</td>
+<td>~50ms</td>
+<td>~50ms</td>
+<td>需 GPU</td>
+<td>需 GPU</td>
+<td>&lt;10ms</td>
+</tr>
+<tr>
+<td><strong>支援機器人</strong></td>
+<td>17 種</td>
+<td>少數</td>
+<td>少數</td>
+<td>Unitree G1</td>
+<td>Unitree G1</td>
+<td>僅 Unitree</td>
+</tr>
+<tr>
+<td><strong>實體驗證</strong></td>
+<td>Unitree G1</td>
+<td>有限</td>
+<td>有限</td>
+<td>Unitree G1</td>
+<td>Unitree G1</td>
+<td>完整</td>
+</tr>
+<tr>
+<td><strong>關節跳動</strong></td>
+<td>偶發</td>
+<td>嚴重</td>
+<td>嚴重</td>
+<td>幾乎消除</td>
+<td>偶發</td>
+<td>最少</td>
+</tr>
+<tr>
+<td><strong>自穿模</strong></td>
+<td>少</td>
+<td>多</td>
+<td>多</td>
+<td>最少</td>
+<td>少</td>
+<td>最少</td>
+</tr>
+<tr>
+<td><strong>商用可行性</strong></td>
+<td>✅ 可商用</td>
+<td>✅</td>
+<td>✅</td>
+<td>⚠️ 待確認</td>
+<td>❌ 禁止商用</td>
+<td>✅ 買機器人附</td>
+</tr>
+<tr>
+<td><strong>技術路線</strong></td>
+<td>幾何 IK 優化</td>
+<td>幾何 IK</td>
+<td>幾何 IK</td>
+<td>神經網路 + RL</td>
+<td>RL + 學習</td>
+<td>閉源</td>
+</tr>
+</table>
+</div>
+
+<h3>關鍵發現：NMR (arxiv 2603.22201)</h3>
+<div class="card">
+<p>2026 年最新的 <strong>Neural Motion Retargeting</strong> 論文直接引用 GMR 作為 baseline 並指出其局限：</p>
+<ul>
+<li>🎯 通過 Hessian 分析證明 GMR 類 IK 優化<strong>本質非凸</strong>，容易陷入局部最優</li>
+<li>🎯 提出 VAE 聚類 + RL expert 修正 + CNN-Transformer 架構，消除關節跳動</li>
+<li>🎯 在武術、舞蹈等動態任務上，NMR 顯著減少自穿模</li>
+<li>⚠️ 但 NMR 需要 GPU 推論，不支援 CPU 即時，且僅驗證 Unitree G1</li>
+</ul>
+<p style="color:var(--yellow);"><strong>結論：GMR 在幾何優化路線中是最佳選擇，但神經網路路線（NMR）正在追趕甚至超越。</strong></p>
+</div>
+
+<!-- ===== BUDGET ===== -->
+<h2>💰 資源與預算估算</h2>
+
+<h3>方案 A：研究驗證（最低可起步）</h3>
+<div class="card">
+<table>
+<tr><th>項目</th><th>成本 (NTD)</th><th>說明</th></tr>
+<tr><td>工作站 (i9 + RTX 4090 + 128GB)</td><td>150,000</td><td>RL 訓練必需</td></tr>
+<tr><td>儲存/NAS</td><td>20,000</td><td>數據集 + 備份</td></tr>
+<tr><td>iPhone / 高幀率相機 x2</td><td>40,000</td><td>最低成本動作採集</td></tr>
+<tr><td>安全設備（吊掛 + 軟墊）</td><td>80,000</td><td>真機測試必備</td></tr>
+<tr><td>Unitree G1 EDU</td><td>450,000</td><td>最便宜的人形平台</td></tr>
+<tr><td>整合測試人力（3 個月）</td><td>300,000</td><td>外包或聘 1 人</td></tr>
+<tr style="background:rgba(88,166,255,0.1)"><td><strong>總計</strong></td><td><strong>~NT$104 萬</strong></td><td>僅能做 demo</td></tr>
+</table>
+</div>
+
+<h3>方案 B：工程化配置（可接商業訂單）</h3>
+<div class="card">
+<table>
+<tr><th>項目</th><th>成本 (NTD)</th><th>說明</th></tr>
+<tr><td>高階工作站 + 儲存</td><td>250,000</td><td>RAM 256GB + 2TB SSD</td></tr>
+<tr><td>中階動捕（Rokoko / Perception Neuron）</td><td>200,000</td><td>比光學便宜很多</td></tr>
+<tr><td>安全設備 + 量測儀器</td><td>200,000</td><td>吊掛 + 熱像儀 + 電源分析</td></tr>
+<tr><td>人形機器人平台</td><td>1,500,000</td><td>含備品</td></tr>
+<tr><td>RL 工程師 x2（年薪）</td><td>3,600,000</td><td>需 Isaac Gym 經驗</td></tr>
+<tr><td>機器人控制工程師 x1</td><td>1,500,000</td><td>ROS2 + SDK</td></tr>
+<tr style="background:rgba(88,166,255,0.1)"><td><strong>總計（2 年）</strong></td><td><strong>~NT$725 萬</strong></td><td>可接商業訂單</td></tr>
+</table>
+</div>
+
+<h3>方案 C：產品化驗證</h3>
+<div class="card">
+<table>
+<tr><th>項目</th><th>成本 (NTD)</th></tr>
+<tr><td>方案 B + GPU 叢集 (4x A100)</td><td>+ 2,400,000</td></tr>
+<tr><td>光學動捕系統 (OptiTrack/Vicon 小型)</td><td>+ 1,500,000</td></tr>
+<tr><td>辦公室 + 電費（2 年）</td><td>+ 600,000</td></tr>
+<tr style="background:rgba(248,81,73,0.1)"><td><strong>總計</strong></td><td><strong>NT$1,175 萬+</strong></td></tr>
+</table>
+</div>
+
+<!-- ===== TIMELINE ===== -->
+<h2>📅 分階段時程預估</h2>
+<div class="card">
+<div class="tl">
+  <div class="tl-item active">
+    <div class="phase">Phase 0：環境建置與驗證</div>
+    <div class="time">⏱ 2-4 週 | 💰 NT$20 萬（不含機器人）</div>
+    <ul>
+      <li>架設工作站 + 安裝 GMR/TWIST/MuJoCo</li>
+      <li>用開源 SMPLX 數據（AMASS/LAFAN1）跑通仿真 pipeline</li>
+      <li>✅ 交付：仿真中看到 retargeted 動作播放</li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <div class="phase">Phase 1：單一動作實機驗證</div>
+    <div class="time">⏱ 2-3 個月 | 💰 NT$80 萬（含機器人 + 安全設備）</div>
+    <ul>
+      <li>購入 Unitree G1 EDU</li>
+      <li>使用 GVHMR + 單目攝影機做動作採集</li>
+      <li>訓練第一個 RL policy（Teacher-Student）</li>
+      <li>sim-to-sim → sim-to-real 驗證一個簡單動作（如走路）</li>
+      <li>✅ 交付：1 個實機 demo 影片</li>
+      <li>⚠️ 成功率預估：50-60%</li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <div class="phase">Phase 2：多動作 + 即時遙操作</div>
+    <div class="time">⏱ 3-6 個月 | 💰 NT$50 萬（中階動捕設備）</div>
+    <ul>
+      <li>擴充動作庫（10-50 個動作 clip）</li>
+      <li>建立即時遙操作 pipeline（MoCap → GMR → TWIST → 機器人）</li>
+      <li>domain randomization + 系統參數辨識</li>
+      <li>✅ 交付：即時遙操作 demo（人動 → 機器人跟動）</li>
+      <li>⚠️ latency 須控制在 30ms 以內</li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <div class="phase">Phase 3：多機器人移植</div>
+    <div class="time">⏱ 3-6 個月 | 💰 NT$150-300 萬（新機器人平台）</div>
+    <ul>
+      <li>移植到非 Unitree 機器人（需重建 URDF + control stack）</li>
+      <li>每個新機器人需要 system identification + PD gain 調校</li>
+      <li>類似架構機器人：4-12 週 | 異構平台：2-6 個月</li>
+      <li>✅ 交付：2+ 種機器人的實機驗證</li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <div class="phase">Phase 4：產品化 / 服務化</div>
+    <div class="time">⏱ 6-12 個月 | 💰 NT$300-500 萬</div>
+    <ul>
+      <li>建立「動作採集服務」流程（客戶影片 → 機器人 policy）</li>
+      <li>安全性認證（ISO 10218 / fall recovery）</li>
+      <li>客戶端 API / Web 介面</li>
+      <li>✅ 交付：可接商業訂單的服務平台</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ===== VISUAL: Cost Breakdown Chart ===== -->
+<h2>📊 成本結構視覺化</h2>
+<div class="card">
+<h3>方案 A vs B vs C 成本比較</h3>
+<div style="margin-bottom:8px;color:#8b949e;font-size:0.85em">方案 A：研究驗證</div>
+<div class="chart-bar" style="width:8.7%;background:var(--accent)">104 萬</div>
+
+<div style="margin-bottom:8px;color:#8b949e;font-size:0.85em">方案 B：工程化</div>
+<div class="chart-bar" style="width:60%;background:var(--yellow)">725 萬（2 年）</div>
+
+<div style="margin-bottom:8px;color:#8b949e;font-size:0.85em">方案 C：產品化</div>
+<div class="chart-bar" style="width:98%;background:var(--red)">1,175 萬+（2 年）</div>
+
+<h3 style="margin-top:20px">成本分布（方案 B）</h3>
+<div style="margin-bottom:4px;color:#8b949e;font-size:0.85em">人力 70%</div>
+<div class="chart-bar" style="width:70%;background:var(--purple)">510 萬 — RL + 控制工程師</div>
+<div style="margin-bottom:4px;color:#8b949e;font-size:0.85em">機器人硬體 21%</div>
+<div class="chart-bar" style="width:21%;background:var(--orange)">150 萬 — 人形平台 + 備品</div>
+<div style="margin-bottom:4px;color:#8b949e;font-size:0.85em">基礎設施 9%</div>
+<div class="chart-bar" style="width:9%;background:var(--accent)">65 萬 — 工作站 + 動捕 + 安全</div>
+</div>
+
+<!-- ===== INDUSTRIAL DEPLOYMENT ===== -->
+<h2>🏭 工業場景部署可行性</h2>
+<div class="card">
+<h3>工廠產線 — 可行性：❌ 極低</h3>
+<table>
+<tr><th>需求</th><th>GMR 能力</th><th>差距</th></tr>
+<tr><td>安全認證 (ISO 10218)</td><td>❌ 無</td><td>需額外開發安全冗餘系統</td></tr>
+<tr><td>物體互動（抓取、放置）</td><td>❌ 無</td><td>GMR 不處理接觸</td></tr>
+<tr><td>重複精度 (&lt;1mm)</td><td>⚠️ 追蹤誤差 5-15°</td><td>RL policy 精度不夠</td></tr>
+<tr><td>故障恢復</td><td>❌ 無</td><td>跌倒後無自動恢復機制</td></tr>
+<tr><td>7x24 穩定運行</td><td>❌ 未驗證</td><td>長時間運行的穩定性未知</td></tr>
+</table>
+
+<h3>展示 / 行銷用途 — 可行性：✅ 適合</h3>
+<ul>
+<li>✅ 客戶展示「人形機器人模仿人類動作」的 demo</li>
+<li>✅ 展場、技術發表會的吸睛演示</li>
+<li>✅ 教育/培訓用途</li>
+</ul>
+
+<h3>研發 / 技術積累 — 可行性：⚠️ 有條件適合</h3>
+<ul>
+<li>✅ 學習 RL + sim-to-real 的完整 pipeline</li>
+<li>✅ 建立團隊技術能力</li>
+<li>⚠️ 需至少 2-3 名有 robotics 背景的工程師</li>
+<li>⚠️ 預期 6-12 個月才能產出有價值成果</li>
+</ul>
+</div>
+
+<!-- ===== RECOMMENDATION ===== -->
+<h2>🎯 最終建議</h2>
+<div class="summary-box">
+<h3>如果目標是「快速展示」</h3>
+<p><strong>Phase 0 + Phase 1</strong>，投入 NT$80-100 萬，3-4 個月做出 1 個實機 demo。風險可控，失敗了就當學費。</p>
+</div>
+
+<div class="summary-box" style="border-color:var(--yellow)">
+<h3>如果目標是「建立服務能力」</h3>
+<p><strong>不建議自己搞。</strong>找技術合作夥伴（台大/清大/交大機器人實驗室），和椿負責硬體通路 + 客戶關係，學界負責技術開發。預算 NT$200-300 萬 / 年，2 年內可驗證商業模式。</p>
+</div>
+
+<div class="summary-box" style="border-color:var(--green)">
+<h3>如果目標是「了解技術趨勢」</h3>
+<p><strong>最推薦。</strong>跑通 Phase 0（2-4 週，成本接近零），了解整個 pipeline。密切關注 NMR（神經 retargeting）和 TWIST2 的進展。GMR 是過渡技術，神經網路路線才是終局。</p>
+</div>
+
+<!-- ===== REFERENCE ===== -->
+<h2>📚 參考資料</h2>
+<div class="card" style="font-size:0.85em">
+<ul>
+<li><strong>GMR</strong>: Araújo et al., "Retargeting Matters: General Motion Retargeting for Humanoid Motion Tracking", ICRA 2026. <a href="https://arxiv.org/abs/2510.02252" style="color:var(--accent)">arxiv</a> | <a href="https://github.com/YanjieZe/GMR" style="color:var(--accent)">GitHub</a></li>
+<li><strong>TWIST</strong>: Ze et al., "TWIST: Teleoperated Whole-Body Imitation System", CoRL 2025. <a href="https://arxiv.org/abs/2505.02833" style="color:var(--accent)">arxiv</a> | <a href="https://github.com/YanjieZe/TWIST" style="color:var(--accent)">GitHub</a></li>
+<li><strong>NMR</strong>: Zhao et al., "Neural Motion Retargeting for Humanoid Whole-body Control", 2026. <a href="https://arxiv.org/html/2603.22201" style="color:var(--accent)">arxiv</a></li>
+<li><strong>H2O</strong>: CMU, "Learning Human-to-Humanoid Real-Time Whole-Body Teleoperation", IROS 2024.</li>
+<li><strong>OmniH2O</strong>: CMU, "OmniH2O: Universal Dexterous Whole-Body Teleoperation", 2025.</li>
+<li><strong>OmniClone</strong>: "Engineering a Robust, All-Rounder Whole-Body Humanoid Teleoperation System", 2026. <a href="https://arxiv.org/html/2603.14327" style="color:var(--accent)">arxiv</a></li>
+</ul>
+</div>
+
+<p style="text-align:center;color:#8b949e;font-size:0.8em;margin-top:32px">
+📋 三模型交叉質疑：Grok-4 (運動學專家) + GPT-4o-mini (ML 工程師) + GLM-5 (企業顧問)<br>
+🤖 Generated by Travis | 2026-04-02
+</p>
+
+</body>
+</html>
