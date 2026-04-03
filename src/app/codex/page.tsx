@@ -378,29 +378,35 @@ function MessageBubble({ message }: { message: CodexSessionMessage }) {
 
 /* ─── Main page ─── */
 
-/* ── Composer input (memo'd to avoid re-render on liveMessages changes) ── */
-const ComposerBar = React.memo(function ComposerBar({ composer, setComposer, onSubmit, attached, resuming, sending, connectionState, selectedId, onResume }: {
-  composer: string; setComposer: (v: string) => void;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void; attached: boolean;
+/* ── Composer input (fully isolated: owns its own state, immune to parent re-renders) ── */
+const ComposerBar = React.memo(function ComposerBar({ onSend, attached, resuming, sending, connectionState, selectedId, onResume }: {
+  onSend: (text: string) => void; attached: boolean;
   resuming: boolean; sending: boolean; connectionState: string;
   selectedId: string | null; onResume: () => void;
 }) {
+  const [text, setText] = useState('')
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!text.trim()) return
+    onSend(text.trim())
+    setText('')
+  }, [text, onSend])
   return (
     <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#080b10] px-3 py-2 sm:px-6 sm:py-3 lg:static lg:z-auto">
-      <form onSubmit={onSubmit} className="flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <textarea
-          value={composer}
-          onChange={(event) => setComposer(event.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           rows={1}
           placeholder={attached ? '輸入訊息...' : '先 Resume 再傳訊'}
           className="min-h-[36px] max-h-[72px] flex-1 resize-none rounded-[18px] border border-white/10 bg-black/30 px-3 py-2 text-sm leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/40"
-          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSubmit(e as any) } }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e as any) } }}
         />
         <button type="button" onClick={onResume} disabled={!selectedId || connectionState === 'connecting' || resuming} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 text-xs font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50">
           {resuming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Server className="h-3.5 w-3.5" />}
           {attached ? '已接' : 'Resume'}
         </button>
-        <button type="submit" disabled={!composer.trim() || !selectedId || connectionState === 'connecting' || connectionState === 'disconnected' || sending} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-medium text-emerald-100 transition hover:border-emerald-300/40 hover:text-emerald-50 disabled:cursor-not-allowed disabled:opacity-50">
+        <button type="submit" disabled={!text.trim() || !selectedId || connectionState === 'connecting' || connectionState === 'disconnected' || sending} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-medium text-emerald-100 transition hover:border-emerald-300/40 hover:text-emerald-50 disabled:cursor-not-allowed disabled:opacity-50">
           {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
           Send
         </button>
@@ -425,7 +431,6 @@ export default function CodexPage() {
   const [attachedThreadId, setAttachedThreadId] = useState<string | null>(null)
   const [resuming, setResuming] = useState(false)
   const [sending, setSending] = useState(false)
-  const [composer, setComposer] = useState('')
   const [liveMessages, setLiveMessages] = useState<CodexSessionMessage[]>([])
   const [runtimeInfo, setRuntimeInfo] = useState<CodexRuntimeInfo | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -715,15 +720,13 @@ export default function CodexPage() {
     } finally { setResuming(false) }
   }, [selectedId, connectionState, runtimeInfo?.mode, attachedThreadId])
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const prompt = composer.trim()
+  const handleSend = useCallback(async (prompt: string) => {
     if (!prompt) return
     if (!selectedId) { setConnectionError('目前沒有可接手的 session'); return }
     if (attachedThreadId !== selectedId) await resumeSelectedSession()
     if (attachedThreadIdRef.current !== selectedId) { setConnectionError('尚未附著到選定的 session'); return }
 
-    setComposer(''); setSending(true); setConnectionError(null)
+    setSending(true); setConnectionError(null)
     setLiveMessages([
       { id: `user:${Date.now()}`, role: 'user', kind: 'live-user', text: prompt, timestamp: new Date().toISOString() },
       { id: 'assistant:pending', role: 'assistant', kind: 'stream', text: '', timestamp: new Date().toISOString(), streaming: true },
@@ -747,7 +750,7 @@ export default function CodexPage() {
         )
       )
     }
-  }, [composer, selectedId, attachedThreadId, runtimeInfo?.mode])
+  }, [selectedId, attachedThreadId, runtimeInfo?.mode])
 
   const filteredSessions = useMemo(() => {
     const keyword = query.trim().toLowerCase()
@@ -938,7 +941,7 @@ export default function CodexPage() {
             )}
           </div>
 
-              <ComposerBar composer={composer} setComposer={setComposer} onSubmit={handleSubmit} attached={!!attachedToSelected} resuming={resuming} sending={sending} connectionState={connectionState} selectedId={selectedId} onResume={resumeSelectedSession} />
+              <ComposerBar onSend={handleSend} attached={!!attachedToSelected} resuming={resuming} sending={sending} connectionState={connectionState} selectedId={selectedId} onResume={resumeSelectedSession} />
         </main>
       </div>
 
