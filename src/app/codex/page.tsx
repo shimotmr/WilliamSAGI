@@ -699,7 +699,7 @@ export default function CodexPage() {
     connectPromiseRef.current = null; setConnectionState('disconnected'); setAttachedThreadId(null); setSending(false); activeTurnIdRef.current = null
   }
 
-  async function resumeSelectedSession() {
+  const resumeSelectedSession = useCallback(async () => {
     if (!selectedId) return
     if (connectionState === 'disconnected' || connectionState === 'error') await connectToAppServer()
     setResuming(true); setConnectionError(null)
@@ -713,9 +713,9 @@ export default function CodexPage() {
     } catch (resumeError) {
       setConnectionError(resumeError instanceof Error ? resumeError.message : '接手 session 失敗')
     } finally { setResuming(false) }
-  }
+  }, [selectedId, connectionState, runtimeInfo?.mode, attachedThreadId])
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const prompt = composer.trim()
     if (!prompt) return
@@ -747,7 +747,7 @@ export default function CodexPage() {
         )
       )
     }
-  }
+  }, [composer, selectedId, attachedThreadId, runtimeInfo?.mode])
 
   const filteredSessions = useMemo(() => {
     const keyword = query.trim().toLowerCase()
