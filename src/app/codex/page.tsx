@@ -400,7 +400,7 @@ const ComposerBar = React.memo(function ComposerBar({ onSend, attached, resuming
           rows={1}
           placeholder={attached ? '輸入訊息...' : '先 Resume 再傳訊'}
           className="min-h-[36px] max-h-[72px] flex-1 resize-none rounded-[18px] border border-white/10 bg-black/30 px-3 py-2 text-sm leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/40"
-          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e as any) } }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); (e.target as HTMLTextAreaElement).form?.requestSubmit() } }}
         />
         <button type="button" onClick={onResume} disabled={!selectedId || connectionState === 'connecting' || resuming} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 text-xs font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50">
           {resuming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Server className="h-3.5 w-3.5" />}
