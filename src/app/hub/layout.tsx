@@ -98,6 +98,7 @@ const navGroups: NavGroup[] = [
       { href: '/hub/v4-5', icon: GitFork, label: 'V4.5 工作流' },
       { href: '/audit/v45', icon: Shield, label: 'V4.5 審計報告' },
       { href: '/hub/local-models', icon: Cpu, label: '本地模型' },
+      { href: '/hub/local-model-lab', icon: FlaskConical, label: '本地實驗室' },
       { href: '/hub/ocr', icon: ScanText, label: 'OCR 解析' },
       { href: '/hub/chat', icon: MessageSquare, label: '本地 Chat' },
       { href: '/hub/rag-testing', icon: FlaskConical, label: 'RAG 測試' },

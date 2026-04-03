@@ -7,6 +7,7 @@ import {
   ArrowUpCircle,
   BadgeCheck,
   Bot,
+  CheckSquare,
   ChevronDown,
   ChevronUp,
   Cpu,
@@ -18,10 +19,13 @@ import {
   RefreshCw,
   ShieldAlert,
   Sparkles,
+  Square,
   Wrench,
+  X,
 } from 'lucide-react';
 
 type CategoryKey = 'overview' | 'model' | 'tool' | 'package' | 'skill' | 'extension' | 'frontend' | 'api';
+type UpgradeActionMode = 'followup' | 'smoke';
 
 type Recommendation = {
   action: string;
@@ -72,6 +76,10 @@ type UpgradeItem = {
   macosFit: string[];
   featureSuggestions: string[];
   summary: string;
+  detailSummary?: string;
+  releaseHighlights?: string[];
+  systemBenefits?: string[];
+  evaluationNotes?: string[];
   installedStatus: string;
   externalRiskHits?: ExternalRiskHit[];
   priority?: {
@@ -87,6 +95,13 @@ type AgentRecommendation = {
   primary: string | null;
   fallbacks: string[];
   notes: string[];
+};
+
+type RefreshPayload = {
+  ok: boolean;
+  error?: string;
+  before?: { generatedAt?: string | null; totalTargets?: number };
+  after?: { generatedAt?: string | null; totalTargets?: number };
 };
 
 type UpgradeDataset = {
@@ -118,6 +133,57 @@ type ActionState = {
   tone: 'success' | 'error' | 'info' | null;
 };
 
+type UpgradeTaskState = {
+  id: number;
+  title: string;
+  status: string;
+  assignee?: string | null;
+  priority?: string | null;
+  created_at?: string | null;
+};
+
+type UpgradeActionStatesPayload = {
+  ok: boolean;
+  error?: string;
+  states?: Record<string, { followup: UpgradeTaskState | null; smoke: UpgradeTaskState | null }>;
+  history?: UpgradeActionHistoryEntry[];
+};
+
+type UpgradeActionHistoryEntry = {
+  taskId: number;
+  itemId: string;
+  itemName: string;
+  action: UpgradeActionMode;
+  title: string;
+  status: string;
+  assignee?: string | null;
+  priority?: string | null;
+  createdAt?: string | null;
+};
+
+type BatchActionResponse = {
+  ok: boolean;
+  error?: string;
+  action?: UpgradeActionMode;
+  createdCount?: number;
+  duplicateCount?: number;
+  failedCount?: number;
+  results?: Array<{
+    ok: boolean;
+    duplicate?: boolean;
+    itemId: string;
+    itemName?: string;
+    action: UpgradeActionMode;
+    taskId?: number;
+    title?: string;
+    status?: string;
+    assignee?: string | null;
+    priority?: string | null;
+    createdAt?: string | null;
+    error?: string;
+  }>;
+};
+
 const tabs: { key: CategoryKey; label: string; icon: typeof Filter }[] = [
   { key: 'overview', label: '總覽', icon: Filter },
   { key: 'model', label: '模型', icon: Cpu },
@@ -137,6 +203,158 @@ const recommendationClass: Record<string, string> = {
   安全疑慮: 'border-red-400/30 bg-red-400/10 text-red-300',
   手動檢查: 'border-white/20 bg-white/10 text-gray-200',
 };
+
+function toneClass(tone: ActionState['tone']) {
+  if (tone === 'success') return 'text-emerald-300';
+  if (tone === 'error') return 'text-red-300';
+  return 'text-gray-400';
+}
+
+function formatTime(value?: string | null) {
+  if (!value) return '未知時間';
+  return new Date(value).toLocaleString('zh-TW', { hour12: false });
+}
+
+function buildActionMessage(
+  payload: {
+    duplicate?: boolean;
+    taskId?: number;
+    title?: string;
+    assignee?: string | null;
+    priority?: string | null;
+  },
+  action: UpgradeActionMode
+) {
+  if (payload.duplicate) {
+    return `已存在${action === 'smoke' ? ' Smoke' : ''}任務 #${payload.taskId}：${payload.title}`;
+  }
+  return `已建立${action === 'smoke' ? ' Smoke' : ''}任務 #${payload.taskId}（${payload.assignee} / ${payload.priority}）`;
+}
+
+function actionLabel(action: UpgradeActionMode) {
+  return action === 'smoke' ? 'Smoke 卡' : '追蹤卡';
+}
+
+function StatusBadge({
+  label,
+  tone = 'neutral',
+}: {
+  label: string;
+  tone?: 'neutral' | 'blue' | 'emerald';
+}) {
+  const className =
+    tone === 'blue'
+      ? 'border-blue-400/30 bg-blue-400/10 text-blue-200'
+      : tone === 'emerald'
+        ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200'
+        : 'border-white/10 bg-white/5 text-gray-300';
+
+  return <span className={`inline-flex rounded-full border px-2 py-1 text-[11px] ${className}`}>{label}</span>;
+}
+
+function DetailDrawer({
+  item,
+  onClose,
+}: {
+  item: UpgradeItem | null;
+  onClose: () => void;
+}) {
+  if (!item) return null;
+
+  const sections = [
+    { title: '更新重點', items: item.releaseHighlights || [] },
+    { title: '對我們系統的好處', items: item.systemBenefits || [] },
+    { title: '導入評估 / 注意事項', items: item.evaluationNotes || [] },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
+      <button type="button" className="flex-1 cursor-default" onClick={onClose} aria-label="關閉詳情面板" />
+      <div className="h-full w-full max-w-2xl overflow-y-auto border-l border-white/10 bg-[#090B10] p-6 shadow-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-xs uppercase tracking-[0.2em] text-gray-500">Upgrade Detail</div>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <h2 className="text-2xl font-semibold text-white">{item.name}</h2>
+              <Badge label={item.recommendation.label} />
+              <StatusBadge label={item.subcategory} />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-gray-300">{item.detailSummary || item.summary}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-2xl border border-white/10 bg-white/5 p-2 text-gray-300 transition hover:bg-white/10 hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs text-gray-500">版本</div>
+            <div className="mt-2 text-sm text-white">
+              {(item.currentVersion || '—') + ' → ' + (item.latestVersion || '—')}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs text-gray-500">OpenClaw 支援</div>
+            <div className="mt-2 text-sm text-white">{item.support.level}</div>
+            <div className="mt-1 text-xs text-gray-400">{item.support.note}</div>
+          </div>
+        </div>
+
+        <div className="mt-6 space-y-4">
+          {sections.map((section) => (
+            <div key={section.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-sm font-semibold text-white">{section.title}</div>
+              {section.items.length === 0 ? (
+                <div className="mt-3 text-sm text-gray-500">這個項目目前還沒有足夠自動摘要，建議搭配官方 release notes 一起看。</div>
+              ) : (
+                <ul className="mt-3 space-y-2 text-sm text-gray-300">
+                  {section.items.map((entry) => (
+                    <li key={entry}>- {entry}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="text-sm font-semibold text-white">既有建議</div>
+            <ul className="mt-3 space-y-2 text-sm text-gray-300">
+              {item.nextActions?.map((entry) => <li key={entry}>- {entry}</li>)}
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="text-sm font-semibold text-white">風險訊號</div>
+            {item.risk.negativeSignals.length === 0 ? (
+              <div className="mt-3 text-sm text-gray-500">目前沒有額外負面訊號。</div>
+            ) : (
+              <ul className="mt-3 space-y-2 text-sm text-gray-300">
+                {item.risk.negativeSignals.map((entry) => <li key={entry}>- {entry}</li>)}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {item.sourceUrl && (
+          <a
+            href={item.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-200 transition hover:bg-cyan-400/15"
+          >
+            查看官方來源 / changelog
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function StatCard({
   icon: Icon,
@@ -173,12 +391,26 @@ function RiskPill({ risk }: { risk: ItemRisk }) {
   return <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 text-[11px] text-emerald-300"><BadgeCheck className="h-3 w-3" />清晰</span>;
 }
 
-function ItemCard({ item }: { item: UpgradeItem }) {
+function ItemCard({
+  item,
+  selected,
+  taskState,
+  onToggleSelect,
+  onActionComplete,
+  onOpenDetail,
+}: {
+  item: UpgradeItem;
+  selected: boolean;
+  taskState?: { followup: UpgradeTaskState | null; smoke: UpgradeTaskState | null };
+  onToggleSelect: (itemId: string) => void;
+  onActionComplete: (itemId: string, action: UpgradeActionMode) => Promise<void>;
+  onOpenDetail: (item: UpgradeItem) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [actionState, setActionState] = useState<ActionState>({ loading: false, message: null, tone: null });
   const versionLine = [item.currentVersion || '—', item.latestVersion || '—'].join(' → ');
 
-  async function triggerAction(action: 'followup' | 'smoke') {
+  async function triggerAction(action: UpgradeActionMode) {
     try {
       setActionState({ loading: true, message: null, tone: null });
       const response = await fetch('/api/hub/upgrade-actions', {
@@ -190,18 +422,11 @@ function ItemCard({ item }: { item: UpgradeItem }) {
       if (!response.ok || !payload?.ok) {
         throw new Error(payload?.error || `HTTP ${response.status}`);
       }
-      if (payload.duplicate) {
-        setActionState({
-          loading: false,
-          message: `已存在任務 #${payload.taskId}：${payload.title}`,
-          tone: 'info',
-        });
-        return;
-      }
+      await onActionComplete(item.id, action);
       setActionState({
         loading: false,
-        message: `已建立 #${payload.taskId}（${payload.assignee} / ${payload.priority}）`,
-        tone: 'success',
+        message: buildActionMessage(payload, action),
+        tone: payload.duplicate ? 'info' : 'success',
       });
     } catch (error) {
       setActionState({
@@ -217,10 +442,20 @@ function ItemCard({ item }: { item: UpgradeItem }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onToggleSelect(item.id)}
+              className="inline-flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white"
+              aria-label={selected ? `取消選取 ${item.name}` : `選取 ${item.name}`}
+            >
+              {selected ? <CheckSquare className="h-4 w-4 text-cyan-300" /> : <Square className="h-4 w-4" />}
+            </button>
             <h3 className="text-sm font-semibold text-white">{item.name}</h3>
             <Badge label={item.recommendation.label} />
             <RiskPill risk={item.risk} />
             <span className="rounded-full border border-white/10 px-2 py-1 text-[11px] text-gray-400">{item.subcategory}</span>
+            {taskState?.followup && <StatusBadge label={`已建追蹤卡 #${taskState.followup.id}`} tone="blue" />}
+            {taskState?.smoke && <StatusBadge label={`已建 Smoke #${taskState.smoke.id}`} tone="emerald" />}
           </div>
           <div className="mt-2 text-xs text-gray-400">{versionLine}</div>
           <p className="mt-2 text-sm text-gray-300">{item.summary}</p>
@@ -242,6 +477,19 @@ function ItemCard({ item }: { item: UpgradeItem }) {
 
       {open && (
         <div className="mt-4 space-y-3 border-t border-white/10 pt-4">
+          <div className="flex flex-wrap gap-2">
+            {taskState?.followup && (
+              <div className="rounded-xl border border-blue-400/20 bg-blue-400/10 px-3 py-2 text-xs text-blue-100">
+                追蹤卡 #{taskState.followup.id} / {taskState.followup.status} / {taskState.followup.assignee || '未指派'}
+              </div>
+            )}
+            {taskState?.smoke && (
+              <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-xs text-emerald-100">
+                Smoke 卡 #{taskState.smoke.id} / {taskState.smoke.status} / {taskState.smoke.assignee || '未指派'}
+              </div>
+            )}
+          </div>
+
           <div>
             <div className="text-xs font-medium text-gray-400">OpenClaw 支援</div>
             <div className="mt-1 text-sm text-white">{item.support.level}</div>
@@ -333,6 +581,12 @@ function ItemCard({ item }: { item: UpgradeItem }) {
             <div className="text-xs font-medium text-gray-400">快速動作</div>
             <div className="mt-2 flex flex-wrap gap-2">
               <button
+                onClick={() => onOpenDetail(item)}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-200 transition hover:bg-white/10"
+              >
+                查看更新評估
+              </button>
+              <button
                 onClick={() => triggerAction('followup')}
                 disabled={actionState.loading}
                 className="rounded-xl border border-blue-400/20 bg-blue-400/10 px-3 py-2 text-xs text-blue-200 transition hover:bg-blue-400/15 disabled:cursor-not-allowed disabled:opacity-60"
@@ -347,19 +601,7 @@ function ItemCard({ item }: { item: UpgradeItem }) {
                 {actionState.loading ? '處理中...' : '建立 Smoke 卡'}
               </button>
             </div>
-            {actionState.message && (
-              <div
-                className={`mt-2 text-xs ${
-                  actionState.tone === 'success'
-                    ? 'text-emerald-300'
-                    : actionState.tone === 'error'
-                      ? 'text-red-300'
-                      : 'text-gray-400'
-                }`}
-              >
-                {actionState.message}
-              </div>
-            )}
+            {actionState.message && <div className={`mt-2 text-xs ${toneClass(actionState.tone)}`}>{actionState.message}</div>}
           </div>
 
           {item.sourceUrl && (
@@ -409,18 +651,47 @@ export default function UpgradeTrackerPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<CategoryKey>('overview');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
+  const [refreshTone, setRefreshTone] = useState<'success' | 'error' | 'info' | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [batchState, setBatchState] = useState<ActionState>({ loading: false, message: null, tone: null });
+  const [taskStates, setTaskStates] = useState<Record<string, { followup: UpgradeTaskState | null; smoke: UpgradeTaskState | null }>>({});
+  const [history, setHistory] = useState<UpgradeActionHistoryEntry[]>([]);
+  const [detailItem, setDetailItem] = useState<UpgradeItem | null>(null);
+
+  async function loadDataset() {
+    const response = await fetch(`/data/update-intelligence-latest.json?ts=${Date.now()}`, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return (await response.json()) as UpgradeDataset;
+  }
+
+  async function loadActionStates() {
+    const response = await fetch(`/api/hub/upgrade-actions?ts=${Date.now()}`, { cache: 'no-store' });
+    const payload = (await response.json()) as UpgradeActionStatesPayload;
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || `HTTP ${response.status}`);
+    }
+    setTaskStates(payload.states || {});
+    setHistory(payload.history || []);
+  }
+
+  async function reloadAll() {
+    const [nextData] = await Promise.all([loadDataset(), loadActionStates()]);
+    setData(nextData);
+    setError(null);
+  }
 
   useEffect(() => {
     let active = true;
     async function load() {
       try {
         setLoading(true);
-        const response = await fetch(`/data/update-intelligence-latest.json?ts=${Date.now()}`, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = (await response.json()) as UpgradeDataset;
+        const nextData = await loadDataset();
         if (!active) return;
-        setData(payload);
+        setData(nextData);
         setError(null);
+        await loadActionStates();
       } catch (loadError) {
         if (!active) return;
         setError(loadError instanceof Error ? loadError.message : '讀取失敗');
@@ -433,6 +704,91 @@ export default function UpgradeTrackerPage() {
       active = false;
     };
   }, []);
+
+  async function handleManualRefresh() {
+    try {
+      setRefreshing(true);
+      setRefreshMessage(null);
+      setRefreshTone(null);
+
+      const response = await fetch('/api/hub/upgrade-tracker-refresh', {
+        method: 'POST',
+      });
+      const payload = (await response.json()) as RefreshPayload;
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || `HTTP ${response.status}`);
+      }
+
+      await reloadAll();
+
+      const before = payload.before?.generatedAt ? formatTime(payload.before.generatedAt) : '未知';
+      const after = payload.after?.generatedAt ? formatTime(payload.after.generatedAt) : '未知';
+      const changed = payload.before?.generatedAt !== payload.after?.generatedAt;
+
+      setRefreshTone(changed ? 'success' : 'info');
+      setRefreshMessage(changed ? `已更新資料集：${before} → ${after}` : `已重新執行更新，時間仍為 ${after}`);
+    } catch (refreshError) {
+      setRefreshTone('error');
+      setRefreshMessage(refreshError instanceof Error ? refreshError.message : '手動更新失敗');
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  async function refreshActionsOnly() {
+    try {
+      await loadActionStates();
+    } catch (loadError) {
+      setBatchState({
+        loading: false,
+        message: loadError instanceof Error ? loadError.message : '無法同步任務狀態',
+        tone: 'error',
+      });
+    }
+  }
+
+  async function handleSingleActionComplete() {
+    await refreshActionsOnly();
+  }
+
+  async function handleBatchAction(action: UpgradeActionMode) {
+    if (selectedIds.length === 0) {
+      setBatchState({ loading: false, message: '請先勾選至少一個項目', tone: 'info' });
+      return;
+    }
+
+    try {
+      setBatchState({ loading: true, message: null, tone: null });
+      const response = await fetch('/api/hub/upgrade-actions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemIds: selectedIds, action }),
+      });
+      const payload = (await response.json()) as BatchActionResponse;
+      if (!response.ok) {
+        throw new Error(payload.error || `HTTP ${response.status}`);
+      }
+
+      await refreshActionsOnly();
+      const created = payload.createdCount || 0;
+      const duplicates = payload.duplicateCount || 0;
+      const failed = payload.failedCount || 0;
+      setBatchState({
+        loading: false,
+        message: `批次建立${actionLabel(action)}完成：新增 ${created}、已存在 ${duplicates}、失敗 ${failed}`,
+        tone: failed > 0 ? 'error' : created > 0 ? 'success' : 'info',
+      });
+      if (failed === 0) {
+        setSelectedIds([]);
+      }
+    } catch (error) {
+      setBatchState({
+        loading: false,
+        message: error instanceof Error ? error.message : '批次建立失敗',
+        tone: 'error',
+      });
+    }
+  }
 
   const filteredItems = useMemo(() => {
     if (!data) return [];
@@ -448,6 +804,25 @@ export default function UpgradeTrackerPage() {
     if (activeTab === 'overview') return [];
     return data.categoryTags[activeTab] || [];
   }, [activeTab, data]);
+
+  const allVisibleSelected = filteredItems.length > 0 && filteredItems.every((item) => selectedIds.includes(item.id));
+
+  function toggleSelection(itemId: string) {
+    setSelectedIds((current) =>
+      current.includes(itemId) ? current.filter((value) => value !== itemId) : [...current, itemId]
+    );
+  }
+
+  function toggleVisibleSelection() {
+    const visibleIds = filteredItems.map((item) => item.id);
+    if (visibleIds.length === 0) return;
+    setSelectedIds((current) => {
+      if (visibleIds.every((id) => current.includes(id))) {
+        return current.filter((id) => !visibleIds.includes(id));
+      }
+      return Array.from(new Set([...current, ...visibleIds]));
+    });
+  }
 
   if (loading) {
     return (
@@ -470,6 +845,7 @@ export default function UpgradeTrackerPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
+      <DetailDrawer item={detailItem} onClose={() => setDetailItem(null)} />
       <div className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(94,106,210,0.18),transparent_35%),#090B10] p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -479,10 +855,33 @@ export default function UpgradeTrackerPage() {
               不是只看最新版，而是一起看 OpenClaw 支援、供應鏈風險、功能替換潛力，以及對 Mac mini 的實際幫助。
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-300">
-            最後更新：{new Date(data.generatedAt).toLocaleString('zh-TW', { hour12: false })}
+          <div className="flex flex-col items-stretch gap-3 lg:items-end">
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-300">
+              最後更新：{formatTime(data.generatedAt)}
+            </div>
+            <button
+              onClick={handleManualRefresh}
+              disabled={refreshing}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 transition hover:border-cyan-300/40 hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? '更新中...' : '手動更新'}
+            </button>
           </div>
         </div>
+        {refreshMessage && (
+          <div
+            className={`mt-4 rounded-2xl border px-4 py-3 text-sm ${
+              refreshTone === 'success'
+                ? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-200'
+                : refreshTone === 'error'
+                  ? 'border-red-400/20 bg-red-400/10 text-red-200'
+                  : 'border-white/10 bg-white/5 text-gray-300'
+            }`}
+          >
+            {refreshMessage}
+          </div>
+        )}
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
@@ -490,6 +889,72 @@ export default function UpgradeTrackerPage() {
         <StatCard icon={ArrowUpCircle} label="建議升級" value={data.summary.recommendationCounts['建議升級'] || 0} />
         <StatCard icon={ShieldAlert} label="安全疑慮" value={data.summary.recommendationCounts['安全疑慮'] || 0} />
         <StatCard icon={RefreshCw} label="外部風險命中" value={data.externalRiskSummary?.matchedTargets || 0} />
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="text-sm font-semibold text-white">建卡狀態 / 批次操作</div>
+            <div className="mt-1 text-sm text-gray-400">
+              已選 {selectedIds.length} 項。手動更新只會刷新 dataset，不會自動替勾選項目建卡。
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={toggleVisibleSelection}
+              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-200 transition hover:bg-white/10"
+            >
+              {allVisibleSelected ? '取消本頁全選' : '全選目前列表'}
+            </button>
+            <button
+              onClick={() => setSelectedIds([])}
+              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-200 transition hover:bg-white/10"
+            >
+              清空勾選
+            </button>
+            <button
+              onClick={() => handleBatchAction('followup')}
+              disabled={batchState.loading}
+              className="rounded-2xl border border-blue-400/20 bg-blue-400/10 px-4 py-2 text-sm text-blue-200 transition hover:bg-blue-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              批次建立追蹤卡
+            </button>
+            <button
+              onClick={() => handleBatchAction('smoke')}
+              disabled={batchState.loading}
+              className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-200 transition hover:bg-emerald-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              批次建立 Smoke 卡
+            </button>
+          </div>
+        </div>
+        {batchState.message && <div className={`mt-3 text-sm ${toneClass(batchState.tone)}`}>{batchState.message}</div>}
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+        <div className="flex items-center gap-2 text-sm font-semibold text-white">
+          <Activity className="h-4 w-4" />
+          最近操作紀錄
+        </div>
+        {history.length === 0 ? (
+          <div className="mt-3 text-sm text-gray-400">目前尚無 upgrade tracker 操作紀錄。</div>
+        ) : (
+          <div className="mt-4 grid gap-3 xl:grid-cols-2">
+            {history.slice(0, 8).map((entry) => (
+              <div key={`${entry.taskId}-${entry.action}`} className="rounded-2xl border border-white/10 bg-[#0C0F16] p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="font-medium text-white">{entry.itemName}</div>
+                  <StatusBadge label={actionLabel(entry.action)} tone={entry.action === 'smoke' ? 'emerald' : 'blue'} />
+                  <StatusBadge label={`#${entry.taskId}`} />
+                </div>
+                <div className="mt-2 text-sm text-gray-300">{entry.title}</div>
+                <div className="mt-2 text-xs text-gray-500">
+                  {formatTime(entry.createdAt)} / {entry.assignee || '未指派'} / {entry.priority || '無優先級'} / {entry.status}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -634,7 +1099,15 @@ export default function UpgradeTrackerPage() {
 
           <div className="grid gap-4 xl:grid-cols-2">
             {filteredItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard
+                key={item.id}
+                item={item}
+                selected={selectedIds.includes(item.id)}
+                taskState={taskStates[item.id]}
+                onToggleSelect={toggleSelection}
+                onActionComplete={handleSingleActionComplete}
+                onOpenDetail={setDetailItem}
+              />
             ))}
           </div>
         </>

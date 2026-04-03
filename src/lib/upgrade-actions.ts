@@ -32,13 +32,36 @@ export type UpgradeTaskPayload = {
   complexity: string
 }
 
+export type UpgradeActionMode = 'followup' | 'smoke'
+
+export type UpgradeActionTaskState = {
+  id: number
+  title: string
+  status: string
+  assignee?: string | null
+  priority?: string | null
+  created_at?: string | null
+}
+
+export type UpgradeActionHistoryEntry = {
+  taskId: number
+  itemId: string
+  itemName: string
+  action: UpgradeActionMode
+  title: string
+  status: string
+  assignee?: string | null
+  priority?: string | null
+  createdAt?: string | null
+}
+
 export async function loadUpgradeDataset(): Promise<{ items: UpgradeItem[] }> {
   const filePath = path.join(process.cwd(), 'public', 'data', 'update-intelligence-latest.json')
   const raw = await fs.readFile(filePath, 'utf-8')
   return JSON.parse(raw)
 }
 
-function assigneeForItem(item: UpgradeItem, mode: 'followup' | 'smoke') {
+function assigneeForItem(item: UpgradeItem, mode: UpgradeActionMode) {
   if (mode === 'smoke') {
     if (item.category === 'model' || item.category === 'api' || item.category === 'skill') {
       return { assignee: 'rex', model: 'zai/glm-5.1', execution: 'subagent' }
@@ -52,7 +75,7 @@ function assigneeForItem(item: UpgradeItem, mode: 'followup' | 'smoke') {
   return { assignee: 'rex', model: 'zai/glm-5.1', execution: 'subagent' }
 }
 
-function priorityForItem(item: UpgradeItem, mode: 'followup' | 'smoke') {
+function priorityForItem(item: UpgradeItem, mode: UpgradeActionMode) {
   if (mode === 'smoke') return 'P2'
   if (item.recommendation.label === '安全疑慮') return 'P1'
   if (item.recommendation.label === '等待OpenClaw支援') return 'P2'
@@ -60,13 +83,13 @@ function priorityForItem(item: UpgradeItem, mode: 'followup' | 'smoke') {
   return 'P2'
 }
 
-function actionTitle(item: UpgradeItem, mode: 'followup' | 'smoke') {
+export function actionTitle(item: UpgradeItem, mode: UpgradeActionMode) {
   if (mode === 'smoke') return `[Smoke][Upgrade] ${item.name} 最小驗證`
   if (item.recommendation.label === '安全疑慮') return `[Upgrade][安全] 審查 ${item.name}`
   return `[Upgrade] 評估 / 收斂 ${item.name}`
 }
 
-export function buildUpgradeTaskPayload(item: UpgradeItem, mode: 'followup' | 'smoke'): UpgradeTaskPayload {
+export function buildUpgradeTaskPayload(item: UpgradeItem, mode: UpgradeActionMode): UpgradeTaskPayload {
   const role = assigneeForItem(item, mode)
   const priority = priorityForItem(item, mode)
   const title = actionTitle(item, mode)

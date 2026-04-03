@@ -457,6 +457,7 @@ export default function CodexPage() {
   const connectPromiseRef = useRef<Promise<void> | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const detailRefreshTimerRef = useRef<number | null>(null)
 
   async function loadSessions() {
     setLoadingList(true)
@@ -659,15 +660,27 @@ export default function CodexPage() {
     const source = new EventSource(`/api/codex/sessions/${encodeURIComponent(sessionId)}/stream`)
     streamRef.current = source
     source.addEventListener('snapshot', (event) => {
-      const payload = JSON.parse((event as MessageEvent<string>).data) as { messages?: CodexSessionMessage[] }
-      setLiveMessages(payload.messages || [])
+      try {
+        const payload = JSON.parse((event as MessageEvent<string>).data) as { messages?: CodexSessionMessage[] }
+        setLiveMessages(payload.messages || [])
+      } catch { /* ignore parse errors */ }
     })
     source.addEventListener('delta', (event) => {
-      const payload = JSON.parse((event as MessageEvent<string>).data) as { messages?: CodexSessionMessage[] }
-      if (!payload.messages?.length) return
-      setLiveMessages(payload.messages); setSending(false)
-      const currentSelectedId = selectedIdRef.current
-      if (currentSelectedId) void loadDetail(currentSelectedId)
+      try {
+        const payload = JSON.parse((event as MessageEvent<string>).data) as { messages?: CodexSessionMessage[] }
+        if (!payload.messages?.length) return
+        // Accumulate: append new messages instead of replacing
+        setLiveMessages((prev) => [...prev, ...payload.messages!])
+        setSending(false)
+        // Debounced detail refresh — avoid flooding re-renders
+        const currentSelectedId = selectedIdRef.current
+        if (currentSelectedId && !detailRefreshTimerRef.current) {
+          detailRefreshTimerRef.current = window.setTimeout(() => {
+            detailRefreshTimerRef.current = null
+            if (selectedIdRef.current) void loadDetail(selectedIdRef.current, { clearLive: true })
+          }, 2000)
+        }
+      } catch { /* ignore parse errors */ }
     })
     source.addEventListener('error', () => { setConnectionError('SSE 連線中斷，請重新 Resume。'); setConnectionState('error') })
   }
@@ -678,25 +691,31 @@ export default function CodexPage() {
     if (connectPromiseRef.current) { await connectPromiseRef.current; return }
 
     setConnectionState('connecting'); setConnectionError(null)
-    const socket = new WebSocket(APP_SERVER_URL)
-    socketRef.current = socket
-    connectPromiseRef.current = new Promise<void>((resolve, reject) => {
-      socket.onmessage = handleSocketMessage
-      socket.onerror = () => { setConnectionState('error'); setConnectionError(`無法連到 ${APP_SERVER_URL}`); connectPromiseRef.current = null; reject(new Error(`無法連到 ${APP_SERVER_URL}`)) }
-      socket.onclose = () => { socketRef.current = null; setConnectionState('disconnected'); pendingRequestsRef.current.forEach((p) => p.reject(new Error('WebSocket 已關閉'))); pendingRequestsRef.current.clear(); if (connectPromiseRef.current) connectPromiseRef.current = null }
-      socket.onopen = async () => {
-        setConnectionState('connected')
-        try {
-          await sendRpc('initialize', { protocolVersion: 2, clientInfo: { name: 'codex-web', version: 'phase-2' }, capabilities: { experimentalApi: true } }, socket)
-          await refreshRemoteThreads()
-          setConnectionState('ready'); connectPromiseRef.current = null; resolve()
-        } catch (socketError) {
-          setConnectionState('error'); setConnectionError(socketError instanceof Error ? socketError.message : '初始化 Codex app-server 失敗'); connectPromiseRef.current = null
-          reject(socketError instanceof Error ? socketError : new Error('初始化 Codex app-server 失敗'))
-        }
+    return new Promise<void>((resolve, reject) => {
+      try {
+        const socket = new WebSocket(APP_SERVER_URL)
+        socketRef.current = socket
+        connectPromiseRef.current = new Promise<void>((innerResolve, innerReject) => {
+          socket.onmessage = handleSocketMessage
+          socket.onerror = () => { setConnectionState('error'); setConnectionError(`無法連到 ${APP_SERVER_URL}`); connectPromiseRef.current = null; innerReject(new Error(`無法連到 ${APP_SERVER_URL}`)) }
+          socket.onclose = () => { socketRef.current = null; setConnectionState('disconnected'); pendingRequestsRef.current.forEach((p) => p.reject(new Error('WebSocket 已關閉'))); pendingRequestsRef.current.clear(); if (connectPromiseRef.current) connectPromiseRef.current = null }
+          socket.onopen = async () => {
+            setConnectionState('connected')
+            try {
+              await sendRpc('initialize', { protocolVersion: 2, clientInfo: { name: 'codex-web', version: 'phase-2' }, capabilities: { experimentalApi: true } }, socket)
+              await refreshRemoteThreads()
+              setConnectionState('ready'); connectPromiseRef.current = null; innerResolve()
+            } catch (socketError) {
+              setConnectionState('error'); setConnectionError(socketError instanceof Error ? socketError.message : '初始化 Codex app-server 失敗'); connectPromiseRef.current = null
+              innerReject(socketError instanceof Error ? socketError : new Error('初始化 Codex app-server 失敗'))
+            }
+          }
+        })
+        connectPromiseRef.current.then(() => resolve()).catch((e) => reject(e))
+      } catch (e) {
+        reject(e)
       }
     })
-    await connectPromiseRef.current
   }
 
   function disconnectFromAppServer() {
@@ -710,27 +729,45 @@ export default function CodexPage() {
     setResuming(true); setConnectionError(null)
     try {
       if (runtimeInfo?.mode === 'sse') {
-        subscribeToSessionStream(selectedId); setAttachedThreadId(selectedId)
+        subscribeToSessionStream(selectedId)
+        setAttachedThreadId(selectedId)
+        attachedThreadIdRef.current = selectedId  // sync ref immediately
         setRemoteThreads((current) => ({ ...current, [selectedId]: { id: selectedId, statusType: 'tailing', updatedAt: new Date().toISOString() } }))
         return
       }
-      await sendRpc('thread/resume', { threadId: selectedId }); setAttachedThreadId(selectedId); await refreshRemoteThreads()
+      await sendRpc('thread/resume', { threadId: selectedId })
+      setAttachedThreadId(selectedId)
+      attachedThreadIdRef.current = selectedId  // sync ref immediately
+      await refreshRemoteThreads()
     } catch (resumeError) {
       setConnectionError(resumeError instanceof Error ? resumeError.message : '接手 session 失敗')
     } finally { setResuming(false) }
-  }, [selectedId, connectionState, runtimeInfo?.mode, attachedThreadId])
+  }, [selectedId, connectionState, runtimeInfo?.mode])
 
   const handleSend = useCallback(async (prompt: string) => {
     if (!prompt) return
     if (!selectedId) { setConnectionError('目前沒有可接手的 session'); return }
-    if (attachedThreadId !== selectedId) await resumeSelectedSession()
-    if (attachedThreadIdRef.current !== selectedId) { setConnectionError('尚未附著到選定的 session'); return }
+
+    // Resume if needed — resumeSelectedSession now syncs ref immediately
+    if (attachedThreadIdRef.current !== selectedId) {
+      try {
+        await resumeSelectedSession()
+      } catch (e) {
+        setConnectionError(e instanceof Error ? e.message : '接手 session 失敗')
+        return
+      }
+    }
+
+    // Double-check after await
+    if (attachedThreadIdRef.current !== selectedId) {
+      setConnectionError('尚未附著到選定的 session')
+      return
+    }
 
     setSending(true); setConnectionError(null)
-    setLiveMessages([
-      { id: `user:${Date.now()}`, role: 'user', kind: 'live-user', text: prompt, timestamp: new Date().toISOString() },
-      { id: 'assistant:pending', role: 'assistant', kind: 'stream', text: '', timestamp: new Date().toISOString(), streaming: true },
-    ])
+    const userMsg: CodexSessionMessage = { id: `user:${Date.now()}`, role: 'user', kind: 'live-user', text: prompt, timestamp: new Date().toISOString() }
+    const pendingAssistant: CodexSessionMessage = { id: 'assistant:pending', role: 'assistant', kind: 'stream', text: '', timestamp: new Date().toISOString(), streaming: true }
+    setLiveMessages((prev) => [...prev, userMsg, pendingAssistant])
 
     try {
       if (runtimeInfo?.mode === 'sse') {
@@ -743,14 +780,15 @@ export default function CodexPage() {
       const turn = result.turn as { id?: string } | undefined
       if (turn?.id) activeTurnIdRef.current = turn.id
     } catch (turnError) {
-      setSending(false); setConnectionError(turnError instanceof Error ? turnError.message : '送出訊息失敗')
+      setSending(false)
+      setConnectionError(turnError instanceof Error ? turnError.message : '送出訊息失敗')
       setLiveMessages((current) =>
         current.map((message) =>
-          message.id.startsWith('assistant:') ? { ...message, text: turnError instanceof Error ? turnError.message : '送出失敗', streaming: false } : message
+          message.id === 'assistant:pending' ? { ...message, text: turnError instanceof Error ? turnError.message : '送出失敗', streaming: false } : message
         )
       )
     }
-  }, [selectedId, attachedThreadId, runtimeInfo?.mode])
+  }, [selectedId, runtimeInfo?.mode, resumeSelectedSession])
 
   const filteredSessions = useMemo(() => {
     const keyword = query.trim().toLowerCase()

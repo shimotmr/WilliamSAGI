@@ -1,11 +1,21 @@
 {
-  "generatedAt": "2026-04-01T16:17:42+08:00",
+  "generatedAt": "2026-04-03T16:03:10+08:00",
   "sources": [
     {
       "sourceId": "github-security-blog",
       "sourceName": "GitHub Security Blog",
       "status": "ok",
       "items": [
+        {
+          "title": "Securing the open source supply chain across GitHub",
+          "link": "https://github.blog/security/supply-chain-security/securing-the-open-source-supply-chain-across-github/",
+          "description": "Recent attacks on open source focus on exfiltrating secrets; here are the prevention steps you can take today, plus a look at the security capabilities GitHub is working on.   The post  Securing the open source supply chain across GitHub  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-04-02T03:20:12+08:00",
+          "riskScore": 2,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
         {
           "title": "A year of open source vulnerability trends: CVEs, advisories, and malware",
           "link": "https://github.blog/security/supply-chain-security/a-year-of-open-source-vulnerability-trends-cves-advisories-and-malware/",
@@ -85,16 +95,6 @@
           "sourceId": "github-security-blog",
           "sourceName": "GitHub Security Blog",
           "trust": "high"
-        },
-        {
-          "title": "How a top bug bounty researcher got their start in security",
-          "link": "https://github.blog/security/how-a-top-bug-bounty-researcher-got-their-start-in-security/",
-          "description": "For this year’s Cybersecurity Awareness Month, the GitHub Bug Bounty team is excited to feature another spotlight on a talented security researcher — @xiridium!   The post  How a top bug bounty researcher got their start in security  appeared first on  The GitHub Blog .",
-          "publishedAt": "2025-10-08T00:00:00+08:00",
-          "riskScore": 1,
-          "sourceId": "github-security-blog",
-          "sourceName": "GitHub Security Blog",
-          "trust": "high"
         }
       ]
     },
@@ -103,6 +103,16 @@
       "sourceName": "OpenSSF Blog",
       "status": "ok",
       "items": [
+        {
+          "title": "From AIxCC to OpenSSF: Welcoming OSS-CRS to Advance AI Driven Open Source Security",
+          "link": "https://openssf.org/blog/2026/04/02/from-aixcc-to-openssf-welcoming-oss-crs-to-advance-ai-driven-open-source-security/",
+          "description": "",
+          "publishedAt": "2026-04-02T22:45:26+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
         {
           "title": "OpenSSF Newsletter – March 2026",
           "link": "https://openssf.org/newsletter/2026/03/26/openssf-newsletter-march-2026/",
@@ -162,16 +172,6 @@
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
           "trust": "high"
-        },
-        {
-          "title": "Securing Agentic AI in Practice: From OpenSSF Guidance to Real-World Implementation",
-          "link": "https://openssf.org/blog/2026/03/13/securing-agentic-ai-in-practice-from-openssf-guidance-to-real-world-implementation/",
-          "description": "Agentic AI systems and AI-driven software workflows are evolving quickly, with more people building on top of them. With that shift comes new questions around trust, control, provenance, and secure interaction between models, tools, and users. Traditional cybersecurity models are being pushed to their limits, and the security stakes have never been higher.",
-          "publishedAt": "2026-03-14T01:02:36+08:00",
-          "riskScore": 1,
-          "sourceId": "openssf-blog",
-          "sourceName": "OpenSSF Blog",
-          "trust": "high"
         }
       ]
     },
@@ -180,6 +180,16 @@
       "sourceName": "Snyk Blog",
       "status": "ok",
       "items": [
+        {
+          "title": "Building AI Security with Our Customers: 5 Lessons from Evo’s Design Partner Program",
+          "link": "https://snyk.io/blog/building-ai-security-with-our-customers/",
+          "description": "Learn 5 key lessons from Snyk’s Evo design partner program. Discover how AI discovery, risk intelligence, and policy automation help teams secure generative AI and govern AI sprawl at scale.",
+          "publishedAt": "2026-04-01T12:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        },
         {
           "title": "Axios npm Package Compromised: Supply Chain Attack Delivers Cross-Platform RAT",
           "link": "https://snyk.io/blog/axios-npm-package-compromised-supply-chain-attack-delivers-cross-platform/",
@@ -199,43 +209,11 @@
           "sourceId": "snyk-blog",
           "sourceName": "Snyk Blog",
           "trust": "medium"
-        },
-        {
-          "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
-          "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
-          "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
-          "publishedAt": "2026-03-24T12:00:00+08:00",
-          "riskScore": 3,
-          "sourceId": "snyk-blog",
-          "sourceName": "Snyk Blog",
-          "trust": "medium"
-        },
-        {
-          "title": "Introducing Agent Security",
-          "link": "https://snyk.io/blog/introducing-agent-security/",
-          "description": "Introducing Agent Security, a unified approach to governing AI agents and ensuring safe behavior from code to runtime. Start with Evo AI-SPM, now generally available.",
-          "publishedAt": "2026-03-23T12:00:00+08:00",
-          "riskScore": 1,
-          "sourceId": "snyk-blog",
-          "sourceName": "Snyk Blog",
-          "trust": "medium"
         }
       ]
     }
   ],
   "matches": {
-    "package-litellm": [
-      {
-        "title": "How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM",
-        "link": "https://snyk.io/blog/poisoned-security-scanner-backdooring-litellm/",
-        "description": "On March 24, 2026, threat actor known as TeamPCP published backdoored versions of the litellm Python package after stealing PyPI credentials via a compromised Trivy GitHub Action in LiteLLM's CI/CD pipeline. Here's what happened, how the three-stage malware works, and how to check if you're affected.",
-        "publishedAt": "2026-03-24T12:00:00+08:00",
-        "riskScore": 3,
-        "sourceId": "snyk-blog",
-        "sourceName": "Snyk Blog",
-        "trust": "medium"
-      }
-    ],
     "frontend-next": [
       {
         "title": "Strengthening supply chain security: Preparing for the next malware campaign",
@@ -251,12 +229,8 @@
   },
   "summary": {
     "sourceCount": 3,
-    "matchedTargets": 2,
+    "matchedTargets": 1,
     "topTargets": [
-      {
-        "targetId": "package-litellm",
-        "count": 1
-      },
       {
         "targetId": "frontend-next",
         "count": 1
