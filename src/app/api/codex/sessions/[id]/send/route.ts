@@ -39,8 +39,6 @@ export async function POST(
         session.id,
         prompt,
         '--full-auto',
-        '--sandbox',
-        'workspace-write',
         '--ask-for-approval',
         'never',
         '--no-alt-screen',
@@ -51,6 +49,7 @@ export async function POST(
         cwd,
         detached: true,
         stdio: 'ignore',
+        env: { ...process.env, CODEX_HOME: process.env.HOME },
       },
     )
 
