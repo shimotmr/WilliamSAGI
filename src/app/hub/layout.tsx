@@ -49,6 +49,7 @@ const navGroups: NavGroup[] = [
       { href: '/hub/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
       { href: '/command',       icon: Swords,          label: '🎯 指揮中心' },
       { href: '/hub/monitor',        icon: Activity,        label: '系統監控' },
+      { href: '/hub/openclaw-os',    icon: LayoutGrid,      label: 'OpenClaw OS' },
       { href: '/hub/observability',  icon: Activity,        label: '🔍 診斷中心' },
       { href: '/hub/alerts',         icon: Bell,            label: '告警中心' },
       { href: '/hub/warroom',   icon: Swords,          label: '作戰室' },
