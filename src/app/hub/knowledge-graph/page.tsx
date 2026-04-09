@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import ForceGraph2D from 'react-force-graph/2d';
+import ForceGraph2D from 'react-force-graph-2d';
 import { Search, Maximize2, Minimize2 } from 'lucide-react';
 
 interface GraphNode {
