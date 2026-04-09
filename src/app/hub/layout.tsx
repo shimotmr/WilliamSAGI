@@ -15,7 +15,7 @@ import {
   HardDrive, Users, BookOpen, PlusSquare, FlaskConical, Lock,
 } from 'lucide-react';
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Share2 } from 'lucide-react';
 
 type NavLink = {
   href: string;
@@ -109,6 +109,13 @@ const navGroups: NavGroup[] = [
       { href: '/hub/tag-intel', icon: Database, label: 'Tag 情報' },
       { href: '/hub/search-intel', icon: Database, label: 'Search Intel' },
       { href: '/hub/task-debug', icon: ScanText, label: 'Task Debug' },
+    ],
+  },
+  {
+    label: '知識系統',
+    items: [
+      { href: '/hub/knowledge-graph', icon: Share2, label: '知識圖譜' },
+      { href: '/hub/entities',       icon: Database, label: '實體總覽' },
     ],
   },
   v4EvolutionGroup,
