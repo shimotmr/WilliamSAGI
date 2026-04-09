@@ -123,8 +123,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: '知識系統',
     items: [
-      { id: 'knowledge-graph', title: '知識圖譜', href: '/portal/knowledge-graph', icon: icons.marketing },
-      { id: 'entities', title: '實體總覽', href: '/portal/entities', icon: icons.agents },
+      { id: 'knowledge-graph', title: '知識圖譜', href: '/hub/knowledge-graph', icon: icons.marketing },
+      { id: 'entities', title: '實體總覽', href: '/hub/entities', icon: icons.agents },
     ]
   },
   {
