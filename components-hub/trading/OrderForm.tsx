@@ -66,6 +66,7 @@ export default function OrderForm({ onOrderSubmit }: OrderFormProps) {
   useEffect(() => {
     if (orderData.symbol && mockStocks[orderData.symbol]) {
       const stock = mockStocks[orderData.symbol]
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentStock(stock)
       
       // 自動設定限價單的價格為當前價格
