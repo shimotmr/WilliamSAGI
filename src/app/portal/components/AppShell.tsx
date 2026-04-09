@@ -121,6 +121,13 @@ const NAV_GROUPS: NavGroup[] = [
     ]
   },
   {
+    label: '知識系統',
+    items: [
+      { id: 'knowledge-graph', title: '知識圖譜', href: '/knowledge-graph', icon: icons.marketing },
+      { id: 'entities', title: '實體總覽', href: '/entities', icon: icons.agents },
+    ]
+  },
+  {
     label: '系統管理',
     items: [
       { id: 'humanoid', title: '人形機器人', href: '/portal/humanoid', icon: icons.agents },
