@@ -123,7 +123,7 @@ export default function NewTaskPage() {
     <div style={{ color: '#EDEDEF', maxWidth: '640px', margin: '0 auto', padding: '2rem 1rem' }}>
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
+        <h1 data-testid="new-task-title" style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
           新建任務
         </h1>
         <p style={{ fontSize: '0.875rem', color: '#8A8F98' }}>
@@ -180,6 +180,7 @@ export default function NewTaskPage() {
             你想要做什麼？
           </label>
           <textarea
+            data-testid="task-description-input"
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="例如：分析上週的銷售數據，找出成長最快的產品類別"
@@ -204,6 +205,7 @@ export default function NewTaskPage() {
           )}
 
           <button
+            data-testid="task-description-next"
             onClick={handleSubmitDescription}
             disabled={loading}
             style={{
@@ -236,7 +238,7 @@ export default function NewTaskPage() {
             marginBottom: '0.5rem',
           }}>
             <p style={{ fontSize: '0.8125rem', color: '#8A8F98', marginBottom: '0.25rem' }}>任務類型</p>
-            <p style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#EDEDEF' }}>{taskType}</p>
+            <p data-testid="detected-task-type" style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#EDEDEF' }}>{taskType}</p>
           </div>
 
           <div style={{
@@ -283,6 +285,7 @@ export default function NewTaskPage() {
               上一步
             </button>
             <button
+              data-testid="questions-next"
               onClick={handleProceedToConfirm}
               disabled={loading}
               style={{
@@ -308,7 +311,7 @@ export default function NewTaskPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Success message */}
           {taskId ? (
-            <div style={{
+            <div data-testid="task-submit-success" style={{
               background: 'rgba(74, 222, 128, 0.1)',
               border: '1px solid rgba(74, 222, 128, 0.2)',
               borderRadius: '16px',
@@ -358,7 +361,7 @@ export default function NewTaskPage() {
                     border: `1px solid ${priorityColors[currentPriority]}30`,
                   }}>
                     <span style={{ fontSize: '0.75rem', color: '#8A8F98' }}>優先級 </span>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: priorityColors[currentPriority] }}>
+                    <span data-testid="selected-priority" style={{ fontSize: '0.8125rem', fontWeight: 600, color: priorityColors[currentPriority] }}>
                       {currentPriority}
                     </span>
                   </div>
@@ -423,6 +426,7 @@ export default function NewTaskPage() {
                   上一步
                 </button>
                 <button
+                  data-testid="submit-task"
                   onClick={handleSubmitTask}
                   disabled={loading}
                   style={{

@@ -670,7 +670,10 @@ export default function UpgradeTrackerPage() {
     const response = await fetch(`/api/hub/upgrade-actions?ts=${Date.now()}`, { cache: 'no-store' });
     const payload = (await response.json()) as UpgradeActionStatesPayload;
     if (!response.ok || !payload.ok) {
-      throw new Error(payload.error || `HTTP ${response.status}`);
+      console.warn('upgrade action states unavailable:', payload.error || `HTTP ${response.status}`);
+      setTaskStates({});
+      setHistory([]);
+      return;
     }
     setTaskStates(payload.states || {});
     setHistory(payload.history || []);
@@ -691,7 +694,11 @@ export default function UpgradeTrackerPage() {
         if (!active) return;
         setData(nextData);
         setError(null);
-        await loadActionStates();
+        try {
+          await loadActionStates();
+        } catch (stateError) {
+          console.warn('upgrade action state load skipped:', stateError);
+        }
       } catch (loadError) {
         if (!active) return;
         setError(loadError instanceof Error ? loadError.message : '讀取失敗');

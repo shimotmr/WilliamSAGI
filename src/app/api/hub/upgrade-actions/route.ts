@@ -11,10 +11,14 @@ import {
 export const dynamic = 'force-dynamic'
 
 function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const invalidUrl = !url || url.includes('placeholder.supabase.co')
+  const invalidKey = !key || key === 'placeholder'
+  if (invalidUrl || invalidKey) {
+    return null
+  }
+  return createClient(url, key)
 }
 
 function normalizeAction(value: unknown): UpgradeActionMode {
@@ -24,6 +28,15 @@ function normalizeAction(value: unknown): UpgradeActionMode {
 async function buildStatePayload() {
   const dataset = await loadUpgradeDataset()
   const supabase = getSupabase()
+
+  if (!supabase) {
+    return {
+      ok: true,
+      states: Object.fromEntries((dataset.items || []).map((item) => [item.id, { followup: null, smoke: null }])),
+      history: [],
+      warning: 'supabase env missing',
+    }
+  }
 
   const trackedTitles = dataset.items.flatMap((item) => [
     actionTitle(item, 'followup'),
@@ -93,6 +106,10 @@ async function createUpgradeAction(itemId: string, action: UpgradeActionMode) {
 
   const payload = buildUpgradeTaskPayload(item, action)
   const supabase = getSupabase()
+
+  if (!supabase) {
+    return { ok: false, status: 503, error: 'supabase env missing', itemId, action }
+  }
 
   const { data: existing } = await supabase
     .from('board_tasks')
