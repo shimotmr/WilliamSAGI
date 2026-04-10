@@ -10,10 +10,19 @@ interface GraphNode {
   id: string;
   label: string;
   group: string;
+  community?: number;
+  community_label?: string;
   degree?: number;
   x?: number;
   y?: number;
   color?: string;
+}
+
+interface GraphEdge {
+  from: string;
+  to: string;
+  confidence?: number;
+  relation_type?: string;
 }
 
 interface Edge {
@@ -22,10 +31,12 @@ interface Edge {
 }
 
 export default function KnowledgeGraph() {
-  const [data, setData] = useState<{ nodes: GraphNode[]; edges: Edge[] } | null>(null);
+  const [data, setData] = useState<{ nodes: GraphNode[]; edges: GraphEdge[] } | null>(null);
   const [search, setSearch] = useState('');
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [colorMode, setColorMode] = useState<'group' | 'community'>('group');
+  const [minConf, setMinConf] = useState(0);
   const [stats, setStats] = useState({ nodes: 0, edges: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,9 +44,10 @@ export default function KnowledgeGraph() {
     const url = `/api/knowledge${q ? `?search=${encodeURIComponent(q)}` : ''}`;
     const res = await fetch(url);
     const result = await res.json();
-    setData(result);
-    setStats({ nodes: result.nodes.length, edges: result.edges.length });
-  }, []);
+    const filteredEdges = result.edges.filter((e: GraphEdge) => (e.confidence || 0) >= minConf);
+    setData({ nodes: result.nodes, edges: filteredEdges });
+    setStats({ nodes: result.nodes.length, edges: filteredEdges.length });
+  }, [minConf]);
 
   useEffect(() => {
     fetchData(search);
@@ -59,9 +71,36 @@ export default function KnowledgeGraph() {
       <header className="border-b border-white/5 p-4 flex items-center gap-4 shrink-0">
         <h1 className="text-xl font-bold">知識圖譜</h1>
         <div className="text-zinc-400 text-sm">
-          節點: {stats.nodes} | 邊: {stats.edges}
+          節點: {stats.nodes} | 邊: {stats.edges} | 置信閾值: {minConf}
         </div>
-        <div className="flex-1 max-w-md ml-auto relative">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setColorMode('group')}
+            className={`px-3 py-1 rounded text-xs ${colorMode === 'group' ? 'bg-blue-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}
+          >
+            群組顏色
+          </button>
+          <button
+            onClick={() => setColorMode('community')}
+            className={`px-3 py-1 rounded text-xs ${colorMode === 'community' ? 'bg-green-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}
+          >
+            社群顏色
+          </button>
+        </div>
+        <div className="flex items-center gap-2 ml-auto">
+          <label className="text-xs text-zinc-400">最小置信度:</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={minConf}
+            onChange={(e) => setMinConf(Number(e.target.value))}
+            className="w-24 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          />
+          <span className="text-xs text-zinc-400">{minConf}</span>
+        </div>
+        <div className="flex-1 max-w-md relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-4 h-4" />
           <input
             type="text"
@@ -88,28 +127,64 @@ export default function KnowledgeGraph() {
           {data && (
             <ForceGraph2D
               graphData={{
-                nodes: data.nodes.map((n) => ({ ...n })),
-                links: data.edges.map((e) => ({ source: e.from, target: e.to })),
+                nodes: data.nodes,
+                links: data.edges.map((e) => ({ source: e.from, target: e.to, confidence: e.confidence, relation_type: e.relation_type })),
               }}
               nodeLabel="label"
-              nodeAutoColorBy="group"
-              nodeVal={(node: any) => ((node as any).degree || 1) + 1}
+              nodeAutoColorBy={colorMode === 'group' ? 'group' : undefined}
+              nodeVal={(node: any) => ((node as any).degree || 1) * 1.5}
+              nodeColor={(node: any) => {
+                if (colorMode === 'group') return undefined;
+                const hue = (node.community || 0) * 137.5;
+                return `hsl(${hue % 360}, 70%, 50%)`;
+              }}
+              linkColor={(link: any) => {
+                const conf = link.confidence || 0;
+                const type = link.relation_type;
+                if (type === 'EXTRACTED' || conf >= 0.9) return '#22c55e'; // green
+                if (type === 'INFERRED' || conf >= 0.5) return '#eab308'; // yellow
+                return '#ef4444'; // red
+              }}
+              linkWidth={(link: any) => (link.confidence || 0.2) * 2}
+              linkOpacity={0.6}
               onNodeClick={(node: any) => onNodeClick(node)}
               backgroundColor="#0a0a0b"
               nodeCanvasObjectMode={() => 'replace' as const}
               nodeCanvasObject={(node: any, canvasCtx: CanvasRenderingContext2D, globalScale: number) => {
                 const label = node.label || node.id;
-                const fontSize = 12 / globalScale;
+                const fontSize = Math.max(10 / globalScale, 4);
                 canvasCtx.font = `${fontSize}px Sans-Serif`;
-                const backgroundRadius = 12 / globalScale;
+                const textWidth = canvasCtx.measureText(label).width;
+                const backgroundRadius = Math.max(textWidth / 2 + 4, 12) / globalScale;
+                canvasCtx.save();
                 canvasCtx.beginPath();
                 canvasCtx.arc(node.x, node.y, backgroundRadius, 0, 2 * Math.PI, false);
-                canvasCtx.fillStyle = node.color || '#1e90ff';
+                canvasCtx.fillStyle = 'rgba(15, 15, 15, 0.9)';
                 canvasCtx.fill();
+                canvasCtx.strokeStyle = node.color || '#1e90ff';
+                canvasCtx.lineWidth = 1 / globalScale;
+                canvasCtx.stroke();
                 canvasCtx.textAlign = 'center';
                 canvasCtx.textBaseline = 'middle';
                 canvasCtx.fillStyle = '#ffffff';
                 canvasCtx.fillText(label, node.x, node.y);
+                canvasCtx.restore();
+              }}
+              linkCanvasObjectMode={"after" as const}
+              linkCanvasObject={(link: any, canvasCtx: CanvasRenderingContext2D, globalScale: number) => {
+                const conf = link.confidence || 0;
+                if (conf < 0.5) return;
+                canvasCtx.save();
+                canvasCtx.translate(link.source.x, link.source.y);
+                canvasCtx.rotate(Math.atan2(link.target.y - link.source.y, link.target.x - link.source.x));
+                canvasCtx.font = `${8 / globalScale}px Sans-Serif`;
+                canvasCtx.textAlign = 'right';
+                canvasCtx.textBaseline = 'middle';
+                canvasCtx.fillStyle = link.color || '#888';
+                canvasCtx.shadowColor = 'rgba(0,0,0,0.5)';
+                canvasCtx.shadowBlur = 4 / globalScale;
+                canvasCtx.fillText(conf.toFixed(1), -3, 0);
+                canvasCtx.restore();
               }}
             />
           )}
