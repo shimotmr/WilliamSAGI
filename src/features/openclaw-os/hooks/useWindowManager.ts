@@ -78,7 +78,7 @@ export function useWindowManager() {
   const closeWindow = useCallback((id: OsAppId) => {
     setOpenIds((prev) => {
       const next = prev.filter((item) => item !== id)
-      setFocusedId(next[next.length - 1] || null as OsAppId)
+      setFocusedId(next[next.length - 1] || (null as unknown as OsAppId))
       return next
     })
   }, [])
