@@ -93,8 +93,8 @@ export default function KnowledgeGraph() {
               }}
               nodeLabel="label"
               nodeAutoColorBy="group"
-              nodeVal={(node: GraphNode) => (node.degree || 1) + 1}
-              onNodeClick={onNodeClick}
+              nodeVal={(node: any) => ((node as any).degree || 1) + 1}
+              onNodeClick={(node: any) => onNodeClick(node)}
               backgroundColor="#0a0a0b"
               nodeCanvasObjectMode={() => 'replace' as const}
               nodeCanvasObject={(node: any, canvasCtx: CanvasRenderingContext2D, globalScale: number) => {
