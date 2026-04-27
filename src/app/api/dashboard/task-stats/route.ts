@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
+export const revalidate = 60
+
 export async function GET() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

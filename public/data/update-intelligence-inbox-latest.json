@@ -1,0 +1,14 @@
+{
+  "title": "升級掃描已發布，採用停滯",
+  "summary": "資料已更新；優先關注 booster adoption 健康度",
+  "remarkDirective": "::inbox-item{title=\"升級掃描已發布，採用停滯\" summary=\"資料已更新；優先關注 booster adoption 健康度\"}",
+  "generatedAt": "2026-04-25T19:01:48+08:00",
+  "published": true,
+  "items": 55,
+  "boosterHealth": {
+    "tone": "warning",
+    "title": "採用停滯",
+    "detail": "最近 7 天仍未觀測到新的 booster 採用，這通常代表新任務尚未進入新流程，或入口尚未全面切到 booster-aware 路由。",
+    "confirmation_rate": 0.325
+  }
+}

@@ -215,16 +215,6 @@ export default function AgentsPage() {
     }
   }, [])
 
-  // Admin polling: tasks + agents + cron
-  useSmartPolling(() => {
-    if (isAdmin) { fetchTasks(); loadAgents(); loadCronSchedules() }
-  }, 30000, [isAdmin, fetchTasks, loadAgents, loadCronSchedules])
-
-  // Admin runs polling
-  useSmartPolling(() => {
-    if (isAdmin) loadRuns()
-  }, 30000, [isAdmin, loadRuns])
-
   const loadRuns = useCallback(async () => {
     
     const { data } = await supabase
@@ -237,7 +227,15 @@ export default function AgentsPage() {
     setRunsLoading(false)
   }, [runDate])
 
-  // loadRuns already handled by useSmartPolling above
+  // Admin polling: tasks + agents + cron
+  useSmartPolling(() => {
+    if (isAdmin) { fetchTasks(); loadAgents(); loadCronSchedules() }
+  }, 30000, [isAdmin, fetchTasks, loadAgents, loadCronSchedules])
+
+  // Admin runs polling
+  useSmartPolling(() => {
+    if (isAdmin) loadRuns()
+  }, 30000, [isAdmin, loadRuns])
 
   if (isAdmin === false) {
     return (

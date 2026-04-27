@@ -6,6 +6,8 @@ const getSupabase = () => createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+export const revalidate = 30
+
 export async function GET() {
   try {
     const supabase = getSupabase()

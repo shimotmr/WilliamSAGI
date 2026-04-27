@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-04-03T16:04:01+08:00",
+  "generatedAt": "2026-04-25T19:01:48+08:00",
   "metadata": {
     "name": "Travis Update Intelligence Registry",
     "version": 1,
     "timezone": "Asia/Taipei"
   },
   "summary": {
-    "totalTargets": 82,
+    "totalTargets": 55,
     "categoryCounts": {
-      "model": 35,
+      "model": 8,
       "tool": 17,
       "package": 8,
       "skill": 4,
@@ -17,106 +17,70 @@
       "api": 7
     },
     "recommendationCounts": {
-      "已最新": 27,
-      "建議升級": 38,
-      "等待OpenClaw支援": 1,
+      "等待OpenClaw支援": 3,
+      "建議升級": 11,
+      "已最新": 19,
       "觀察等待": 1,
-      "手動檢查": 15
+      "手動檢查": 21
     },
     "urgent": [
       {
-        "name": "OpenClaw",
+        "name": "next",
         "label": "建議升級",
-        "summary": "2026.4.1 → v2026.4.2；OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。；Plugins/xAI: move `x_search` settings from the legacy core `tools.web.x_search.*` path to the plugin-owned `plugins.entries.xai.config.xSearch.*` path, standardize `x_search` auth on `plugins.entries.xai.config.webSearch.apiKey` / `XAI_API_KEY`, and migrate legacy config with `openclaw doctor --fix`. (#59674) Thanks @vincentkoc. / Plugins/web fetch: move Firecrawl `web_fetch` config from the legacy core `tools.web.fetch.firecrawl.*` path to the plugin-owned `plugins.entries.firecrawl.config.webFetch.*` path, route `web_fetch` fallback through the new fetch-provider boundary instead of a Firecrawl-only core branch, and migrate legacy config with `openclaw doctor --fix`. (#59465) Thanks @vincentkoc. / Tasks/Task Flow: restore the core Task Flow substrate with managed-vs-mirrored sync modes, durable flow state/revision tracking, and `openclaw flows` inspection/recovery primitives so background orchestration can persist and be operated separately from plugin authoring layers. (#58930) Thanks @mbelinky."
+        "summary": "^16.2.2 → 16.2.4；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。"
       },
       {
-        "name": "@anthropic-ai/claude-code",
+        "name": "@supabase/supabase-js",
         "label": "建議升級",
-        "summary": "2.1.86 → 2.1.91"
+        "summary": "^2.45.0 → 2.104.1"
       },
       {
-        "name": "@byterover/byterover",
+        "name": "@tanstack/react-query",
         "label": "建議升級",
-        "summary": "1.1.0 → 1.1.5"
+        "summary": "^5.90.21 → 5.100.2"
       },
       {
-        "name": "@openclaw/lobster",
-        "label": "建議升級",
-        "summary": "2026.3.1 → 2026.3.13"
+        "name": "Claude Opus 4.6",
+        "label": "等待OpenClaw支援",
+        "summary": "OpenClaw: missing-provider"
       },
       {
-        "name": "@playwright/mcp",
-        "label": "建議升級",
-        "summary": "0.0.64 → 0.0.70"
+        "name": "Claude Sonnet 4.6",
+        "label": "等待OpenClaw支援",
+        "summary": "OpenClaw: missing-provider"
       },
       {
-        "name": "apify-cli",
+        "name": "Codex GPT-5.4",
         "label": "建議升級",
-        "summary": "1.2.1 → 1.4.1"
+        "summary": "gpt-5.4 → gpt-5.4-pro-2026-03-05；OpenClaw: native"
       },
       {
-        "name": "bun",
+        "name": "GLM 5.1",
         "label": "建議升級",
-        "summary": "1.3.8 → 1.3.11；Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one."
+        "summary": "glm-5 → glm-5.1；OpenClaw: native"
       },
       {
-        "name": "clawhub",
+        "name": "Gemini 2.5 Pro / Flash",
         "label": "建議升級",
-        "summary": "0.5.0 → 0.9.0"
+        "summary": "gemini-2.5-pro → gemini-2.5-pro / gemini-2.5-flash；OpenClaw: native"
       }
     ],
     "topPriority": [
       {
-        "name": "OpenClaw",
+        "name": "next",
         "tier": "high",
         "score": 8.0,
-        "summary": "2026.4.1 → v2026.4.2；OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。；Plugins/xAI: move `x_search` settings from the legacy core `tools.web.x_search.*` path to the plugin-owned `plugins.entries.xai.config.xSearch.*` path, standardize `x_search` auth on `plugins.entries.xai.config.webSearch.apiKey` / `XAI_API_KEY`, and migrate legacy config with `openclaw doctor --fix`. (#59674) Thanks @vincentkoc. / Plugins/web fetch: move Firecrawl `web_fetch` config from the legacy core `tools.web.fetch.firecrawl.*` path to the plugin-owned `plugins.entries.firecrawl.config.webFetch.*` path, route `web_fetch` fallback through the new fetch-provider boundary instead of a Firecrawl-only core branch, and migrate legacy config with `openclaw doctor --fix`. (#59465) Thanks @vincentkoc. / Tasks/Task Flow: restore the core Task Flow substrate with managed-vs-mirrored sync modes, durable flow state/revision tracking, and `openclaw flows` inspection/recovery primitives so background orchestration can persist and be operated separately from plugin authoring layers. (#58930) Thanks @mbelinky.",
+        "summary": "^16.2.2 → 16.2.4；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。",
         "nextActions": [
           "先做本機 smoke test，再安排灰度升級",
-          "先做 provider/tool-call smoke test，再決定要不要升級 gateway"
-        ]
-      },
-      {
-        "name": "@anthropic-ai/claude-code",
-        "tier": "high",
-        "score": 7.0,
-        "summary": "2.1.86 → 2.1.91",
-        "nextActions": [
-          "先做本機 smoke test，再安排灰度升級"
-        ]
-      },
-      {
-        "name": "@byterover/byterover",
-        "tier": "high",
-        "score": 7.0,
-        "summary": "1.1.0 → 1.1.5",
-        "nextActions": [
-          "先做本機 smoke test，再安排灰度升級"
-        ]
-      },
-      {
-        "name": "@openclaw/lobster",
-        "tier": "high",
-        "score": 7.0,
-        "summary": "2026.3.1 → 2026.3.13",
-        "nextActions": [
-          "先做本機 smoke test，再安排灰度升級"
-        ]
-      },
-      {
-        "name": "@playwright/mcp",
-        "tier": "high",
-        "score": 7.0,
-        "summary": "0.0.64 → 0.0.70",
-        "nextActions": [
-          "先做本機 smoke test，再安排灰度升級"
+          "先清現有 App Router / metadata 問題，再規劃 14→16 遷移"
         ]
       },
       {
         "name": "@supabase/supabase-js",
         "tier": "high",
         "score": 7.0,
-        "summary": "^2.45.0 → 2.101.1",
+        "summary": "^2.45.0 → 2.104.1",
         "nextActions": [
           "先做本機 smoke test，再安排灰度升級"
         ]
@@ -125,9 +89,27 @@
         "name": "@tanstack/react-query",
         "tier": "high",
         "score": 7.0,
-        "summary": "^5.90.21 → 5.96.1",
+        "summary": "^5.90.21 → 5.100.2",
         "nextActions": [
           "先做本機 smoke test，再安排灰度升級"
+        ]
+      },
+      {
+        "name": "Claude Opus 4.6",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "OpenClaw: missing-provider",
+        "nextActions": [
+          "先補 provider/catalog 支援，再決定是否納入正式 picker"
+        ]
+      },
+      {
+        "name": "Claude Sonnet 4.6",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "OpenClaw: missing-provider",
+        "nextActions": [
+          "先補 provider/catalog 支援，再決定是否納入正式 picker"
         ]
       },
       {
@@ -138,17 +120,29 @@
         "nextActions": [
           "先維持現況，等待下一輪巡檢與更多訊號"
         ]
+      },
+      {
+        "name": "GLM 5.1",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "glm-5 → glm-5.1；OpenClaw: native",
+        "nextActions": [
+          "先維持現況，等待下一輪巡檢與更多訊號"
+        ]
+      },
+      {
+        "name": "Gemini 2.5 Pro / Flash",
+        "tier": "high",
+        "score": 7.0,
+        "summary": "gemini-2.5-pro → gemini-2.5-pro / gemini-2.5-flash；OpenClaw: native",
+        "nextActions": [
+          "先維持現況，等待下一輪巡檢與更多訊號"
+        ]
       }
     ],
     "macFitHighlights": [
       "ffmpeg",
-      "tailscale",
-      "DeepSeek R1 0528 Qwen3 8B MLX",
-      "Gemma 3 4B IT QAT (LM Studio)",
-      "Local gemma-4-e2b-it",
-      "Local gemma-4-e4b-it",
-      "Mistral Nemo Instruct 2407 (LM Studio)",
-      "Qwen2.5 Coder 7B Instruct MLX"
+      "tailscale"
     ]
   },
   "scanPolicies": {
@@ -174,10 +168,8 @@
       "fast",
       "general",
       "high-cost",
-      "local",
       "long-context",
       "low-cost",
-      "macos-fit",
       "manual-fix-needed",
       "multimodal",
       "provider-missing",
@@ -984,7 +976,7 @@
       "sourceType": "npm_package_json",
       "sourceUrl": "https://github.com/supabase/supabase-js/tree/master/packages/core/supabase-js",
       "currentVersion": "^2.45.0",
-      "latestVersion": "2.101.1",
+      "latestVersion": "2.104.1",
       "versionComparison": -1,
       "support": {
         "level": "n/a",
@@ -994,9 +986,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1014,12 +1004,11 @@
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "^2.45.0 → 2.101.1",
+      "summary": "^2.45.0 → 2.104.1",
       "detailSummary": "@supabase/supabase-js 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：^2.45.0 → 2.101.1",
-        "更新重點：Isomorphic Javascript SDK for Supabase",
-        "上游 repo 最近更新於 2026-04-03"
+        "版本差距：^2.45.0 → 2.104.1",
+        "更新重點：Isomorphic Javascript SDK for Supabase"
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -1031,9 +1020,7 @@
         "先做本機 smoke test，再安排灰度升級"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 7.0,
@@ -1061,7 +1048,7 @@
       "sourceType": "npm_package_json",
       "sourceUrl": "https://tanstack.com/query",
       "currentVersion": "^5.90.21",
-      "latestVersion": "5.96.1",
+      "latestVersion": "5.100.2",
       "versionComparison": -1,
       "support": {
         "level": "n/a",
@@ -1071,9 +1058,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1091,12 +1076,11 @@
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "^5.90.21 → 5.96.1",
+      "summary": "^5.90.21 → 5.100.2",
       "detailSummary": "@tanstack/react-query 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：^5.90.21 → 5.96.1",
-        "更新重點：Hooks for managing, caching and syncing asynchronous and remote data in React",
-        "上游 repo 最近更新於 2026-04-03"
+        "版本差距：^5.90.21 → 5.100.2",
+        "更新重點：Hooks for managing, caching and syncing asynchronous and remote data in React"
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -1107,9 +1091,7 @@
         "先做本機 smoke test，再安排灰度升級"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 7.0,
@@ -1147,10 +1129,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 209",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1171,8 +1150,7 @@
       "summary": "^171.4.0 → 171.4.0",
       "detailSummary": "googleapis 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "更新重點：Google APIs Client Library for Node.js",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Google APIs Client Library for Node.js"
       ],
       "systemBenefits": [
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
@@ -1182,10 +1160,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 209",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -1220,10 +1195,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 1629",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1245,8 +1217,7 @@
       "detailSummary": "mermaid 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "版本差距：^11.12.3 → 11.14.0",
-        "更新重點：Markdown-ish syntax for generating flowcharts, mindmaps, sequence diagrams, class diagrams, gantt charts, git graphs and more.",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Markdown-ish syntax for generating flowcharts, mindmaps, sequence diagrams, class diagrams, gantt charts, git graphs and more."
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -1257,10 +1228,7 @@
         "先做本機 smoke test，再安排灰度升級"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 1629",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 7.0,
@@ -1288,57 +1256,32 @@
       "sourceType": "npm_package_json",
       "sourceUrl": "https://nextjs.org",
       "currentVersion": "^16.2.2",
-      "latestVersion": "16.2.2",
-      "versionComparison": 0,
+      "latestVersion": "16.2.4",
+      "versionComparison": -1,
       "support": {
         "level": "n/a",
         "note": "not model"
       },
       "risk": {
-        "securityStatus": "warning",
+        "securityStatus": "clear",
         "reviewStatus": "monitor",
         "negativeSignals": [
-          "Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。",
-          "外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign"
+          "Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。"
         ],
-        "activitySignals": [
-          "open issues 高於 3660",
-          "repo 更新於 2026-04-03",
-          "外部風險 feed 命中 1 則"
-        ],
+        "activitySignals": [],
         "advisories": {
-          "count": 1,
+          "count": 0,
           "critical": 0,
           "high": 0,
-          "aliases": [
-            "CVE-2025-59472"
-          ],
-          "details": [
-            {
-              "id": "GHSA-5f7q-jpqc-wp7h",
-              "summary": "Next.js has Unbounded Memory Consumption via PPR Resume Endpoint ",
-              "severity": "moderate"
-            }
-          ]
-        },
-        "externalHits": [
-          {
-            "title": "Strengthening supply chain security: Preparing for the next malware campaign",
-            "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
-            "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
-            "publishedAt": "2025-12-24T07:52:08+08:00",
-            "riskScore": 3,
-            "sourceId": "github-security-blog",
-            "sourceName": "GitHub Security Blog",
-            "trust": "high"
-          }
-        ]
+          "aliases": [],
+          "details": []
+        }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "upgrade",
+        "label": "建議升級",
         "why": [
-          "目前版本已達最新或超前。"
+          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
         ]
       },
       "macosFit": [],
@@ -1346,53 +1289,39 @@
         "14 → 16 屬於跨主版本跳升，先補齊現有 App Router / metadata / client component 問題，再規劃升級。",
         "這種升級更適合拆成 framework smoke + lint/type/build 三步，不要一次拉上 production。"
       ],
-      "summary": "^16.2.2 → 16.2.2；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。 / 外部風險：GitHub Security Blog / Strengthening supply chain security: Preparing for the next malware campaign",
-      "detailSummary": "next 目前判定為「已最新」，目前仍需觀察風險與相容性。",
+      "summary": "^16.2.2 → 16.2.4；Next.js 主版本跳升伴隨 API 與 build 行為改動，遷移成本高。",
+      "detailSummary": "next 目前判定為「建議升級」，目前仍需觀察風險與相容性。",
       "releaseHighlights": [
-        "更新重點：The React Framework",
-        "上游 repo 最近更新於 2026-04-03"
+        "版本差距：^16.2.2 → 16.2.4",
+        "更新重點：The React Framework"
       ],
       "systemBenefits": [
+        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
         "可讓正式站維持在較新 Next 基線，後續安全追蹤與 App Router 問題排查更直接。",
         "14 → 16 屬於跨主版本跳升，先補齊現有 App Router / metadata / client component 問題，再規劃升級。",
         "這種升級更適合拆成 framework smoke + lint/type/build 三步，不要一次拉上 production。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
+        "目前判定：建議升級。",
         "有風險或活性訊號，適合先做小範圍驗證再決定。",
-        "先讀外部風險來源，確認是否為真實相關事件",
+        "先做本機 smoke test，再安排灰度升級",
         "先清現有 App Router / metadata 問題，再規劃 14→16 遷移"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 3660",
-        "repo 更新於 2026-04-03",
-        "外部風險 feed 命中 1 則"
-      ],
-      "externalRiskHits": [
-        {
-          "title": "Strengthening supply chain security: Preparing for the next malware campaign",
-          "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
-          "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
-          "publishedAt": "2025-12-24T07:52:08+08:00",
-          "riskScore": 3,
-          "sourceId": "github-security-blog",
-          "sourceName": "GitHub Security Blog",
-          "trust": "high"
-        }
-      ],
+      "activitySignals": [],
+      "externalRiskHits": [],
       "priority": {
-        "score": 5.0,
-        "tier": "medium",
+        "score": 8.0,
+        "tier": "high",
         "reasons": [
-          "有安全警示",
-          "外部風險來源有命中",
+          "已有可行升級",
+          "版本落後",
           "前端框架影響面大"
         ]
       },
       "nextActions": [
-        "先讀外部風險來源，確認是否為真實相關事件",
+        "先做本機 smoke test，再安排灰度升級",
         "先清現有 App Router / metadata 問題，再規劃 14→16 遷移"
       ]
     },
@@ -1420,10 +1349,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 438",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1445,8 +1371,7 @@
       "detailSummary": "recharts 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "版本差距：^3.7.0 → 3.8.1",
-        "更新重點：React charts",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：React charts"
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -1457,10 +1382,7 @@
         "先做本機 smoke test，再安排灰度升級"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 438",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 7.0,
@@ -1498,9 +1420,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -1522,8 +1442,7 @@
       "detailSummary": "shiki 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "版本差距：^3.23.0 → 4.0.2",
-        "更新重點：A beautiful Syntax Highlighter.",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：A beautiful Syntax Highlighter."
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -1534,9 +1453,7 @@
         "先做本機 smoke test，再安排灰度升級"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 7.0,
@@ -1563,12 +1480,12 @@
       "scanFrequency": "daily",
       "sourceType": "cloud_model",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "currentVersion": "claude-opus-4-6",
+      "currentVersion": null,
       "latestVersion": "claude-opus-4-6",
       "versionComparison": 0,
       "support": {
-        "level": "configured-alias",
-        "note": "系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
+        "level": "missing-provider",
+        "note": "provider 未接入現行 OpenClaw config"
       },
       "risk": {
         "securityStatus": "clear",
@@ -1584,38 +1501,40 @@
         }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "support-gap",
+        "label": "等待OpenClaw支援",
         "why": [
-          "目前版本已達最新或超前。"
+          "目前不是完整 native provider，先補支援矩陣或 provider 接線。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "claude-opus-4-6 → claude-opus-4-6；OpenClaw: configured-alias",
-      "detailSummary": "Claude Opus 4.6 目前判定為「已最新」，OpenClaw 支援狀態是 configured-alias，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "OpenClaw: missing-provider",
+      "detailSummary": "Claude Opus 4.6 目前判定為「等待OpenClaw支援」，OpenClaw 支援狀態是 missing-provider，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "OpenClaw 支援現況：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
+        "OpenClaw 支援現況：missing-provider / provider 未接入現行 OpenClaw config"
       ],
       "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
+        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單",
-        "先維持現況，等待下一輪巡檢與更多訊號"
+        "目前判定：等待OpenClaw支援。",
+        "OpenClaw 支援評估：missing-provider / provider 未接入現行 OpenClaw config",
+        "先補 provider/catalog 支援，再決定是否納入正式 picker"
       ],
-      "installedStatus": "configured",
+      "installedStatus": "not-configured",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "有版本差但仍受支援缺口限制",
+          "支援狀態不完整"
+        ]
       },
       "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
+        "先補 provider/catalog 支援，再決定是否納入正式 picker"
       ]
     },
     {
@@ -1631,12 +1550,12 @@
       "scanFrequency": "daily",
       "sourceType": "cloud_model",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "currentVersion": "claude-sonnet-4-6",
+      "currentVersion": null,
       "latestVersion": "claude-sonnet-4-6",
       "versionComparison": 0,
       "support": {
-        "level": "configured-alias",
-        "note": "系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
+        "level": "missing-provider",
+        "note": "provider 未接入現行 OpenClaw config"
       },
       "risk": {
         "securityStatus": "clear",
@@ -1652,309 +1571,40 @@
         }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "support-gap",
+        "label": "等待OpenClaw支援",
         "why": [
-          "目前版本已達最新或超前。"
+          "目前不是完整 native provider，先補支援矩陣或 provider 接線。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "claude-sonnet-4-6 → claude-sonnet-4-6；OpenClaw: configured-alias",
-      "detailSummary": "Claude Sonnet 4.6 目前判定為「已最新」，OpenClaw 支援狀態是 configured-alias，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "OpenClaw: missing-provider",
+      "detailSummary": "Claude Sonnet 4.6 目前判定為「等待OpenClaw支援」，OpenClaw 支援狀態是 missing-provider，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "OpenClaw 支援現況：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
+        "OpenClaw 支援現況：missing-provider / provider 未接入現行 OpenClaw config"
       ],
       "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
+        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單",
-        "先維持現況，等待下一輪巡檢與更多訊號"
+        "目前判定：等待OpenClaw支援。",
+        "OpenClaw 支援評估：missing-provider / provider 未接入現行 OpenClaw config",
+        "先補 provider/catalog 支援，再決定是否納入正式 picker"
       ],
-      "installedStatus": "configured",
+      "installedStatus": "not-configured",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-anthropic-claude-haiku-4-5",
-      "name": "claude haiku 4 5",
-      "category": "model",
-      "subcategory": "anthropic",
-      "tags": [
-        "agentic",
-        "tool-use"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "currentVersion": "claude-haiku-4-5",
-      "latestVersion": "claude-haiku-4-5",
-      "versionComparison": 0,
-      "support": {
-        "level": "configured-alias",
-        "note": "系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "有版本差但仍受支援缺口限制",
+          "支援狀態不完整"
         ]
       },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "claude-haiku-4-5 → claude-haiku-4-5；OpenClaw: configured-alias",
-      "detailSummary": "claude haiku 4 5 目前判定為「已最新」，OpenClaw 支援狀態是 configured-alias，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：configured-alias / 系統 defaults 可接受，但 provider catalog 不在現行 providers 清單",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
       "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-anthropic-opus46-claude-opus-4-6",
-      "name": "claude opus 4 6",
-      "category": "model",
-      "subcategory": "anthropic-opus46",
-      "tags": [
-        "agentic",
-        "multimodal",
-        "reasoning",
-        "tool-use"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "currentVersion": "claude-opus-4-6",
-      "latestVersion": "claude-opus-4-6",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "claude-opus-4-6 → claude-opus-4-6；OpenClaw: native",
-      "detailSummary": "claude opus 4 6 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-anthropic-opus46-claude-sonnet-4-6",
-      "name": "claude sonnet 4 6",
-      "category": "model",
-      "subcategory": "anthropic-opus46",
-      "tags": [
-        "agentic",
-        "tool-use"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "currentVersion": "claude-sonnet-4-6",
-      "latestVersion": "claude-sonnet-4-6",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "claude-sonnet-4-6 → claude-sonnet-4-6；OpenClaw: native",
-      "detailSummary": "claude sonnet 4 6 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-gemini-gemini-2-5-flash",
-      "name": "gemini-2.5-flash",
-      "category": "model",
-      "subcategory": "gemini",
-      "tags": [
-        "fast",
-        "low-cost",
-        "multimodal"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://ai.google.dev/gemini-api/docs/changelog",
-      "currentVersion": "gemini-2.5-flash",
-      "latestVersion": "gemini-2.5-flash",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "gemini-2.5-flash → gemini-2.5-flash；OpenClaw: native",
-      "detailSummary": "gemini-2.5-flash 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
+        "先補 provider/catalog 支援，再決定是否納入正式 picker"
       ]
     },
     {
@@ -1975,7 +1625,7 @@
       "versionComparison": -1,
       "support": {
         "level": "native",
-        "note": "configured"
+        "note": "provider-catalog"
       },
       "risk": {
         "securityStatus": "clear",
@@ -2003,7 +1653,7 @@
       "detailSummary": "Gemini 2.5 Pro / Flash 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "版本差距：gemini-2.5-pro → gemini-2.5-pro / gemini-2.5-flash",
-        "OpenClaw 支援現況：native / configured"
+        "OpenClaw 支援現況：native / provider-catalog"
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -2012,622 +1662,10 @@
       ],
       "evaluationNotes": [
         "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
+        "OpenClaw 支援評估：native / provider-catalog",
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-deepseek-r1-0528-qwen3-8b-mlx",
-      "name": "DeepSeek R1 0528 Qwen3 8B MLX",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "deepseek-r1-0528-qwen3-8b-mlx",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "deepseek-r1-0528-qwen3-8b-mlx → 9 live models；OpenClaw: native",
-      "detailSummary": "DeepSeek R1 0528 Qwen3 8B MLX 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：deepseek-r1-0528-qwen3-8b-mlx → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-gemma-3-4b-it-qat",
-      "name": "Gemma 3 4B IT QAT (LM Studio)",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "gemma-3-4b-it-qat",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "gemma-3-4b-it-qat → 9 live models；OpenClaw: native",
-      "detailSummary": "Gemma 3 4B IT QAT (LM Studio) 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：gemma-3-4b-it-qat → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-gemma-4-e2b-it",
-      "name": "Local gemma-4-e2b-it",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "gemma-4-e2b-it",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "gemma-4-e2b-it → 9 live models；OpenClaw: native",
-      "detailSummary": "Local gemma-4-e2b-it 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：gemma-4-e2b-it → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-gemma-4-e4b-it",
-      "name": "Local gemma-4-e4b-it",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "gemma-4-e4b-it",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "gemma-4-e4b-it → 9 live models；OpenClaw: native",
-      "detailSummary": "Local gemma-4-e4b-it 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：gemma-4-e4b-it → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-mistral-nemo-instruct-2407",
-      "name": "Mistral Nemo Instruct 2407 (LM Studio)",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "mistral-nemo-instruct-2407",
-      "latestVersion": "9 live models",
-      "versionComparison": 1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "mistral-nemo-instruct-2407 → 9 live models；OpenClaw: native",
-      "detailSummary": "Mistral Nemo Instruct 2407 (LM Studio) 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-qwen2-5-coder-7b-instruct-mlx",
-      "name": "Qwen2.5 Coder 7B Instruct MLX",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "coding",
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "qwen2.5-coder-7b-instruct-mlx",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "qwen2.5-coder-7b-instruct-mlx → 9 live models；OpenClaw: native",
-      "detailSummary": "Qwen2.5 Coder 7B Instruct MLX 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：qwen2.5-coder-7b-instruct-mlx → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-qwen3-5-4b-optiq",
-      "name": "Qwen3.5 4B OptiQ (LM Studio)",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "qwen3.5-4b-optiq",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "qwen3.5-4b-optiq → 9 live models；OpenClaw: native",
-      "detailSummary": "Qwen3.5 4B OptiQ (LM Studio) 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：qwen3.5-4b-optiq → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-local-llm-qwen3-5-9b-mlx",
-      "name": "Qwen3.5 9B MLX (LM Studio)",
-      "category": "model",
-      "subcategory": "local-llm",
-      "tags": [
-        "local",
-        "macos-fit"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "http://127.0.0.1:1234/v1/models",
-      "currentVersion": "qwen3.5-9b-mlx",
-      "latestVersion": "9 live models",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "featureSuggestions": [],
-      "summary": "qwen3.5-9b-mlx → 9 live models；OpenClaw: native",
-      "detailSummary": "Qwen3.5 9B MLX (LM Studio) 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：qwen3.5-9b-mlx → 9 live models",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
-        "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
-        "本地模型適合作為 Mac mini fallback，能降低外部供應商風險。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
+      "installedStatus": "provider-catalog",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
@@ -2655,12 +1693,12 @@
       "scanFrequency": "daily",
       "sourceType": "cloud_model",
       "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-tokenplan",
-      "currentVersion": "MiniMax-M2.7-highspeed",
+      "currentVersion": "MiniMax-M2.5",
       "latestVersion": "MiniMax-M2.7-highspeed",
-      "versionComparison": 0,
+      "versionComparison": -1,
       "support": {
         "level": "native",
-        "note": "configured"
+        "note": "provider-catalog"
       },
       "risk": {
         "securityStatus": "clear",
@@ -2678,10 +1716,10 @@
         }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "upgrade",
+        "label": "建議升級",
         "why": [
-          "目前版本已達最新或超前。"
+          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
         ]
       },
       "macosFit": [],
@@ -2689,167 +1727,38 @@
         "目前主代理 Telegram 不建議直接把 MiniMax 當 primary，除非 tool-call 文字化輸出已被 parser 或 sanitizer 吃乾淨。",
         "MiniMax 比較適合低成本 fallback，而不是直接放在最外層 user-facing channel。"
       ],
-      "summary": "MiniMax-M2.7-highspeed → MiniMax-M2.7-highspeed；OpenClaw: native；已觀測到 MiniMax × lossless-claw × Telegram delivery 交互 bug，會漏出 TOOL_CALL 文字。",
-      "detailSummary": "MiniMax M2.7 目前判定為「已最新」，OpenClaw 支援狀態是 native，目前仍需觀察風險與相容性。",
+      "summary": "MiniMax-M2.5 → MiniMax-M2.7-highspeed；OpenClaw: native；已觀測到 MiniMax × lossless-claw × Telegram delivery 交互 bug，會漏出 TOOL_CALL 文字。",
+      "detailSummary": "MiniMax M2.7 目前判定為「建議升級」，OpenClaw 支援狀態是 native，目前仍需觀察風險與相容性。",
       "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
+        "版本差距：MiniMax-M2.5 → MiniMax-M2.7-highspeed",
+        "OpenClaw 支援現況：native / provider-catalog"
       ],
       "systemBenefits": [
+        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
         "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。",
         "目前主代理 Telegram 不建議直接把 MiniMax 當 primary，除非 tool-call 文字化輸出已被 parser 或 sanitizer 吃乾淨。",
         "MiniMax 比較適合低成本 fallback，而不是直接放在最外層 user-facing channel。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
+        "目前判定：建議升級。",
+        "OpenClaw 支援評估：native / provider-catalog",
         "有風險或活性訊號，適合先做小範圍驗證再決定。",
         "Telegram 主代理先不要直接切回 MiniMax primary"
       ],
-      "installedStatus": "configured",
+      "installedStatus": "provider-catalog",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
+        ]
       },
       "nextActions": [
         "Telegram 主代理先不要直接切回 MiniMax primary"
-      ]
-    },
-    {
-      "id": "model-auto-minimax-minimax-m2-5",
-      "name": "MiniMax-M2.5",
-      "category": "model",
-      "subcategory": "minimax",
-      "tags": [
-        "cn",
-        "low-cost"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-tokenplan",
-      "currentVersion": "MiniMax-M2.5",
-      "latestVersion": "MiniMax-M2.5",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "MiniMax-M2.5 → MiniMax-M2.5；OpenClaw: native",
-      "detailSummary": "MiniMax-M2.5 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-minimax-minimax-m2-7",
-      "name": "MiniMax-M2.7",
-      "category": "model",
-      "subcategory": "minimax",
-      "tags": [
-        "cn",
-        "low-cost"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-tokenplan",
-      "currentVersion": "MiniMax-M2.7",
-      "latestVersion": "MiniMax-M2.7",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "MiniMax-M2.7 → MiniMax-M2.7；OpenClaw: native",
-      "detailSummary": "MiniMax-M2.7 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -2931,338 +1840,6 @@
       ]
     },
     {
-      "id": "model-auto-openai-gpt-4o",
-      "name": "gpt-4o",
-      "category": "model",
-      "subcategory": "openai",
-      "tags": [
-        "multimodal"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models",
-      "currentVersion": "gpt-4o",
-      "latestVersion": "gpt-4o",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "gpt-4o → gpt-4o；OpenClaw: native",
-      "detailSummary": "gpt-4o 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-openai-gpt-4o-mini",
-      "name": "gpt-4o-mini",
-      "category": "model",
-      "subcategory": "openai",
-      "tags": [
-        "low-cost",
-        "multimodal"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models",
-      "currentVersion": "gpt-4o-mini",
-      "latestVersion": "gpt-4o-mini",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "gpt-4o-mini → gpt-4o-mini；OpenClaw: native",
-      "detailSummary": "gpt-4o-mini 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-openai-o1",
-      "name": "o1",
-      "category": "model",
-      "subcategory": "openai",
-      "tags": [
-        "reasoning"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models",
-      "currentVersion": "o1",
-      "latestVersion": "o1",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "o1 → o1；OpenClaw: native",
-      "detailSummary": "o1 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-openai-o1-mini",
-      "name": "o1-mini",
-      "category": "model",
-      "subcategory": "openai",
-      "tags": [
-        "low-cost",
-        "reasoning"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models",
-      "currentVersion": "o1-mini",
-      "latestVersion": "o1-mini",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "o1-mini → o1-mini；OpenClaw: native",
-      "detailSummary": "o1-mini 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-openai-o3-mini",
-      "name": "o3-mini",
-      "category": "model",
-      "subcategory": "openai",
-      "tags": [
-        "low-cost"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models",
-      "currentVersion": "o3-mini",
-      "latestVersion": "o3-mini",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "o3-mini → o3-mini；OpenClaw: native",
-      "detailSummary": "o3-mini 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
       "id": "model-codex-gpt-5-4",
       "name": "Codex GPT-5.4",
       "category": "model",
@@ -3336,153 +1913,6 @@
       ]
     },
     {
-      "id": "model-auto-openai-codex-gpt-5-4-mini",
-      "name": "Codex GPT-5.4-MINI",
-      "category": "model",
-      "subcategory": "openai-codex",
-      "tags": [
-        "agentic",
-        "coding",
-        "low-cost",
-        "tool-use"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models/gpt-5/",
-      "currentVersion": "gpt-5.4-mini",
-      "latestVersion": "gpt-5.4-pro-2026-03-05",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "gpt-5.4-mini → gpt-5.4-pro-2026-03-05；OpenClaw: native",
-      "detailSummary": "Codex GPT-5.4-MINI 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：gpt-5.4-mini → gpt-5.4-pro-2026-03-05",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-openai-codex-gpt-5-4-nano",
-      "name": "Codex GPT-5.4-NANO",
-      "category": "model",
-      "subcategory": "openai-codex",
-      "tags": [
-        "agentic",
-        "coding",
-        "tool-use"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://platform.openai.com/docs/models/gpt-5/",
-      "currentVersion": "gpt-5.4-nano",
-      "latestVersion": "gpt-5.4-pro-2026-03-05",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "gpt-5.4-nano → gpt-5.4-pro-2026-03-05；OpenClaw: native",
-      "detailSummary": "Codex GPT-5.4-NANO 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：gpt-5.4-nano → gpt-5.4-pro-2026-03-05",
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
       "id": "model-grok-4-20",
       "name": "Grok 4.20",
       "category": "model",
@@ -3495,78 +1925,12 @@
       "scanFrequency": "daily",
       "sourceType": "cloud_model",
       "sourceUrl": "https://docs.x.ai/developers/release-notes",
-      "currentVersion": "grok-4.20-beta-0309-reasoning",
-      "latestVersion": "grok-4.20",
-      "versionComparison": 1,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "grok-4.20-beta-0309-reasoning → grok-4.20；OpenClaw: native",
-      "detailSummary": "Grok 4.20 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-xai-grok-4-1-fast-reasoning",
-      "name": "grok-4-1-fast-reasoning",
-      "category": "model",
-      "subcategory": "xai",
-      "tags": [
-        "reasoning"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://docs.x.ai/developers/models",
       "currentVersion": "grok-4-1-fast-reasoning",
-      "latestVersion": "grok-4-1-fast-reasoning",
-      "versionComparison": 0,
+      "latestVersion": "grok-4.20",
+      "versionComparison": -1,
       "support": {
         "level": "native",
-        "note": "configured"
+        "note": "provider-catalog"
       },
       "risk": {
         "securityStatus": "clear",
@@ -3582,102 +1946,40 @@
         }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "upgrade",
+        "label": "建議升級",
         "why": [
-          "目前版本已達最新或超前。"
+          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "grok-4-1-fast-reasoning → grok-4-1-fast-reasoning；OpenClaw: native",
-      "detailSummary": "grok-4-1-fast-reasoning 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "grok-4-1-fast-reasoning → grok-4.20；OpenClaw: native",
+      "detailSummary": "Grok 4.20 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
+        "版本差距：grok-4-1-fast-reasoning → grok-4.20",
+        "OpenClaw 支援現況：native / provider-catalog"
       ],
       "systemBenefits": [
+        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
         "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
+        "目前判定：建議升級。",
+        "OpenClaw 支援評估：native / provider-catalog",
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
-      "installedStatus": "configured",
+      "installedStatus": "provider-catalog",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-xai-grok-4-20-experimental-beta-0304-reasoning",
-      "name": "grok-4.20-experimental-beta-0304-reasoning",
-      "category": "model",
-      "subcategory": "xai",
-      "tags": [
-        "beta",
-        "reasoning"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://docs.x.ai/developers/models",
-      "currentVersion": "grok-4.20-experimental-beta-0304-reasoning",
-      "latestVersion": "grok-4.20-experimental-beta-0304-reasoning",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
+        "score": 7.0,
+        "tier": "high",
+        "reasons": [
+          "已有可行升級",
+          "版本落後"
         ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "grok-4.20-experimental-beta-0304-reasoning → grok-4.20-experimental-beta-0304-reasoning；OpenClaw: native",
-      "detailSummary": "grok-4.20-experimental-beta-0304-reasoning 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
       },
       "nextActions": [
         "先維持現況，等待下一輪巡檢與更多訊號"
@@ -3696,149 +1998,12 @@
       "scanFrequency": "daily",
       "sourceType": "cloud_model",
       "sourceUrl": "https://docs.z.ai/release-notes/new-released",
-      "currentVersion": "glm-5.1",
-      "latestVersion": "glm-5.1",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "glm-5.1 → glm-5.1；OpenClaw: native",
-      "detailSummary": "GLM 5.1 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-zai-glm-4-7",
-      "name": "glm-4.7",
-      "category": "model",
-      "subcategory": "zai",
-      "tags": [
-        "cn"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://docs.z.ai/release-notes/new-released",
-      "currentVersion": "glm-4.7",
-      "latestVersion": "glm-5.1",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "glm-4.7 → glm-5.1；OpenClaw: native",
-      "detailSummary": "glm-4.7 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：glm-4.7 → glm-5.1",
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-zai-glm-5",
-      "name": "glm-5",
-      "category": "model",
-      "subcategory": "zai",
-      "tags": [
-        "cn"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://docs.z.ai/release-notes/new-released",
       "currentVersion": "glm-5",
       "latestVersion": "glm-5.1",
       "versionComparison": -1,
       "support": {
         "level": "native",
-        "note": "configured-live"
+        "note": "provider-catalog"
       },
       "risk": {
         "securityStatus": "clear",
@@ -3863,10 +2028,10 @@
       "macosFit": [],
       "featureSuggestions": [],
       "summary": "glm-5 → glm-5.1；OpenClaw: native",
-      "detailSummary": "glm-5 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "detailSummary": "GLM 5.1 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "版本差距：glm-5 → glm-5.1",
-        "OpenClaw 支援現況：native / configured-live"
+        "OpenClaw 支援現況：native / provider-catalog"
       ],
       "systemBenefits": [
         "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
@@ -3875,10 +2040,10 @@
       ],
       "evaluationNotes": [
         "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured-live",
+        "OpenClaw 支援評估：native / provider-catalog",
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
-      "installedStatus": "configured-live",
+      "installedStatus": "provider-catalog",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
@@ -3888,144 +2053,6 @@
           "已有可行升級",
           "版本落後"
         ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-zai-glm-5-turbo",
-      "name": "glm-5-turbo",
-      "category": "model",
-      "subcategory": "zai",
-      "tags": [
-        "cn",
-        "low-cost"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://docs.z.ai/release-notes/new-released",
-      "currentVersion": "glm-5-turbo",
-      "latestVersion": "glm-5.1",
-      "versionComparison": -1,
-      "support": {
-        "level": "native",
-        "note": "configured-live"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "模型主線已有更新，先確認 OpenClaw provider 與工具調用相容性。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "glm-5-turbo → glm-5.1；OpenClaw: native",
-      "detailSummary": "glm-5-turbo 目前判定為「建議升級」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：glm-5-turbo → glm-5.1",
-        "OpenClaw 支援現況：native / configured-live"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "OpenClaw 支援評估：native / configured-live",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured-live",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ]
-    },
-    {
-      "id": "model-auto-zhipu-glm-5-plus",
-      "name": "glm-5-plus",
-      "category": "model",
-      "subcategory": "zhipu",
-      "tags": [
-        "cn"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "cloud_model",
-      "sourceUrl": "https://open.bigmodel.cn/",
-      "currentVersion": "glm-5-plus",
-      "latestVersion": "glm-5-plus",
-      "versionComparison": 0,
-      "support": {
-        "level": "native",
-        "note": "configured"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
-        "why": [
-          "目前版本已達最新或超前。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "glm-5-plus → glm-5-plus；OpenClaw: native",
-      "detailSummary": "glm-5-plus 目前判定為「已最新」，OpenClaw 支援狀態是 native，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "OpenClaw 支援現況：native / configured"
-      ],
-      "systemBenefits": [
-        "可讓 agent 排序與 fallback 決策更接近實際可用模型，而不是停留在過期假設。",
-        "若沿用 OpenClaw 現有接受清單，導入成本相對可控，不需要先重做整個 provider 架構。"
-      ],
-      "evaluationNotes": [
-        "目前判定：已最新。",
-        "OpenClaw 支援評估：native / configured",
-        "先維持現況，等待下一輪巡檢與更多訊號"
-      ],
-      "installedStatus": "configured",
-      "activitySignals": [],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 0.0,
-        "tier": "low",
-        "reasons": []
       },
       "nextActions": [
         "先維持現況，等待下一輪巡檢與更多訊號"
@@ -4043,9 +2070,9 @@
       "scanFrequency": "daily",
       "sourceType": "pypi",
       "sourceUrl": "https://pypi.org/project/fastapi/",
-      "currentVersion": "0.133.1",
-      "latestVersion": "0.135.3",
-      "versionComparison": -1,
+      "currentVersion": null,
+      "latestVersion": "0.136.1",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4054,9 +2081,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4066,44 +2091,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "manual-review",
+        "label": "手動檢查",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "0.133.1 → 0.135.3；FastAPI framework, high performance, easy to learn, fast to code, ready for production",
-      "detailSummary": "fastapi 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "FastAPI framework, high performance, easy to learn, fast to code, ready for production",
+      "detailSummary": "fastapi 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：0.133.1 → 0.135.3",
-        "更新重點：FastAPI framework, high performance, easy to learn, fast to code, ready for production",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：FastAPI framework, high performance, easy to learn, fast to code, ready for production"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：手動檢查。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -4118,9 +2135,9 @@
       "scanFrequency": "daily",
       "sourceType": "pypi",
       "sourceUrl": "https://pypi.org/project/litellm/",
-      "currentVersion": "1.81.16",
-      "latestVersion": "1.83.1",
-      "versionComparison": -1,
+      "currentVersion": null,
+      "latestVersion": "1.83.13",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4129,10 +2146,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 2197",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4142,45 +2156,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "manual-review",
+        "label": "手動檢查",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "1.81.16 → 1.83.1；Library to easily interface with LLM API providers",
-      "detailSummary": "litellm 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "Library to easily interface with LLM API providers",
+      "detailSummary": "litellm 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：1.81.16 → 1.83.1",
-        "更新重點：Library to easily interface with LLM API providers",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Library to easily interface with LLM API providers"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：手動檢查。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 2197",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -4195,9 +2200,9 @@
       "scanFrequency": "daily",
       "sourceType": "pypi",
       "sourceUrl": "https://pypi.org/project/openai/",
-      "currentVersion": "2.24.0",
-      "latestVersion": "2.30.0",
-      "versionComparison": -1,
+      "currentVersion": null,
+      "latestVersion": "2.32.0",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4206,10 +2211,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 371",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4219,45 +2221,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "manual-review",
+        "label": "手動檢查",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2.24.0 → 2.30.0；The official Python library for the openai API",
-      "detailSummary": "openai 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "The official Python library for the openai API",
+      "detailSummary": "openai 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：2.24.0 → 2.30.0",
-        "更新重點：The official Python library for the openai API",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：The official Python library for the openai API"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：手動檢查。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 371",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -4283,9 +2276,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4306,8 +2297,7 @@
       "summary": "1.58.0 → 1.58.0；A high-level API to automate web browsers",
       "detailSummary": "playwright 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "更新重點：A high-level API to automate web browsers",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：A high-level API to automate web browsers"
       ],
       "systemBenefits": [
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
@@ -4317,9 +2307,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -4342,8 +2330,8 @@
       "scanFrequency": "daily",
       "sourceType": "pypi",
       "sourceUrl": "https://pypi.org/project/pydantic/",
-      "currentVersion": "2.12.5",
-      "latestVersion": "2.12.5",
+      "currentVersion": null,
+      "latestVersion": "2.13.3",
       "versionComparison": 0,
       "support": {
         "level": "n/a",
@@ -4363,16 +2351,16 @@
         }
       },
       "recommendation": {
-        "action": "up-to-date",
-        "label": "已最新",
+        "action": "manual-review",
+        "label": "手動檢查",
         "why": [
-          "目前版本已達最新或超前。"
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2.12.5 → 2.12.5；Data validation using Python type hints",
-      "detailSummary": "pydantic 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "Data validation using Python type hints",
+      "detailSummary": "pydantic 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
         "更新重點：Data validation using Python type hints"
       ],
@@ -4380,7 +2368,7 @@
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：已最新。",
+        "目前判定：手動檢查。",
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
@@ -4418,10 +2406,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 239",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4442,8 +2427,7 @@
       "summary": "2.33.1 → 2.33.1；Python HTTP for Humans.",
       "detailSummary": "requests 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "更新重點：Python HTTP for Humans.",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Python HTTP for Humans."
       ],
       "systemBenefits": [
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
@@ -4454,10 +2438,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 239",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -4480,84 +2461,9 @@
       "scanFrequency": "daily",
       "sourceType": "pypi",
       "sourceUrl": "https://pypi.org/project/supabase/",
-      "currentVersion": "2.28.0",
-      "latestVersion": "2.28.3",
-      "versionComparison": -1,
-      "support": {
-        "level": "n/a",
-        "note": "not model"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-02"
-        ],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "2.28.0 → 2.28.3；Supabase client for Python.",
-      "detailSummary": "supabase 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：2.28.0 → 2.28.3",
-        "更新重點：Supabase client for Python.",
-        "上游 repo 最近更新於 2026-04-02"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
-      ],
-      "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-02"
-      ],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
-      ]
-    },
-    {
-      "id": "package-uvicorn",
-      "name": "uvicorn",
-      "category": "package",
-      "subcategory": "pypi",
-      "tags": [
-        "python",
-        "asgi"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "pypi",
-      "sourceUrl": "https://pypi.org/project/uvicorn/",
-      "currentVersion": "0.41.0",
-      "latestVersion": "0.42.0",
-      "versionComparison": -1,
+      "currentVersion": null,
+      "latestVersion": "2.29.0",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4576,57 +2482,52 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "manual-review",
+        "label": "手動檢查",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "0.41.0 → 0.42.0；The lightning-fast ASGI server.",
-      "detailSummary": "uvicorn 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "Supabase client for Python.",
+      "detailSummary": "supabase 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：0.41.0 → 0.42.0",
-        "更新重點：The lightning-fast ASGI server."
+        "更新重點：Supabase client for Python."
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：手動檢查。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
-      "id": "skill-minimax-skills",
-      "name": "MiniMax Skills",
-      "category": "skill",
-      "subcategory": "github",
+      "id": "package-uvicorn",
+      "name": "uvicorn",
+      "category": "package",
+      "subcategory": "pypi",
       "tags": [
-        "skills",
-        "minimax"
+        "python",
+        "asgi"
       ],
-      "scanFrequency": "weekly",
-      "sourceType": "github_repo",
-      "sourceUrl": "https://github.com/minimax-ai/skills",
+      "scanFrequency": "daily",
+      "sourceType": "pypi",
+      "sourceUrl": "https://pypi.org/project/uvicorn/",
       "currentVersion": null,
-      "latestVersion": null,
+      "latestVersion": "0.46.0",
       "versionComparison": 0,
       "support": {
         "level": "n/a",
@@ -4636,9 +2537,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4656,10 +2555,75 @@
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "尚無足夠自動摘要",
+      "summary": "The lightning-fast ASGI server.",
+      "detailSummary": "uvicorn 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "releaseHighlights": [
+        "更新重點：The lightning-fast ASGI server."
+      ],
+      "systemBenefits": [
+        "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
+      ],
+      "evaluationNotes": [
+        "目前判定：手動檢查。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ],
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "skill-minimax-skills",
+      "name": "MiniMax Skills",
+      "category": "skill",
+      "subcategory": "github",
+      "tags": [
+        "skills",
+        "minimax"
+      ],
+      "scanFrequency": "weekly",
+      "sourceType": "github_repo",
+      "sourceUrl": "https://github.com/minimax-ai/skills/releases",
+      "currentVersion": null,
+      "latestVersion": null,
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "manual-review",
+        "label": "手動檢查",
+        "why": [
+          "目前無法自動比較完整版本差距，建議保守人工確認。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "GitHub API rate limited; fallback to manual review.",
       "detailSummary": "MiniMax Skills 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：GitHub API rate limited; fallback to manual review."
       ],
       "systemBenefits": [],
       "evaluationNotes": [
@@ -4667,9 +2631,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -4691,7 +2653,7 @@
       ],
       "scanFrequency": "weekly",
       "sourceType": "github_repo",
-      "sourceUrl": "https://github.com/HKUDS/OpenSpace",
+      "sourceUrl": "https://github.com/HKUDS/OpenSpace/releases",
       "currentVersion": null,
       "latestVersion": null,
       "versionComparison": 0,
@@ -4703,9 +2665,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -4723,10 +2683,10 @@
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "尚無足夠自動摘要",
+      "summary": "GitHub API rate limited; fallback to manual review.",
       "detailSummary": "OpenSpace 目前判定為「手動檢查」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：GitHub API rate limited; fallback to manual review."
       ],
       "systemBenefits": [],
       "evaluationNotes": [
@@ -4734,9 +2694,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -4881,9 +2839,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://bun.sh/",
-      "currentVersion": "1.3.8",
-      "latestVersion": "1.3.11",
-      "versionComparison": -1,
+      "currentVersion": "1.3.13",
+      "latestVersion": "1.3.13",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4902,42 +2860,37 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "1.3.8 → 1.3.11；Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.",
-      "detailSummary": "bun 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "1.3.13 → 1.3.13；Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.",
+      "detailSummary": "bun 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：1.3.8 → 1.3.11",
         "更新重點：Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one."
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
         "本機腳本與 build 鏈會更穩，對開發迴圈與部署一致性有直接幫助。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -4952,9 +2905,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
-      "currentVersion": "2026.2.0",
+      "currentVersion": "2026.3.0",
       "latestVersion": "2026.3.0",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -4973,41 +2926,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2026.2.0 → 2026.3.0；Cloudflare Tunnel client (formerly Argo Tunnel)",
-      "detailSummary": "cloudflared 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "2026.3.0 → 2026.3.0；Cloudflare Tunnel client (formerly Argo Tunnel)",
+      "detailSummary": "cloudflared 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：2026.2.0 → 2026.3.0",
         "更新重點：Cloudflare Tunnel client (formerly Argo Tunnel)"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5023,9 +2971,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://ffmpeg.org/",
-      "currentVersion": "8.0.1_4",
+      "currentVersion": "8.1_1",
       "latestVersion": "8.1",
-      "versionComparison": -1,
+      "versionComparison": 1,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5044,10 +2992,10 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [
@@ -5055,35 +3003,30 @@
         "影音處理屬於本機強項，建議保持在穩定新版本。"
       ],
       "featureSuggestions": [],
-      "summary": "8.0.1_4 → 8.1；Play, record, convert, and stream select audio and video codecs",
-      "detailSummary": "ffmpeg 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "8.1_1 → 8.1；Play, record, convert, and stream select audio and video codecs",
+      "detailSummary": "ffmpeg 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：8.0.1_4 → 8.1",
         "更新重點：Play, record, convert, and stream select audio and video codecs"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
         "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。",
         "影音處理屬於本機強項，建議保持在穩定新版本。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5098,9 +3041,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://cli.github.com/",
-      "currentVersion": "2.86.0",
-      "latestVersion": "2.89.0",
-      "versionComparison": -1,
+      "currentVersion": "2.91.0",
+      "latestVersion": "2.91.0",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5119,41 +3062,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2.86.0 → 2.89.0；GitHub command-line tool",
-      "detailSummary": "gh 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "2.91.0 → 2.91.0；GitHub command-line tool",
+      "detailSummary": "gh 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：2.86.0 → 2.89.0",
         "更新重點：GitHub command-line tool"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5168,9 +3106,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://nodejs.org/",
-      "currentVersion": "25.8.0",
-      "latestVersion": "25.8.2",
-      "versionComparison": -1,
+      "currentVersion": "25.9.0_2",
+      "latestVersion": "25.9.0",
+      "versionComparison": 1,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5189,41 +3127,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "25.8.0 → 25.8.2；Open-source, cross-platform JavaScript runtime environment",
-      "detailSummary": "node 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "25.9.0_2 → 25.9.0；Open-source, cross-platform JavaScript runtime environment",
+      "detailSummary": "node 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：25.8.0 → 25.8.2",
         "更新重點：Open-source, cross-platform JavaScript runtime environment"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5239,9 +3172,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://tailscale.com",
-      "currentVersion": "1.94.1",
+      "currentVersion": "1.96.4",
       "latestVersion": "1.96.4",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5260,44 +3193,39 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [
         "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。"
       ],
       "featureSuggestions": [],
-      "summary": "1.94.1 → 1.96.4；Easiest, most secure way to use WireGuard and 2FA",
-      "detailSummary": "tailscale 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "1.96.4 → 1.96.4；Easiest, most secure way to use WireGuard and 2FA",
+      "detailSummary": "tailscale 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：1.94.1 → 1.96.4",
         "更新重點：Easiest, most secure way to use WireGuard and 2FA"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
         "和 macOS / Mac mini 原生環境相容度高，可優先維持最新。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5312,9 +3240,9 @@
       "scanFrequency": "daily",
       "sourceType": "brew",
       "sourceUrl": "https://github.com/yt-dlp/yt-dlp",
-      "currentVersion": "2026.2.4",
+      "currentVersion": "2026.3.17_1",
       "latestVersion": "2026.3.17",
-      "versionComparison": -1,
+      "versionComparison": 1,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5333,41 +3261,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2026.2.4 → 2026.3.17；Feature-rich command-line audio/video downloader",
-      "detailSummary": "yt-dlp 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "2026.3.17_1 → 2026.3.17；Feature-rich command-line audio/video downloader",
+      "detailSummary": "yt-dlp 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：2026.2.4 → 2026.3.17",
         "更新重點：Feature-rich command-line audio/video downloader"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5382,10 +3305,10 @@
       ],
       "scanFrequency": "daily",
       "sourceType": "github_release",
-      "sourceUrl": "https://github.com/openclaw/openclaw/releases/tag/v2026.4.2",
-      "currentVersion": "2026.4.1",
-      "latestVersion": "v2026.4.2",
-      "versionComparison": -1,
+      "sourceUrl": "https://github.com/openclaw/openclaw/releases/tag/v2026.4.23",
+      "currentVersion": "2026.4.23",
+      "latestVersion": "v2026.4.23",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5397,8 +3320,8 @@
           "OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。"
         ],
         "activitySignals": [
-          "open issues 高於 17096",
-          "repo 更新於 2026-04-03"
+          "open issues 高於 13478",
+          "repo 更新於 2026-04-25"
         ],
         "advisories": {
           "count": 0,
@@ -5409,10 +3332,10 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
@@ -5421,43 +3344,37 @@
         "OpenClaw 升級前一定先看 provider / tool-call compatibility，尤其 MiniMax 與 Telegram 輸出鏈。",
         "如果 release notes 涉及 gateway / parser / protocol，先做本機 smoke test，不要直接上 production。"
       ],
-      "summary": "2026.4.1 → v2026.4.2；OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。；Plugins/xAI: move `x_search` settings from the legacy core `tools.web.x_search.*` path to the plugin-owned `plugins.entries.xai.config.xSearch.*` path, standardize `x_search` auth on `plugins.entries.xai.config.webSearch.apiKey` / `XAI_API_KEY`, and migrate legacy config with `openclaw doctor --fix`. (#59674) Thanks @vincentkoc. / Plugins/web fetch: move Firecrawl `web_fetch` config from the legacy core `tools.web.fetch.firecrawl.*` path to the plugin-owned `plugins.entries.firecrawl.config.webFetch.*` path, route `web_fetch` fallback through the new fetch-provider boundary instead of a Firecrawl-only core branch, and migrate legacy config with `openclaw doctor --fix`. (#59465) Thanks @vincentkoc. / Tasks/Task Flow: restore the core Task Flow substrate with managed-vs-mirrored sync modes, durable flow state/revision tracking, and `openclaw flows` inspection/recovery primitives so background orchestration can persist and be operated separately from plugin authoring layers. (#58930) Thanks @mbelinky.",
-      "detailSummary": "OpenClaw 目前判定為「建議升級」，目前仍需觀察風險與相容性。",
+      "summary": "2026.4.23 → v2026.4.23；OpenClaw 生態更新快，跨版本跳升容易牽動 provider parser 與 gateway 行為。；Providers/OpenAI: add image generation and reference-image editing through Codex OAuth, so `openai/gpt-image-2` works without an `OPENAI_API_KEY`. Fixes #70703. / Providers/OpenRouter: add image generation and reference-image editing through `image_generate`, so OpenRouter image models work with `OPENROUTER_API_KEY`. Fixes #55066 via #67668. Thanks @notamicrodose. / Image generation: let agents request provider-supported quality and output format hints, and pass OpenAI-specific background, moderation, compression, and user hints through the `image_generate` tool. (#70503) Thanks @ottodeng.",
+      "detailSummary": "OpenClaw 目前判定為「已最新」，目前仍需觀察風險與相容性。",
       "releaseHighlights": [
-        "版本差距：2026.4.1 → v2026.4.2",
-        "更新重點：Plugins/xAI: move `x_search` settings from the legacy core `tools.web.x_search.*` path to the plugin-owned `plugins.entries.xai.config.xSearch.*` path, standardize `x_search` auth on `plugins.entries.xai.config.webSearch.apiKey` / `XAI_API_KEY`, and migrate legacy config with `openclaw doctor --fix`. (#59674) Thanks @vincentkoc. / Plugins/web fetch: move Firecrawl `web_fetch` config from the legacy core `tools.web.fetch.firecrawl.*` path to the plugin-owned `plugins.entries.firecrawl.config.webFetch.*` path, route `web_fetch` fallback through the new fetch-provider boundary instead of a Firecrawl-only core branch, and migrate legacy config with `openclaw doctor --fix`. (#59465) Thanks @vincentkoc. / Tasks/Task Flow: restore the core Task Flow substrate with managed-vs-mirrored sync modes, durable flow state/revision tracking, and `openclaw flows` inspection/recovery primitives so background orchestration can persist and be operated separately from plugin authoring layers. (#58930) Thanks @mbelinky.",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Providers/OpenAI: add image generation and reference-image editing through Codex OAuth, so `openai/gpt-image-2` works without an `OPENAI_API_KEY`. Fixes #70703. / Providers/OpenRouter: add image generation and reference-image editing through `image_generate`, so OpenRouter image models work with `OPENROUTER_API_KEY`. Fixes #55066 via #67668. Thanks @notamicrodose. / Image generation: let agents request provider-supported quality and output format hints, and pass OpenAI-specific background, moderation, compression, and user hints through the `image_generate` tool. (#70503) Thanks @ottodeng.",
+        "上游 repo 最近更新於 2026-04-25"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
         "可同步拿到 provider、failover 與 retry 類修正，降低主代理與 fallback 漂移。",
         "先看新 release 是否改善 provider/tool-call compatibility，再安排灰度升級。",
         "OpenClaw 升級前一定先看 provider / tool-call compatibility，尤其 MiniMax 與 Telegram 輸出鏈。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
+        "目前判定：已最新。",
         "有風險或活性訊號，適合先做小範圍驗證再決定。",
-        "先做本機 smoke test，再安排灰度升級",
         "先做 provider/tool-call smoke test，再決定要不要升級 gateway"
       ],
       "installedStatus": "n/a",
       "activitySignals": [
-        "open issues 高於 17096",
-        "repo 更新於 2026-04-03"
+        "open issues 高於 13478",
+        "repo 更新於 2026-04-25"
       ],
       "externalRiskHits": [],
       "priority": {
-        "score": 8.0,
-        "tier": "high",
+        "score": 1.0,
+        "tier": "low",
         "reasons": [
-          "已有可行升級",
-          "版本落後",
           "核心控制面元件"
         ]
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級",
         "先做 provider/tool-call smoke test，再決定要不要升級 gateway"
       ]
     },
@@ -5474,86 +3391,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": "https://github.com/anthropics/claude-code",
-      "currentVersion": "2.1.86",
-      "latestVersion": "2.1.91",
-      "versionComparison": -1,
-      "support": {
-        "level": "n/a",
-        "note": "not model"
-      },
-      "risk": {
-        "securityStatus": "clear",
-        "reviewStatus": "clear",
-        "negativeSignals": [],
-        "activitySignals": [
-          "open issues 高於 9053",
-          "repo 更新於 2026-04-03"
-        ],
-        "advisories": {
-          "count": 0,
-          "critical": 0,
-          "high": 0,
-          "aliases": [],
-          "details": []
-        }
-      },
-      "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
-        "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
-        ]
-      },
-      "macosFit": [],
-      "featureSuggestions": [],
-      "summary": "2.1.86 → 2.1.91",
-      "detailSummary": "@anthropic-ai/claude-code 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
-      "releaseHighlights": [
-        "版本差距：2.1.86 → 2.1.91",
-        "更新重點：Use Claude, Anthropic's AI assistant, right from your terminal. Claude can understand your codebase, edit files, run terminal commands, and handle entire workflows for you.",
-        "上游 repo 最近更新於 2026-04-03"
-      ],
-      "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
-        "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
-      ],
-      "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
-      ],
-      "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 9053",
-        "repo 更新於 2026-04-03"
-      ],
-      "externalRiskHits": [],
-      "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
-      },
-      "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
-      ]
-    },
-    {
-      "id": "tool-byterover-cli",
-      "name": "@byterover/byterover",
-      "category": "tool",
-      "subcategory": "npm-global",
-      "tags": [
-        "extension",
-        "memory"
-      ],
-      "scanFrequency": "daily",
-      "sourceType": "npm_global",
-      "sourceUrl": null,
-      "currentVersion": "1.1.0",
-      "latestVersion": "1.1.5",
-      "versionComparison": -1,
+      "currentVersion": "2.1.119",
+      "latestVersion": "2.1.119",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5572,41 +3412,101 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "1.1.0 → 1.1.5",
-      "detailSummary": "@byterover/byterover 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "2.1.119 → 2.1.119",
+      "detailSummary": "@anthropic-ai/claude-code 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：1.1.0 → 1.1.5",
-        "更新重點：ByteRover context engine plugin for OpenClaw — curates and queries conversation context via brv CLI"
+        "更新重點：Use Claude, Anthropic's AI assistant, right from your terminal. Claude can understand your codebase, edit files, run terminal commands, and handle entire workflows for you."
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ]
+    },
+    {
+      "id": "tool-byterover-cli",
+      "name": "@byterover/byterover",
+      "category": "tool",
+      "subcategory": "npm-global",
+      "tags": [
+        "extension",
+        "memory"
+      ],
+      "scanFrequency": "daily",
+      "sourceType": "npm_global",
+      "sourceUrl": "https://github.com/campfirein/brv-openclaw-plugin#readme",
+      "currentVersion": "1.1.7",
+      "latestVersion": "1.1.7",
+      "versionComparison": 0,
+      "support": {
+        "level": "n/a",
+        "note": "not model"
+      },
+      "risk": {
+        "securityStatus": "clear",
+        "reviewStatus": "clear",
+        "negativeSignals": [],
+        "activitySignals": [],
+        "advisories": {
+          "count": 0,
+          "critical": 0,
+          "high": 0,
+          "aliases": [],
+          "details": []
+        }
+      },
+      "recommendation": {
+        "action": "up-to-date",
+        "label": "已最新",
+        "why": [
+          "目前版本已達最新或超前。"
+        ]
+      },
+      "macosFit": [],
+      "featureSuggestions": [],
+      "summary": "1.1.7 → 1.1.7",
+      "detailSummary": "@byterover/byterover 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "releaseHighlights": [
+        "更新重點：ByteRover context engine plugin for OpenClaw — curates and queries conversation context via brv CLI"
+      ],
+      "systemBenefits": [
+        "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
+      ],
+      "evaluationNotes": [
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
+      ],
+      "installedStatus": "n/a",
+      "activitySignals": [],
+      "externalRiskHits": [],
+      "priority": {
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
+      },
+      "nextActions": [
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5622,9 +3522,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": "https://github.com/openai/codex#readme",
-      "currentVersion": "0.118.0-alpha.3",
-      "latestVersion": "0.118.0",
-      "versionComparison": 1,
+      "currentVersion": "0.125.0",
+      "latestVersion": "0.125.0",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5635,10 +3535,7 @@
         "negativeSignals": [
           "協定變更頻繁，舊客戶端容易出現 unknown variant / timeout。"
         ],
-        "activitySignals": [
-          "open issues 高於 2247",
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -5659,11 +3556,10 @@
         "Codex CLI 建議與 LabIDE /桌面端協定一起觀察，避免再踩 protocol mismatch。",
         "Codex CLI 升級要和桌面端 / LabIDE app-server protocol 一起看，避免再次出現 shim 等級 workaround。"
       ],
-      "summary": "0.118.0-alpha.3 → 0.118.0；協定變更頻繁，舊客戶端容易出現 unknown variant / timeout。",
+      "summary": "0.125.0 → 0.125.0；協定變更頻繁，舊客戶端容易出現 unknown variant / timeout。",
       "detailSummary": "@openai/codex 目前判定為「已最新」，目前仍需觀察風險與相容性。",
       "releaseHighlights": [
-        "更新重點：<p align=\"center\"><code>npm i -g @openai/codex</code><br />or <code>brew install --cask codex</code></p> <p align=\"center\"><strong>Codex CLI</strong> is a coding agent from OpenAI that runs locally on your computer. <p align=\"center\">   <img src=\"https://",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：<p align=\"center\"><code>npm i -g @openai/codex</code><br />or <code>brew install --cask codex</code></p> <p align=\"center\"><strong>Codex CLI</strong> is a coding agent from OpenAI that runs locally on your computer. <p align=\"center\">   <img src=\"https://"
       ],
       "systemBenefits": [
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
@@ -5676,10 +3572,7 @@
         "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "open issues 高於 2247",
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
         "score": 0.0,
@@ -5702,9 +3595,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": null,
-      "currentVersion": "2026.3.1",
+      "currentVersion": "2026.3.13",
       "latestVersion": "2026.3.13",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5723,41 +3616,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "2026.3.1 → 2026.3.13",
-      "detailSummary": "@openclaw/lobster 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "2026.3.13 → 2026.3.13",
+      "detailSummary": "@openclaw/lobster 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：2026.3.1 → 2026.3.13",
         "更新重點：Lobster workflow tool plugin (typed pipelines + resumable approvals)"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5772,9 +3660,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": "https://playwright.dev",
-      "currentVersion": "0.0.64",
+      "currentVersion": "0.0.70",
       "latestVersion": "0.0.70",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5783,9 +3671,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -5795,44 +3681,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "0.0.64 → 0.0.70",
-      "detailSummary": "@playwright/mcp 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "0.0.70 → 0.0.70",
+      "detailSummary": "@playwright/mcp 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：0.0.64 → 0.0.70",
-        "更新重點：Playwright Tools for MCP",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Playwright Tools for MCP"
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -5847,9 +3725,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": "https://github.com/apify/apify-cli#readme",
-      "currentVersion": "1.2.1",
+      "currentVersion": "1.4.1",
       "latestVersion": "1.4.1",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -5858,9 +3736,7 @@
         "securityStatus": "clear",
         "reviewStatus": "clear",
         "negativeSignals": [],
-        "activitySignals": [
-          "repo 更新於 2026-04-02"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -5870,44 +3746,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "1.2.1 → 1.4.1",
-      "detailSummary": "apify-cli 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "1.4.1 → 1.4.1",
+      "detailSummary": "apify-cli 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：1.2.1 → 1.4.1",
-        "更新重點：Apify command-line interface (CLI) helps you manage the Apify cloud platform and develop, build, and deploy Apify Actors.",
-        "上游 repo 最近更新於 2026-04-02"
+        "更新重點：Apify command-line interface (CLI) helps you manage the Apify cloud platform and develop, build, and deploy Apify Actors."
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-02"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -6025,9 +3893,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": null,
-      "currentVersion": "0.5.0",
+      "currentVersion": "0.9.0",
       "latestVersion": "0.9.0",
-      "versionComparison": -1,
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -6046,41 +3914,36 @@
         }
       },
       "recommendation": {
-        "action": "upgrade",
-        "label": "建議升級",
+        "action": "up-to-date",
+        "label": "已最新",
         "why": [
-          "有穩定新版本可用，建議安排小範圍 smoke test 後升級。"
+          "目前版本已達最新或超前。"
         ]
       },
       "macosFit": [],
       "featureSuggestions": [],
-      "summary": "0.5.0 → 0.9.0",
-      "detailSummary": "clawhub 目前判定為「建議升級」，整體風險相對可控，可視 smoke 結果安排後續導入。",
+      "summary": "0.9.0 → 0.9.0",
+      "detailSummary": "clawhub 目前判定為「已最新」，整體風險相對可控，可視 smoke 結果安排後續導入。",
       "releaseHighlights": [
-        "版本差距：0.5.0 → 0.9.0",
         "更新重點：ClawHub CLI \\u2014 install, update, search, and publish skills plus OpenClaw packages."
       ],
       "systemBenefits": [
-        "若 smoke test 通過，可先縮小版本落差，降低之後一次性大升級的風險。",
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。"
       ],
       "evaluationNotes": [
-        "目前判定：建議升級。",
-        "先做本機 smoke test，再安排灰度升級"
+        "目前判定：已最新。",
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ],
       "installedStatus": "n/a",
       "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 7.0,
-        "tier": "high",
-        "reasons": [
-          "已有可行升級",
-          "版本落後"
-        ]
+        "score": 0.0,
+        "tier": "low",
+        "reasons": []
       },
       "nextActions": [
-        "先做本機 smoke test，再安排灰度升級"
+        "先維持現況，等待下一輪巡檢與更多訊號"
       ]
     },
     {
@@ -6095,9 +3958,9 @@
       "scanFrequency": "daily",
       "sourceType": "npm_global",
       "sourceUrl": "https://docs.firecrawl.dev/cli",
-      "currentVersion": "1.9.8",
-      "latestVersion": "1.12.2",
-      "versionComparison": -1,
+      "currentVersion": "1.15.2",
+      "latestVersion": "1.15.2",
+      "versionComparison": 0,
       "support": {
         "level": "n/a",
         "note": "not model"
@@ -6108,9 +3971,7 @@
         "negativeSignals": [
           "web scraping 生態近期有供應鏈污染案例，快更新不一定更安全。"
         ],
-        "activitySignals": [
-          "repo 更新於 2026-04-03"
-        ],
+        "activitySignals": [],
         "advisories": {
           "count": 0,
           "critical": 0,
@@ -6130,12 +3991,10 @@
       "featureSuggestions": [
         "抓取類工具升級前要先查供應鏈與封鎖風險，不要用最新版本直接進 production pipeline。"
       ],
-      "summary": "1.9.8 → 1.12.2；web scraping 生態近期有供應鏈污染案例，快更新不一定更安全。",
+      "summary": "1.15.2 → 1.15.2；web scraping 生態近期有供應鏈污染案例，快更新不一定更安全。",
       "detailSummary": "firecrawl-cli 目前判定為「觀察等待」，目前仍需觀察風險與相容性。",
       "releaseHighlights": [
-        "版本差距：1.9.8 → 1.12.2",
-        "更新重點：Command-line interface for Firecrawl. Scrape, crawl, and extract data from any website directly from your terminal.",
-        "上游 repo 最近更新於 2026-04-03"
+        "更新重點：Command-line interface for Firecrawl. Scrape, crawl, and extract data from any website directly from your terminal."
       ],
       "systemBenefits": [
         "可讓本機開發、正式站部署與後續依賴追蹤維持同一條基線。",
@@ -6147,16 +4006,13 @@
         "先觀察社群與供應鏈訊號，暫不追最新"
       ],
       "installedStatus": "n/a",
-      "activitySignals": [
-        "repo 更新於 2026-04-03"
-      ],
+      "activitySignals": [],
       "externalRiskHits": [],
       "priority": {
-        "score": 4.0,
-        "tier": "medium",
+        "score": 3.0,
+        "tier": "low",
         "reasons": [
-          "需先觀察風險",
-          "版本落後"
+          "需先觀察風險"
         ]
       },
       "nextActions": [
@@ -6167,37 +4023,15 @@
   "modelRecommendations": {
     "vectors": {
       "coding": [
-        "openai-codex/gpt-5.4",
-        "anthropic/claude-sonnet-4-6",
-        "zai/glm-5.1",
-        "local-llm/qwen2.5-coder-7b-instruct-mlx"
+        "openai-codex/gpt-5.4"
       ],
-      "research": [
-        "anthropic/claude-opus-4-6",
-        "zai/glm-5.1",
-        "xai/grok-4.20-beta-0309-reasoning",
-        "gemini/gemini-2.5-pro"
-      ],
+      "research": [],
       "tool_use": [
-        "anthropic/claude-sonnet-4-6",
-        "openai-codex/gpt-5.4",
-        "zai/glm-5.1"
+        "openai-codex/gpt-5.4"
       ],
-      "local_first": [
-        "local-llm/mistral-nemo-instruct-2407",
-        "local-llm/gemma-3-4b-it-qat",
-        "local-llm/qwen3.5-4b-optiq"
-      ],
-      "low_cost": [
-        "minimax/MiniMax-M2.7-highspeed",
-        "zai/glm-5-turbo",
-        "local-llm/qwen3.5-4b-optiq"
-      ],
-      "structured_output": [
-        "openai-codex/gpt-5.4-mini",
-        "anthropic/claude-sonnet-4-6",
-        "zai/glm-5.1"
-      ]
+      "local_first": [],
+      "low_cost": [],
+      "structured_output": []
     },
     "agents": [
       {
@@ -6209,124 +4043,19 @@
           "openai-codex/gpt-5.4",
           "gemini/gemini-2.5-pro",
           "minimax/MiniMax-M2.7-highspeed",
-          "xai/grok-4-1-fast-reasoning"
-        ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "openai-codex/gpt-5.4",
-          "gemini/gemini-2.5-pro",
-          "minimax/MiniMax-M2.7-highspeed",
           "xai/grok-4-1-fast-reasoning",
-          "anthropic-opus46/claude-sonnet-4-6"
+          "nvidia-nim/meta/llama3-8b-instruct"
         ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "openai-codex/gpt-5.4",
-          "gemini/gemini-2.5-pro",
-          "minimax/MiniMax-M2.7-highspeed",
-          "xai/grok-4-1-fast-reasoning",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4-mini",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/qwen3.5-9b-mlx",
-          "minimax/MiniMax-M2.5",
-          "minimax/MiniMax-M2.7",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-4.7",
-          "zai/glm-5",
-          "zai/glm-5-turbo",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
-        "newlyAddedAcceptedModels": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4-mini",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/mistral-nemo-instruct-2407"
-        ],
+        "newlyAddedAcceptedModels": [],
         "notes": [
           "保留原本設定，並把 OpenClaw 目前可接受的模型一起納入排序。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -6336,42 +4065,6 @@
             "total_jobs": 29,
             "completed": 0,
             "timeouts": 29,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-opus-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
-            "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -6394,14 +4087,6 @@
           "xai/grok-4-1-fast-reasoning",
           "minimax/MiniMax-M2.5",
           "openai-codex/gpt-5.4-mini",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
           "xai/grok-4.20-beta-0309-reasoning",
           "gemini/gemini-2.5-pro",
           "anthropic-opus46/claude-opus-4-6",
@@ -6423,109 +4108,16 @@
           "zai/glm-5-turbo",
           "zhipu/glm-5-plus"
         ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "minimax/MiniMax-M2.5",
-          "openai-codex/gpt-5.4-mini"
-        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "minimax/MiniMax-M2.5",
-          "openai-codex/gpt-5.4-mini",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "gemini/gemini-2.5-pro",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "minimax/MiniMax-M2.7",
-          "minimax/MiniMax-M2.7-highspeed",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-4.7",
-          "zai/glm-5",
-          "zai/glm-5-turbo",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
         "newlyAddedAcceptedModels": [],
         "notes": [
           "Coder 任務保留原本可用模型，另外把 Codex、Claude 與本地 coder 模型排前面做實作與 smoke。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -6535,42 +4127,6 @@
             "total_jobs": 29,
             "completed": 0,
             "timeouts": 29,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-opus-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
-            "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -6599,14 +4155,6 @@
           "anthropic/claude-opus-4-6",
           "anthropic/claude-sonnet-4-6",
           "gemini/gemini-2.5-flash",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
           "minimax/MiniMax-M2.5",
           "minimax/MiniMax-M2.7",
           "minimax/MiniMax-M2.7-highspeed",
@@ -6622,109 +4170,16 @@
           "zai/glm-5-turbo",
           "zhipu/glm-5-plus"
         ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "anthropic-opus46/claude-opus-4-6",
-          "gemini/gemini-2.5-pro"
-        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "anthropic-opus46/claude-opus-4-6",
-          "gemini/gemini-2.5-pro",
-          "zai/glm-4.7",
-          "openai-codex/gpt-5.4-mini",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
-          "minimax/MiniMax-M2.5",
-          "minimax/MiniMax-M2.7",
-          "minimax/MiniMax-M2.7-highspeed",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4-1-fast-reasoning",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-5",
-          "zai/glm-5-turbo",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
         "newlyAddedAcceptedModels": [],
         "notes": [
           "研究代理優先長推理與研究模型，但 Grok beta 仍放在 Claude / GLM 之後以降低不穩定性。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -6734,42 +4189,6 @@
             "total_jobs": 29,
             "completed": 0,
             "timeouts": 29,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-opus-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
-            "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -6792,14 +4211,6 @@
           "xai/grok-4-1-fast-reasoning",
           "openai-codex/gpt-5.4-mini",
           "gemini/gemini-2.5-pro",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
           "anthropic-opus46/claude-opus-4-6",
           "anthropic/claude-haiku-4-5",
           "anthropic/claude-opus-4-6",
@@ -6821,109 +4232,16 @@
           "zai/glm-5-turbo",
           "zhipu/glm-5-plus"
         ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "openai-codex/gpt-5.4-mini",
-          "gemini/gemini-2.5-pro"
-        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "openai-codex/gpt-5.4-mini",
-          "gemini/gemini-2.5-pro",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "minimax/MiniMax-M2.5",
-          "minimax/MiniMax-M2.7",
-          "minimax/MiniMax-M2.7-highspeed",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-4.7",
-          "zai/glm-5",
-          "zai/glm-5-turbo",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
         "newlyAddedAcceptedModels": [],
         "notes": [
           "審查代理優先乾淨、穩定的輸出鏈，beta 與高噪音模型後排。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -6933,42 +4251,6 @@
             "total_jobs": 29,
             "completed": 0,
             "timeouts": 29,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-opus-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
-            "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -6993,14 +4275,6 @@
           "minimax/MiniMax-M2.7-highspeed",
           "minimax/MiniMax-M2.7",
           "openai-codex/gpt-5.4-mini",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
           "gemini/gemini-2.5-pro",
           "anthropic-opus46/claude-opus-4-6",
           "anthropic/claude-haiku-4-5",
@@ -7020,109 +4294,16 @@
           "zai/glm-5",
           "zhipu/glm-5-plus"
         ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "minimax/MiniMax-M2.5",
-          "zai/glm-5-turbo",
-          "minimax/MiniMax-M2.7-highspeed"
-        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "minimax/MiniMax-M2.5",
-          "zai/glm-5-turbo",
-          "minimax/MiniMax-M2.7-highspeed",
-          "minimax/MiniMax-M2.7",
-          "openai-codex/gpt-5.4-mini",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
-          "gemini/gemini-2.5-pro",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4-1-fast-reasoning",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-4.7",
-          "zai/glm-5",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
         "newlyAddedAcceptedModels": [],
         "notes": [
           "行政與巡檢優先低成本、小模型與本地模型，同時保留 GLM / Claude 作為保險。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -7132,42 +4313,6 @@
             "total_jobs": 29,
             "completed": 0,
             "timeouts": 29,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-opus-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
-            "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -7190,14 +4335,6 @@
           "xai/grok-4-1-fast-reasoning",
           "openai-codex/gpt-5.4-mini",
           "gemini/gemini-2.5-pro",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
           "anthropic-opus46/claude-opus-4-6",
           "anthropic/claude-haiku-4-5",
           "anthropic/claude-opus-4-6",
@@ -7219,109 +4356,16 @@
           "zai/glm-5-turbo",
           "zhipu/glm-5-plus"
         ],
-        "primary": "zai/glm-5.1",
-        "fallbacks": [
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "openai-codex/gpt-5.4-mini",
-          "gemini/gemini-2.5-pro"
-        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
         "prioritizedModels": [
-          "zai/glm-5.1",
-          "anthropic-opus46/claude-sonnet-4-6",
-          "openai-codex/gpt-5.4",
-          "xai/grok-4-1-fast-reasoning",
-          "openai-codex/gpt-5.4-mini",
-          "gemini/gemini-2.5-pro",
-          "local-llm/gemma-3-4b-it-qat",
-          "local-llm/gemma-4-e4b-it",
-          "local-llm/gemma-4-e2b-it",
-          "local-llm/mistral-nemo-instruct-2407",
-          "local-llm/qwen2.5-coder-7b-instruct-mlx",
-          "local-llm/qwen3.5-4b-optiq",
-          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-          "local-llm/qwen3.5-9b-mlx",
-          "anthropic-opus46/claude-opus-4-6",
-          "anthropic/claude-haiku-4-5",
-          "anthropic/claude-opus-4-6",
-          "anthropic/claude-sonnet-4-6",
-          "gemini/gemini-2.5-flash",
-          "minimax/MiniMax-M2.5",
-          "minimax/MiniMax-M2.7",
-          "minimax/MiniMax-M2.7-highspeed",
-          "openai-codex/gpt-5.4-nano",
-          "openai/gpt-4o",
-          "openai/gpt-4o-mini",
-          "openai/o1",
-          "openai/o1-mini",
-          "openai/o3-mini",
-          "xai/grok-4.20-beta-0309-reasoning",
-          "xai/grok-4.20-experimental-beta-0304-reasoning",
-          "zai/glm-4.7",
-          "zai/glm-5",
-          "zai/glm-5-turbo",
-          "zhipu/glm-5-plus"
+          "openai-codex/gpt-5.4"
         ],
         "newlyAddedAcceptedModels": [],
         "notes": [
           "結構化與決策任務偏保守排序，先穩定再追求更激進的 reasoning 模型。"
         ],
         "historicalHints": {
-          "minimax/MiniMax-M2.5": {
-            "score": 0.435,
-            "success_rate": 0.05,
-            "avg_duration_sec": 340.0,
-            "cost_per_job": 0.01,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 40,
-            "completed": 2,
-            "timeouts": 38,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0.4,
-              "speed": 0,
-              "cost": 1,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-beta-0309-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 8,
-            "completed": 0,
-            "timeouts": 8,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
-          "xai/grok-4.20-experimental-beta-0304-reasoning": {
-            "score": 0.3,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.03,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 4,
-            "completed": 0,
-            "timeouts": 4,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0.5,
-              "rate_limit": 0.5
-            }
-          },
           "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
@@ -7339,34 +4383,41 @@
               "cost": 0,
               "rate_limit": 0.5
             }
-          },
-          "anthropic/claude-opus-4-6": {
+          }
+        }
+      },
+      {
+        "agent": "Local",
+        "id": "local",
+        "profile": null,
+        "configuredPrimary": "local-llm/gemma-3-4b-it-qat",
+        "configuredFallbacks": [
+          "local-llm/qwen3.5-4b-optiq",
+          "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
+          "local-llm/qwen3.5-9b-mlx",
+          "local-llm/mistral-nemo-instruct-2407"
+        ],
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [],
+        "prioritizedModels": [
+          "openai-codex/gpt-5.4"
+        ],
+        "newlyAddedAcceptedModels": [
+          "openai-codex/gpt-5.4"
+        ],
+        "notes": [
+          "保留原本設定，並把 OpenClaw 目前可接受的模型一起納入排序。"
+        ],
+        "historicalHints": {
+          "openai-codex/gpt-5.4": {
             "score": 0.2,
             "success_rate": 0.0,
             "avg_duration_sec": 0,
             "cost_per_job": 0.05,
             "rate_limit_ratio": 0.0,
-            "total_jobs": 2,
+            "total_jobs": 29,
             "completed": 0,
-            "timeouts": 2,
-            "failed": 0,
-            "rate_limits": 0,
-            "sub_scores": {
-              "success": 0,
-              "speed": 0.5,
-              "cost": 0,
-              "rate_limit": 0.5
-            }
-          },
-          "anthropic/claude-sonnet-4-6": {
-            "score": 0.2,
-            "success_rate": 0.0,
-            "avg_duration_sec": 0,
-            "cost_per_job": 0.05,
-            "rate_limit_ratio": 0.0,
-            "total_jobs": 7,
-            "completed": 0,
-            "timeouts": 7,
+            "timeouts": 29,
             "failed": 0,
             "rate_limits": 0,
             "sub_scores": {
@@ -7380,40 +4431,7 @@
       }
     ],
     "acceptedModels": [
-      "anthropic-opus46/claude-opus-4-6",
-      "anthropic-opus46/claude-sonnet-4-6",
-      "anthropic/claude-haiku-4-5",
-      "anthropic/claude-opus-4-6",
-      "anthropic/claude-sonnet-4-6",
-      "gemini/gemini-2.5-flash",
-      "gemini/gemini-2.5-pro",
-      "local-llm/deepseek-r1-0528-qwen3-8b-mlx",
-      "local-llm/gemma-3-4b-it-qat",
-      "local-llm/gemma-4-e2b-it",
-      "local-llm/gemma-4-e4b-it",
-      "local-llm/mistral-nemo-instruct-2407",
-      "local-llm/qwen2.5-coder-7b-instruct-mlx",
-      "local-llm/qwen3.5-4b-optiq",
-      "local-llm/qwen3.5-9b-mlx",
-      "minimax/MiniMax-M2.5",
-      "minimax/MiniMax-M2.7",
-      "minimax/MiniMax-M2.7-highspeed",
-      "openai-codex/gpt-5.4",
-      "openai-codex/gpt-5.4-mini",
-      "openai-codex/gpt-5.4-nano",
-      "openai/gpt-4o",
-      "openai/gpt-4o-mini",
-      "openai/o1",
-      "openai/o1-mini",
-      "openai/o3-mini",
-      "xai/grok-4-1-fast-reasoning",
-      "xai/grok-4.20-beta-0309-reasoning",
-      "xai/grok-4.20-experimental-beta-0304-reasoning",
-      "zai/glm-4.7",
-      "zai/glm-5",
-      "zai/glm-5-turbo",
-      "zai/glm-5.1",
-      "zhipu/glm-5-plus"
+      "openai-codex/gpt-5.4"
     ],
     "sourceWeightsUpdatedAt": "2026-03-16T06:30:45.934179"
   },
@@ -7438,11 +4456,18 @@
       "glm-5.1"
     ],
     "lmstudio": [
+      "deepseek-r1-0528-qwen3-8b",
       "deepseek-r1-0528-qwen3-8b-mlx",
+      "gemma-2-27b-it",
       "gemma-3-4b-it-qat",
-      "gemma-4-e2b-it",
-      "gemma-4-e4b-it",
+      "gemma-3n-e2b-it-mlx",
+      "gemma-3n-e4b-it-mlx",
+      "gemma-4-e2b-it@q4_k_m",
+      "gemma-4-e2b-it@q6_k",
+      "gemma-4-e4b-it@q4_k_m",
+      "gemma-4-e4b-it@q5_k_m",
       "mistral-nemo-instruct-2407",
+      "mlx-community/gemma-4-e2b-it",
       "qwen2.5-coder-7b-instruct-mlx",
       "qwen3.5-4b-optiq",
       "qwen3.5-9b-mlx"
@@ -7450,12 +4475,7 @@
   },
   "externalRiskSummary": {
     "sourceCount": 3,
-    "matchedTargets": 1,
-    "topTargets": [
-      {
-        "targetId": "frontend-next",
-        "count": 1
-      }
-    ]
+    "matchedTargets": 0,
+    "topTargets": []
   }
 }

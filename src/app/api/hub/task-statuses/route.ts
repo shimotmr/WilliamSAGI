@@ -19,6 +19,8 @@ async function requireAdmin(): Promise<NextResponse | null> {
   return null
 }
 
+export const revalidate = 30
+
 export async function GET(request: NextRequest) {
   const authError = await requireAdmin()
   if (authError) return authError

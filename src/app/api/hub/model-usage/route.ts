@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+export const revalidate = 30
+
 export async function GET(request: NextRequest) {
   const getSupabase = () => createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -279,6 +279,8 @@ function parseTelegramMessages() {
   }
 }
 
+export const revalidate = 30
+
 export async function GET() {
   const supabase = getSupabase()
   const today = new Date()

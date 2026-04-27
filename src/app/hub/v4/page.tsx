@@ -7,6 +7,7 @@ import {
   TrendingUp, RefreshCw, AlertTriangle, Unlock,
   Hammer, Brain, FileText, BarChart3, Shield, Play,
 } from 'lucide-react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 interface AgentStat {
   name: string

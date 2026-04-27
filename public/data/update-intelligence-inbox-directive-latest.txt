@@ -1,0 +1,1 @@
+::inbox-item{title="升級掃描已發布，採用停滯" summary="資料已更新；優先關注 booster adoption 健康度"}

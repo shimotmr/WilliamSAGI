@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSmartPolling } from '../../../hooks/useSmartPolling'
 import { RefreshCw, Plus, X, Search, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 

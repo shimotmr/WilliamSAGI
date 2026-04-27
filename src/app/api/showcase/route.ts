@@ -39,6 +39,8 @@ const hardcodedShowcase = [
   },
 ]
 
+export const revalidate = 30
+
 export async function GET() {
   const cookieStore = await cookies()
   const token = cookieStore.get('auth-token')?.value

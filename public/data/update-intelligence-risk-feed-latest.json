@@ -1,11 +1,31 @@
 {
-  "generatedAt": "2026-04-03T16:03:10+08:00",
+  "generatedAt": "2026-04-25T19:01:05+08:00",
   "sources": [
     {
       "sourceId": "github-security-blog",
       "sourceName": "GitHub Security Blog",
       "status": "ok",
       "items": [
+        {
+          "title": "Hack the AI agent: Build agentic AI security skills with the GitHub Secure Code Game",
+          "link": "https://github.blog/security/hack-the-ai-agent-build-agentic-ai-security-skills-with-the-github-secure-code-game/",
+          "description": "Learn to find and exploit real-world agentic AI vulnerabilities through five progressive challenges in this free, open source game that over 10,000 developers have already used to sharpen their security skills.   The post  Hack the AI agent: Build agentic AI security skills with the GitHub Secure Code Game  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-04-15T02:17:59+08:00",
+          "riskScore": 2,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
+        {
+          "title": "How exposed is your code? Find out in minutes—for free",
+          "link": "https://github.blog/security/application-security/how-exposed-is-your-code-find-out-in-minutes-for-free/",
+          "description": "The new Code Security Risk Assessment gives you a one-click view of vulnerabilities across your organization, at no cost.   The post  How exposed is your code? Find out in minutes—for free  appeared first on  The GitHub Blog .",
+          "publishedAt": "2026-04-14T23:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "github-security-blog",
+          "sourceName": "GitHub Security Blog",
+          "trust": "high"
+        },
         {
           "title": "Securing the open source supply chain across GitHub",
           "link": "https://github.blog/security/supply-chain-security/securing-the-open-source-supply-chain-across-github/",
@@ -75,26 +95,6 @@
           "sourceId": "github-security-blog",
           "sourceName": "GitHub Security Blog",
           "trust": "high"
-        },
-        {
-          "title": "Strengthening supply chain security: Preparing for the next malware campaign",
-          "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
-          "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
-          "publishedAt": "2025-12-24T07:52:08+08:00",
-          "riskScore": 3,
-          "sourceId": "github-security-blog",
-          "sourceName": "GitHub Security Blog",
-          "trust": "high"
-        },
-        {
-          "title": "Top security researcher shares their bug bounty process",
-          "link": "https://github.blog/security/top-security-researcher-shares-their-bug-bounty-process/",
-          "description": "For this year’s Cybersecurity Awareness Month, the GitHub Bug Bounty team is excited to put the spotlight on a talented security researcher—André Storfjord Kristiansen!   The post  Top security researcher shares their bug bounty process  appeared first on  The GitHub Blog .",
-          "publishedAt": "2025-10-23T00:00:00+08:00",
-          "riskScore": 1,
-          "sourceId": "github-security-blog",
-          "sourceName": "GitHub Security Blog",
-          "trust": "high"
         }
       ]
     },
@@ -104,70 +104,70 @@
       "status": "ok",
       "items": [
         {
-          "title": "From AIxCC to OpenSSF: Welcoming OSS-CRS to Advance AI Driven Open Source Security",
-          "link": "https://openssf.org/blog/2026/04/02/from-aixcc-to-openssf-welcoming-oss-crs-to-advance-ai-driven-open-source-security/",
-          "description": "",
-          "publishedAt": "2026-04-02T22:45:26+08:00",
+          "title": "OpenSSF Newsletter – April 2026",
+          "link": "https://openssf.org/newsletter/2026/04/21/openssf-newsletter-april-2026/",
+          "description": "TL;DR: 🚀 OpenSSF Community Day NA → Agenda live, read the session highlights. ⚖️ TPN &#038; SBOM Evolution → New frameworks aim to turn \"dead\" PDF notices and static SBOMs into active security intelligence.  🤖 Agentic AI Security → OpenSSF welcomes OSS-CRS and examines using SAFE-MCP to secure non-deterministic AI agents.  📦 Project Milestones → Gemara v1.0.0 released; Security Slam 2026 honors projects meeting rigorous security baselines.  🎓 Policy &#038; Skills → CRA Readiness Guide for Mainta",
+          "publishedAt": "2026-04-22T04:06:13+08:00",
           "riskScore": 1,
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
           "trust": "high"
         },
         {
-          "title": "OpenSSF Newsletter – March 2026",
-          "link": "https://openssf.org/newsletter/2026/03/26/openssf-newsletter-march-2026/",
-          "description": "TL;DR:  💰 $12.5M New Funding → Anthropic, AWS, Google, and more invest in OSS &#038; AI security   🤝 Ambassador Program Launch → New global initiative to empower community leaders   🛠️ No-Cost Tooling → Kusari Inspector now free for OpenSSF project maintainers   💎 The Gemara Model → A new 7-layer framework for GRC and automated risk assessment",
-          "publishedAt": "2026-03-27T00:24:14+08:00",
-          "riskScore": 1,
-          "sourceId": "openssf-blog",
-          "sourceName": "OpenSSF Blog",
-          "trust": "high"
-        },
-        {
-          "title": "What’s in the SOSS? Podcast #57 – S3E9 From Noise to Signal: Security Expertise and Kusari Inspector with Mike Lieberman",
-          "link": "https://openssf.org/podcast/2026/03/24/whats-in-the-soss-podcast-57-s3e9-from-noise-to-signal-security-expertise-and-kusari-inspector-with-mike-lieberman/",
-          "description": "",
-          "publishedAt": "2026-03-24T22:31:52+08:00",
-          "riskScore": 1,
-          "sourceId": "openssf-blog",
-          "sourceName": "OpenSSF Blog",
-          "trust": "high"
-        },
-        {
-          "title": "Kusari Partners with OpenSSF to Strengthen Open Source Software Supply Chain Security",
-          "link": "https://openssf.org/blog/2026/03/23/kusari-partners-with-openssf-to-strengthen-open-source-software-supply-chain-security/",
-          "description": "",
-          "publishedAt": "2026-03-23T20:43:33+08:00",
+          "title": "Secure Your Spot: The OpenSSF Community Day North America 2026 Agenda is Live!",
+          "link": "https://openssf.org/blog/2026/04/20/secure-your-spot-the-openssf-community-day-north-america-2026-agenda-is-live/",
+          "description": "The 2026 OpenSSF Community Day North America agenda is live, and we invite the open source community to join us on Thursday, May 21, in Minneapolis, MN. Co-located with Open Source Summit North America, this event will serve as a collaborative space for maintainers, security researchers, and industry leaders to discuss the state and future of software supply chain security.",
+          "publishedAt": "2026-04-21T03:26:25+08:00",
           "riskScore": 2,
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
           "trust": "high"
         },
         {
-          "title": "Leading Tech Coalition Invests $12.5 Million Through OpenSSF and Alpha-Omega to Strengthen Open Source Security",
-          "link": "https://openssf.org/blog/2026/03/17/leading-tech-coalition-invests-12-5-million-through-openssf-and-alpha-omega-to-strengthen-open-source-security/",
+          "title": "From Noise to Signal: Using Runtime Context to Win the Vulnerability Management Battle",
+          "link": "https://openssf.org/blog/2026/04/15/from-noise-to-signal-using-runtime-context-to-win-the-vulnerability-management-battle/",
           "description": "",
-          "publishedAt": "2026-03-18T04:19:30+08:00",
+          "publishedAt": "2026-04-15T22:28:48+08:00",
           "riskScore": 1,
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
           "trust": "high"
         },
         {
-          "title": "Linux Foundation Announces $12.5 Million in Grant Funding from Leading Organizations to Advance Open Source Security",
-          "link": "https://openssf.org/press-release/2026/03/17/linux-foundation-announces-12-5-million-in-grant-funding-from-leading-organizations-to-advance-open-source-security/",
-          "description": "",
-          "publishedAt": "2026-03-17T20:00:51+08:00",
+          "title": "Security Slam 2026: Celebrating Our Security Champions and Project Milestones",
+          "link": "https://openssf.org/blog/2026/04/10/security-slam-2026-celebrating-our-security-champions-and-project-milestones/",
+          "description": "The 2026 Security Slam has officially concluded, and we couldn't be more proud of the progress made across the open source ecosystem. From automated baseline evaluations to comprehensive threat modeling, our participating projects and contributors have taken significant steps to “secure open source at the source.\"",
+          "publishedAt": "2026-04-11T03:36:20+08:00",
           "riskScore": 1,
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
           "trust": "high"
         },
         {
-          "title": "KubeCon + CloudNativeCon Europe 2026 Co-located Event Deep Dive: Open Source SecurityCon",
-          "link": "https://openssf.org/blog/2026/03/16/kubecon-cloudnativecon-europe-2026-co-located-event-deep-dive-open-source-securitycon/",
-          "description": "Open Source SecurityCon (evolved from Cloud Native SecurityCon) returns for its second event, co-located with KubeCon + CloudNativeCon Europe 2026. The conference advances innovation and collaboration across open source software security and cloud native security. It brings together creators, maintainers, operators, and consumers who are actively involved in securing the software ecosystem.",
-          "publishedAt": "2026-03-17T04:12:52+08:00",
+          "title": "OpenSSF Tech Talk Recap: Securing Agentic AI",
+          "link": "https://openssf.org/blog/2026/04/08/openssf-tech-talk-recap-securing-agentic-ai/",
+          "description": "At our recent Open Source Security Foundation (OpenSSF) Tech Talk, experts from Microsoft, Thread AI, Canonical, and the OpenSSF AI/ML Security Working Group joined forces to dismantle the \"black box\" of AI security.",
+          "publishedAt": "2026-04-09T04:13:25+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "Rethinking Post-Deployment Vulnerability Detection",
+          "link": "https://openssf.org/blog/2026/04/03/rethinking-post-deployment-vulnerability-detection/",
+          "description": "",
+          "publishedAt": "2026-04-04T00:33:58+08:00",
+          "riskScore": 1,
+          "sourceId": "openssf-blog",
+          "sourceName": "OpenSSF Blog",
+          "trust": "high"
+        },
+        {
+          "title": "From AIxCC to OpenSSF: Welcoming OSS-CRS to Advance AI Driven Open Source Security",
+          "link": "https://openssf.org/blog/2026/04/02/from-aixcc-to-openssf-welcoming-oss-crs-to-advance-ai-driven-open-source-security/",
+          "description": "",
+          "publishedAt": "2026-04-02T22:45:26+08:00",
           "riskScore": 1,
           "sourceId": "openssf-blog",
           "sourceName": "OpenSSF Blog",
@@ -181,30 +181,40 @@
       "status": "ok",
       "items": [
         {
-          "title": "Building AI Security with Our Customers: 5 Lessons from Evo’s Design Partner Program",
-          "link": "https://snyk.io/blog/building-ai-security-with-our-customers/",
-          "description": "Learn 5 key lessons from Snyk’s Evo design partner program. Discover how AI discovery, risk intelligence, and policy automation help teams secure generative AI and govern AI sprawl at scale.",
-          "publishedAt": "2026-04-01T12:00:00+08:00",
+          "title": "Hardcoding Security into Every Commit: The Future of Snyk Secrets",
+          "link": "https://snyk.io/blog/future-snyk-secrets/",
+          "description": "Snyk Secrets bridges the gap between code and credentials with real-time, high-precision detection, ensuring your most sensitive data stays hidden while your developers stay fast.",
+          "publishedAt": "2026-04-23T08:00:00+08:00",
           "riskScore": 1,
           "sourceId": "snyk-blog",
           "sourceName": "Snyk Blog",
           "trust": "medium"
         },
         {
-          "title": "Axios npm Package Compromised: Supply Chain Attack Delivers Cross-Platform RAT",
-          "link": "https://snyk.io/blog/axios-npm-package-compromised-supply-chain-attack-delivers-cross-platform/",
-          "description": "Meta description: Malicious versions of the Axios npm package (1.14.1 and 0.30.4) were published via a compromised maintainer account, injecting a hidden dependency that deploys a cross-platform remote access trojan. Here's what happened, who's affected, and how to check your exposure.",
-          "publishedAt": "2026-03-31T07:00:00+08:00",
-          "riskScore": 3,
+          "title": "JPMorgan Just Published a Cyber To-Do List and Snyk Covers 8 of the 10 Items. How do you stack up?",
+          "link": "https://snyk.io/blog/snyk-covers-jpmorgan-cyber-list/",
+          "description": "JPMorganChase published a 10-point cyber resilience checklist. See how Snyk covers 8 of the 10 actions and where it fits in your security stack.",
+          "publishedAt": "2026-04-23T08:00:00+08:00",
+          "riskScore": 1,
           "sourceId": "snyk-blog",
           "sourceName": "Snyk Blog",
           "trust": "medium"
         },
         {
-          "title": "The 5 Principles of Snyk’s Developer Experience",
-          "link": "https://snyk.io/blog/5-principles-of-snyk-developer-experience/",
-          "description": "Discover the 5 principles behind Snyk’s developer experience. Learn how seamless workflows, actionable fixes, and AI-driven security help developers ship secure code faster without disrupting productivity.",
-          "publishedAt": "2026-03-26T12:00:00+08:00",
+          "title": "Governing Security in the Age of Infinite Signal – From Discovery to Control",
+          "link": "https://snyk.io/blog/from-discovery-to-control/",
+          "description": "AI can find vulnerabilities at scale, but enterprise security now depends on control, validation, and governance that can keep up.",
+          "publishedAt": "2026-04-10T08:00:00+08:00",
+          "riskScore": 1,
+          "sourceId": "snyk-blog",
+          "sourceName": "Snyk Blog",
+          "trust": "medium"
+        },
+        {
+          "title": "Secure What Matters: Scaling Effortless Container Security for the AI Era",
+          "link": "https://snyk.io/blog/scale-container-security-effortlessly/",
+          "description": "Announcing Snyk Container Registry Sync GA for automated image management and runtime intelligence. Scale container security effortlessly for the fast-paced AI era.",
+          "publishedAt": "2026-04-07T12:00:00+08:00",
           "riskScore": 1,
           "sourceId": "snyk-blog",
           "sourceName": "Snyk Blog",
@@ -213,28 +223,10 @@
       ]
     }
   ],
-  "matches": {
-    "frontend-next": [
-      {
-        "title": "Strengthening supply chain security: Preparing for the next malware campaign",
-        "link": "https://github.blog/security/supply-chain-security/strengthening-supply-chain-security-preparing-for-the-next-malware-campaign/",
-        "description": "Security advice for users and maintainers to help reduce the impact of the next supply chain malware attack.   The post  Strengthening supply chain security: Preparing for the next malware campaign  appeared first on  The GitHub Blog .",
-        "publishedAt": "2025-12-24T07:52:08+08:00",
-        "riskScore": 3,
-        "sourceId": "github-security-blog",
-        "sourceName": "GitHub Security Blog",
-        "trust": "high"
-      }
-    ]
-  },
+  "matches": {},
   "summary": {
     "sourceCount": 3,
-    "matchedTargets": 1,
-    "topTargets": [
-      {
-        "targetId": "frontend-next",
-        "count": 1
-      }
-    ]
+    "matchedTargets": 0,
+    "topTargets": []
   }
 }

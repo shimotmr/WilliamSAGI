@@ -8,6 +8,8 @@ const getSupabase = () => createClient(
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
+export const revalidate = 30
+
 export async function GET() {
   try {
     const { count: active } = await getSupabase().from('board_tasks').select('*',{count:'exact',head:true}).eq('status','執行中')

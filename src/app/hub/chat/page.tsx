@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSmartPolling } from '../../hooks/useSmartPolling'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 
