@@ -13,7 +13,8 @@ import {
   AlertCircle,
   BarChart3
 } from 'lucide-react'
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 interface HealthData {
   current: {
@@ -83,15 +84,7 @@ export default function MonitorPage() {
     setLoading(false)
   }, [])
 
-  useEffect(() => {
-    fetchAllData()
-  }, [fetchAllData])
-
-  useEffect(() => {
-    if (!autoRefresh) return
-    const interval = setInterval(fetchAllData, 30000)
-    return () => clearInterval(interval)
-  }, [autoRefresh, fetchAllData])
+  useSmartPolling(fetchAllData, 30000, [fetchAllData])
 
   const getHealthColor = (level: string) => {
     switch (level) {

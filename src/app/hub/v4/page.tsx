@@ -80,11 +80,7 @@ export default function V4LiveFeed() {
     }
   }
 
-  useEffect(() => {
-    fetchData()
-    const iv = setInterval(fetchData, 30000)
-    return () => clearInterval(iv)
-  }, [])
+  useSmartPolling(fetchData, 30000)
 
   if (loading) {
     return (

@@ -2,7 +2,8 @@
 
 import { LogIn, Eye, Pencil, Settings, LogOut, Download, RefreshCw, Trash2, Plus, Play, FileText, Upload, AlertCircle, MousePointer, ShieldCheck } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../../../hooks/useSmartPolling'
 
 import { supabase } from '@/lib/supabase'
 
@@ -130,11 +131,7 @@ export default function LogsPage() {
     setIsLoading(false)
   }, [actionFilter, searchText])
 
-  useEffect(() => {
-    fetchLogs()
-    const interval = setInterval(fetchLogs, 30000)
-    return () => clearInterval(interval)
-  }, [fetchLogs])
+  useSmartPolling(fetchLogs, 30000, [fetchLogs])
 
   const formatTime = (ts: string) => {
     try {

@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 import SectionCard from '@/components/ui/SectionCard'
 import PageHeader from '@/components/ui/PageHeader'
 import { Activity, Ghost, Zap, Wrench, Lock, RefreshCw, AlertTriangle, CheckCircle2, XCircle, ChevronDown, ChevronRight, Clock } from 'lucide-react'
@@ -187,11 +188,7 @@ export default function ObservabilityDiagnosisPage() {
     }
   }, [])
 
-  useEffect(() => {
-    fetchData()
-    const timer = setInterval(fetchData, 60000)
-    return () => clearInterval(timer)
-  }, [fetchData])
+  useSmartPolling(fetchData, 60000, [fetchData])
 
   const toggleCategory = (id: string) => {
     setExpandedCategories(prev => {

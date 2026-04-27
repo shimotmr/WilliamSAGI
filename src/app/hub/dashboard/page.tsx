@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 import StatsGrid from '@/features/dashboard/components/StatsGrid'
 import TokenTrendCard from '@/features/dashboard/components/TokenTrendCard'
 import AgentStatusGrid from '@/features/dashboard/components/AgentStatusGrid'
@@ -19,29 +20,19 @@ export default function DashboardPage() {
   const [error, setError] = useState('')
   const [lastUpdated, setLastUpdated] = useState('')
 
-  useEffect(() => {
-    let mounted = true
-    const load = async () => {
-      try {
-        const result = await fetchDashboardData()
-        if (!mounted) return
-        setData(result)
-        setLastUpdated(new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }))
-        setError('')
-      } catch (err) {
-        if (!mounted) return
-        setError(err instanceof Error ? err.message : '載入失敗')
-      } finally {
-        if (mounted) setLoading(false)
-      }
+  const load = async () => {
+    try {
+      const result = await fetchDashboardData()
+      setData(result)
+      setLastUpdated(new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }))
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '載入失敗')
+    } finally {
+      setLoading(false)
     }
-    load()
-    const timer = setInterval(load, 30000)
-    return () => {
-      mounted = false
-      clearInterval(timer)
-    }
-  }, [])
+  }
+  useSmartPolling(load, 30000)
 
   return (
     <DashboardShell>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSmartPolling } from '../hooks/useSmartPolling';
 
 interface Task {
   task_id: string;
@@ -53,11 +54,7 @@ export default function ProgressPage() {
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-    const interval = setInterval(fetchTasks, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  useSmartPolling(fetchTasks, 60000);
 
   const toggle = (id: string) => {
     if (expanded === id) {

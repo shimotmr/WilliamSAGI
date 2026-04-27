@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSmartPolling } from '../../hooks/useSmartPolling';
 
 interface Task {
   id: number;
@@ -34,11 +35,7 @@ export default function BoardPage() {
       .catch(() => setLoading(false));
   };
 
-  useEffect(() => {
-    fetchTasks();
-    const interval = setInterval(fetchTasks, 15000); // Poll every 15s
-    return () => clearInterval(interval);
-  }, []);
+  useSmartPolling(fetchTasks, 30000);
 
   const groups = tasks.reduce<Record<string, Task[]>>((acc, t) => {
     const s = t.status || '其他';

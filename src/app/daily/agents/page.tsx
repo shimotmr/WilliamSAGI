@@ -11,7 +11,8 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 // =============================================================================
 // Type Definitions
@@ -66,8 +67,8 @@ interface AgentsResponse {
 // =============================================================================
 // Configuration
 // =============================================================================
-const POLL_INTERVAL_MS = 15_000 // 15 seconds for real-time updates
-const ERROR_RETRY_DELAY_MS = 5_000 // 5 seconds retry on error
+const POLL_INTERVAL_MS = 30_000 // 30 seconds for real-time updates
+const ERROR_RETRY_DELAY_MS = 15_000 // 15 seconds retry on error
 
 // Status color mapping
 const statusColors = {
@@ -182,19 +183,7 @@ export default function AgentsRealtimePage() {
   // =============================================================================
   // Lifecycle & Polling
   // =============================================================================
-  useEffect(() => {
-    // Initial fetch
-    fetchAgents()
-    
-    // Setup polling
-    pollingRef.current = setInterval(() => fetchAgents(), POLL_INTERVAL_MS)
-    
-    // Cleanup
-    return () => {
-      if (pollingRef.current) clearInterval(pollingRef.current)
-      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current)
-    }
-  }, [fetchAgents])
+  useSmartPolling(fetchAgents, POLL_INTERVAL_MS, [fetchAgents])
 
   // =============================================================================
   // Event Handlers

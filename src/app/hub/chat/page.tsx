@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 
 export default function ChatPage() {

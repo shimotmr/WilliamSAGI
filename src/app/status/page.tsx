@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../hooks/useSmartPolling'
 import {
   Activity, Cpu, CheckCircle2, Clock, ListTodo,
   Zap, Shield, Bot, AlertTriangle, RefreshCw,
@@ -199,11 +200,7 @@ export default function StatusPage() {
     }
   }, [])
 
-  useEffect(() => {
-    fetchData()
-    const interval = setInterval(fetchData, 30000) // auto-refresh every 30s
-    return () => clearInterval(interval)
-  }, [fetchData])
+  useSmartPolling(fetchData, 30000, [fetchData])
 
   if (loading) {
     return (

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 interface WeComMessage {
   id: number;
@@ -45,12 +46,7 @@ export default function WeComPage() {
     }
   }, [search]);
 
-  useEffect(() => {
-    fetchMessages();
-    // 每 30 秒自動重整
-    const timer = setInterval(fetchMessages, 30000);
-    return () => clearInterval(timer);
-  }, [fetchMessages]);
+  useSmartPolling(fetchMessages, 60000, [fetchMessages]);
 
   const grouped = messages.reduce<Record<string, WeComMessage[]>>((acc, m) => {
     const key = m.parent_msg_id || m.external_userid || 'direct';

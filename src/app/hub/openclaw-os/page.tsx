@@ -58,10 +58,10 @@ function OpenClawOSPage() {
 
   useEffect(() => {
     load()
-    const refresh = setInterval(load, 45000)
+    const refresh = setInterval(load, 60000)
     const tick = () => setClock(new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }))
     tick()
-    const timer = setInterval(tick, 30000)
+    const timer = setInterval(tick, 60000)
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
     const onKey = (event: KeyboardEvent) => {

@@ -14,7 +14,8 @@ import {
   TimeScale
 } from 'chart.js'
 import { TrendingUp, RefreshCw } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 import { Line } from 'react-chartjs-2'
 
 ChartJS.register(
@@ -117,13 +118,7 @@ export default function ModelQuotaOverview() {
     }
   }
 
-  useEffect(() => {
-    fetchData()
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchData, 30000)
-    return () => clearInterval(interval)
-  }, [])
+  useSmartPolling(fetchData, 60000)
 
   if (loading) {
     return (

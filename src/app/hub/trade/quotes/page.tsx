@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../../../hooks/useSmartPolling'
 import { RefreshCw, Plus, X, Search, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -66,12 +67,8 @@ export default function QuotesPage() {
     setLoading(false)
   }, [watchlist])
 
-  useEffect(() => { if (watchlist.length > 0) fetchQuotes() }, [watchlist, fetchQuotes])
-  useEffect(() => {
-    if (!autoRefresh) return
-    const iv = setInterval(fetchQuotes, 10000)
-    return () => clearInterval(iv)
-  }, [autoRefresh, fetchQuotes])
+  // Replaced with useSmartPolling for visibility-aware polling
+  useSmartPolling(() => { if (watchlist.length > 0) fetchQuotes() }, 60000, [watchlist, fetchQuotes])
 
   const addToWatchlist = () => {
     const sym = addSymbol.trim()

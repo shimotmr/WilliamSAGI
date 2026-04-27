@@ -1,7 +1,8 @@
 'use client'
 
 import { Cpu, Database, HardDrive, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 type SystemStatus = {
   tokenUsage: {
@@ -73,15 +74,7 @@ export default function SystemMonitor() {
     }
   }
 
-  useEffect(() => {
-    fetchStatus()
-  }, [])
-
-  // Auto-refresh every 15s
-  useEffect(() => {
-    const interval = setInterval(fetchStatus, 15000)
-    return () => clearInterval(interval)
-  }, [])
+  useSmartPolling(fetchStatus, 30000)
 
   if (loading) {
     return (

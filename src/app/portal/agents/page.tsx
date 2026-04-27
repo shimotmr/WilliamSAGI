@@ -6,7 +6,8 @@ import {
   MessageSquare, Building, ArrowLeft, Lock, FileText, GitFork
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useSmartPolling } from '../../hooks/useSmartPolling'
 
 import { supabase } from "@/lib/supabase"
 
@@ -214,18 +215,15 @@ export default function AgentsPage() {
     }
   }, [])
 
-  useEffect(() => {
-    // Check admin cookie
-    const admin = document.cookie.split(';').some(c => c.trim().startsWith('is_admin=true'))
-    setIsAdmin(admin)
-    if (admin) {
-      fetchTasks()
-      loadAgents()
-      loadCronSchedules()
-      const interval = setInterval(() => { fetchTasks(); loadAgents(); loadCronSchedules() }, 30000)
-      return () => clearInterval(interval)
-    }
-  }, [fetchTasks, loadAgents, loadCronSchedules])
+  // Admin polling: tasks + agents + cron
+  useSmartPolling(() => {
+    if (isAdmin) { fetchTasks(); loadAgents(); loadCronSchedules() }
+  }, 30000, [isAdmin, fetchTasks, loadAgents, loadCronSchedules])
+
+  // Admin runs polling
+  useSmartPolling(() => {
+    if (isAdmin) loadRuns()
+  }, 30000, [isAdmin, loadRuns])
 
   const loadRuns = useCallback(async () => {
     
@@ -239,9 +237,7 @@ export default function AgentsPage() {
     setRunsLoading(false)
   }, [runDate])
 
-  useEffect(() => {
-    if (isAdmin) { loadRuns(); const i = setInterval(loadRuns, 30000); return () => clearInterval(i) }
-  }, [isAdmin, loadRuns])
+  // loadRuns already handled by useSmartPolling above
 
   if (isAdmin === false) {
     return (

@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /api/
+Disallow: /hub/
+Disallow: /portal/
+Disallow: /daily/
+Disallow: /progress
+Disallow: /status
+Disallow: /codex
+Disallow: /experimental/
+Disallow: /dashboard/
+Allow: /
+Allow: /api/hub/system-status
+
+Sitemap: https://william-sagi.vercel.app/sitemap.xml
